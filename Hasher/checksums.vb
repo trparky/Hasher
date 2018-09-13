@@ -74,6 +74,11 @@ Public Class checksums
         Return Not crc32Result
     End Function
 
+    Public Sub dispose()
+        fileStream.Close()
+        fileStream.Dispose()
+    End Sub
+
     Private Sub checksumStatusUpdaterThreadSubroutine()
         Try
 beginAgain:

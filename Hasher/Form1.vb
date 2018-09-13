@@ -39,8 +39,11 @@
     End Function
 
     Function verifyChecksum(strFile As String, checksumType As checksumType) As String
+        Dim strChecksum As String = Nothing
+
         If IO.File.Exists(strFile) Then
             Dim oldLocationInFile As ULong = 0
+
             Dim checksums As New checksums With {
                 .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan),
                 .setChecksumStatusUpdateRoutine = Sub(checksumStatusDetails As checksumStatusDetails)
@@ -59,26 +62,32 @@
             }
 
             If checksumType = checksumType.md5 Then
-                Return checksums.MD5()
+                strChecksum = checksums.MD5()
             ElseIf checksumType = checksumType.sha160 Then
-                Return checksums.SHA160()
+                strChecksum = checksums.SHA160()
             ElseIf checksumType = checksumType.sha256 Then
-                Return checksums.SHA256()
+                strChecksum = checksums.SHA256()
             ElseIf checksumType = checksumType.sha384 Then
-                Return checksums.SHA384()
+                strChecksum = checksums.SHA384()
             ElseIf checksumType = checksumType.sha512 Then
-                Return checksums.SHA512()
+                strChecksum = checksums.SHA512()
             ElseIf checksumType = checksumType.RIPEMD160 Then
-                Return checksums.RIPEMD160()
+                strChecksum = checksums.RIPEMD160()
             Else
-                Return Nothing
+                strChecksum = Nothing
             End If
+
+            checksums.dispose()
         Else
-            Return Nothing
+            strChecksum = Nothing
         End If
+
+        Return strChecksum
     End Function
 
     Function performIndividualFilesChecksum(index As Short, strFile As String, checksumType As checksumType) As String
+        Dim strChecksum As String = Nothing
+
         If IO.File.Exists(strFile) Then
             Dim oldLocationInFile As ULong = 0
             Dim checksums As New checksums With {
@@ -100,23 +109,27 @@
             }
 
             If checksumType = checksumType.md5 Then
-                Return checksums.MD5()
+                strChecksum = checksums.MD5()
             ElseIf checksumType = checksumType.sha160 Then
-                Return checksums.SHA160()
+                strChecksum = checksums.SHA160()
             ElseIf checksumType = checksumType.sha256 Then
-                Return checksums.SHA256()
+                strChecksum = checksums.SHA256()
             ElseIf checksumType = checksumType.sha384 Then
-                Return checksums.SHA384()
+                strChecksum = checksums.SHA384()
             ElseIf checksumType = checksumType.sha512 Then
-                Return checksums.SHA512()
+                strChecksum = checksums.SHA512()
             ElseIf checksumType = checksumType.RIPEMD160 Then
-                Return checksums.RIPEMD160()
+                strChecksum = checksums.RIPEMD160()
             Else
-                Return Nothing
+                strChecksum = Nothing
             End If
+
+            checksums.dispose()
         Else
-            Return Nothing
+            strChecksum = Nothing
         End If
+
+        Return strChecksum
     End Function
 
     Private Sub updateFilesListCountHeader()
