@@ -5,6 +5,7 @@
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
     Private ReadOnly intBufferSize As Integer = 4096
+    Private boolClosingWindow As Boolean = False
 
     Enum checksumType As Short
         md5
@@ -242,14 +243,16 @@
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
                                                  Catch ex As Threading.ThreadAbortException
-                                                     lblIndividualFilesStatus.Text = "(No Background Processes)"
-                                                     lblIndividualFilesStatusProcessingFile.Text = ""
-                                                     IndividualFilesProgressBar.Value = 0
+                                                     If Not boolClosingWindow Then
+                                                         lblIndividualFilesStatus.Text = "(No Background Processes)"
+                                                         lblIndividualFilesStatusProcessingFile.Text = ""
+                                                         IndividualFilesProgressBar.Value = 0
+                                                         resetHashIndividualFilesProgress()
+                                                     End If
 
-                                                     resetHashIndividualFilesProgress()
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                     Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -445,14 +448,16 @@
                                                          boolBackgroundThreadWorking = False
                                                          workingThread = Nothing
                                                      Catch ex As Threading.ThreadAbortException
-                                                         lblVerifyHashStatusProcessingFile.Text = ""
-                                                         lblVerifyHashStatus.Text = "(No Background Processes)"
-                                                         VerifyHashProgressBar.Value = 0
+                                                         If Not boolClosingWindow Then
+                                                             lblVerifyHashStatusProcessingFile.Text = ""
+                                                             lblVerifyHashStatus.Text = "(No Background Processes)"
+                                                             VerifyHashProgressBar.Value = 0
+                                                             verifyHashesListFiles.Items.Clear()
+                                                         End If
 
-                                                         verifyHashesListFiles.Items.Clear()
                                                          boolBackgroundThreadWorking = False
                                                          workingThread = Nothing
-                                                         Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                         If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
                                                      End Try
                                                  End Sub) With {
                 .Priority = Threading.ThreadPriority.Highest,
@@ -598,7 +603,10 @@
             e.Cancel = True
             Exit Sub
         Else
-            If workingThread IsNot Nothing Then workingThread.Abort()
+            If workingThread IsNot Nothing Then
+                boolClosingWindow = True
+                workingThread.Abort()
+            End If
         End If
     End Sub
 End Class
