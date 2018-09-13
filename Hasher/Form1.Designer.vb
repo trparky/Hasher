@@ -61,6 +61,7 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep1 = New System.Windows.Forms.Label()
         Me.listFiles = New System.Windows.Forms.ListView()
         Me.colFileName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colFileSize = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.btnRemoveSelectedFiles = New System.Windows.Forms.Button()
         Me.btnRemoveAllFiles = New System.Windows.Forms.Button()
         Me.btnAddFilesInFolder = New System.Windows.Forms.Button()
@@ -79,6 +80,7 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.colChecksum = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -528,7 +530,7 @@ Partial Class Form1
         Me.listFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.listFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFileName, Me.colChecksum})
+        Me.listFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFileName, Me.colFileSize, Me.colChecksum})
         Me.listFiles.FullRowSelect = True
         Me.listFiles.Location = New System.Drawing.Point(160, 20)
         Me.listFiles.Name = "listFiles"
@@ -540,7 +542,7 @@ Partial Class Form1
         'colFileName
         '
         Me.colFileName.Text = "File Name"
-        Me.colFileName.Width = 557
+        Me.colFileName.Width = 528
         '
         'btnRemoveSelectedFiles
         '
@@ -626,7 +628,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colResults})
+        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults})
         Me.verifyHashesListFiles.FullRowSelect = True
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 12)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
@@ -642,6 +644,7 @@ Partial Class Form1
         '
         'colResults
         '
+        Me.colResults.DisplayIndex = 2
         Me.colResults.Text = "Results"
         Me.colResults.Width = 72
         '
@@ -684,6 +687,17 @@ Partial Class Form1
         '
         Me.colChecksum.Text = "Hash/Checksum"
         Me.colChecksum.Width = 241
+        '
+        'colFileSize
+        '
+        Me.colFileSize.Text = "File Size"
+        Me.colFileSize.Width = 70
+        '
+        'colFileSize2
+        '
+        Me.colFileSize2.DisplayIndex = 1
+        Me.colFileSize2.Text = "File Size"
+        Me.colFileSize2.Width = 87
         '
         'Form1
         '
@@ -766,4 +780,6 @@ Partial Class Form1
     Friend WithEvents radioRIPEMD160 As RadioButton
     Friend WithEvents btnCopyTextHashResultsToClipboard As Button
     Friend WithEvents colChecksum As ColumnHeader
+    Friend WithEvents colFileSize As ColumnHeader
+    Friend WithEvents colFileSize2 As ColumnHeader
 End Class

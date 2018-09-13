@@ -161,15 +161,29 @@
     End Sub
 
     Private Sub btnAddIndividualFiles_Click(sender As Object, e As EventArgs) Handles btnAddIndividualFiles.Click
+        Dim itemToBeAdded As ListViewItem
+
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             If OpenFileDialog.FileNames.Count() = 0 Then
                 MsgBox("You must select some files.", MsgBoxStyle.Critical, Me.Text)
             ElseIf OpenFileDialog.FileNames.Count() = 1 Then
-                If Not isFileInListView(OpenFileDialog.FileName) Then listFiles.Items.Add(OpenFileDialog.FileName).SubItems.Add("To Be Computed")
+                If Not isFileInListView(OpenFileDialog.FileName) Then
+                    itemToBeAdded = New ListViewItem(OpenFileDialog.FileName)
+                    itemToBeAdded.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(OpenFileDialog.FileName).Length))
+                    itemToBeAdded.SubItems.Add("To Be Computed")
+                    listFiles.Items.Add(itemToBeAdded)
+                    itemToBeAdded = Nothing
+                End If
             Else
                 listFiles.BeginUpdate()
                 For Each strFileName As String In OpenFileDialog.FileNames
-                    If Not isFileInListView(strFileName) Then listFiles.Items.Add(strFileName).SubItems.Add("To Be Computed")
+                    If Not isFileInListView(strFileName) Then
+                        itemToBeAdded = New ListViewItem(strFileName)
+                        itemToBeAdded.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                        itemToBeAdded.SubItems.Add("To Be Computed")
+                        listFiles.Items.Add(itemToBeAdded)
+                        itemToBeAdded = Nothing
+                    End If
                 Next
                 listFiles.EndUpdate()
             End If
@@ -220,7 +234,7 @@
 
                                                          If Not hashResultArray.ContainsKey(strFileName) Then
                                                              strChecksum = performIndividualFilesChecksum(index, strFileName, checksumType)
-                                                             item.SubItems(1).Text = strChecksum
+                                                             item.SubItems(2).Text = strChecksum
                                                              hashResultArray.Add(strFileName, strChecksum)
                                                          End If
 
@@ -364,6 +378,7 @@
         For Each strFileName As String In IO.Directory.GetFiles(directoryPath, "*.*", directorySearchOptions)
             If Not isFileInListOfListViewItems(strFileName, listOfFiles) Then
                 listViewItem = New ListViewItem(strFileName)
+                listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
                 listViewItem.SubItems.Add("To Be Computed")
                 listOfFiles.Add(listViewItem)
                 listViewItem = Nothing
@@ -485,9 +500,11 @@
 
         If strChecksum.Equals(strChecksumInFile, StringComparison.OrdinalIgnoreCase) Then
             listViewItem.BackColor = Color.LightGreen
+            listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
             listViewItem.SubItems.Add("Valid")
         Else
             listViewItem.BackColor = Color.Pink
+            listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
             listViewItem.SubItems.Add("NOT Valid")
         End If
 
