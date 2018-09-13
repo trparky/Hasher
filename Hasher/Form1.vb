@@ -434,6 +434,7 @@
 
             workingThread = New Threading.Thread(Sub()
                                                      Try
+                                                         verifyHashesListFiles.BeginUpdate()
                                                          boolBackgroundThreadWorking = True
                                                          Dim linesInFile As New Specialized.StringCollection()
                                                          Dim strLineInFile As String
@@ -459,6 +460,7 @@
                                                          VerifyHashProgressBar.Value = 0
 
                                                          verifyHashesListFiles.Items.AddRange(listOfFiles.ToArray())
+                                                         verifyHashesListFiles.EndUpdate()
                                                          Me.Invoke(Sub() MsgBox("Processing of hash file complete.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
                                                          boolBackgroundThreadWorking = False
                                                          workingThread = Nothing
