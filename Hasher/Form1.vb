@@ -181,6 +181,13 @@
                                                      Dim index As Short = 1
                                                      hashResultArray.Clear()
 
+                                                     radioMD5.Enabled = False
+                                                     radioSHA1.Enabled = False
+                                                     radioSHA256.Enabled = False
+                                                     radioSHA384.Enabled = False
+                                                     radioSHA512.Enabled = False
+                                                     radioRIPEMD160.Enabled = False
+
                                                      If radioMD5.Checked Then
                                                          checksumType = checksumType.md5
                                                      ElseIf radioSHA1.Checked Then
@@ -213,6 +220,12 @@
 
                                                      btnIndividualFilesCopyToClipboard.Enabled = True
                                                      btnIndividualFilesSaveResultsToDisk.Enabled = True
+                                                     radioMD5.Enabled = True
+                                                     radioSHA1.Enabled = True
+                                                     radioSHA256.Enabled = True
+                                                     radioSHA384.Enabled = True
+                                                     radioSHA512.Enabled = True
+                                                     radioRIPEMD160.Enabled = True
 
                                                      Me.Invoke(Sub() MsgBox("Complete.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
                                                      resetHashIndividualFilesProgress()
