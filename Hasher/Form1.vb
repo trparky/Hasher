@@ -4,6 +4,7 @@
     Private hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
+    Private ReadOnly intBufferSize As Integer = 4096
 
     Enum checksumType As Short
         md5
@@ -41,7 +42,7 @@
         If IO.File.Exists(strFile) Then
             Dim oldLocationInFile As ULong = 0
             Dim checksums As New checksums With {
-                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, 4096, IO.FileOptions.SequentialScan),
+                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan),
                 .setChecksumStatusUpdateRoutine = Sub(checksumStatusDetails As checksumStatusDetails)
                                                       Try
                                                           Me.Invoke(Sub()
@@ -81,7 +82,7 @@
         If IO.File.Exists(strFile) Then
             Dim oldLocationInFile As ULong = 0
             Dim checksums As New checksums With {
-                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, 4096, IO.FileOptions.SequentialScan),
+                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan),
                 .setChecksumStatusUpdateRoutine = Sub(checksumStatusDetails As checksumStatusDetails)
                                                       Try
                                                           Me.Invoke(Sub()
