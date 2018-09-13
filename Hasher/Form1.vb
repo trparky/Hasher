@@ -52,7 +52,12 @@
                                                                         lblVerifyHashStatus.Text = "Estimated " & fileSizeToHumanSize(checksumStatusDetails.currentLocationInFile - oldLocationInFile) & "/second"
                                                                         oldLocationInFile = checksumStatusDetails.currentLocationInFile
 
-                                                                        VerifyHashProgressBar.Value = checksumStatusDetails.currentLocationInFile / checksumStatusDetails.lengthOfFile * 100
+                                                                        If checksumStatusDetails.currentLocationInFile <> 0 And checksumStatusDetails.lengthOfFile <> 0 Then
+                                                                            VerifyHashProgressBar.Value = checksumStatusDetails.currentLocationInFile / checksumStatusDetails.lengthOfFile * 100
+                                                                        Else
+                                                                            VerifyHashProgressBar.Value = 0
+                                                                        End If
+
                                                                         lblVerifyHashStatus.Text &= ", " & String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(checksumStatusDetails.currentLocationInFile), fileSizeToHumanSize(checksumStatusDetails.lengthOfFile))
                                                                         oldLocationInFile = checksumStatusDetails.currentLocationInFile
                                                                     End Sub)
@@ -98,7 +103,12 @@
                                                                         lblIndividualFilesStatus.Text = "Estimated " & fileSizeToHumanSize(checksumStatusDetails.currentLocationInFile - oldLocationInFile) & "/second"
                                                                         oldLocationInFile = checksumStatusDetails.currentLocationInFile
 
-                                                                        IndividualFilesProgressBar.Value = checksumStatusDetails.currentLocationInFile / checksumStatusDetails.lengthOfFile * 100
+                                                                        If checksumStatusDetails.currentLocationInFile <> 0 And checksumStatusDetails.lengthOfFile <> 0 Then
+                                                                            IndividualFilesProgressBar.Value = checksumStatusDetails.currentLocationInFile / checksumStatusDetails.lengthOfFile * 100
+                                                                        Else
+                                                                            IndividualFilesProgressBar.Value = 0
+                                                                        End If
+
                                                                         lblIndividualFilesStatus.Text &= ", " & String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(checksumStatusDetails.currentLocationInFile), fileSizeToHumanSize(checksumStatusDetails.lengthOfFile))
                                                                         lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s).", index, listFiles.Items.Count())
                                                                         oldLocationInFile = checksumStatusDetails.currentLocationInFile
