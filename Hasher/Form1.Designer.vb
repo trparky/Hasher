@@ -398,6 +398,7 @@ Partial Class Form1
         '
         'lblIndividualFilesStatusProcessingFile
         '
+        Me.lblIndividualFilesStatusProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblIndividualFilesStatusProcessingFile.AutoSize = True
         Me.lblIndividualFilesStatusProcessingFile.Location = New System.Drawing.Point(687, 260)
         Me.lblIndividualFilesStatusProcessingFile.Name = "lblIndividualFilesStatusProcessingFile"
@@ -596,7 +597,7 @@ Partial Class Form1
         '
         'lblVerifyHashStatusProcessingFile
         '
-        Me.lblVerifyHashStatusProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblVerifyHashStatusProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblVerifyHashStatusProcessingFile.AutoSize = True
         Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(677, 321)
         Me.lblVerifyHashStatusProcessingFile.Name = "lblVerifyHashStatusProcessingFile"
