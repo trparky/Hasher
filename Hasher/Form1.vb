@@ -525,11 +525,19 @@
     End Sub
 
     Private Sub listFiles_DragDrop(sender As Object, e As DragEventArgs) Handles listFiles.DragDrop
+        Dim listViewItem As myListViewItem
+
         For Each strItem As String In e.Data.GetData(DataFormats.FileDrop)
             If IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) Then
                 addFilesFromDirectory(strItem)
             Else
-                If Not isFileInListView(strItem) Then listFiles.Items.Add(strItem)
+                If Not isFileInListView(strItem) Then
+                    listViewItem = New myListViewItem(strItem) With {.fileSize = New IO.FileInfo(strItem).Length}
+                    listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
+                    listViewItem.SubItems.Add(fileSizeToHumanSize("To Be Computed"))
+                    listFiles.Items.Add(listViewItem)
+                    listViewItem = Nothing
+                End If
             End If
         Next
         updateFilesListCountHeader()
