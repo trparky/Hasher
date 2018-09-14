@@ -6,6 +6,7 @@
     Private workingThread As Threading.Thread
     Private ReadOnly intBufferSize As Integer = 16 * 1024 * 1024
     Private boolClosingWindow As Boolean = False
+    Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
 
     Enum checksumType As Short
         md5
@@ -636,5 +637,81 @@
                 workingThread.Abort()
             End If
         End If
+    End Sub
+
+    Private Sub listFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles listFiles.ColumnClick
+        ' Get the new sorting column.
+        Dim new_sorting_column As ColumnHeader = listFiles.Columns(e.Column)
+
+        ' Figure out the new sorting order.
+        Dim sort_order As SortOrder
+        If (m_SortingColumn2 Is Nothing) Then
+            ' New column. Sort ascending.
+            sort_order = SortOrder.Ascending
+        Else
+            ' See if this is the same column.
+            If new_sorting_column.Equals(m_SortingColumn2) Then
+                ' Same column. Switch the sort order.
+                If m_SortingColumn2.Text.StartsWith("> ") Then
+                    sort_order = SortOrder.Descending
+                Else
+                    sort_order = SortOrder.Ascending
+                End If
+            Else
+                ' New column. Sort ascending.
+                sort_order = SortOrder.Ascending
+            End If
+
+            ' Remove the old sort indicator.
+            m_SortingColumn2.Text = m_SortingColumn2.Text.Substring(2)
+        End If
+
+        ' Display the new sort order.
+        m_SortingColumn2 = new_sorting_column
+        m_SortingColumn2.Text = If(sort_order = SortOrder.Ascending, "> " & m_SortingColumn2.Text, "< " & m_SortingColumn2.Text)
+
+        ' Create a comparer.
+        listFiles.ListViewItemSorter = New ListViewComparer(e.Column, sort_order)
+
+        ' Sort.
+        listFiles.Sort()
+    End Sub
+
+    Private Sub verifyHashesListFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles verifyHashesListFiles.ColumnClick
+        ' Get the new sorting column.
+        Dim new_sorting_column As ColumnHeader = verifyHashesListFiles.Columns(e.Column)
+
+        ' Figure out the new sorting order.
+        Dim sort_order As SortOrder
+        If (m_SortingColumn1 Is Nothing) Then
+            ' New column. Sort ascending.
+            sort_order = SortOrder.Ascending
+        Else
+            ' See if this is the same column.
+            If new_sorting_column.Equals(m_SortingColumn1) Then
+                ' Same column. Switch the sort order.
+                If m_SortingColumn1.Text.StartsWith("> ") Then
+                    sort_order = SortOrder.Descending
+                Else
+                    sort_order = SortOrder.Ascending
+                End If
+            Else
+                ' New column. Sort ascending.
+                sort_order = SortOrder.Ascending
+            End If
+
+            ' Remove the old sort indicator.
+            m_SortingColumn1.Text = m_SortingColumn1.Text.Substring(2)
+        End If
+
+        ' Display the new sort order.
+        m_SortingColumn1 = new_sorting_column
+        m_SortingColumn1.Text = If(sort_order = SortOrder.Ascending, "> " & m_SortingColumn1.Text, "< " & m_SortingColumn1.Text)
+
+        ' Create a comparer.
+        verifyHashesListFiles.ListViewItemSorter = New ListViewComparer(e.Column, sort_order)
+
+        ' Sort.
+        verifyHashesListFiles.Sort()
     End Sub
 End Class
