@@ -5,4 +5,4 @@
 ' a specific target and scoped to a namespace, type, member, etc.
 
 <Assembly: CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles")>
-<Assembly: CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification:="<Pending>", Scope:="member", Target:="~F:Hasher.checksums.crc32Table")>
+<Assembly: CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier")>
