@@ -161,15 +161,15 @@
     End Sub
 
     Private Sub btnAddIndividualFiles_Click(sender As Object, e As EventArgs) Handles btnAddIndividualFiles.Click
-        Dim itemToBeAdded As ListViewItem
+        Dim itemToBeAdded As myListViewItem
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             If OpenFileDialog.FileNames.Count() = 0 Then
                 MsgBox("You must select some files.", MsgBoxStyle.Critical, Me.Text)
             ElseIf OpenFileDialog.FileNames.Count() = 1 Then
                 If Not isFileInListView(OpenFileDialog.FileName) Then
-                    itemToBeAdded = New ListViewItem(OpenFileDialog.FileName)
-                    itemToBeAdded.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(OpenFileDialog.FileName).Length))
+                    itemToBeAdded = New myListViewItem(OpenFileDialog.FileName) With {.fileSize = New IO.FileInfo(OpenFileDialog.FileName).Length}
+                    itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
                     itemToBeAdded.SubItems.Add("To Be Computed")
                     listFiles.Items.Add(itemToBeAdded)
                     itemToBeAdded = Nothing
@@ -178,8 +178,8 @@
                 listFiles.BeginUpdate()
                 For Each strFileName As String In OpenFileDialog.FileNames
                     If Not isFileInListView(strFileName) Then
-                        itemToBeAdded = New ListViewItem(strFileName)
-                        itemToBeAdded.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                        itemToBeAdded = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
+                        itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
                         itemToBeAdded.SubItems.Add("To Be Computed")
                         listFiles.Items.Add(itemToBeAdded)
                         itemToBeAdded = Nothing
@@ -372,13 +372,13 @@
 
     Private Sub addFilesFromDirectory(directoryPath As String)
         Dim listOfFiles As New List(Of ListViewItem)
-        Dim listViewItem As ListViewItem
+        Dim listViewItem As myListViewItem
         Dim directorySearchOptions As IO.SearchOption = If(My.Settings.boolRecurrsiveDirectorySearch, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly)
 
         For Each strFileName As String In IO.Directory.GetFiles(directoryPath, "*.*", directorySearchOptions)
             If Not isFileInListOfListViewItems(strFileName, listOfFiles) Then
-                listViewItem = New ListViewItem(strFileName)
-                listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
+                listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                 listViewItem.SubItems.Add("To Be Computed")
                 listOfFiles.Add(listViewItem)
                 listViewItem = Nothing
@@ -496,20 +496,21 @@
             strFileName = IO.Path.Combine(strPathOfChecksumFile, strFileName)
         End If
 
-        Dim listViewItem As ListViewItem
-        listViewItem = New ListViewItem(strFileName)
+        Dim listViewItem As myListViewItem
+        listViewItem = New myListViewItem(strFileName)
 
         If IO.File.Exists(strFileName) Then
             Dim strChecksumInFile As String = verifyChecksum(strFileName, hashFileType)
+            listViewItem.fileSize = New IO.FileInfo(strFileName).Length
 
             If strChecksum.Equals(strChecksumInFile, StringComparison.OrdinalIgnoreCase) Then
                 listViewItem.BackColor = Color.LightGreen
-                listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                 listViewItem.SubItems.Add("Valid")
                 longFilesThatPassedVerification += 1
             Else
                 listViewItem.BackColor = Color.Pink
-                listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                 listViewItem.SubItems.Add("NOT Valid")
             End If
         Else
