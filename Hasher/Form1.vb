@@ -495,19 +495,25 @@
             strFileName = IO.Path.Combine(strPathOfChecksumFile, strFileName)
         End If
 
-        Dim strChecksumInFile As String = verifyChecksum(strFileName, hashFileType)
-
         Dim listViewItem As ListViewItem
         listViewItem = New ListViewItem(strFileName)
 
-        If strChecksum.Equals(strChecksumInFile, StringComparison.OrdinalIgnoreCase) Then
-            listViewItem.BackColor = Color.LightGreen
-            listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
-            listViewItem.SubItems.Add("Valid")
+        If IO.File.Exists(strFileName) Then
+            Dim strChecksumInFile As String = verifyChecksum(strFileName, hashFileType)
+
+            If strChecksum.Equals(strChecksumInFile, StringComparison.OrdinalIgnoreCase) Then
+                listViewItem.BackColor = Color.LightGreen
+                listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                listViewItem.SubItems.Add("Valid")
+            Else
+                listViewItem.BackColor = Color.Pink
+                listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                listViewItem.SubItems.Add("NOT Valid")
+            End If
         Else
-            listViewItem.BackColor = Color.Pink
-            listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
-            listViewItem.SubItems.Add("NOT Valid")
+            listViewItem.BackColor = Color.LightGray
+            listViewItem.SubItems.Add("")
+            listViewItem.SubItems.Add("Doesn't Exist")
         End If
 
         verifyHashesListFiles.Items.Add(listViewItem)
