@@ -534,7 +534,7 @@
                 If Not isFileInListView(strItem) Then
                     listViewItem = New myListViewItem(strItem) With {.fileSize = New IO.FileInfo(strItem).Length}
                     listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                    listViewItem.SubItems.Add(fileSizeToHumanSize("To Be Computed"))
+                    listViewItem.SubItems.Add("To Be Computed")
                     listFiles.Items.Add(listViewItem)
                     listViewItem = Nothing
                 End If
