@@ -532,6 +532,7 @@
                 If Not isFileInListView(strItem) Then listFiles.Items.Add(strItem)
             End If
         Next
+        updateFilesListCountHeader()
     End Sub
 
     Private Sub listFiles_DragEnter(sender As Object, e As DragEventArgs) Handles listFiles.DragEnter
