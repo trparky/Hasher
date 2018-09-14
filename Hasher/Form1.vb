@@ -439,6 +439,7 @@
                                                          Dim linesInFile As New Specialized.StringCollection()
                                                          Dim strLineInFile As String
                                                          Dim index As Integer = 1
+                                                         Dim longFilesThatPassedVerification As Long = 0
 
                                                          Using fileStream As New IO.StreamReader(OpenFileDialog.FileName, System.Text.Encoding.UTF8)
                                                              strLineInFile = fileStream.ReadLine()
@@ -451,7 +452,7 @@
 
                                                          For Each strLineInCollection As String In linesInFile
                                                              lblVerifyHashStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s)", index, linesInFile.Count())
-                                                             processLineInHashFile(strPathOfChecksumFile, strLineInCollection, checksumType, listOfFiles)
+                                                             processLineInHashFile(strPathOfChecksumFile, strLineInCollection, checksumType, listOfFiles, longFilesThatPassedVerification)
                                                              index += 1
                                                          Next
 
@@ -461,7 +462,7 @@
 
                                                          verifyHashesListFiles.Items.AddRange(listOfFiles.ToArray())
                                                          verifyHashesListFiles.EndUpdate()
-                                                         Me.Invoke(Sub() MsgBox("Processing of hash file complete.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                         Me.Invoke(Sub() MsgBox(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification.", longFilesThatPassedVerification, linesInFile.Count), MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
                                                          boolBackgroundThreadWorking = False
                                                          workingThread = Nothing
                                                      Catch ex As Threading.ThreadAbortException
@@ -487,7 +488,7 @@
         OpenFileDialog.Multiselect = oldMultiValue
     End Sub
 
-    Private Sub processLineInHashFile(strPathOfChecksumFile As String, strLineInFile As String, hashFileType As checksumType, ByRef listOfFiles As List(Of ListViewItem))
+    Private Sub processLineInHashFile(strPathOfChecksumFile As String, strLineInFile As String, hashFileType As checksumType, ByRef listOfFiles As List(Of ListViewItem), ByRef longFilesThatPassedVerification As Long)
         Dim strChecksum As String = hashLineParser.Match(strLineInFile).Groups(1).Value
         Dim strFileName As String = hashLineParser.Match(strLineInFile).Groups(2).Value
 
@@ -505,6 +506,7 @@
                 listViewItem.BackColor = Color.LightGreen
                 listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
                 listViewItem.SubItems.Add("Valid")
+                longFilesThatPassedVerification += 1
             Else
                 listViewItem.BackColor = Color.Pink
                 listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
