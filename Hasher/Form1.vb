@@ -548,8 +548,8 @@
     End Sub
 
     Private Function isFileInListView(strFile As String) As Boolean
-        Dim itemCountWithMatch As Integer = listFiles.Items.Cast(Of ListViewItem).Where(Function(item As ListViewItem) item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase)).Count() <> 0
-        'Dim itemCountWithMatch As Integer = (From item As ListViewItem In listFiles.Items Where item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase) Select item).Count
+        Dim itemCountWithMatch As Integer = listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase)).Count() <> 0
+        'Dim itemCountWithMatch As Integer = (From item As myListViewItem In listFiles.Items Where item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase) Select item).Count
         Return If(itemCountWithMatch = 0, False, True)
     End Function
 
