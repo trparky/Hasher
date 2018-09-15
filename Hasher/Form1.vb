@@ -193,6 +193,7 @@
     End Sub
 
     Private Sub btnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
+        btnComputeHash.Enabled = False
         btnAddFilesInFolder.Enabled = False
         btnAddIndividualFiles.Enabled = False
         btnRemoveAllFiles.Enabled = False
@@ -268,6 +269,8 @@
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
                                                      If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                 Finally
+                                                     btnComputeHash.Enabled = True
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -399,6 +402,7 @@
     End Sub
 
     Private Sub btnOpenExistingHashFile_Click(sender As Object, e As EventArgs) Handles btnOpenExistingHashFile.Click
+        btnOpenExistingHashFile.Enabled = False
         verifyHashesListFiles.Items.Clear()
 
         Dim oldMultiValue As Boolean = OpenFileDialog.Multiselect
@@ -477,6 +481,8 @@
                                                          boolBackgroundThreadWorking = False
                                                          workingThread = Nothing
                                                          If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                     Finally
+                                                         btnOpenExistingHashFile.Enabled = True
                                                      End Try
                                                  End Sub) With {
                 .Priority = Threading.ThreadPriority.Highest,
