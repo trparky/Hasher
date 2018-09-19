@@ -179,6 +179,7 @@
                     itemToBeAdded = New myListViewItem(OpenFileDialog.FileName) With {.fileSize = New IO.FileInfo(OpenFileDialog.FileName).Length}
                     itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
                     itemToBeAdded.SubItems.Add(strToBeComputed)
+                    itemToBeAdded.fileName = OpenFileDialog.FileName
                     listFiles.Items.Add(itemToBeAdded)
                     itemToBeAdded = Nothing
                 End If
@@ -189,6 +190,7 @@
                         itemToBeAdded = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
                         itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
                         itemToBeAdded.SubItems.Add(strToBeComputed)
+                        itemToBeAdded.fileName = strFileName
                         listFiles.Items.Add(itemToBeAdded)
                         itemToBeAdded = Nothing
                     End If
@@ -392,6 +394,7 @@
                 listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
                 listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                 listViewItem.SubItems.Add(strToBeComputed)
+                listViewItem.fileName = strFileName
                 listOfFiles.Add(listViewItem)
                 listViewItem = Nothing
             End If
@@ -708,7 +711,7 @@
 
     Private Sub CopyHashToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyHashToClipboardToolStripMenuItem.Click
         Dim selectedItem As myListViewItem = listFiles.SelectedItems(0)
-        If copyTextToWindowsClipboard(selectedItem.hash) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, Me.Text)
+        If copyTextToWindowsClipboard(selectedItem.hash & " *" & selectedItem.fileName) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, Me.Text)
     End Sub
 
     Private Sub verifyHashesListFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles verifyHashesListFiles.ColumnClick
