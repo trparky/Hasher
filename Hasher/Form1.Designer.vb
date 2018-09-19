@@ -22,6 +22,7 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabWelcome = New System.Windows.Forms.TabPage()
         Me.lblWelcomeText = New System.Windows.Forms.Label()
@@ -79,6 +80,8 @@ Partial Class Form1
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
+        Me.listFilesContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.CopyHashToClipboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.colChecksum = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TabControl1.SuspendLayout()
@@ -87,6 +90,7 @@ Partial Class Form1
         Me.tabHashIndividualFiles.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
         Me.tabSettings.SuspendLayout()
+        Me.listFilesContextMenu.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -532,6 +536,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.listFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFileName, Me.colFileSize, Me.colChecksum})
+        Me.listFiles.ContextMenuStrip = Me.listFilesContextMenu
         Me.listFiles.FullRowSelect = True
         Me.listFiles.Location = New System.Drawing.Point(160, 20)
         Me.listFiles.Name = "listFiles"
@@ -700,6 +705,19 @@ Partial Class Form1
         Me.colFileSize2.Text = "File Size"
         Me.colFileSize2.Width = 87
         '
+        'ContextMenuStrip1
+        '
+        Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyHashToClipboardToolStripMenuItem})
+        Me.listFilesContextMenu.Name = "ContextMenuStrip1"
+        Me.listFilesContextMenu.Size = New System.Drawing.Size(202, 48)
+        '
+        '
+        'CopyHashToClipboardToolStripMenuItem
+        '
+        Me.CopyHashToClipboardToolStripMenuItem.Name = "CopyHashToClipboardToolStripMenuItem"
+        Me.CopyHashToClipboardToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
+        Me.CopyHashToClipboardToolStripMenuItem.Text = "Copy Hash to Clipboard"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -720,6 +738,7 @@ Partial Class Form1
         Me.tabVerifySavedHashes.PerformLayout()
         Me.tabSettings.ResumeLayout(False)
         Me.tabSettings.PerformLayout()
+        Me.listFilesContextMenu.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -783,4 +802,6 @@ Partial Class Form1
     Friend WithEvents colChecksum As ColumnHeader
     Friend WithEvents colFileSize As ColumnHeader
     Friend WithEvents colFileSize2 As ColumnHeader
+    Friend WithEvents listFilesContextMenu As ContextMenuStrip
+    Friend WithEvents CopyHashToClipboardToolStripMenuItem As ToolStripMenuItem
 End Class

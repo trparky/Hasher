@@ -238,12 +238,13 @@
 
                                                      listFiles.BeginUpdate()
 
-                                                     For Each item As ListViewItem In listFiles.Items
+                                                     For Each item As myListViewItem In listFiles.Items
                                                          strFileName = item.SubItems(0).Text
 
                                                          If Not hashResultArray.ContainsKey(strFileName) Then
                                                              strChecksum = performIndividualFilesChecksum(index, strFileName, checksumType)
                                                              item.SubItems(2).Text = strChecksum
+                                                             item.hash = strChecksum
                                                              hashResultArray.Add(strFileName, strChecksum)
                                                          End If
 
@@ -695,6 +696,19 @@
 
         ' Sort.
         listFiles.Sort()
+    End Sub
+
+    Private Sub ContextMenuStrip1_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles listFilesContextMenu.Opening
+        If listFiles.SelectedItems.Count = 0 Then
+            e.Cancel = True
+        Else
+            If String.IsNullOrWhiteSpace(DirectCast(listFiles.SelectedItems(0), myListViewItem).hash) Then e.Cancel = True
+        End If
+    End Sub
+
+    Private Sub CopyHashToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyHashToClipboardToolStripMenuItem.Click
+        Dim selectedItem As myListViewItem = listFiles.SelectedItems(0)
+        If copyTextToWindowsClipboard(selectedItem.hash) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, Me.Text)
     End Sub
 
     Private Sub verifyHashesListFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles verifyHashesListFiles.ColumnClick
