@@ -164,6 +164,7 @@
     Private Sub btnAddIndividualFiles_Click(sender As Object, e As EventArgs) Handles btnAddIndividualFiles.Click
         Dim itemToBeAdded As myListViewItem
 
+        OpenFileDialog.Title = "Select Files to be Hashed..."
         OpenFileDialog.Multiselect = True
         OpenFileDialog.Filter = "Show All Files|*.*"
 
@@ -414,6 +415,7 @@
         Dim strFileExtension, strPathOfChecksumFile As String
         Dim listOfFiles As New List(Of ListViewItem)
 
+        OpenFileDialog.Title = "Select a hash file to verify..."
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
 
