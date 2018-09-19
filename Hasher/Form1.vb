@@ -668,18 +668,15 @@
 
         ' Figure out the new sorting order.
         Dim sort_order As SortOrder
-        If (m_SortingColumn2 Is Nothing) Then
+
+        If m_SortingColumn2 Is Nothing Then
             ' New column. Sort ascending.
             sort_order = SortOrder.Ascending
         Else
             ' See if this is the same column.
             If new_sorting_column.Equals(m_SortingColumn2) Then
                 ' Same column. Switch the sort order.
-                If m_SortingColumn2.Text.StartsWith("> ") Then
-                    sort_order = SortOrder.Descending
-                Else
-                    sort_order = SortOrder.Ascending
-                End If
+                sort_order = If(m_SortingColumn2.Text.StartsWith("> "), SortOrder.Descending, SortOrder.Ascending)
             Else
                 ' New column. Sort ascending.
                 sort_order = SortOrder.Ascending
