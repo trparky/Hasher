@@ -164,6 +164,9 @@
     Private Sub btnAddIndividualFiles_Click(sender As Object, e As EventArgs) Handles btnAddIndividualFiles.Click
         Dim itemToBeAdded As myListViewItem
 
+        OpenFileDialog.Multiselect = True
+        OpenFileDialog.Filter = "Show All Files|*.*"
+
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             If OpenFileDialog.FileNames.Count() = 0 Then
                 MsgBox("You must select some files.", MsgBoxStyle.Critical, Me.Text)
