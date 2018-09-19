@@ -2,7 +2,7 @@
 Public Class myListViewItem
     Inherits ListViewItem
     Private longFileSize As Long
-    Private strHash As String
+    Private strHash, strFileName As String
 
     Public Sub New(strInput As String)
         Me.Text = strInput
@@ -14,6 +14,15 @@ Public Class myListViewItem
         End Get
         Set(value As String)
             strHash = value
+        End Set
+    End Property
+
+    Public Property fileName() As String
+        Get
+            Return strFileName
+        End Get
+        Set(value As String)
+            strFileName = value
         End Set
     End Property
 
