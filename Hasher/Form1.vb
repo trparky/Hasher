@@ -1,4 +1,7 @@
 ﻿Public Class Form1
+    Private Const strToBeComputed As String = "To Be Computed"
+    Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
+
     Private hashResultArray As New Dictionary(Of String, String)
     Private hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
@@ -175,7 +178,7 @@
                 If Not isFileInListView(OpenFileDialog.FileName) Then
                     itemToBeAdded = New myListViewItem(OpenFileDialog.FileName) With {.fileSize = New IO.FileInfo(OpenFileDialog.FileName).Length}
                     itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-                    itemToBeAdded.SubItems.Add("To Be Computed")
+                    itemToBeAdded.SubItems.Add(strToBeComputed)
                     listFiles.Items.Add(itemToBeAdded)
                     itemToBeAdded = Nothing
                 End If
@@ -185,7 +188,7 @@
                     If Not isFileInListView(strFileName) Then
                         itemToBeAdded = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
                         itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-                        itemToBeAdded.SubItems.Add("To Be Computed")
+                        itemToBeAdded.SubItems.Add(strToBeComputed)
                         listFiles.Items.Add(itemToBeAdded)
                         itemToBeAdded = Nothing
                     End If
@@ -264,7 +267,7 @@
                                                      workingThread = Nothing
                                                  Catch ex As Threading.ThreadAbortException
                                                      If Not boolClosingWindow Then
-                                                         lblIndividualFilesStatus.Text = "(No Background Processes)"
+                                                         lblIndividualFilesStatus.Text = strNoBackgroundProcesses
                                                          lblIndividualFilesStatusProcessingFile.Text = ""
                                                          IndividualFilesProgressBar.Value = 0
                                                          resetHashIndividualFilesProgress()
@@ -291,7 +294,7 @@
         btnRemoveSelectedFiles.Enabled = True
         listFiles.Enabled = True
 
-        lblIndividualFilesStatus.Text = "(No Background Processes)"
+        lblIndividualFilesStatus.Text = strNoBackgroundProcesses
         lblIndividualFilesStatusProcessingFile.Text = ""
         IndividualFilesProgressBar.Value = 0
     End Sub
@@ -387,7 +390,7 @@
             If Not isFileInListOfListViewItems(strFileName, listOfFiles) Then
                 listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
                 listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                listViewItem.SubItems.Add("To Be Computed")
+                listViewItem.SubItems.Add(strToBeComputed)
                 listOfFiles.Add(listViewItem)
                 listViewItem = Nothing
             End If
@@ -467,7 +470,7 @@
                                                          Next
 
                                                          lblVerifyHashStatusProcessingFile.Text = ""
-                                                         lblVerifyHashStatus.Text = "(No Background Processes)"
+                                                         lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                          VerifyHashProgressBar.Value = 0
 
                                                          verifyHashesListFiles.Items.AddRange(listOfFiles.ToArray())
@@ -478,7 +481,7 @@
                                                      Catch ex As Threading.ThreadAbortException
                                                          If Not boolClosingWindow Then
                                                              lblVerifyHashStatusProcessingFile.Text = ""
-                                                             lblVerifyHashStatus.Text = "(No Background Processes)"
+                                                             lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                              VerifyHashProgressBar.Value = 0
                                                              verifyHashesListFiles.Items.Clear()
                                                          End If
@@ -545,7 +548,7 @@
                 If Not isFileInListView(strItem) Then
                     listViewItem = New myListViewItem(strItem) With {.fileSize = New IO.FileInfo(strItem).Length}
                     listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                    listViewItem.SubItems.Add("To Be Computed")
+                    listViewItem.SubItems.Add(strToBeComputed)
                     listFiles.Items.Add(listViewItem)
                     listViewItem = Nothing
                 End If
