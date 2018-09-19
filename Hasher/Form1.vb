@@ -1,13 +1,13 @@
 ﻿Public Class Form1
     Private Const strToBeComputed As String = "To Be Computed"
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
+    Private Const intBufferSize As Integer = 16 * 1024 * 1024
 
     Private hashResultArray As New Dictionary(Of String, String)
     Private hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
-    Private ReadOnly intBufferSize As Integer = 16 * 1024 * 1024
     Private boolClosingWindow As Boolean = False
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
 
