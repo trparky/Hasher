@@ -74,6 +74,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationEvents.vb" />
     <Compile Include="Check for Update Stuff.vb" />
     <Compile Include="checksums.vb" />
     <Compile Include="Form1.vb">
