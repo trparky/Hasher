@@ -65,6 +65,18 @@ Namespace My
                 Me("boolRecurrsiveDirectorySearch") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property boolSSL() As Boolean
+            Get
+                Return CType(Me("boolSSL"),Boolean)
+            End Get
+            Set
+                Me("boolSSL") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

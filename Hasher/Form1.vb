@@ -382,6 +382,8 @@
         lblIndividualFilesStatusProcessingFile.Text = ""
         lblVerifyHashStatusProcessingFile.Text = ""
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
+        chkSSL.Checked = My.Settings.boolSSL
+        lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString)
     End Sub
 
     Private Sub addFilesFromDirectory(directoryPath As String)
@@ -761,5 +763,14 @@
 
         ' Sort.
         verifyHashesListFiles.Sort()
+    End Sub
+
+    Private Sub btnCheckForUpdates_Click_1(sender As Object, e As EventArgs) Handles btnCheckForUpdates.Click
+        Dim checkForUpdatesClassObject As New Check_for_Update_Stuff(Me)
+        checkForUpdatesClassObject.checkForUpdates()
+    End Sub
+
+    Private Sub chkSSL_Click(sender As Object, e As EventArgs) Handles chkSSL.Click
+        My.Settings.boolSSL = chkSSL.Checked
     End Sub
 End Class

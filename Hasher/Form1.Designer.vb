@@ -82,6 +82,10 @@ Partial Class Form1
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.listFilesContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.CopyHashToClipboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.lblDownloadNotification = New System.Windows.Forms.Label()
+        Me.btnCheckForUpdates = New System.Windows.Forms.Button()
+        Me.downloadProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.chkSSL = New System.Windows.Forms.CheckBox()
         Me.colChecksum = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TabControl1.SuspendLayout()
@@ -112,6 +116,9 @@ Partial Class Form1
         'tabWelcome
         '
         Me.tabWelcome.BackColor = System.Drawing.SystemColors.Control
+        Me.tabWelcome.Controls.Add(Me.lblDownloadNotification)
+        Me.tabWelcome.Controls.Add(Me.btnCheckForUpdates)
+        Me.tabWelcome.Controls.Add(Me.downloadProgressBar)
         Me.tabWelcome.Controls.Add(Me.lblWelcomeText)
         Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
         Me.tabWelcome.Name = "tabWelcome"
@@ -125,9 +132,9 @@ Partial Class Form1
         Me.lblWelcomeText.AutoSize = True
         Me.lblWelcomeText.Location = New System.Drawing.Point(16, 19)
         Me.lblWelcomeText.Name = "lblWelcomeText"
-        Me.lblWelcomeText.Size = New System.Drawing.Size(261, 39)
+        Me.lblWelcomeText.Size = New System.Drawing.Size(261, 52)
         Me.lblWelcomeText.TabIndex = 0
-        Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written by Tom Parkison."
+        Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hasher version {0}" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written by Tom Parkison."
         '
         'tabHashText
         '
@@ -666,6 +673,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkSSL)
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
@@ -717,6 +725,43 @@ Partial Class Form1
         Me.CopyHashToClipboardToolStripMenuItem.Name = "CopyHashToClipboardToolStripMenuItem"
         Me.CopyHashToClipboardToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
         Me.CopyHashToClipboardToolStripMenuItem.Text = "Copy Selected Hash to Clipboard"
+        '
+        'downloadProgressBar
+        '
+        Me.downloadProgressBar.Location = New System.Drawing.Point(176, 90)
+        Me.downloadProgressBar.Name = "downloadProgressBar"
+        Me.downloadProgressBar.Size = New System.Drawing.Size(277, 23)
+        Me.downloadProgressBar.TabIndex = 6
+        Me.downloadProgressBar.Visible = False
+        '
+        'btnCheckForUpdates
+        '
+        Me.btnCheckForUpdates.Location = New System.Drawing.Point(19, 74)
+        Me.btnCheckForUpdates.Name = "btnCheckForUpdates"
+        Me.btnCheckForUpdates.Size = New System.Drawing.Size(151, 39)
+        Me.btnCheckForUpdates.TabIndex = 7
+        Me.btnCheckForUpdates.Text = "Check for Updates"
+        Me.btnCheckForUpdates.UseVisualStyleBackColor = True
+        '
+        'lblDownloadNotification
+        '
+        Me.lblDownloadNotification.AutoSize = True
+        Me.lblDownloadNotification.Location = New System.Drawing.Point(173, 71)
+        Me.lblDownloadNotification.Name = "lblDownloadNotification"
+        Me.lblDownloadNotification.Size = New System.Drawing.Size(133, 13)
+        Me.lblDownloadNotification.TabIndex = 8
+        Me.lblDownloadNotification.Text = "(No Download in Progress)"
+        Me.lblDownloadNotification.Visible = False
+        '
+        'chkSSL
+        '
+        Me.chkSSL.AutoSize = True
+        Me.chkSSL.Location = New System.Drawing.Point(15, 36)
+        Me.chkSSL.Name = "chkSSL"
+        Me.chkSSL.Size = New System.Drawing.Size(361, 17)
+        Me.chkSSL.TabIndex = 1
+        Me.chkSSL.Text = "Use SSL to check for and download program updates (Recommended)"
+        Me.chkSSL.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -804,4 +849,8 @@ Partial Class Form1
     Friend WithEvents colFileSize2 As ColumnHeader
     Friend WithEvents listFilesContextMenu As ContextMenuStrip
     Friend WithEvents CopyHashToClipboardToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents chkSSL As CheckBox
+    Friend WithEvents lblDownloadNotification As Label
+    Friend WithEvents btnCheckForUpdates As Button
+    Friend WithEvents downloadProgressBar As ProgressBar
 End Class
