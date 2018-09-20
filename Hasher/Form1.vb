@@ -706,12 +706,26 @@
             e.Cancel = True
         Else
             If String.IsNullOrWhiteSpace(DirectCast(listFiles.SelectedItems(0), myListViewItem).hash) Then e.Cancel = True
+
+            If listFiles.SelectedItems.Count = 1 Then
+                CopyHashToClipboardToolStripMenuItem.Text = "Copy Selected Hash to Clipboard"
+            ElseIf listFiles.SelectedItems.Count > 1 Then
+                CopyHashToClipboardToolStripMenuItem.Text = "Copy Selected Hashes to Clipboard"
+            End If
         End If
     End Sub
 
     Private Sub CopyHashToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyHashToClipboardToolStripMenuItem.Click
-        Dim selectedItem As myListViewItem = listFiles.SelectedItems(0)
-        If copyTextToWindowsClipboard(selectedItem.hash & " *" & selectedItem.fileName) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, Me.Text)
+        If listFiles.SelectedItems.Count = 1 Then
+            Dim selectedItem As myListViewItem = listFiles.SelectedItems(0)
+            If copyTextToWindowsClipboard(selectedItem.hash & " *" & selectedItem.fileName) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, Me.Text)
+        Else
+            Dim stringBuilder As New Text.StringBuilder
+            For Each item As myListViewItem In listFiles.SelectedItems
+                stringBuilder.AppendLine(item.hash & " *" & item.fileName)
+            Next
+            If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, Me.Text)
+        End If
     End Sub
 
     Private Sub verifyHashesListFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles verifyHashesListFiles.ColumnClick
