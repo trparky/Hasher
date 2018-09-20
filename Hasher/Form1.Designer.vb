@@ -716,7 +716,7 @@ Partial Class Form1
         '
         Me.CopyHashToClipboardToolStripMenuItem.Name = "CopyHashToClipboardToolStripMenuItem"
         Me.CopyHashToClipboardToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
-        Me.CopyHashToClipboardToolStripMenuItem.Text = "Copy Hash to Clipboard"
+        Me.CopyHashToClipboardToolStripMenuItem.Text = "Copy Selected Hash to Clipboard"
         '
         'Form1
         '
