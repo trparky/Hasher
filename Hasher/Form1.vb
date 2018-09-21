@@ -71,22 +71,7 @@
                                                   End Sub
             }
 
-            If checksumType = checksumType.md5 Then
-                strChecksum = checksums.MD5()
-            ElseIf checksumType = checksumType.sha160 Then
-                strChecksum = checksums.SHA160()
-            ElseIf checksumType = checksumType.sha256 Then
-                strChecksum = checksums.SHA256()
-            ElseIf checksumType = checksumType.sha384 Then
-                strChecksum = checksums.SHA384()
-            ElseIf checksumType = checksumType.sha512 Then
-                strChecksum = checksums.SHA512()
-            ElseIf checksumType = checksumType.RIPEMD160 Then
-                strChecksum = checksums.RIPEMD160()
-            Else
-                strChecksum = Nothing
-            End If
-
+            strChecksum = performChecksumCalculation(checksums, checksumType)
             checksums.dispose()
         Else
             strChecksum = Nothing
@@ -122,28 +107,31 @@
                                                   End Sub
             }
 
-            If checksumType = checksumType.md5 Then
-                strChecksum = checksums.MD5()
-            ElseIf checksumType = checksumType.sha160 Then
-                strChecksum = checksums.SHA160()
-            ElseIf checksumType = checksumType.sha256 Then
-                strChecksum = checksums.SHA256()
-            ElseIf checksumType = checksumType.sha384 Then
-                strChecksum = checksums.SHA384()
-            ElseIf checksumType = checksumType.sha512 Then
-                strChecksum = checksums.SHA512()
-            ElseIf checksumType = checksumType.RIPEMD160 Then
-                strChecksum = checksums.RIPEMD160()
-            Else
-                strChecksum = Nothing
-            End If
-
+            strChecksum = performChecksumCalculation(checksums, checksumType)
             checksums.dispose()
         Else
             strChecksum = Nothing
         End If
 
         Return strChecksum
+    End Function
+
+    Private Function performChecksumCalculation(ByRef checksums As checksums, checksumType As checksumType)
+        If checksumType = checksumType.md5 Then
+            Return checksums.MD5()
+        ElseIf checksumType = checksumType.sha160 Then
+            Return checksums.SHA160()
+        ElseIf checksumType = checksumType.sha256 Then
+            Return checksums.SHA256()
+        ElseIf checksumType = checksumType.sha384 Then
+            Return checksums.SHA384()
+        ElseIf checksumType = checksumType.sha512 Then
+            Return checksums.SHA512()
+        ElseIf checksumType = checksumType.RIPEMD160 Then
+            Return checksums.RIPEMD160()
+        Else
+            Return Nothing
+        End If
     End Function
 
     Function performIndividualFilesChecksum(index As Short, strFile As String, checksumType As checksumType) As String
@@ -174,22 +162,7 @@
                                                   End Sub
             }
 
-            If checksumType = checksumType.md5 Then
-                strChecksum = checksums.MD5()
-            ElseIf checksumType = checksumType.sha160 Then
-                strChecksum = checksums.SHA160()
-            ElseIf checksumType = checksumType.sha256 Then
-                strChecksum = checksums.SHA256()
-            ElseIf checksumType = checksumType.sha384 Then
-                strChecksum = checksums.SHA384()
-            ElseIf checksumType = checksumType.sha512 Then
-                strChecksum = checksums.SHA512()
-            ElseIf checksumType = checksumType.RIPEMD160 Then
-                strChecksum = checksums.RIPEMD160()
-            Else
-                strChecksum = Nothing
-            End If
-
+            strChecksum = performChecksumCalculation(checksums, checksumType)
             checksums.dispose()
         Else
             strChecksum = Nothing
