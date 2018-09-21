@@ -441,6 +441,7 @@
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString)
+        Me.Size = My.Settings.windowSize
 
         deleteTemporaryNewEXEFile()
     End Sub
@@ -979,5 +980,9 @@
 
     Private Sub chkSSL_Click(sender As Object, e As EventArgs) Handles chkSSL.Click
         My.Settings.boolSSL = chkSSL.Checked
+    End Sub
+
+    Private Sub Form1_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
+        My.Settings.windowSize = Me.Size
     End Sub
 End Class

@@ -8,5 +8,8 @@
     <Setting Name="boolSSL" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="windowSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">1088, 446</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
