@@ -95,6 +95,57 @@
         Return strChecksum
     End Function
 
+    Function getChecksumForComparison(strFile As String, checksumType As checksumType) As String
+        Dim strChecksum As String = Nothing
+
+        If IO.File.Exists(strFile) Then
+            Dim oldLocationInFile As ULong = 0
+            Dim checksums As New checksums With {
+                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan),
+                .setChecksumStatusUpdateRoutine = Sub(checksumStatusDetails As checksumStatusDetails)
+                                                      Try
+                                                          Me.Invoke(Sub()
+                                                                        lblCompareFilesStatus.Text = "Estimated " & fileSizeToHumanSize(checksumStatusDetails.currentLocationInFile - oldLocationInFile) & "/second"
+                                                                        oldLocationInFile = checksumStatusDetails.currentLocationInFile
+
+                                                                        If checksumStatusDetails.currentLocationInFile <> 0 And checksumStatusDetails.lengthOfFile <> 0 Then
+                                                                            compareFilesProgressBar.Value = checksumStatusDetails.currentLocationInFile / checksumStatusDetails.lengthOfFile * 100
+                                                                        Else
+                                                                            compareFilesProgressBar.Value = 0
+                                                                        End If
+
+                                                                        lblCompareFilesStatus.Text &= ", " & String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(checksumStatusDetails.currentLocationInFile), fileSizeToHumanSize(checksumStatusDetails.lengthOfFile))
+                                                                        oldLocationInFile = checksumStatusDetails.currentLocationInFile
+                                                                    End Sub)
+                                                      Catch ex As Exception
+                                                      End Try
+                                                  End Sub
+            }
+
+            If checksumType = checksumType.md5 Then
+                strChecksum = checksums.MD5()
+            ElseIf checksumType = checksumType.sha160 Then
+                strChecksum = checksums.SHA160()
+            ElseIf checksumType = checksumType.sha256 Then
+                strChecksum = checksums.SHA256()
+            ElseIf checksumType = checksumType.sha384 Then
+                strChecksum = checksums.SHA384()
+            ElseIf checksumType = checksumType.sha512 Then
+                strChecksum = checksums.SHA512()
+            ElseIf checksumType = checksumType.RIPEMD160 Then
+                strChecksum = checksums.RIPEMD160()
+            Else
+                strChecksum = Nothing
+            End If
+
+            checksums.dispose()
+        Else
+            strChecksum = Nothing
+        End If
+
+        Return strChecksum
+    End Function
+
     Function performIndividualFilesChecksum(index As Short, strFile As String, checksumType As checksumType) As String
         Dim strChecksum As String = Nothing
 
@@ -385,6 +436,8 @@
         Control.CheckForIllegalCrossThreadCalls = False
         lblIndividualFilesStatusProcessingFile.Text = ""
         lblVerifyHashStatusProcessingFile.Text = ""
+        lblFile1Hash.Text = ""
+        lblFile2Hash.Text = ""
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString)
@@ -795,6 +848,125 @@
     Private Sub btnCheckForUpdates_Click_1(sender As Object, e As EventArgs) Handles btnCheckForUpdates.Click
         Dim checkForUpdatesClassObject As New Check_for_Update_Stuff(Me)
         checkForUpdatesClassObject.checkForUpdates()
+    End Sub
+
+    Private Sub btnCompareFiles_Click(sender As Object, e As EventArgs) Handles btnCompareFiles.Click
+        If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
+            MsgBox("Please select two different files.", MsgBoxStyle.Information, Me.Text)
+            Exit Sub
+        End If
+
+        btnCompareFilesBrowseFile1.Enabled = False
+        btnCompareFilesBrowseFile1.Enabled = False
+        txtFile1.Enabled = False
+        txtFile2.Enabled = False
+        btnCompareFiles.Enabled = False
+
+        workingThread = New Threading.Thread(Sub()
+                                                 Try
+                                                     boolBackgroundThreadWorking = True
+                                                     Dim checksumType As checksumType
+
+                                                     compareRadioMD5.Enabled = False
+                                                     compareRadioRIPEMD160.Enabled = False
+                                                     compareRadioSHA1.Enabled = False
+                                                     compareRadioSHA256.Enabled = False
+                                                     compareRadioSHA384.Enabled = False
+                                                     compareRadioSHA512.Enabled = False
+
+                                                     If compareRadioMD5.Checked Then
+                                                         checksumType = checksumType.md5
+                                                     ElseIf compareRadioSHA1.Checked Then
+                                                         checksumType = checksumType.sha160
+                                                     ElseIf compareRadioSHA256.Checked Then
+                                                         checksumType = checksumType.sha256
+                                                     ElseIf compareRadioSHA384.Checked Then
+                                                         checksumType = checksumType.sha384
+                                                     ElseIf compareRadioSHA512.Checked Then
+                                                         checksumType = checksumType.sha512
+                                                     ElseIf compareRadioRIPEMD160.Checked Then
+                                                         checksumType = checksumType.RIPEMD160
+                                                     End If
+
+                                                     Dim strChecksum1 As String = getChecksumForComparison(txtFile1.Text, checksumType)
+                                                     Dim strChecksum2 As String = getChecksumForComparison(txtFile2.Text, checksumType)
+
+                                                     lblFile1Hash.Text = "Hash/Checksum: " & strChecksum1
+                                                     lblFile2Hash.Text = "Hash/Checksum: " & strChecksum2
+                                                     ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
+                                                     ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+
+                                                     btnCompareFilesBrowseFile1.Enabled = True
+                                                     btnCompareFilesBrowseFile1.Enabled = True
+                                                     txtFile1.Enabled = True
+                                                     txtFile2.Enabled = True
+                                                     btnCompareFiles.Enabled = True
+                                                     compareRadioMD5.Enabled = True
+                                                     compareRadioRIPEMD160.Enabled = True
+                                                     compareRadioSHA1.Enabled = True
+                                                     compareRadioSHA256.Enabled = True
+                                                     compareRadioSHA384.Enabled = True
+                                                     compareRadioSHA512.Enabled = True
+                                                     lblCompareFilesStatus.Text = strNoBackgroundProcesses
+
+                                                     If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
+                                                         MsgBox("Both files are the same.", MsgBoxStyle.Information, Me.Text)
+                                                     Else
+                                                         MsgBox("The two files don't match.", MsgBoxStyle.Critical, Me.Text)
+                                                     End If
+
+                                                     boolBackgroundThreadWorking = False
+                                                     workingThread = Nothing
+                                                 Catch ex As Threading.ThreadAbortException
+                                                     If Not boolClosingWindow Then
+                                                         btnCompareFilesBrowseFile1.Enabled = True
+                                                         btnCompareFilesBrowseFile1.Enabled = True
+                                                         txtFile1.Enabled = True
+                                                         txtFile2.Enabled = True
+                                                         btnCompareFiles.Enabled = True
+                                                         compareRadioMD5.Enabled = True
+                                                         compareRadioRIPEMD160.Enabled = True
+                                                         compareRadioSHA1.Enabled = True
+                                                         compareRadioSHA256.Enabled = True
+                                                         compareRadioSHA384.Enabled = True
+                                                         compareRadioSHA512.Enabled = True
+                                                         lblCompareFilesStatus.Text = strNoBackgroundProcesses
+                                                     End If
+
+                                                     boolBackgroundThreadWorking = False
+                                                     workingThread = Nothing
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                 Finally
+                                                     btnComputeHash.Enabled = True
+                                                 End Try
+                                             End Sub) With {
+            .Priority = Threading.ThreadPriority.Highest,
+            .Name = "Hash Generation Thread",
+            .IsBackground = True
+        }
+        workingThread.Start()
+    End Sub
+
+    Private Sub btnCompareFilesBrowseFile1_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile1.Click
+        lblFile1Hash.Text = ""
+        ToolTip.SetToolTip(lblFile1Hash, "")
+
+        OpenFileDialog.Title = "Select file #1 to be compared..."
+        OpenFileDialog.Multiselect = False
+        OpenFileDialog.Filter = "Show All Files|*.*"
+
+        If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile1.Text = OpenFileDialog.FileName
+    End Sub
+
+    Private Sub btnCompareFilesBrowseFile2_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile2.Click
+        lblFile2Hash.Text = ""
+        ToolTip.SetToolTip(lblFile2Hash, "")
+
+        OpenFileDialog.Title = "Select file #2 to be compared..."
+        OpenFileDialog.Multiselect = False
+        OpenFileDialog.Filter = "Show All Files|*.*"
+
+        If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile2.Text = OpenFileDialog.FileName
     End Sub
 
     Private Sub chkSSL_Click(sender As Object, e As EventArgs) Handles chkSSL.Click

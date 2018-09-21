@@ -25,6 +25,9 @@ Partial Class Form1
         Me.components = New System.ComponentModel.Container()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabWelcome = New System.Windows.Forms.TabPage()
+        Me.lblDownloadNotification = New System.Windows.Forms.Label()
+        Me.btnCheckForUpdates = New System.Windows.Forms.Button()
+        Me.downloadProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblWelcomeText = New System.Windows.Forms.Label()
         Me.tabHashText = New System.Windows.Forms.TabPage()
         Me.btnCopyTextHashResultsToClipboard = New System.Windows.Forms.Button()
@@ -63,6 +66,9 @@ Partial Class Form1
         Me.listFiles = New System.Windows.Forms.ListView()
         Me.colFileName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colFileSize = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colChecksum = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.listFilesContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.CopyHashToClipboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnRemoveSelectedFiles = New System.Windows.Forms.Button()
         Me.btnRemoveAllFiles = New System.Windows.Forms.Button()
         Me.btnAddFilesInFolder = New System.Windows.Forms.Button()
@@ -73,28 +79,43 @@ Partial Class Form1
         Me.lblVerifyHashStatus = New System.Windows.Forms.Label()
         Me.verifyHashesListFiles = New System.Windows.Forms.ListView()
         Me.colFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colResults = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.btnOpenExistingHashFile = New System.Windows.Forms.Button()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.chkSSL = New System.Windows.Forms.CheckBox()
         Me.chkRecurrsiveDirectorySearch = New System.Windows.Forms.CheckBox()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
-        Me.listFilesContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.CopyHashToClipboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.lblDownloadNotification = New System.Windows.Forms.Label()
-        Me.btnCheckForUpdates = New System.Windows.Forms.Button()
-        Me.downloadProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.chkSSL = New System.Windows.Forms.CheckBox()
-        Me.colChecksum = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.tabCompareFiles = New System.Windows.Forms.TabPage()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.txtFile1 = New System.Windows.Forms.TextBox()
+        Me.txtFile2 = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.btnCompareFilesBrowseFile1 = New System.Windows.Forms.Button()
+        Me.btnCompareFilesBrowseFile2 = New System.Windows.Forms.Button()
+        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.compareRadioRIPEMD160 = New System.Windows.Forms.RadioButton()
+        Me.compareRadioMD5 = New System.Windows.Forms.RadioButton()
+        Me.compareRadioSHA512 = New System.Windows.Forms.RadioButton()
+        Me.compareRadioSHA384 = New System.Windows.Forms.RadioButton()
+        Me.compareRadioSHA256 = New System.Windows.Forms.RadioButton()
+        Me.compareRadioSHA1 = New System.Windows.Forms.RadioButton()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.btnCompareFiles = New System.Windows.Forms.Button()
+        Me.compareFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.lblCompareFilesStatus = New System.Windows.Forms.Label()
+        Me.lblFile1Hash = New System.Windows.Forms.Label()
+        Me.lblFile2Hash = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
         Me.tabHashIndividualFiles.SuspendLayout()
+        Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
         Me.tabSettings.SuspendLayout()
-        Me.listFilesContextMenu.SuspendLayout()
+        Me.tabCompareFiles.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -106,6 +127,7 @@ Partial Class Form1
         Me.TabControl1.Controls.Add(Me.tabHashText)
         Me.TabControl1.Controls.Add(Me.tabHashIndividualFiles)
         Me.TabControl1.Controls.Add(Me.tabVerifySavedHashes)
+        Me.TabControl1.Controls.Add(Me.tabCompareFiles)
         Me.TabControl1.Controls.Add(Me.tabSettings)
         Me.TabControl1.Location = New System.Drawing.Point(12, 12)
         Me.TabControl1.Name = "TabControl1"
@@ -127,6 +149,33 @@ Partial Class Form1
         Me.tabWelcome.TabIndex = 0
         Me.tabWelcome.Text = "Welcome"
         '
+        'lblDownloadNotification
+        '
+        Me.lblDownloadNotification.AutoSize = True
+        Me.lblDownloadNotification.Location = New System.Drawing.Point(173, 71)
+        Me.lblDownloadNotification.Name = "lblDownloadNotification"
+        Me.lblDownloadNotification.Size = New System.Drawing.Size(133, 13)
+        Me.lblDownloadNotification.TabIndex = 8
+        Me.lblDownloadNotification.Text = "(No Download in Progress)"
+        Me.lblDownloadNotification.Visible = False
+        '
+        'btnCheckForUpdates
+        '
+        Me.btnCheckForUpdates.Location = New System.Drawing.Point(19, 74)
+        Me.btnCheckForUpdates.Name = "btnCheckForUpdates"
+        Me.btnCheckForUpdates.Size = New System.Drawing.Size(151, 39)
+        Me.btnCheckForUpdates.TabIndex = 7
+        Me.btnCheckForUpdates.Text = "Check for Updates"
+        Me.btnCheckForUpdates.UseVisualStyleBackColor = True
+        '
+        'downloadProgressBar
+        '
+        Me.downloadProgressBar.Location = New System.Drawing.Point(176, 90)
+        Me.downloadProgressBar.Name = "downloadProgressBar"
+        Me.downloadProgressBar.Size = New System.Drawing.Size(277, 23)
+        Me.downloadProgressBar.TabIndex = 6
+        Me.downloadProgressBar.Visible = False
+        '
         'lblWelcomeText
         '
         Me.lblWelcomeText.AutoSize = True
@@ -134,7 +183,8 @@ Partial Class Form1
         Me.lblWelcomeText.Name = "lblWelcomeText"
         Me.lblWelcomeText.Size = New System.Drawing.Size(261, 52)
         Me.lblWelcomeText.TabIndex = 0
-        Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hasher version {0}" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written by Tom Parkison."
+        Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hasher version {0}" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written" &
+    " by Tom Parkison."
         '
         'tabHashText
         '
@@ -557,6 +607,28 @@ Partial Class Form1
         Me.colFileName.Text = "File Name"
         Me.colFileName.Width = 528
         '
+        'colFileSize
+        '
+        Me.colFileSize.Text = "File Size"
+        Me.colFileSize.Width = 70
+        '
+        'colChecksum
+        '
+        Me.colChecksum.Text = "Hash/Checksum"
+        Me.colChecksum.Width = 241
+        '
+        'listFilesContextMenu
+        '
+        Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyHashToClipboardToolStripMenuItem})
+        Me.listFilesContextMenu.Name = "ContextMenuStrip1"
+        Me.listFilesContextMenu.Size = New System.Drawing.Size(249, 26)
+        '
+        'CopyHashToClipboardToolStripMenuItem
+        '
+        Me.CopyHashToClipboardToolStripMenuItem.Name = "CopyHashToClipboardToolStripMenuItem"
+        Me.CopyHashToClipboardToolStripMenuItem.Size = New System.Drawing.Size(248, 22)
+        Me.CopyHashToClipboardToolStripMenuItem.Text = "Copy Selected Hash to Clipboard"
+        '
         'btnRemoveSelectedFiles
         '
         Me.btnRemoveSelectedFiles.Location = New System.Drawing.Point(15, 90)
@@ -655,9 +727,13 @@ Partial Class Form1
         Me.colFile.Text = "File Name"
         Me.colFile.Width = 557
         '
+        'colFileSize2
+        '
+        Me.colFileSize2.Text = "File Size"
+        Me.colFileSize2.Width = 87
+        '
         'colResults
         '
-        Me.colResults.DisplayIndex = 2
         Me.colResults.Text = "Results"
         Me.colResults.Width = 72
         '
@@ -681,6 +757,16 @@ Partial Class Form1
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
         '
+        'chkSSL
+        '
+        Me.chkSSL.AutoSize = True
+        Me.chkSSL.Location = New System.Drawing.Point(15, 36)
+        Me.chkSSL.Name = "chkSSL"
+        Me.chkSSL.Size = New System.Drawing.Size(361, 17)
+        Me.chkSSL.TabIndex = 1
+        Me.chkSSL.Text = "Use SSL to check for and download program updates (Recommended)"
+        Me.chkSSL.UseVisualStyleBackColor = True
+        '
         'chkRecurrsiveDirectorySearch
         '
         Me.chkRecurrsiveDirectorySearch.AutoSize = True
@@ -697,71 +783,211 @@ Partial Class Form1
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
         '
-        'colChecksum
+        'tabCompareFiles
         '
-        Me.colChecksum.Text = "Hash/Checksum"
-        Me.colChecksum.Width = 241
+        Me.tabCompareFiles.BackColor = System.Drawing.SystemColors.Control
+        Me.tabCompareFiles.Controls.Add(Me.lblFile2Hash)
+        Me.tabCompareFiles.Controls.Add(Me.lblFile1Hash)
+        Me.tabCompareFiles.Controls.Add(Me.compareFilesProgressBar)
+        Me.tabCompareFiles.Controls.Add(Me.lblCompareFilesStatus)
+        Me.tabCompareFiles.Controls.Add(Me.btnCompareFiles)
+        Me.tabCompareFiles.Controls.Add(Me.Label6)
+        Me.tabCompareFiles.Controls.Add(Me.compareRadioRIPEMD160)
+        Me.tabCompareFiles.Controls.Add(Me.compareRadioMD5)
+        Me.tabCompareFiles.Controls.Add(Me.compareRadioSHA512)
+        Me.tabCompareFiles.Controls.Add(Me.compareRadioSHA384)
+        Me.tabCompareFiles.Controls.Add(Me.compareRadioSHA256)
+        Me.tabCompareFiles.Controls.Add(Me.compareRadioSHA1)
+        Me.tabCompareFiles.Controls.Add(Me.btnCompareFilesBrowseFile2)
+        Me.tabCompareFiles.Controls.Add(Me.btnCompareFilesBrowseFile1)
+        Me.tabCompareFiles.Controls.Add(Me.Label5)
+        Me.tabCompareFiles.Controls.Add(Me.txtFile2)
+        Me.tabCompareFiles.Controls.Add(Me.txtFile1)
+        Me.tabCompareFiles.Controls.Add(Me.Label4)
+        Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
+        Me.tabCompareFiles.Name = "tabCompareFiles"
+        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 363)
+        Me.tabCompareFiles.TabIndex = 5
+        Me.tabCompareFiles.Text = "Compare Files"
         '
-        'colFileSize
+        'Label4
         '
-        Me.colFileSize.Text = "File Size"
-        Me.colFileSize.Width = 70
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(15, 14)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(46, 13)
+        Me.Label4.TabIndex = 0
+        Me.Label4.Text = "File #1"
         '
-        'colFileSize2
+        'txtFile1
         '
-        Me.colFileSize2.DisplayIndex = 1
-        Me.colFileSize2.Text = "File Size"
-        Me.colFileSize2.Width = 87
+        Me.txtFile1.Location = New System.Drawing.Point(67, 11)
+        Me.txtFile1.Name = "txtFile1"
+        Me.txtFile1.Size = New System.Drawing.Size(459, 20)
+        Me.txtFile1.TabIndex = 1
         '
-        'ContextMenuStrip1
+        'txtFile2
         '
-        Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyHashToClipboardToolStripMenuItem})
-        Me.listFilesContextMenu.Name = "ContextMenuStrip1"
-        Me.listFilesContextMenu.Size = New System.Drawing.Size(202, 48)
+        Me.txtFile2.Location = New System.Drawing.Point(67, 37)
+        Me.txtFile2.Name = "txtFile2"
+        Me.txtFile2.Size = New System.Drawing.Size(459, 20)
+        Me.txtFile2.TabIndex = 2
         '
+        'Label5
         '
-        'CopyHashToClipboardToolStripMenuItem
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(15, 40)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(46, 13)
+        Me.Label5.TabIndex = 3
+        Me.Label5.Text = "File #2"
         '
-        Me.CopyHashToClipboardToolStripMenuItem.Name = "CopyHashToClipboardToolStripMenuItem"
-        Me.CopyHashToClipboardToolStripMenuItem.Size = New System.Drawing.Size(201, 22)
-        Me.CopyHashToClipboardToolStripMenuItem.Text = "Copy Selected Hash to Clipboard"
+        'btnCompareFilesBrowseFile1
         '
-        'downloadProgressBar
+        Me.btnCompareFilesBrowseFile1.Image = Global.Hasher.My.Resources.Resources.folder_explore
+        Me.btnCompareFilesBrowseFile1.Location = New System.Drawing.Point(532, 9)
+        Me.btnCompareFilesBrowseFile1.Name = "btnCompareFilesBrowseFile1"
+        Me.btnCompareFilesBrowseFile1.Size = New System.Drawing.Size(25, 23)
+        Me.btnCompareFilesBrowseFile1.TabIndex = 4
+        Me.ToolTip.SetToolTip(Me.btnCompareFilesBrowseFile1, "Browse for File #1")
+        Me.btnCompareFilesBrowseFile1.UseVisualStyleBackColor = True
         '
-        Me.downloadProgressBar.Location = New System.Drawing.Point(176, 90)
-        Me.downloadProgressBar.Name = "downloadProgressBar"
-        Me.downloadProgressBar.Size = New System.Drawing.Size(277, 23)
-        Me.downloadProgressBar.TabIndex = 6
-        Me.downloadProgressBar.Visible = False
+        'btnCompareFilesBrowseFile2
         '
-        'btnCheckForUpdates
+        Me.btnCompareFilesBrowseFile2.Image = Global.Hasher.My.Resources.Resources.folder_explore
+        Me.btnCompareFilesBrowseFile2.Location = New System.Drawing.Point(532, 36)
+        Me.btnCompareFilesBrowseFile2.Name = "btnCompareFilesBrowseFile2"
+        Me.btnCompareFilesBrowseFile2.Size = New System.Drawing.Size(25, 23)
+        Me.btnCompareFilesBrowseFile2.TabIndex = 5
+        Me.ToolTip.SetToolTip(Me.btnCompareFilesBrowseFile2, "Browse for File #2")
+        Me.btnCompareFilesBrowseFile2.UseVisualStyleBackColor = True
         '
-        Me.btnCheckForUpdates.Location = New System.Drawing.Point(19, 74)
-        Me.btnCheckForUpdates.Name = "btnCheckForUpdates"
-        Me.btnCheckForUpdates.Size = New System.Drawing.Size(151, 39)
-        Me.btnCheckForUpdates.TabIndex = 7
-        Me.btnCheckForUpdates.Text = "Check for Updates"
-        Me.btnCheckForUpdates.UseVisualStyleBackColor = True
+        'compareRadioRIPEMD160
         '
-        'lblDownloadNotification
+        Me.compareRadioRIPEMD160.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.compareRadioRIPEMD160.AutoSize = True
+        Me.compareRadioRIPEMD160.Location = New System.Drawing.Point(240, 76)
+        Me.compareRadioRIPEMD160.Name = "compareRadioRIPEMD160"
+        Me.compareRadioRIPEMD160.Size = New System.Drawing.Size(85, 17)
+        Me.compareRadioRIPEMD160.TabIndex = 27
+        Me.compareRadioRIPEMD160.Text = "RIPEMD160"
+        Me.compareRadioRIPEMD160.UseVisualStyleBackColor = True
         '
-        Me.lblDownloadNotification.AutoSize = True
-        Me.lblDownloadNotification.Location = New System.Drawing.Point(173, 71)
-        Me.lblDownloadNotification.Name = "lblDownloadNotification"
-        Me.lblDownloadNotification.Size = New System.Drawing.Size(133, 13)
-        Me.lblDownloadNotification.TabIndex = 8
-        Me.lblDownloadNotification.Text = "(No Download in Progress)"
-        Me.lblDownloadNotification.Visible = False
+        'compareRadioMD5
         '
-        'chkSSL
+        Me.compareRadioMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.compareRadioMD5.AutoSize = True
+        Me.compareRadioMD5.Location = New System.Drawing.Point(596, 76)
+        Me.compareRadioMD5.Name = "compareRadioMD5"
+        Me.compareRadioMD5.Size = New System.Drawing.Size(296, 17)
+        Me.compareRadioMD5.TabIndex = 26
+        Me.compareRadioMD5.Text = "MD5 (Seriously Not Recommended, Insecure Hash Type)"
+        Me.compareRadioMD5.UseVisualStyleBackColor = True
         '
-        Me.chkSSL.AutoSize = True
-        Me.chkSSL.Location = New System.Drawing.Point(15, 36)
-        Me.chkSSL.Name = "chkSSL"
-        Me.chkSSL.Size = New System.Drawing.Size(361, 17)
-        Me.chkSSL.TabIndex = 1
-        Me.chkSSL.Text = "Use SSL to check for and download program updates (Recommended)"
-        Me.chkSSL.UseVisualStyleBackColor = True
+        'compareRadioSHA512
+        '
+        Me.compareRadioSHA512.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.compareRadioSHA512.AutoSize = True
+        Me.compareRadioSHA512.Location = New System.Drawing.Point(166, 76)
+        Me.compareRadioSHA512.Name = "compareRadioSHA512"
+        Me.compareRadioSHA512.Size = New System.Drawing.Size(68, 17)
+        Me.compareRadioSHA512.TabIndex = 25
+        Me.compareRadioSHA512.Text = "SHA-512"
+        Me.compareRadioSHA512.UseVisualStyleBackColor = True
+        '
+        'compareRadioSHA384
+        '
+        Me.compareRadioSHA384.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.compareRadioSHA384.AutoSize = True
+        Me.compareRadioSHA384.Location = New System.Drawing.Point(92, 76)
+        Me.compareRadioSHA384.Name = "compareRadioSHA384"
+        Me.compareRadioSHA384.Size = New System.Drawing.Size(68, 17)
+        Me.compareRadioSHA384.TabIndex = 24
+        Me.compareRadioSHA384.Text = "SHA-384"
+        Me.compareRadioSHA384.UseVisualStyleBackColor = True
+        '
+        'compareRadioSHA256
+        '
+        Me.compareRadioSHA256.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.compareRadioSHA256.AutoSize = True
+        Me.compareRadioSHA256.Checked = True
+        Me.compareRadioSHA256.Location = New System.Drawing.Point(18, 76)
+        Me.compareRadioSHA256.Name = "compareRadioSHA256"
+        Me.compareRadioSHA256.Size = New System.Drawing.Size(68, 17)
+        Me.compareRadioSHA256.TabIndex = 23
+        Me.compareRadioSHA256.TabStop = True
+        Me.compareRadioSHA256.Text = "SHA-256"
+        Me.compareRadioSHA256.UseVisualStyleBackColor = True
+        '
+        'compareRadioSHA1
+        '
+        Me.compareRadioSHA1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.compareRadioSHA1.AutoSize = True
+        Me.compareRadioSHA1.Location = New System.Drawing.Point(331, 76)
+        Me.compareRadioSHA1.Name = "compareRadioSHA1"
+        Me.compareRadioSHA1.Size = New System.Drawing.Size(259, 17)
+        Me.compareRadioSHA1.TabIndex = 22
+        Me.compareRadioSHA1.Text = "SHA-1 (Not Recommended, Insecure Hash Type)"
+        Me.compareRadioSHA1.UseVisualStyleBackColor = True
+        '
+        'Label6
+        '
+        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Location = New System.Drawing.Point(15, 60)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(236, 13)
+        Me.Label6.TabIndex = 28
+        Me.Label6.Text = "Select your hash type to compare with..."
+        '
+        'btnCompareFiles
+        '
+        Me.btnCompareFiles.Location = New System.Drawing.Point(18, 99)
+        Me.btnCompareFiles.Name = "btnCompareFiles"
+        Me.btnCompareFiles.Size = New System.Drawing.Size(142, 39)
+        Me.btnCompareFiles.TabIndex = 29
+        Me.btnCompareFiles.Text = "Compare Files"
+        Me.btnCompareFiles.UseVisualStyleBackColor = True
+        '
+        'compareFilesProgressBar
+        '
+        Me.compareFilesProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.compareFilesProgressBar.Location = New System.Drawing.Point(166, 115)
+        Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
+        Me.compareFilesProgressBar.Size = New System.Drawing.Size(800, 23)
+        Me.compareFilesProgressBar.TabIndex = 31
+        '
+        'lblCompareFilesStatus
+        '
+        Me.lblCompareFilesStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblCompareFilesStatus.AutoSize = True
+        Me.lblCompareFilesStatus.Location = New System.Drawing.Point(166, 99)
+        Me.lblCompareFilesStatus.Name = "lblCompareFilesStatus"
+        Me.lblCompareFilesStatus.Size = New System.Drawing.Size(140, 13)
+        Me.lblCompareFilesStatus.TabIndex = 30
+        Me.lblCompareFilesStatus.Text = "(No Background Processes)"
+        '
+        'lblFile1Hash
+        '
+        Me.lblFile1Hash.AutoSize = True
+        Me.lblFile1Hash.Location = New System.Drawing.Point(563, 14)
+        Me.lblFile1Hash.Name = "lblFile1Hash"
+        Me.lblFile1Hash.Size = New System.Drawing.Size(39, 13)
+        Me.lblFile1Hash.TabIndex = 32
+        Me.lblFile1Hash.Text = "Label7"
+        '
+        'lblFile2Hash
+        '
+        Me.lblFile2Hash.AutoSize = True
+        Me.lblFile2Hash.Location = New System.Drawing.Point(563, 41)
+        Me.lblFile2Hash.Name = "lblFile2Hash"
+        Me.lblFile2Hash.Size = New System.Drawing.Size(39, 13)
+        Me.lblFile2Hash.TabIndex = 33
+        Me.lblFile2Hash.Text = "Label8"
         '
         'Form1
         '
@@ -779,11 +1005,13 @@ Partial Class Form1
         Me.tabHashText.PerformLayout()
         Me.tabHashIndividualFiles.ResumeLayout(False)
         Me.tabHashIndividualFiles.PerformLayout()
+        Me.listFilesContextMenu.ResumeLayout(False)
         Me.tabVerifySavedHashes.ResumeLayout(False)
         Me.tabVerifySavedHashes.PerformLayout()
         Me.tabSettings.ResumeLayout(False)
         Me.tabSettings.PerformLayout()
-        Me.listFilesContextMenu.ResumeLayout(False)
+        Me.tabCompareFiles.ResumeLayout(False)
+        Me.tabCompareFiles.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -853,4 +1081,24 @@ Partial Class Form1
     Friend WithEvents lblDownloadNotification As Label
     Friend WithEvents btnCheckForUpdates As Button
     Friend WithEvents downloadProgressBar As ProgressBar
+    Friend WithEvents tabCompareFiles As TabPage
+    Friend WithEvents btnCompareFilesBrowseFile1 As Button
+    Friend WithEvents Label5 As Label
+    Friend WithEvents txtFile2 As TextBox
+    Friend WithEvents txtFile1 As TextBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents btnCompareFilesBrowseFile2 As Button
+    Friend WithEvents ToolTip As ToolTip
+    Friend WithEvents compareRadioRIPEMD160 As RadioButton
+    Friend WithEvents compareRadioMD5 As RadioButton
+    Friend WithEvents compareRadioSHA512 As RadioButton
+    Friend WithEvents compareRadioSHA384 As RadioButton
+    Friend WithEvents compareRadioSHA256 As RadioButton
+    Friend WithEvents compareRadioSHA1 As RadioButton
+    Friend WithEvents Label6 As Label
+    Friend WithEvents btnCompareFiles As Button
+    Friend WithEvents compareFilesProgressBar As ProgressBar
+    Friend WithEvents lblCompareFilesStatus As Label
+    Friend WithEvents lblFile2Hash As Label
+    Friend WithEvents lblFile1Hash As Label
 End Class
