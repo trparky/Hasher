@@ -386,6 +386,16 @@
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString)
+
+        deleteTemporaryNewEXEFile()
+    End Sub
+
+    Private Sub deleteTemporaryNewEXEFile()
+        Try
+            Dim newExecutableName As String = New IO.FileInfo(Application.ExecutablePath).Name & ".new.exe"
+            If IO.File.Exists(newExecutableName) Then IO.File.Delete(newExecutableName)
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub addFilesFromDirectory(directoryPath As String)
