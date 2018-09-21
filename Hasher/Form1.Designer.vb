@@ -793,8 +793,6 @@ Partial Class Form1
         '
         'compareFilesProgressBar
         '
-        Me.compareFilesProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.compareFilesProgressBar.Location = New System.Drawing.Point(166, 115)
         Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
         Me.compareFilesProgressBar.Size = New System.Drawing.Size(861, 23)
@@ -802,7 +800,6 @@ Partial Class Form1
         '
         'lblCompareFilesStatus
         '
-        Me.lblCompareFilesStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblCompareFilesStatus.AutoSize = True
         Me.lblCompareFilesStatus.Location = New System.Drawing.Point(166, 99)
         Me.lblCompareFilesStatus.Name = "lblCompareFilesStatus"
@@ -821,7 +818,6 @@ Partial Class Form1
         '
         'Label6
         '
-        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label6.Location = New System.Drawing.Point(15, 60)
@@ -832,7 +828,6 @@ Partial Class Form1
         '
         'compareRadioRIPEMD160
         '
-        Me.compareRadioRIPEMD160.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.compareRadioRIPEMD160.AutoSize = True
         Me.compareRadioRIPEMD160.Location = New System.Drawing.Point(240, 76)
         Me.compareRadioRIPEMD160.Name = "compareRadioRIPEMD160"
@@ -843,7 +838,6 @@ Partial Class Form1
         '
         'compareRadioMD5
         '
-        Me.compareRadioMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.compareRadioMD5.AutoSize = True
         Me.compareRadioMD5.Location = New System.Drawing.Point(596, 76)
         Me.compareRadioMD5.Name = "compareRadioMD5"
@@ -854,7 +848,6 @@ Partial Class Form1
         '
         'compareRadioSHA512
         '
-        Me.compareRadioSHA512.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.compareRadioSHA512.AutoSize = True
         Me.compareRadioSHA512.Location = New System.Drawing.Point(166, 76)
         Me.compareRadioSHA512.Name = "compareRadioSHA512"
@@ -865,7 +858,6 @@ Partial Class Form1
         '
         'compareRadioSHA384
         '
-        Me.compareRadioSHA384.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.compareRadioSHA384.AutoSize = True
         Me.compareRadioSHA384.Location = New System.Drawing.Point(92, 76)
         Me.compareRadioSHA384.Name = "compareRadioSHA384"
@@ -876,7 +868,6 @@ Partial Class Form1
         '
         'compareRadioSHA256
         '
-        Me.compareRadioSHA256.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.compareRadioSHA256.AutoSize = True
         Me.compareRadioSHA256.Checked = True
         Me.compareRadioSHA256.Location = New System.Drawing.Point(18, 76)
@@ -889,7 +880,6 @@ Partial Class Form1
         '
         'compareRadioSHA1
         '
-        Me.compareRadioSHA1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.compareRadioSHA1.AutoSize = True
         Me.compareRadioSHA1.Location = New System.Drawing.Point(331, 76)
         Me.compareRadioSHA1.Name = "compareRadioSHA1"
