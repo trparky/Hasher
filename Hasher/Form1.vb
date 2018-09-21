@@ -344,7 +344,9 @@
         SaveFileDialog.Title = "Save Hash Results to Disk"
 
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
-            IO.File.WriteAllText(SaveFileDialog.FileName, strGetIndividualHashesInStringFormat(), System.Text.Encoding.UTF8)
+            Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
+                streamWriter.Write(strGetIndividualHashesInStringFormat())
+            End Using
             MsgBox("Your hash results have been written to disk.", MsgBoxStyle.Information, Me.Text)
         End If
     End Sub
