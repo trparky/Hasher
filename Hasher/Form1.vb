@@ -855,6 +855,14 @@
             MsgBox("Please select two different files.", MsgBoxStyle.Information, Me.Text)
             Exit Sub
         End If
+        If Not IO.File.Exists(txtFile1.Text) Then
+            MsgBox("File #1 doesn't exist.", MsgBoxStyle.Critical, Me.Text)
+            Exit Sub
+        End If
+        If Not IO.File.Exists(txtFile2.Text) Then
+            MsgBox("File #2 doesn't exist.", MsgBoxStyle.Critical, Me.Text)
+            Exit Sub
+        End If
 
         btnCompareFilesBrowseFile1.Enabled = False
         btnCompareFilesBrowseFile1.Enabled = False

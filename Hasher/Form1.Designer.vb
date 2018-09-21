@@ -82,40 +82,40 @@ Partial Class Form1
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colResults = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.btnOpenExistingHashFile = New System.Windows.Forms.Button()
-        Me.tabSettings = New System.Windows.Forms.TabPage()
-        Me.chkSSL = New System.Windows.Forms.CheckBox()
-        Me.chkRecurrsiveDirectorySearch = New System.Windows.Forms.CheckBox()
-        Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
-        Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.tabCompareFiles = New System.Windows.Forms.TabPage()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtFile1 = New System.Windows.Forms.TextBox()
-        Me.txtFile2 = New System.Windows.Forms.TextBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.btnCompareFilesBrowseFile1 = New System.Windows.Forms.Button()
-        Me.btnCompareFilesBrowseFile2 = New System.Windows.Forms.Button()
-        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.lblFile2Hash = New System.Windows.Forms.Label()
+        Me.lblFile1Hash = New System.Windows.Forms.Label()
+        Me.compareFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.lblCompareFilesStatus = New System.Windows.Forms.Label()
+        Me.btnCompareFiles = New System.Windows.Forms.Button()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.compareRadioRIPEMD160 = New System.Windows.Forms.RadioButton()
         Me.compareRadioMD5 = New System.Windows.Forms.RadioButton()
         Me.compareRadioSHA512 = New System.Windows.Forms.RadioButton()
         Me.compareRadioSHA384 = New System.Windows.Forms.RadioButton()
         Me.compareRadioSHA256 = New System.Windows.Forms.RadioButton()
         Me.compareRadioSHA1 = New System.Windows.Forms.RadioButton()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.btnCompareFiles = New System.Windows.Forms.Button()
-        Me.compareFilesProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.lblCompareFilesStatus = New System.Windows.Forms.Label()
-        Me.lblFile1Hash = New System.Windows.Forms.Label()
-        Me.lblFile2Hash = New System.Windows.Forms.Label()
+        Me.btnCompareFilesBrowseFile2 = New System.Windows.Forms.Button()
+        Me.btnCompareFilesBrowseFile1 = New System.Windows.Forms.Button()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.txtFile2 = New System.Windows.Forms.TextBox()
+        Me.txtFile1 = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.chkSSL = New System.Windows.Forms.CheckBox()
+        Me.chkRecurrsiveDirectorySearch = New System.Windows.Forms.CheckBox()
+        Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
+        Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
+        Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
+        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
         Me.tabHashIndividualFiles.SuspendLayout()
         Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
-        Me.tabSettings.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
+        Me.tabSettings.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -746,43 +746,6 @@ Partial Class Form1
         Me.btnOpenExistingHashFile.Text = "Open Hash File"
         Me.btnOpenExistingHashFile.UseVisualStyleBackColor = True
         '
-        'tabSettings
-        '
-        Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
-        Me.tabSettings.Controls.Add(Me.chkSSL)
-        Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
-        Me.tabSettings.Location = New System.Drawing.Point(4, 22)
-        Me.tabSettings.Name = "tabSettings"
-        Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
-        Me.tabSettings.TabIndex = 4
-        Me.tabSettings.Text = "Settings"
-        '
-        'chkSSL
-        '
-        Me.chkSSL.AutoSize = True
-        Me.chkSSL.Location = New System.Drawing.Point(15, 36)
-        Me.chkSSL.Name = "chkSSL"
-        Me.chkSSL.Size = New System.Drawing.Size(361, 17)
-        Me.chkSSL.TabIndex = 1
-        Me.chkSSL.Text = "Use SSL to check for and download program updates (Recommended)"
-        Me.chkSSL.UseVisualStyleBackColor = True
-        '
-        'chkRecurrsiveDirectorySearch
-        '
-        Me.chkRecurrsiveDirectorySearch.AutoSize = True
-        Me.chkRecurrsiveDirectorySearch.Location = New System.Drawing.Point(15, 13)
-        Me.chkRecurrsiveDirectorySearch.Name = "chkRecurrsiveDirectorySearch"
-        Me.chkRecurrsiveDirectorySearch.Size = New System.Drawing.Size(434, 17)
-        Me.chkRecurrsiveDirectorySearch.TabIndex = 0
-        Me.chkRecurrsiveDirectorySearch.Text = "When processing directories, search recursively for all files in path including s" &
-    "ub-folders"
-        Me.chkRecurrsiveDirectorySearch.UseVisualStyleBackColor = True
-        '
-        'OpenFileDialog
-        '
-        Me.OpenFileDialog.Multiselect = True
-        Me.OpenFileDialog.Title = "Add Files to List..."
-        '
         'tabCompareFiles
         '
         Me.tabCompareFiles.BackColor = System.Drawing.SystemColors.Control
@@ -810,59 +773,62 @@ Partial Class Form1
         Me.tabCompareFiles.TabIndex = 5
         Me.tabCompareFiles.Text = "Compare Files"
         '
-        'Label4
+        'lblFile2Hash
         '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(15, 14)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(46, 13)
-        Me.Label4.TabIndex = 0
-        Me.Label4.Text = "File #1"
+        Me.lblFile2Hash.AutoSize = True
+        Me.lblFile2Hash.Location = New System.Drawing.Point(563, 41)
+        Me.lblFile2Hash.Name = "lblFile2Hash"
+        Me.lblFile2Hash.Size = New System.Drawing.Size(39, 13)
+        Me.lblFile2Hash.TabIndex = 33
+        Me.lblFile2Hash.Text = "Label8"
         '
-        'txtFile1
+        'lblFile1Hash
         '
-        Me.txtFile1.Location = New System.Drawing.Point(67, 11)
-        Me.txtFile1.Name = "txtFile1"
-        Me.txtFile1.Size = New System.Drawing.Size(459, 20)
-        Me.txtFile1.TabIndex = 1
+        Me.lblFile1Hash.AutoSize = True
+        Me.lblFile1Hash.Location = New System.Drawing.Point(563, 14)
+        Me.lblFile1Hash.Name = "lblFile1Hash"
+        Me.lblFile1Hash.Size = New System.Drawing.Size(39, 13)
+        Me.lblFile1Hash.TabIndex = 32
+        Me.lblFile1Hash.Text = "Label7"
         '
-        'txtFile2
+        'compareFilesProgressBar
         '
-        Me.txtFile2.Location = New System.Drawing.Point(67, 37)
-        Me.txtFile2.Name = "txtFile2"
-        Me.txtFile2.Size = New System.Drawing.Size(459, 20)
-        Me.txtFile2.TabIndex = 2
+        Me.compareFilesProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.compareFilesProgressBar.Location = New System.Drawing.Point(166, 115)
+        Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
+        Me.compareFilesProgressBar.Size = New System.Drawing.Size(861, 23)
+        Me.compareFilesProgressBar.TabIndex = 31
         '
-        'Label5
+        'lblCompareFilesStatus
         '
-        Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(15, 40)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(46, 13)
-        Me.Label5.TabIndex = 3
-        Me.Label5.Text = "File #2"
+        Me.lblCompareFilesStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblCompareFilesStatus.AutoSize = True
+        Me.lblCompareFilesStatus.Location = New System.Drawing.Point(166, 99)
+        Me.lblCompareFilesStatus.Name = "lblCompareFilesStatus"
+        Me.lblCompareFilesStatus.Size = New System.Drawing.Size(140, 13)
+        Me.lblCompareFilesStatus.TabIndex = 30
+        Me.lblCompareFilesStatus.Text = "(No Background Processes)"
         '
-        'btnCompareFilesBrowseFile1
+        'btnCompareFiles
         '
-        Me.btnCompareFilesBrowseFile1.Image = Global.Hasher.My.Resources.Resources.folder_explore
-        Me.btnCompareFilesBrowseFile1.Location = New System.Drawing.Point(532, 9)
-        Me.btnCompareFilesBrowseFile1.Name = "btnCompareFilesBrowseFile1"
-        Me.btnCompareFilesBrowseFile1.Size = New System.Drawing.Size(25, 23)
-        Me.btnCompareFilesBrowseFile1.TabIndex = 4
-        Me.ToolTip.SetToolTip(Me.btnCompareFilesBrowseFile1, "Browse for File #1")
-        Me.btnCompareFilesBrowseFile1.UseVisualStyleBackColor = True
+        Me.btnCompareFiles.Location = New System.Drawing.Point(18, 99)
+        Me.btnCompareFiles.Name = "btnCompareFiles"
+        Me.btnCompareFiles.Size = New System.Drawing.Size(142, 39)
+        Me.btnCompareFiles.TabIndex = 29
+        Me.btnCompareFiles.Text = "Compare Files"
+        Me.btnCompareFiles.UseVisualStyleBackColor = True
         '
-        'btnCompareFilesBrowseFile2
+        'Label6
         '
-        Me.btnCompareFilesBrowseFile2.Image = Global.Hasher.My.Resources.Resources.folder_explore
-        Me.btnCompareFilesBrowseFile2.Location = New System.Drawing.Point(532, 36)
-        Me.btnCompareFilesBrowseFile2.Name = "btnCompareFilesBrowseFile2"
-        Me.btnCompareFilesBrowseFile2.Size = New System.Drawing.Size(25, 23)
-        Me.btnCompareFilesBrowseFile2.TabIndex = 5
-        Me.ToolTip.SetToolTip(Me.btnCompareFilesBrowseFile2, "Browse for File #2")
-        Me.btnCompareFilesBrowseFile2.UseVisualStyleBackColor = True
+        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Location = New System.Drawing.Point(15, 60)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(236, 13)
+        Me.Label6.TabIndex = 28
+        Me.Label6.Text = "Select your hash type to compare with..."
         '
         'compareRadioRIPEMD160
         '
@@ -932,62 +898,100 @@ Partial Class Form1
         Me.compareRadioSHA1.Text = "SHA-1 (Not Recommended, Insecure Hash Type)"
         Me.compareRadioSHA1.UseVisualStyleBackColor = True
         '
-        'Label6
+        'btnCompareFilesBrowseFile2
         '
-        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(15, 60)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(236, 13)
-        Me.Label6.TabIndex = 28
-        Me.Label6.Text = "Select your hash type to compare with..."
+        Me.btnCompareFilesBrowseFile2.Image = Global.Hasher.My.Resources.Resources.folder_explore
+        Me.btnCompareFilesBrowseFile2.Location = New System.Drawing.Point(532, 36)
+        Me.btnCompareFilesBrowseFile2.Name = "btnCompareFilesBrowseFile2"
+        Me.btnCompareFilesBrowseFile2.Size = New System.Drawing.Size(25, 23)
+        Me.btnCompareFilesBrowseFile2.TabIndex = 5
+        Me.ToolTip.SetToolTip(Me.btnCompareFilesBrowseFile2, "Browse for File #2")
+        Me.btnCompareFilesBrowseFile2.UseVisualStyleBackColor = True
         '
-        'btnCompareFiles
+        'btnCompareFilesBrowseFile1
         '
-        Me.btnCompareFiles.Location = New System.Drawing.Point(18, 99)
-        Me.btnCompareFiles.Name = "btnCompareFiles"
-        Me.btnCompareFiles.Size = New System.Drawing.Size(142, 39)
-        Me.btnCompareFiles.TabIndex = 29
-        Me.btnCompareFiles.Text = "Compare Files"
-        Me.btnCompareFiles.UseVisualStyleBackColor = True
+        Me.btnCompareFilesBrowseFile1.Image = Global.Hasher.My.Resources.Resources.folder_explore
+        Me.btnCompareFilesBrowseFile1.Location = New System.Drawing.Point(532, 9)
+        Me.btnCompareFilesBrowseFile1.Name = "btnCompareFilesBrowseFile1"
+        Me.btnCompareFilesBrowseFile1.Size = New System.Drawing.Size(25, 23)
+        Me.btnCompareFilesBrowseFile1.TabIndex = 4
+        Me.ToolTip.SetToolTip(Me.btnCompareFilesBrowseFile1, "Browse for File #1")
+        Me.btnCompareFilesBrowseFile1.UseVisualStyleBackColor = True
         '
-        'compareFilesProgressBar
+        'Label5
         '
-        Me.compareFilesProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.compareFilesProgressBar.Location = New System.Drawing.Point(166, 115)
-        Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
-        Me.compareFilesProgressBar.Size = New System.Drawing.Size(800, 23)
-        Me.compareFilesProgressBar.TabIndex = 31
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(15, 40)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(46, 13)
+        Me.Label5.TabIndex = 3
+        Me.Label5.Text = "File #2"
         '
-        'lblCompareFilesStatus
+        'txtFile2
         '
-        Me.lblCompareFilesStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblCompareFilesStatus.AutoSize = True
-        Me.lblCompareFilesStatus.Location = New System.Drawing.Point(166, 99)
-        Me.lblCompareFilesStatus.Name = "lblCompareFilesStatus"
-        Me.lblCompareFilesStatus.Size = New System.Drawing.Size(140, 13)
-        Me.lblCompareFilesStatus.TabIndex = 30
-        Me.lblCompareFilesStatus.Text = "(No Background Processes)"
+        Me.txtFile2.BackColor = System.Drawing.SystemColors.Window
+        Me.txtFile2.Location = New System.Drawing.Point(67, 37)
+        Me.txtFile2.Name = "txtFile2"
+        Me.txtFile2.ReadOnly = True
+        Me.txtFile2.Size = New System.Drawing.Size(459, 20)
+        Me.txtFile2.TabIndex = 2
         '
-        'lblFile1Hash
+        'txtFile1
         '
-        Me.lblFile1Hash.AutoSize = True
-        Me.lblFile1Hash.Location = New System.Drawing.Point(563, 14)
-        Me.lblFile1Hash.Name = "lblFile1Hash"
-        Me.lblFile1Hash.Size = New System.Drawing.Size(39, 13)
-        Me.lblFile1Hash.TabIndex = 32
-        Me.lblFile1Hash.Text = "Label7"
+        Me.txtFile1.BackColor = System.Drawing.SystemColors.Window
+        Me.txtFile1.Location = New System.Drawing.Point(67, 11)
+        Me.txtFile1.Name = "txtFile1"
+        Me.txtFile1.ReadOnly = True
+        Me.txtFile1.Size = New System.Drawing.Size(459, 20)
+        Me.txtFile1.TabIndex = 1
         '
-        'lblFile2Hash
+        'Label4
         '
-        Me.lblFile2Hash.AutoSize = True
-        Me.lblFile2Hash.Location = New System.Drawing.Point(563, 41)
-        Me.lblFile2Hash.Name = "lblFile2Hash"
-        Me.lblFile2Hash.Size = New System.Drawing.Size(39, 13)
-        Me.lblFile2Hash.TabIndex = 33
-        Me.lblFile2Hash.Text = "Label8"
+        Me.Label4.AutoSize = True
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(15, 14)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(46, 13)
+        Me.Label4.TabIndex = 0
+        Me.Label4.Text = "File #1"
+        '
+        'tabSettings
+        '
+        Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkSSL)
+        Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
+        Me.tabSettings.Location = New System.Drawing.Point(4, 22)
+        Me.tabSettings.Name = "tabSettings"
+        Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
+        Me.tabSettings.TabIndex = 4
+        Me.tabSettings.Text = "Settings"
+        '
+        'chkSSL
+        '
+        Me.chkSSL.AutoSize = True
+        Me.chkSSL.Location = New System.Drawing.Point(15, 36)
+        Me.chkSSL.Name = "chkSSL"
+        Me.chkSSL.Size = New System.Drawing.Size(361, 17)
+        Me.chkSSL.TabIndex = 1
+        Me.chkSSL.Text = "Use SSL to check for and download program updates (Recommended)"
+        Me.chkSSL.UseVisualStyleBackColor = True
+        '
+        'chkRecurrsiveDirectorySearch
+        '
+        Me.chkRecurrsiveDirectorySearch.AutoSize = True
+        Me.chkRecurrsiveDirectorySearch.Location = New System.Drawing.Point(15, 13)
+        Me.chkRecurrsiveDirectorySearch.Name = "chkRecurrsiveDirectorySearch"
+        Me.chkRecurrsiveDirectorySearch.Size = New System.Drawing.Size(434, 17)
+        Me.chkRecurrsiveDirectorySearch.TabIndex = 0
+        Me.chkRecurrsiveDirectorySearch.Text = "When processing directories, search recursively for all files in path including s" &
+    "ub-folders"
+        Me.chkRecurrsiveDirectorySearch.UseVisualStyleBackColor = True
+        '
+        'OpenFileDialog
+        '
+        Me.OpenFileDialog.Multiselect = True
+        Me.OpenFileDialog.Title = "Add Files to List..."
         '
         'Form1
         '
@@ -1008,10 +1012,10 @@ Partial Class Form1
         Me.listFilesContextMenu.ResumeLayout(False)
         Me.tabVerifySavedHashes.ResumeLayout(False)
         Me.tabVerifySavedHashes.PerformLayout()
-        Me.tabSettings.ResumeLayout(False)
-        Me.tabSettings.PerformLayout()
         Me.tabCompareFiles.ResumeLayout(False)
         Me.tabCompareFiles.PerformLayout()
+        Me.tabSettings.ResumeLayout(False)
+        Me.tabSettings.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
