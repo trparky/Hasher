@@ -108,6 +108,16 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.tabCompareAgainstKnownHash = New System.Windows.Forms.TabPage()
+        Me.btnBrowseFileForCompareKnownHash = New System.Windows.Forms.Button()
+        Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.txtKnownHash = New System.Windows.Forms.TextBox()
+        Me.btnCompareAgainstKnownHash = New System.Windows.Forms.Button()
+        Me.compareAgainstKnownHashProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.lblCompareAgainstKnownHashStatus = New System.Windows.Forms.Label()
+        Me.lblCompareFileAgainstKnownHashType = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -116,6 +126,7 @@ Partial Class Form1
         Me.tabVerifySavedHashes.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
         Me.tabSettings.SuspendLayout()
+        Me.tabCompareAgainstKnownHash.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -128,6 +139,7 @@ Partial Class Form1
         Me.TabControl1.Controls.Add(Me.tabHashIndividualFiles)
         Me.TabControl1.Controls.Add(Me.tabVerifySavedHashes)
         Me.TabControl1.Controls.Add(Me.tabCompareFiles)
+        Me.TabControl1.Controls.Add(Me.tabCompareAgainstKnownHash)
         Me.TabControl1.Controls.Add(Me.tabSettings)
         Me.TabControl1.Location = New System.Drawing.Point(12, 12)
         Me.TabControl1.Name = "TabControl1"
@@ -983,6 +995,107 @@ Partial Class Form1
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
         '
+        'tabCompareAgainstKnownHash
+        '
+        Me.tabCompareAgainstKnownHash.BackColor = System.Drawing.SystemColors.Control
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.lblCompareFileAgainstKnownHashType)
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.compareAgainstKnownHashProgressBar)
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.lblCompareAgainstKnownHashStatus)
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.btnCompareAgainstKnownHash)
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.txtKnownHash)
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.Label8)
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.btnBrowseFileForCompareKnownHash)
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.txtFileForKnownHash)
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.Label7)
+        Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 22)
+        Me.tabCompareAgainstKnownHash.Name = "tabCompareAgainstKnownHash"
+        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 363)
+        Me.tabCompareAgainstKnownHash.TabIndex = 6
+        Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
+        '
+        'btnBrowseFileForCompareKnownHash
+        '
+        Me.btnBrowseFileForCompareKnownHash.Image = Global.Hasher.My.Resources.Resources.folder_explore
+        Me.btnBrowseFileForCompareKnownHash.Location = New System.Drawing.Point(564, 9)
+        Me.btnBrowseFileForCompareKnownHash.Name = "btnBrowseFileForCompareKnownHash"
+        Me.btnBrowseFileForCompareKnownHash.Size = New System.Drawing.Size(25, 23)
+        Me.btnBrowseFileForCompareKnownHash.TabIndex = 7
+        Me.ToolTip.SetToolTip(Me.btnBrowseFileForCompareKnownHash, "Browse for File #1")
+        Me.btnBrowseFileForCompareKnownHash.UseVisualStyleBackColor = True
+        '
+        'txtFileForKnownHash
+        '
+        Me.txtFileForKnownHash.BackColor = System.Drawing.SystemColors.Window
+        Me.txtFileForKnownHash.Location = New System.Drawing.Point(48, 12)
+        Me.txtFileForKnownHash.Name = "txtFileForKnownHash"
+        Me.txtFileForKnownHash.ReadOnly = True
+        Me.txtFileForKnownHash.Size = New System.Drawing.Size(510, 20)
+        Me.txtFileForKnownHash.TabIndex = 6
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.Location = New System.Drawing.Point(15, 15)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(27, 13)
+        Me.Label7.TabIndex = 5
+        Me.Label7.Text = "File"
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(15, 41)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(78, 13)
+        Me.Label8.TabIndex = 8
+        Me.Label8.Text = "Known Hash"
+        '
+        'txtKnownHash
+        '
+        Me.txtKnownHash.BackColor = System.Drawing.SystemColors.Window
+        Me.txtKnownHash.Location = New System.Drawing.Point(99, 38)
+        Me.txtKnownHash.Name = "txtKnownHash"
+        Me.txtKnownHash.Size = New System.Drawing.Size(459, 20)
+        Me.txtKnownHash.TabIndex = 9
+        '
+        'btnCompareAgainstKnownHash
+        '
+        Me.btnCompareAgainstKnownHash.Enabled = False
+        Me.btnCompareAgainstKnownHash.Location = New System.Drawing.Point(18, 67)
+        Me.btnCompareAgainstKnownHash.Name = "btnCompareAgainstKnownHash"
+        Me.btnCompareAgainstKnownHash.Size = New System.Drawing.Size(134, 39)
+        Me.btnCompareAgainstKnownHash.TabIndex = 10
+        Me.btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
+        Me.btnCompareAgainstKnownHash.UseVisualStyleBackColor = True
+        '
+        'compareAgainstKnownHashProgressBar
+        '
+        Me.compareAgainstKnownHashProgressBar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.compareAgainstKnownHashProgressBar.Location = New System.Drawing.Point(158, 83)
+        Me.compareAgainstKnownHashProgressBar.Name = "compareAgainstKnownHashProgressBar"
+        Me.compareAgainstKnownHashProgressBar.Size = New System.Drawing.Size(861, 23)
+        Me.compareAgainstKnownHashProgressBar.TabIndex = 33
+        '
+        'lblCompareAgainstKnownHashStatus
+        '
+        Me.lblCompareAgainstKnownHashStatus.AutoSize = True
+        Me.lblCompareAgainstKnownHashStatus.Location = New System.Drawing.Point(158, 67)
+        Me.lblCompareAgainstKnownHashStatus.Name = "lblCompareAgainstKnownHashStatus"
+        Me.lblCompareAgainstKnownHashStatus.Size = New System.Drawing.Size(140, 13)
+        Me.lblCompareAgainstKnownHashStatus.TabIndex = 32
+        Me.lblCompareAgainstKnownHashStatus.Text = "(No Background Processes)"
+        '
+        'lblCompareFileAgainstKnownHashType
+        '
+        Me.lblCompareFileAgainstKnownHashType.AutoSize = True
+        Me.lblCompareFileAgainstKnownHashType.Location = New System.Drawing.Point(565, 41)
+        Me.lblCompareFileAgainstKnownHashType.Name = "lblCompareFileAgainstKnownHashType"
+        Me.lblCompareFileAgainstKnownHashType.Size = New System.Drawing.Size(39, 13)
+        Me.lblCompareFileAgainstKnownHashType.TabIndex = 34
+        Me.lblCompareFileAgainstKnownHashType.Text = "Label9"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1006,6 +1119,8 @@ Partial Class Form1
         Me.tabCompareFiles.PerformLayout()
         Me.tabSettings.ResumeLayout(False)
         Me.tabSettings.PerformLayout()
+        Me.tabCompareAgainstKnownHash.ResumeLayout(False)
+        Me.tabCompareAgainstKnownHash.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1095,4 +1210,14 @@ Partial Class Form1
     Friend WithEvents lblCompareFilesStatus As Label
     Friend WithEvents lblFile2Hash As Label
     Friend WithEvents lblFile1Hash As Label
+    Friend WithEvents tabCompareAgainstKnownHash As TabPage
+    Friend WithEvents txtKnownHash As TextBox
+    Friend WithEvents Label8 As Label
+    Friend WithEvents btnBrowseFileForCompareKnownHash As Button
+    Friend WithEvents txtFileForKnownHash As TextBox
+    Friend WithEvents Label7 As Label
+    Friend WithEvents compareAgainstKnownHashProgressBar As ProgressBar
+    Friend WithEvents lblCompareAgainstKnownHashStatus As Label
+    Friend WithEvents btnCompareAgainstKnownHash As Button
+    Friend WithEvents lblCompareFileAgainstKnownHashType As Label
 End Class

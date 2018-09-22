@@ -80,6 +80,42 @@
         Return strChecksum
     End Function
 
+    Function getChecksumForComparisonAgainstKnownHash(strFile As String, checksumType As checksumType) As String
+        Dim strChecksum As String = Nothing
+
+        If IO.File.Exists(strFile) Then
+            Dim oldLocationInFile As ULong = 0
+            Dim checksums As New checksums With {
+                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan),
+                .setChecksumStatusUpdateRoutine = Sub(checksumStatusDetails As checksumStatusDetails)
+                                                      Try
+                                                          Me.Invoke(Sub()
+                                                                        lblCompareAgainstKnownHashStatus.Text = "Estimated " & fileSizeToHumanSize(checksumStatusDetails.currentLocationInFile - oldLocationInFile) & "/second"
+                                                                        oldLocationInFile = checksumStatusDetails.currentLocationInFile
+
+                                                                        If checksumStatusDetails.currentLocationInFile <> 0 And checksumStatusDetails.lengthOfFile <> 0 Then
+                                                                            compareAgainstKnownHashProgressBar.Value = checksumStatusDetails.currentLocationInFile / checksumStatusDetails.lengthOfFile * 100
+                                                                        Else
+                                                                            compareAgainstKnownHashProgressBar.Value = 0
+                                                                        End If
+
+                                                                        lblCompareAgainstKnownHashStatus.Text &= ", " & String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(checksumStatusDetails.currentLocationInFile), fileSizeToHumanSize(checksumStatusDetails.lengthOfFile))
+                                                                        oldLocationInFile = checksumStatusDetails.currentLocationInFile
+                                                                    End Sub)
+                                                      Catch ex As Exception
+                                                      End Try
+                                                  End Sub
+            }
+
+            strChecksum = performChecksumCalculation(checksums, checksumType)
+            checksums.dispose()
+        Else
+            strChecksum = Nothing
+        End If
+
+        Return strChecksum
+    End Function
+
     Function getChecksumForComparison(strFile As String, checksumType As checksumType) As String
         Dim strChecksum As String = Nothing
 
@@ -411,6 +447,7 @@
         lblVerifyHashStatusProcessingFile.Text = ""
         lblFile1Hash.Text = ""
         lblFile2Hash.Text = ""
+        lblCompareFileAgainstKnownHashType.Text = ""
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString)
@@ -953,6 +990,110 @@
 
     Private Sub chkSSL_Click(sender As Object, e As EventArgs) Handles chkSSL.Click
         My.Settings.boolSSL = chkSSL.Checked
+    End Sub
+
+    Private Sub btnBrowseFileForCompareKnownHash_Click(sender As Object, e As EventArgs) Handles btnBrowseFileForCompareKnownHash.Click
+        OpenFileDialog.Title = "Select file for known hash comparison..."
+        OpenFileDialog.Multiselect = False
+        OpenFileDialog.Filter = "Show All Files|*.*"
+
+        If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFileForKnownHash.Text = OpenFileDialog.FileName
+    End Sub
+
+    Private Sub txtKnownHash_TextChanged(sender As Object, e As EventArgs) Handles txtKnownHash.TextChanged
+        If String.IsNullOrWhiteSpace(txtKnownHash.Text) Then
+            lblCompareFileAgainstKnownHashType.Text = ""
+            btnCompareAgainstKnownHash.Enabled = False
+        Else
+            If txtKnownHash.Text.Length = 128 Or txtKnownHash.Text.Length = 96 Or txtKnownHash.Text.Length = 64 Or txtKnownHash.Text.Length = 40 Or txtKnownHash.Text.Length = 32 Then
+                btnCompareAgainstKnownHash.Enabled = True
+
+                'lblCompareFileAgainstKnownHashType
+                If txtKnownHash.Text.Length = 32 Then
+                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: MD5"
+                ElseIf txtKnownHash.Text.Length = 40 Then
+                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA1"
+                ElseIf txtKnownHash.Text.Length = 64 Then
+                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA256"
+                ElseIf txtKnownHash.Text.Length = 96 Then
+                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA384"
+                ElseIf txtKnownHash.Text.Length = 128 Then
+                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA512"
+                End If
+            Else
+                lblCompareFileAgainstKnownHashType.Text = ""
+                btnCompareAgainstKnownHash.Enabled = False
+            End If
+        End If
+    End Sub
+
+    Private Sub btnCompareAgainstKnownHash_Click(sender As Object, e As EventArgs) Handles btnCompareAgainstKnownHash.Click
+        txtFileForKnownHash.Text = txtFileForKnownHash.Text.Trim
+
+        If Not IO.File.Exists(txtFileForKnownHash.Text) Then
+            MsgBox("File doesn't exist.", MsgBoxStyle.Critical, Me.Text)
+            Exit Sub
+        End If
+
+        txtFileForKnownHash.Enabled = False
+        btnBrowseFileForCompareKnownHash.Enabled = False
+        txtKnownHash.Enabled = False
+        btnCompareAgainstKnownHash.Enabled = False
+
+        workingThread = New Threading.Thread(Sub()
+                                                 Try
+                                                     boolBackgroundThreadWorking = True
+                                                     Dim checksumType As checksumType
+
+                                                     If txtKnownHash.Text.Length = 32 Then
+                                                         checksumType = checksumType.md5
+                                                     ElseIf txtKnownHash.Text.Length = 40 Then
+                                                         checksumType = checksumType.sha160
+                                                     ElseIf txtKnownHash.Text.Length = 64 Then
+                                                         checksumType = checksumType.sha256
+                                                     ElseIf txtKnownHash.Text.Length = 96 Then
+                                                         checksumType = checksumType.sha384
+                                                     ElseIf txtKnownHash.Text.Length = 128 Then
+                                                         checksumType = checksumType.sha512
+                                                     End If
+
+                                                     Dim strChecksum As String = getChecksumForComparison(txtFileForKnownHash.Text, checksumType)
+
+                                                     txtFileForKnownHash.Enabled = True
+                                                     btnBrowseFileForCompareKnownHash.Enabled = True
+                                                     txtKnownHash.Enabled = True
+                                                     btnCompareAgainstKnownHash.Enabled = True
+                                                     lblCompareFilesStatus.Text = strNoBackgroundProcesses
+
+                                                     If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
+                                                         MsgBox("The checksums match!", MsgBoxStyle.Information, Me.Text)
+                                                     Else
+                                                         MsgBox("The checksums DON'T match!", MsgBoxStyle.Critical, Me.Text)
+                                                     End If
+
+                                                     boolBackgroundThreadWorking = False
+                                                     workingThread = Nothing
+                                                 Catch ex As Threading.ThreadAbortException
+                                                     If Not boolClosingWindow Then
+                                                         txtFileForKnownHash.Enabled = True
+                                                         btnBrowseFileForCompareKnownHash.Enabled = True
+                                                         txtKnownHash.Enabled = True
+                                                         btnCompareAgainstKnownHash.Enabled = True
+                                                         lblCompareFilesStatus.Text = strNoBackgroundProcesses
+                                                     End If
+
+                                                     boolBackgroundThreadWorking = False
+                                                     workingThread = Nothing
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                 Finally
+                                                     btnComputeHash.Enabled = True
+                                                 End Try
+                                             End Sub) With {
+            .Priority = Threading.ThreadPriority.Highest,
+            .Name = "Hash Generation Thread",
+            .IsBackground = True
+        }
+        workingThread.Start()
     End Sub
 
     Private Sub Form1_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
