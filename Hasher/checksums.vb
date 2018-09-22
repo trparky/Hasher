@@ -210,10 +210,4 @@ beginAgain:
         Dim Output As Byte() = SHA1Engine.ComputeHash(Text.Encoding.UTF8.GetBytes(inputString))
         Return BitConverter.ToString(Output).ToLower().Replace("-", "")
     End Function
-
-    Public Shared Function RIPEMD160String(inputString As String) As String
-        Dim SHA1Engine As New Security.Cryptography.RIPEMD160Managed
-        Dim Output As Byte() = SHA1Engine.ComputeHash(Text.Encoding.UTF8.GetBytes(inputString))
-        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
-    End Function
 End Class

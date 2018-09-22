@@ -17,7 +17,6 @@
         sha256
         sha384
         sha512
-        RIPEMD160
     End Enum
 
     Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
@@ -163,8 +162,6 @@
             Return checksums.SHA384()
         ElseIf checksumType = checksumType.sha512 Then
             Return checksums.SHA512()
-        ElseIf checksumType = checksumType.RIPEMD160 Then
-            Return checksums.RIPEMD160()
         Else
             Return Nothing
         End If
@@ -282,7 +279,6 @@
                                                      radioSHA256.Enabled = False
                                                      radioSHA384.Enabled = False
                                                      radioSHA512.Enabled = False
-                                                     radioRIPEMD160.Enabled = False
 
                                                      If radioMD5.Checked Then
                                                          checksumType = checksumType.md5
@@ -294,8 +290,6 @@
                                                          checksumType = checksumType.sha384
                                                      ElseIf radioSHA512.Checked Then
                                                          checksumType = checksumType.sha512
-                                                     ElseIf radioRIPEMD160.Checked Then
-                                                         checksumType = checksumType.RIPEMD160
                                                      End If
 
                                                      listFiles.BeginUpdate()
@@ -322,7 +316,6 @@
                                                      radioSHA256.Enabled = True
                                                      radioSHA384.Enabled = True
                                                      radioSHA512.Enabled = True
-                                                     radioRIPEMD160.Enabled = True
 
                                                      Me.Invoke(Sub() MsgBox("Complete.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
                                                      resetHashIndividualFilesProgress()
@@ -397,8 +390,6 @@
             SaveFileDialog.Filter = "SHA384 File|*.sha384"
         ElseIf radioSHA512.Checked Then
             SaveFileDialog.Filter = "SHA512 File|*.sha512"
-        ElseIf radioRIPEMD160.Checked Then
-            SaveFileDialog.Filter = "RIPEMD160 File|*.ripemd160"
         End If
 
         SaveFileDialog.Title = "Save Hash Results to Disk"
@@ -437,7 +428,7 @@
         disableIndividualFilesResultsButtonsAndClearResults()
     End Sub
 
-    Private Sub textRadioRIPEMD160_Click(sender As Object, e As EventArgs) Handles textRadioRIPEMD160.Click
+    Private Sub textRadioRIPEMD160_Click(sender As Object, e As EventArgs)
         disableIndividualFilesResultsButtonsAndClearResults()
     End Sub
 
@@ -528,8 +519,6 @@
             checksumType = checksumType.sha384
         ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
             checksumType = checksumType.sha512
-        ElseIf strFileExtension.Equals(".ripemd160", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = checksumType.RIPEMD160
         Else
             MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, Me.Text)
             Exit Sub
@@ -703,8 +692,6 @@
             txtHashResults.Text = checksums.SHA384String(txtTextToHash.Text)
         ElseIf textRadioSHA512.Checked Then
             txtHashResults.Text = checksums.SHA512String(txtTextToHash.Text)
-        ElseIf textRadioRIPEMD160.Checked Then
-            txtHashResults.Text = checksums.RIPEMD160String(txtTextToHash.Text)
         End If
 
         btnCopyTextHashResultsToClipboard.Enabled = True
@@ -730,7 +717,7 @@
         clearTextHashResults()
     End Sub
 
-    Private Sub textRadioRIPEMD160_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioRIPEMD160.CheckedChanged
+    Private Sub textRadioRIPEMD160_CheckedChanged(sender As Object, e As EventArgs)
         clearTextHashResults()
     End Sub
 
@@ -905,7 +892,6 @@
                                                      Dim checksumType As checksumType
 
                                                      compareRadioMD5.Enabled = False
-                                                     compareRadioRIPEMD160.Enabled = False
                                                      compareRadioSHA1.Enabled = False
                                                      compareRadioSHA256.Enabled = False
                                                      compareRadioSHA384.Enabled = False
@@ -921,8 +907,6 @@
                                                          checksumType = checksumType.sha384
                                                      ElseIf compareRadioSHA512.Checked Then
                                                          checksumType = checksumType.sha512
-                                                     ElseIf compareRadioRIPEMD160.Checked Then
-                                                         checksumType = checksumType.RIPEMD160
                                                      End If
 
                                                      Dim strChecksum1 As String = getChecksumForComparison(txtFile1.Text, checksumType)
@@ -939,7 +923,6 @@
                                                      txtFile2.Enabled = True
                                                      btnCompareFiles.Enabled = True
                                                      compareRadioMD5.Enabled = True
-                                                     compareRadioRIPEMD160.Enabled = True
                                                      compareRadioSHA1.Enabled = True
                                                      compareRadioSHA256.Enabled = True
                                                      compareRadioSHA384.Enabled = True
@@ -962,7 +945,6 @@
                                                          txtFile2.Enabled = True
                                                          btnCompareFiles.Enabled = True
                                                          compareRadioMD5.Enabled = True
-                                                         compareRadioRIPEMD160.Enabled = True
                                                          compareRadioSHA1.Enabled = True
                                                          compareRadioSHA256.Enabled = True
                                                          compareRadioSHA384.Enabled = True

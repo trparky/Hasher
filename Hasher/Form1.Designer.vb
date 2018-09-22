@@ -31,7 +31,6 @@ Partial Class Form1
         Me.lblWelcomeText = New System.Windows.Forms.Label()
         Me.tabHashText = New System.Windows.Forms.TabPage()
         Me.btnCopyTextHashResultsToClipboard = New System.Windows.Forms.Button()
-        Me.textRadioRIPEMD160 = New System.Windows.Forms.RadioButton()
         Me.txtHashResults = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.btnPasteTextFromWindowsClipboard = New System.Windows.Forms.Button()
@@ -47,7 +46,6 @@ Partial Class Form1
         Me.txtTextToHash = New System.Windows.Forms.TextBox()
         Me.lblTextToHash = New System.Windows.Forms.Label()
         Me.tabHashIndividualFiles = New System.Windows.Forms.TabPage()
-        Me.radioRIPEMD160 = New System.Windows.Forms.RadioButton()
         Me.lblLine = New System.Windows.Forms.Label()
         Me.lblHashIndividualFilesStep3 = New System.Windows.Forms.Label()
         Me.lblHashIndividualFilesStep2 = New System.Windows.Forms.Label()
@@ -89,7 +87,6 @@ Partial Class Form1
         Me.lblCompareFilesStatus = New System.Windows.Forms.Label()
         Me.btnCompareFiles = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.compareRadioRIPEMD160 = New System.Windows.Forms.RadioButton()
         Me.compareRadioMD5 = New System.Windows.Forms.RadioButton()
         Me.compareRadioSHA512 = New System.Windows.Forms.RadioButton()
         Me.compareRadioSHA384 = New System.Windows.Forms.RadioButton()
@@ -202,7 +199,6 @@ Partial Class Form1
         '
         Me.tabHashText.BackColor = System.Drawing.SystemColors.Control
         Me.tabHashText.Controls.Add(Me.btnCopyTextHashResultsToClipboard)
-        Me.tabHashText.Controls.Add(Me.textRadioRIPEMD160)
         Me.tabHashText.Controls.Add(Me.txtHashResults)
         Me.tabHashText.Controls.Add(Me.Label3)
         Me.tabHashText.Controls.Add(Me.btnPasteTextFromWindowsClipboard)
@@ -233,17 +229,6 @@ Partial Class Form1
         Me.btnCopyTextHashResultsToClipboard.TabIndex = 31
         Me.btnCopyTextHashResultsToClipboard.Text = "Copy Results to Clipboard"
         Me.btnCopyTextHashResultsToClipboard.UseVisualStyleBackColor = True
-        '
-        'textRadioRIPEMD160
-        '
-        Me.textRadioRIPEMD160.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.textRadioRIPEMD160.AutoSize = True
-        Me.textRadioRIPEMD160.Location = New System.Drawing.Point(243, 250)
-        Me.textRadioRIPEMD160.Name = "textRadioRIPEMD160"
-        Me.textRadioRIPEMD160.Size = New System.Drawing.Size(85, 17)
-        Me.textRadioRIPEMD160.TabIndex = 30
-        Me.textRadioRIPEMD160.Text = "RIPEMD160"
-        Me.textRadioRIPEMD160.UseVisualStyleBackColor = True
         '
         'txtHashResults
         '
@@ -302,7 +287,7 @@ Partial Class Form1
         '
         Me.textRadioMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.textRadioMD5.AutoSize = True
-        Me.textRadioMD5.Location = New System.Drawing.Point(599, 250)
+        Me.textRadioMD5.Location = New System.Drawing.Point(506, 250)
         Me.textRadioMD5.Name = "textRadioMD5"
         Me.textRadioMD5.Size = New System.Drawing.Size(296, 17)
         Me.textRadioMD5.TabIndex = 24
@@ -348,7 +333,7 @@ Partial Class Form1
         '
         Me.textRadioSHA1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.textRadioSHA1.AutoSize = True
-        Me.textRadioSHA1.Location = New System.Drawing.Point(334, 250)
+        Me.textRadioSHA1.Location = New System.Drawing.Point(241, 250)
         Me.textRadioSHA1.Name = "textRadioSHA1"
         Me.textRadioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.textRadioSHA1.TabIndex = 20
@@ -401,7 +386,6 @@ Partial Class Form1
         'tabHashIndividualFiles
         '
         Me.tabHashIndividualFiles.BackColor = System.Drawing.SystemColors.Control
-        Me.tabHashIndividualFiles.Controls.Add(Me.radioRIPEMD160)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblLine)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep3)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep2)
@@ -427,17 +411,6 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 363)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
-        '
-        'radioRIPEMD160
-        '
-        Me.radioRIPEMD160.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.radioRIPEMD160.AutoSize = True
-        Me.radioRIPEMD160.Location = New System.Drawing.Point(240, 224)
-        Me.radioRIPEMD160.Name = "radioRIPEMD160"
-        Me.radioRIPEMD160.Size = New System.Drawing.Size(85, 17)
-        Me.radioRIPEMD160.TabIndex = 21
-        Me.radioRIPEMD160.Text = "RIPEMD160"
-        Me.radioRIPEMD160.UseVisualStyleBackColor = True
         '
         'lblLine
         '
@@ -535,7 +508,7 @@ Partial Class Form1
         '
         Me.radioMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioMD5.AutoSize = True
-        Me.radioMD5.Location = New System.Drawing.Point(596, 224)
+        Me.radioMD5.Location = New System.Drawing.Point(505, 224)
         Me.radioMD5.Name = "radioMD5"
         Me.radioMD5.Size = New System.Drawing.Size(296, 17)
         Me.radioMD5.TabIndex = 11
@@ -581,7 +554,7 @@ Partial Class Form1
         '
         Me.radioSHA1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA1.AutoSize = True
-        Me.radioSHA1.Location = New System.Drawing.Point(331, 224)
+        Me.radioSHA1.Location = New System.Drawing.Point(240, 224)
         Me.radioSHA1.Name = "radioSHA1"
         Me.radioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.radioSHA1.TabIndex = 7
@@ -767,7 +740,6 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.lblCompareFilesStatus)
         Me.tabCompareFiles.Controls.Add(Me.btnCompareFiles)
         Me.tabCompareFiles.Controls.Add(Me.Label6)
-        Me.tabCompareFiles.Controls.Add(Me.compareRadioRIPEMD160)
         Me.tabCompareFiles.Controls.Add(Me.compareRadioMD5)
         Me.tabCompareFiles.Controls.Add(Me.compareRadioSHA512)
         Me.tabCompareFiles.Controls.Add(Me.compareRadioSHA384)
@@ -838,20 +810,10 @@ Partial Class Form1
         Me.Label6.TabIndex = 28
         Me.Label6.Text = "Select your hash type to compare with..."
         '
-        'compareRadioRIPEMD160
-        '
-        Me.compareRadioRIPEMD160.AutoSize = True
-        Me.compareRadioRIPEMD160.Location = New System.Drawing.Point(240, 76)
-        Me.compareRadioRIPEMD160.Name = "compareRadioRIPEMD160"
-        Me.compareRadioRIPEMD160.Size = New System.Drawing.Size(85, 17)
-        Me.compareRadioRIPEMD160.TabIndex = 27
-        Me.compareRadioRIPEMD160.Text = "RIPEMD160"
-        Me.compareRadioRIPEMD160.UseVisualStyleBackColor = True
-        '
         'compareRadioMD5
         '
         Me.compareRadioMD5.AutoSize = True
-        Me.compareRadioMD5.Location = New System.Drawing.Point(596, 76)
+        Me.compareRadioMD5.Location = New System.Drawing.Point(505, 76)
         Me.compareRadioMD5.Name = "compareRadioMD5"
         Me.compareRadioMD5.Size = New System.Drawing.Size(296, 17)
         Me.compareRadioMD5.TabIndex = 26
@@ -893,7 +855,7 @@ Partial Class Form1
         'compareRadioSHA1
         '
         Me.compareRadioSHA1.AutoSize = True
-        Me.compareRadioSHA1.Location = New System.Drawing.Point(331, 76)
+        Me.compareRadioSHA1.Location = New System.Drawing.Point(240, 76)
         Me.compareRadioSHA1.Name = "compareRadioSHA1"
         Me.compareRadioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.compareRadioSHA1.TabIndex = 22
@@ -1178,8 +1140,6 @@ Partial Class Form1
     Friend WithEvents btnPasteTextFromWindowsClipboard As Button
     Friend WithEvents txtHashResults As TextBox
     Friend WithEvents Label3 As Label
-    Friend WithEvents textRadioRIPEMD160 As RadioButton
-    Friend WithEvents radioRIPEMD160 As RadioButton
     Friend WithEvents btnCopyTextHashResultsToClipboard As Button
     Friend WithEvents colChecksum As ColumnHeader
     Friend WithEvents colFileSize As ColumnHeader
@@ -1198,7 +1158,6 @@ Partial Class Form1
     Friend WithEvents Label4 As Label
     Friend WithEvents btnCompareFilesBrowseFile2 As Button
     Friend WithEvents ToolTip As ToolTip
-    Friend WithEvents compareRadioRIPEMD160 As RadioButton
     Friend WithEvents compareRadioMD5 As RadioButton
     Friend WithEvents compareRadioSHA512 As RadioButton
     Friend WithEvents compareRadioSHA384 As RadioButton
