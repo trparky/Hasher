@@ -83,7 +83,7 @@ Class Check_for_Update_Stuff
 
     Private Function transformURL(strURLInput As String) As String
         If Not strURLInput.Trim.ToLower.StartsWith("http") Then
-            Return If(My.Settings.boolSSL, "https://" & strURLInput, "http://" & strURLInput)
+            Return If(My.Settings.boolSSL, "https://", "http://") & strURLInput
         Else
             Return strURLInput
         End If
