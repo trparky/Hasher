@@ -300,7 +300,7 @@ Class Check_for_Update_Stuff
     Private Function createHTTPUserAgentHeaderString() As String
         Dim versionInfo As String() = Application.ProductVersion.Split(".")
         Dim versionString As String = String.Format("{0}.{1} Build {2}", versionInfo(0), versionInfo(1), versionInfo(2))
-        Return String.Format("Scheduled Task Scanner version {0} on {1}", versionString, getFullOSVersionString())
+        Return String.Format("Hasher version {0} on {1}", versionString, getFullOSVersionString())
     End Function
 
     Private Function getFullOSVersionString() As String
