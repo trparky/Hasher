@@ -454,6 +454,22 @@
         Me.Size = My.Settings.windowSize
 
         deleteTemporaryNewEXEFile()
+
+        If My.Application.CommandLineArgs.Count = 1 Then
+            Dim commandLineArgument As String = My.Application.CommandLineArgs(0).ToLower.Trim
+
+            If commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
+                commandLineArgument = System.Text.RegularExpressions.Regex.Replace(commandLineArgument, "--hashfile=", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                commandLineArgument = commandLineArgument.Replace(Chr(34), "")
+
+                If IO.File.Exists(commandLineArgument) Then
+                    TabControl1.SelectTab(3)
+                    btnOpenExistingHashFile.Enabled = False
+                    verifyHashesListFiles.Items.Clear()
+                    processExistingHashFile(commandLineArgument)
+                End If
+            End If
+        End If
     End Sub
 
     Private Sub deleteTemporaryNewEXEFile()
@@ -492,99 +508,101 @@
         updateFilesListCountHeader()
     End Sub
 
+    Private Sub processExistingHashFile(strFile As String)
+        Dim checksumType As checksumType
+        Dim listOfFiles As New List(Of ListViewItem)
+        Dim checksumFileInfo As New IO.FileInfo(strFile)
+        Dim strFileExtension, strPathOfChecksumFile As String
+
+        strFileExtension = checksumFileInfo.Extension
+        strPathOfChecksumFile = checksumFileInfo.DirectoryName
+        checksumFileInfo = Nothing
+
+        If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
+            checksumType = checksumType.md5
+        ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
+            checksumType = checksumType.sha160
+        ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
+            checksumType = checksumType.sha256
+        ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
+            checksumType = checksumType.sha384
+        ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+            checksumType = checksumType.sha512
+        ElseIf strFileExtension.Equals(".ripemd160", StringComparison.OrdinalIgnoreCase) Then
+            checksumType = checksumType.RIPEMD160
+        Else
+            MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, Me.Text)
+            Exit Sub
+        End If
+
+        workingThread = New Threading.Thread(Sub()
+                                                 Try
+                                                     verifyHashesListFiles.BeginUpdate()
+                                                     boolBackgroundThreadWorking = True
+                                                     Dim linesInFile As New Specialized.StringCollection()
+                                                     Dim strLineInFile As String
+                                                     Dim index As Integer = 1
+                                                     Dim longFilesThatPassedVerification As Long = 0
+
+                                                     Using fileStream As New IO.StreamReader(strFile, System.Text.Encoding.UTF8)
+                                                         strLineInFile = fileStream.ReadLine()
+
+                                                         While Not String.IsNullOrEmpty(strLineInFile)
+                                                             If hashLineParser.IsMatch(strLineInFile) And Not strLineInFile.StartsWith("'") Then
+                                                                 linesInFile.Add(strLineInFile)
+                                                             End If
+                                                             strLineInFile = fileStream.ReadLine()
+                                                         End While
+                                                     End Using
+
+                                                     For Each strLineInCollection As String In linesInFile
+                                                         lblVerifyHashStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s)", index, linesInFile.Count())
+                                                         processLineInHashFile(strPathOfChecksumFile, strLineInCollection, checksumType, listOfFiles, longFilesThatPassedVerification)
+                                                         index += 1
+                                                     Next
+
+                                                     lblVerifyHashStatusProcessingFile.Text = ""
+                                                     lblVerifyHashStatus.Text = strNoBackgroundProcesses
+                                                     VerifyHashProgressBar.Value = 0
+
+                                                     verifyHashesListFiles.Items.AddRange(listOfFiles.ToArray())
+                                                     verifyHashesListFiles.EndUpdate()
+                                                     Me.Invoke(Sub() MsgBox(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification.", longFilesThatPassedVerification, linesInFile.Count), MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                     boolBackgroundThreadWorking = False
+                                                     workingThread = Nothing
+                                                 Catch ex As Threading.ThreadAbortException
+                                                     If Not boolClosingWindow Then
+                                                         lblVerifyHashStatusProcessingFile.Text = ""
+                                                         lblVerifyHashStatus.Text = strNoBackgroundProcesses
+                                                         VerifyHashProgressBar.Value = 0
+                                                         verifyHashesListFiles.Items.Clear()
+                                                     End If
+
+                                                     boolBackgroundThreadWorking = False
+                                                     workingThread = Nothing
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                 Finally
+                                                     btnOpenExistingHashFile.Enabled = True
+                                                 End Try
+                                             End Sub) With {
+            .Priority = Threading.ThreadPriority.Highest,
+            .Name = "Verify Hash File Working Thread",
+            .IsBackground = True
+        }
+        workingThread.Start()
+    End Sub
+
     Private Sub btnOpenExistingHashFile_Click(sender As Object, e As EventArgs) Handles btnOpenExistingHashFile.Click
         btnOpenExistingHashFile.Enabled = False
         verifyHashesListFiles.Items.Clear()
 
         Dim oldMultiValue As Boolean = OpenFileDialog.Multiselect
-        Dim checksumType As checksumType
-        Dim checksumFileInfo As IO.FileInfo
-        Dim strFileExtension, strPathOfChecksumFile As String
-        Dim listOfFiles As New List(Of ListViewItem)
 
         OpenFileDialog.Title = "Select a hash file to verify..."
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
 
-        If OpenFileDialog.ShowDialog() = DialogResult.OK Then
-            checksumFileInfo = New IO.FileInfo(OpenFileDialog.FileName)
-            strFileExtension = checksumFileInfo.Extension
-            strPathOfChecksumFile = checksumFileInfo.DirectoryName
-            checksumFileInfo = Nothing
-
-            If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = checksumType.md5
-            ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = checksumType.sha160
-            ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = checksumType.sha256
-            ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = checksumType.sha384
-            ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = checksumType.sha512
-            ElseIf strFileExtension.Equals(".ripemd160", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = checksumType.RIPEMD160
-            Else
-                MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, Me.Text)
-                Exit Sub
-            End If
-
-            workingThread = New Threading.Thread(Sub()
-                                                     Try
-                                                         verifyHashesListFiles.BeginUpdate()
-                                                         boolBackgroundThreadWorking = True
-                                                         Dim linesInFile As New Specialized.StringCollection()
-                                                         Dim strLineInFile As String
-                                                         Dim index As Integer = 1
-                                                         Dim longFilesThatPassedVerification As Long = 0
-
-                                                         Using fileStream As New IO.StreamReader(OpenFileDialog.FileName, System.Text.Encoding.UTF8)
-                                                             strLineInFile = fileStream.ReadLine()
-
-                                                             While Not String.IsNullOrEmpty(strLineInFile)
-                                                                 If hashLineParser.IsMatch(strLineInFile) And Not strLineInFile.StartsWith("'") Then
-                                                                     linesInFile.Add(strLineInFile)
-                                                                 End If
-                                                                 strLineInFile = fileStream.ReadLine()
-                                                             End While
-                                                         End Using
-
-                                                         For Each strLineInCollection As String In linesInFile
-                                                             lblVerifyHashStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s)", index, linesInFile.Count())
-                                                             processLineInHashFile(strPathOfChecksumFile, strLineInCollection, checksumType, listOfFiles, longFilesThatPassedVerification)
-                                                             index += 1
-                                                         Next
-
-                                                         lblVerifyHashStatusProcessingFile.Text = ""
-                                                         lblVerifyHashStatus.Text = strNoBackgroundProcesses
-                                                         VerifyHashProgressBar.Value = 0
-
-                                                         verifyHashesListFiles.Items.AddRange(listOfFiles.ToArray())
-                                                         verifyHashesListFiles.EndUpdate()
-                                                         Me.Invoke(Sub() MsgBox(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification.", longFilesThatPassedVerification, linesInFile.Count), MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
-                                                         boolBackgroundThreadWorking = False
-                                                         workingThread = Nothing
-                                                     Catch ex As Threading.ThreadAbortException
-                                                         If Not boolClosingWindow Then
-                                                             lblVerifyHashStatusProcessingFile.Text = ""
-                                                             lblVerifyHashStatus.Text = strNoBackgroundProcesses
-                                                             VerifyHashProgressBar.Value = 0
-                                                             verifyHashesListFiles.Items.Clear()
-                                                         End If
-
-                                                         boolBackgroundThreadWorking = False
-                                                         workingThread = Nothing
-                                                         If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
-                                                     Finally
-                                                         btnOpenExistingHashFile.Enabled = True
-                                                     End Try
-                                                 End Sub) With {
-                .Priority = Threading.ThreadPriority.Highest,
-                .Name = "Verify Hash File Working Thread",
-                .IsBackground = True
-            }
-            workingThread.Start()
-        End If
+        If OpenFileDialog.ShowDialog() = DialogResult.OK Then processExistingHashFile(OpenFileDialog.FileName)
 
         OpenFileDialog.Multiselect = oldMultiValue
     End Sub
