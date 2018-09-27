@@ -717,10 +717,6 @@
         clearTextHashResults()
     End Sub
 
-    Private Sub textRadioRIPEMD160_CheckedChanged(sender As Object, e As EventArgs)
-        clearTextHashResults()
-    End Sub
-
     Private Sub textRadioSHA1_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA1.CheckedChanged
         clearTextHashResults()
     End Sub
