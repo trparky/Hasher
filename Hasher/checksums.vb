@@ -1,7 +1,3 @@
-Public Class checksumStatusDetails
-    Public currentLocationInFile As ULong, lengthOfFile As ULong
-End Class
-
 Public Class checksums
 
     ' How to use this VB.NET Class
@@ -24,7 +20,6 @@ Public Class checksums
     Private crc32Table() As Integer
     Private Const BUFFER_SIZE As Integer = 1024
     Private checksumStatusUpdater As [Delegate]
-    Private checksumStatusDetails As checksumStatusDetails
     Private checksumStatusUpdaterThread As Threading.Thread = Nothing
     Private fileStream As IO.Stream
 
@@ -82,7 +77,7 @@ Public Class checksums
     Private Sub checksumStatusUpdaterThreadSubroutine()
         Try
 beginAgain:
-            checksumStatusUpdater.DynamicInvoke(New checksumStatusDetails With {.lengthOfFile = fileStream.Length, .currentLocationInFile = fileStream.Position})
+            checksumStatusUpdater.DynamicInvoke(fileStream.Length, fileStream.Position)
             Threading.Thread.Sleep(1000)
             GoTo beginAgain
         Catch ex As Threading.ThreadAbortException
@@ -116,8 +111,6 @@ beginAgain:
     End Sub
 
     Private Sub checksumStatusUpdateInvoker()
-        checksumStatusDetails = New checksumStatusDetails With {.lengthOfFile = fileStream.Length, .currentLocationInFile = fileStream.Position}
-
         ' Checks to see if we have a status update routine to invoke.
         If checksumStatusUpdater IsNot Nothing Then
             ' We invoke the status update routine if we have one to invoke. This is usually injected
