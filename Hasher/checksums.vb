@@ -78,7 +78,7 @@ Public Class checksums
         Try
 beginAgain:
             checksumStatusUpdater.DynamicInvoke(fileStream.Length, fileStream.Position)
-            Threading.Thread.Sleep(1000)
+            If My.Settings.boolEnablePerSecondStatusUpdates Then Threading.Thread.Sleep(1000)
             GoTo beginAgain
         Catch ex As Threading.ThreadAbortException
             ' Does nothing

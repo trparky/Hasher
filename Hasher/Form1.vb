@@ -53,7 +53,12 @@
                 .setChecksumStatusUpdateRoutine = Sub(longFileSize As Long, longCurrentPositionInFile As Long)
                                                       Try
                                                           Me.Invoke(Sub()
-                                                                        lblVerifyHashStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second"
+                                                                        If My.Settings.boolEnablePerSecondStatusUpdates Then
+                                                                            lblVerifyHashStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second, "
+                                                                        Else
+                                                                            lblVerifyHashStatus.Text = ""
+                                                                        End If
+
                                                                         oldLocationInFile = longCurrentPositionInFile
 
                                                                         If longCurrentPositionInFile <> 0 And longFileSize <> 0 Then
@@ -62,7 +67,7 @@
                                                                             VerifyHashProgressBar.Value = 0
                                                                         End If
 
-                                                                        lblVerifyHashStatus.Text &= ", " & String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
+                                                                        lblVerifyHashStatus.Text &= String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
                                                                         oldLocationInFile = longCurrentPositionInFile
                                                                     End Sub)
                                                       Catch ex As Exception
@@ -89,7 +94,12 @@
                 .setChecksumStatusUpdateRoutine = Sub(longFileSize As Long, longCurrentPositionInFile As Long)
                                                       Try
                                                           Me.Invoke(Sub()
-                                                                        lblCompareAgainstKnownHashStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second"
+                                                                        If My.Settings.boolEnablePerSecondStatusUpdates Then
+                                                                            lblCompareAgainstKnownHashStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second, "
+                                                                        Else
+                                                                            lblCompareAgainstKnownHashStatus.Text = ""
+                                                                        End If
+
                                                                         oldLocationInFile = longCurrentPositionInFile
 
                                                                         If longCurrentPositionInFile <> 0 And longFileSize <> 0 Then
@@ -98,7 +108,7 @@
                                                                             compareAgainstKnownHashProgressBar.Value = 0
                                                                         End If
 
-                                                                        lblCompareAgainstKnownHashStatus.Text &= ", " & String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
+                                                                        lblCompareAgainstKnownHashStatus.Text &= String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
                                                                         oldLocationInFile = longCurrentPositionInFile
                                                                     End Sub)
                                                       Catch ex As Exception
@@ -125,7 +135,12 @@
                 .setChecksumStatusUpdateRoutine = Sub(longFileSize As Long, longCurrentPositionInFile As Long)
                                                       Try
                                                           Me.Invoke(Sub()
-                                                                        lblCompareFilesStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second"
+                                                                        If My.Settings.boolEnablePerSecondStatusUpdates Then
+                                                                            lblCompareFilesStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second, "
+                                                                        Else
+                                                                            lblCompareFilesStatus.Text = ""
+                                                                        End If
+
                                                                         oldLocationInFile = longCurrentPositionInFile
 
                                                                         If longCurrentPositionInFile <> 0 And longFileSize <> 0 Then
@@ -134,7 +149,7 @@
                                                                             compareFilesProgressBar.Value = 0
                                                                         End If
 
-                                                                        lblCompareFilesStatus.Text &= ", " & String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
+                                                                        lblCompareFilesStatus.Text &= String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
                                                                         oldLocationInFile = longCurrentPositionInFile
                                                                     End Sub)
                                                       Catch ex As Exception
@@ -177,7 +192,12 @@
                 .setChecksumStatusUpdateRoutine = Sub(longFileSize As Long, longCurrentPositionInFile As Long)
                                                       Try
                                                           Me.Invoke(Sub()
-                                                                        lblIndividualFilesStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second"
+                                                                        If My.Settings.boolEnablePerSecondStatusUpdates Then
+                                                                            lblIndividualFilesStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second, "
+                                                                        Else
+                                                                            lblIndividualFilesStatus.Text = ""
+                                                                        End If
+
                                                                         oldLocationInFile = longCurrentPositionInFile
 
                                                                         If longCurrentPositionInFile <> 0 And longFileSize <> 0 Then
@@ -186,7 +206,7 @@
                                                                             IndividualFilesProgressBar.Value = 0
                                                                         End If
 
-                                                                        lblIndividualFilesStatus.Text &= ", " & String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
+                                                                        lblIndividualFilesStatus.Text &= String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
                                                                         lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s).", index, listFiles.Items.Count())
                                                                         oldLocationInFile = longCurrentPositionInFile
                                                                     End Sub)
@@ -441,6 +461,7 @@
         lblCompareFileAgainstKnownHashType.Text = ""
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
+        chkPerSecondStatusUpdates.Checked = My.Settings.boolEnablePerSecondStatusUpdates
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString)
         Me.Size = My.Settings.windowSize
 
@@ -1094,5 +1115,9 @@
 
     Private Sub Form1_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
         My.Settings.windowSize = Me.Size
+    End Sub
+
+    Private Sub chkPerSecondStatusUpdates_Click(sender As Object, e As EventArgs) Handles chkPerSecondStatusUpdates.Click
+        My.Settings.boolEnablePerSecondStatusUpdates = chkPerSecondStatusUpdates.Checked
     End Sub
 End Class
