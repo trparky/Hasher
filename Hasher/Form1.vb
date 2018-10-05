@@ -160,7 +160,7 @@
                                                                         End If
 
                                                                         lblIndividualFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
-                                                                        lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s).", index, listFiles.Items.Count())
+                                                                        lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s).", index.ToString("N0"), listFiles.Items.Count().ToString("N0"))
                                                                         oldLocationInFile = totalBytesRead
                                                                     End Sub)
                                                       Catch ex As Exception
@@ -177,7 +177,7 @@
     End Function
 
     Private Sub updateFilesListCountHeader()
-        lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files", listFiles.Items.Count().ToString())
+        lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files", listFiles.Items.Count().ToString("N0"))
         btnComputeHash.Enabled = If(listFiles.Items.Count() = 0, False, True)
     End Sub
 
@@ -517,7 +517,7 @@
                                                      End Using
 
                                                      For Each strLineInCollection As String In linesInFile
-                                                         lblVerifyHashStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s)", index, linesInFile.Count())
+                                                         lblVerifyHashStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s)", index.ToString("N0"), linesInFile.Count().ToString("N0"))
                                                          processLineInHashFile(strPathOfChecksumFile, strLineInCollection, checksumType, listOfFiles, longFilesThatPassedVerification)
                                                          index += 1
                                                      Next
@@ -643,7 +643,7 @@
     End Sub
 
     Private Sub txtTextToHash_TextChanged(sender As Object, e As EventArgs) Handles txtTextToHash.TextChanged
-        lblHashTextStep1.Text = String.Format("Step 1: Input some text: {0} Characters", txtTextToHash.Text.Length)
+        lblHashTextStep1.Text = String.Format("Step 1: Input some text: {0} Characters", txtTextToHash.Text.Length.ToString("N0"))
         btnComputeTextHash.Enabled = If(txtTextToHash.Text.Length = 0, False, True)
         clearTextHashResults()
     End Sub
