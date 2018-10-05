@@ -581,7 +581,11 @@
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
 
-        If OpenFileDialog.ShowDialog() = DialogResult.OK Then processExistingHashFile(OpenFileDialog.FileName)
+        If OpenFileDialog.ShowDialog() = DialogResult.OK Then
+            processExistingHashFile(OpenFileDialog.FileName)
+        Else
+            btnOpenExistingHashFile.Enabled = True
+        End If
 
         OpenFileDialog.Multiselect = oldMultiValue
     End Sub
