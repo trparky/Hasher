@@ -16,21 +16,8 @@ Public Class checksums
         End Set
     End Property
 
-    Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As Form1.checksumType) As String
-        Dim HashAlgorithm As Security.Cryptography.HashAlgorithm
-
-        If hashType = Form1.checksumType.md5 Then
-            HashAlgorithm = New Security.Cryptography.MD5CryptoServiceProvider
-        ElseIf hashType = Form1.checksumType.sha160 Then
-            HashAlgorithm = New Security.Cryptography.SHA1CryptoServiceProvider
-        ElseIf hashType = Form1.checksumType.sha256 Then
-            HashAlgorithm = New Security.Cryptography.SHA256CryptoServiceProvider
-        ElseIf hashType = Form1.checksumType.sha384 Then
-            HashAlgorithm = New Security.Cryptography.SHA384CryptoServiceProvider
-        ElseIf hashType = Form1.checksumType.sha512 Then
-            HashAlgorithm = New Security.Cryptography.SHA512CryptoServiceProvider
-        End If
-
+    Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType) As String
+        Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType)
         Dim readAheadBuffer As Byte(), buffer As Byte()
         Dim readAheadBytesRead As Integer, bytesRead As Integer
         Dim size As Long, totalBytesRead As Long = 0

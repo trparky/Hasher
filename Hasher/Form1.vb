@@ -11,14 +11,6 @@
     Private boolClosingWindow As Boolean = False
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
 
-    Enum checksumType As Short
-        md5
-        sha160
-        sha256
-        sha384
-        sha512
-    End Enum
-
     Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
         Dim shortRoundNumber As Short = If(roundToNearestWholeNumber, 0, 2)
@@ -677,15 +669,15 @@
 
     Private Sub btnComputeTextHash_Click(sender As Object, e As EventArgs) Handles btnComputeTextHash.Click
         If textRadioMD5.Checked Then
-            txtHashResults.Text = MD5String(txtTextToHash.Text)
+            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksumType.md5)
         ElseIf textRadioSHA1.Checked Then
-            txtHashResults.Text = SHA160String(txtTextToHash.Text)
+            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksumType.sha160)
         ElseIf textRadioSHA256.Checked Then
-            txtHashResults.Text = SHA256String(txtTextToHash.Text)
+            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksumType.sha256)
         ElseIf textRadioSHA384.Checked Then
-            txtHashResults.Text = SHA384String(txtTextToHash.Text)
+            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksumType.sha384)
         ElseIf textRadioSHA512.Checked Then
-            txtHashResults.Text = SHA512String(txtTextToHash.Text)
+            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksumType.sha512)
         End If
 
         btnCopyTextHashResultsToClipboard.Enabled = True
@@ -1090,33 +1082,9 @@
         My.Settings.windowSize = Me.Size
     End Sub
 
-    Public Function MD5String(inputString As String) As String
-        Dim MD5Engine As New Security.Cryptography.MD5CryptoServiceProvider
-        Dim Output As Byte() = MD5Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
-        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
-    End Function
-
-    Public Function SHA160String(inputString As String) As String
-        Dim SHA1Engine As New Security.Cryptography.SHA1CryptoServiceProvider
-        Dim Output As Byte() = SHA1Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
-        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
-    End Function
-
-    Public Function SHA256String(inputString As String) As String
-        Dim SHA1Engine As New Security.Cryptography.SHA256Managed
-        Dim Output As Byte() = SHA1Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
-        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
-    End Function
-
-    Public Function SHA384String(inputString As String) As String
-        Dim SHA1Engine As New Security.Cryptography.SHA384Managed
-        Dim Output As Byte() = SHA1Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
-        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
-    End Function
-
-    Public Function SHA512String(inputString As String) As String
-        Dim SHA1Engine As New Security.Cryptography.SHA512Managed
-        Dim Output As Byte() = SHA1Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+    Private Function getHashOfString(inputString As String, hashType As checksumType) As String
+        Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType)
+        Dim Output As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
         Return BitConverter.ToString(Output).ToLower().Replace("-", "")
     End Function
 End Class
