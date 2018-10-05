@@ -49,34 +49,26 @@
             Dim oldLocationInFile As ULong = 0
 
             Dim checksums As New checksums With {
-                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan),
-                .setChecksumStatusUpdateRoutine = Sub(longFileSize As Long, longCurrentPositionInFile As Long)
+                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
                                                       Try
                                                           Me.Invoke(Sub()
-                                                                        If My.Settings.boolEnablePerSecondStatusUpdates Then
-                                                                            lblVerifyHashStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second, "
-                                                                        Else
-                                                                            lblVerifyHashStatus.Text = ""
-                                                                        End If
+                                                                        oldLocationInFile = totalBytesRead
 
-                                                                        oldLocationInFile = longCurrentPositionInFile
-
-                                                                        If longCurrentPositionInFile <> 0 And longFileSize <> 0 Then
-                                                                            VerifyHashProgressBar.Value = longCurrentPositionInFile / longFileSize * 100
+                                                                        If totalBytesRead <> 0 And size <> 0 Then
+                                                                            VerifyHashProgressBar.Value = totalBytesRead / size * 100
                                                                         Else
                                                                             VerifyHashProgressBar.Value = 0
                                                                         End If
 
-                                                                        lblVerifyHashStatus.Text &= String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
-                                                                        oldLocationInFile = longCurrentPositionInFile
+                                                                        lblVerifyHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                        oldLocationInFile = totalBytesRead
                                                                     End Sub)
                                                       Catch ex As Exception
                                                       End Try
                                                   End Sub
             }
 
-            strChecksum = performChecksumCalculation(checksums, checksumType)
-            checksums.dispose()
+            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
         Else
             strChecksum = Nothing
         End If
@@ -90,34 +82,26 @@
         If IO.File.Exists(strFile) Then
             Dim oldLocationInFile As ULong = 0
             Dim checksums As New checksums With {
-                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan),
-                .setChecksumStatusUpdateRoutine = Sub(longFileSize As Long, longCurrentPositionInFile As Long)
+                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
                                                       Try
                                                           Me.Invoke(Sub()
-                                                                        If My.Settings.boolEnablePerSecondStatusUpdates Then
-                                                                            lblCompareAgainstKnownHashStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second, "
-                                                                        Else
-                                                                            lblCompareAgainstKnownHashStatus.Text = ""
-                                                                        End If
+                                                                        oldLocationInFile = totalBytesRead
 
-                                                                        oldLocationInFile = longCurrentPositionInFile
-
-                                                                        If longCurrentPositionInFile <> 0 And longFileSize <> 0 Then
-                                                                            compareAgainstKnownHashProgressBar.Value = longCurrentPositionInFile / longFileSize * 100
+                                                                        If totalBytesRead <> 0 And size <> 0 Then
+                                                                            compareAgainstKnownHashProgressBar.Value = totalBytesRead / size * 100
                                                                         Else
                                                                             compareAgainstKnownHashProgressBar.Value = 0
                                                                         End If
 
-                                                                        lblCompareAgainstKnownHashStatus.Text &= String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
-                                                                        oldLocationInFile = longCurrentPositionInFile
+                                                                        lblCompareAgainstKnownHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                        oldLocationInFile = totalBytesRead
                                                                     End Sub)
                                                       Catch ex As Exception
                                                       End Try
                                                   End Sub
             }
 
-            strChecksum = performChecksumCalculation(checksums, checksumType)
-            checksums.dispose()
+            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
         Else
             strChecksum = Nothing
         End If
@@ -131,55 +115,31 @@
         If IO.File.Exists(strFile) Then
             Dim oldLocationInFile As ULong = 0
             Dim checksums As New checksums With {
-                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan),
-                .setChecksumStatusUpdateRoutine = Sub(longFileSize As Long, longCurrentPositionInFile As Long)
+                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
                                                       Try
                                                           Me.Invoke(Sub()
-                                                                        If My.Settings.boolEnablePerSecondStatusUpdates Then
-                                                                            lblCompareFilesStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second, "
-                                                                        Else
-                                                                            lblCompareFilesStatus.Text = ""
-                                                                        End If
+                                                                        oldLocationInFile = totalBytesRead
 
-                                                                        oldLocationInFile = longCurrentPositionInFile
-
-                                                                        If longCurrentPositionInFile <> 0 And longFileSize <> 0 Then
-                                                                            compareFilesProgressBar.Value = longCurrentPositionInFile / longFileSize * 100
+                                                                        If totalBytesRead <> 0 And size <> 0 Then
+                                                                            compareFilesProgressBar.Value = totalBytesRead / size * 100
                                                                         Else
                                                                             compareFilesProgressBar.Value = 0
                                                                         End If
 
-                                                                        lblCompareFilesStatus.Text &= String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
-                                                                        oldLocationInFile = longCurrentPositionInFile
+                                                                        lblCompareFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                        oldLocationInFile = totalBytesRead
                                                                     End Sub)
                                                       Catch ex As Exception
                                                       End Try
                                                   End Sub
             }
 
-            strChecksum = performChecksumCalculation(checksums, checksumType)
-            checksums.dispose()
+            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
         Else
             strChecksum = Nothing
         End If
 
         Return strChecksum
-    End Function
-
-    Private Function performChecksumCalculation(ByRef checksums As checksums, checksumType As checksumType)
-        If checksumType = checksumType.md5 Then
-            Return checksums.MD5()
-        ElseIf checksumType = checksumType.sha160 Then
-            Return checksums.SHA160()
-        ElseIf checksumType = checksumType.sha256 Then
-            Return checksums.SHA256()
-        ElseIf checksumType = checksumType.sha384 Then
-            Return checksums.SHA384()
-        ElseIf checksumType = checksumType.sha512 Then
-            Return checksums.SHA512()
-        Else
-            Return Nothing
-        End If
     End Function
 
     Function performIndividualFilesChecksum(index As Short, strFile As String, checksumType As checksumType) As String
@@ -188,35 +148,27 @@
         If IO.File.Exists(strFile) Then
             Dim oldLocationInFile As ULong = 0
             Dim checksums As New checksums With {
-                .setFileStream = New IO.FileStream(strFile, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan),
-                .setChecksumStatusUpdateRoutine = Sub(longFileSize As Long, longCurrentPositionInFile As Long)
+                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
                                                       Try
                                                           Me.Invoke(Sub()
-                                                                        If My.Settings.boolEnablePerSecondStatusUpdates Then
-                                                                            lblIndividualFilesStatus.Text = "Estimated " & fileSizeToHumanSize(longCurrentPositionInFile - oldLocationInFile) & "/second, "
-                                                                        Else
-                                                                            lblIndividualFilesStatus.Text = ""
-                                                                        End If
+                                                                        oldLocationInFile = totalBytesRead
 
-                                                                        oldLocationInFile = longCurrentPositionInFile
-
-                                                                        If longCurrentPositionInFile <> 0 And longFileSize <> 0 Then
-                                                                            IndividualFilesProgressBar.Value = longCurrentPositionInFile / longFileSize * 100
+                                                                        If totalBytesRead <> 0 And size <> 0 Then
+                                                                            IndividualFilesProgressBar.Value = totalBytesRead / size * 100
                                                                         Else
                                                                             IndividualFilesProgressBar.Value = 0
                                                                         End If
 
-                                                                        lblIndividualFilesStatus.Text &= String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(longCurrentPositionInFile), fileSizeToHumanSize(longFileSize))
+                                                                        lblIndividualFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
                                                                         lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s).", index, listFiles.Items.Count())
-                                                                        oldLocationInFile = longCurrentPositionInFile
+                                                                        oldLocationInFile = totalBytesRead
                                                                     End Sub)
                                                       Catch ex As Exception
                                                       End Try
                                                   End Sub
             }
 
-            strChecksum = performChecksumCalculation(checksums, checksumType)
-            checksums.dispose()
+            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
         Else
             strChecksum = Nothing
         End If
@@ -461,7 +413,6 @@
         lblCompareFileAgainstKnownHashType.Text = ""
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
-        chkPerSecondStatusUpdates.Checked = My.Settings.boolEnablePerSecondStatusUpdates
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString)
         Me.Size = My.Settings.windowSize
 
@@ -704,15 +655,15 @@
 
     Private Sub btnComputeTextHash_Click(sender As Object, e As EventArgs) Handles btnComputeTextHash.Click
         If textRadioMD5.Checked Then
-            txtHashResults.Text = checksums.MD5String(txtTextToHash.Text)
+            txtHashResults.Text = MD5String(txtTextToHash.Text)
         ElseIf textRadioSHA1.Checked Then
-            txtHashResults.Text = checksums.SHA160String(txtTextToHash.Text)
+            txtHashResults.Text = SHA160String(txtTextToHash.Text)
         ElseIf textRadioSHA256.Checked Then
-            txtHashResults.Text = checksums.SHA256String(txtTextToHash.Text)
+            txtHashResults.Text = SHA256String(txtTextToHash.Text)
         ElseIf textRadioSHA384.Checked Then
-            txtHashResults.Text = checksums.SHA384String(txtTextToHash.Text)
+            txtHashResults.Text = SHA384String(txtTextToHash.Text)
         ElseIf textRadioSHA512.Checked Then
-            txtHashResults.Text = checksums.SHA512String(txtTextToHash.Text)
+            txtHashResults.Text = SHA512String(txtTextToHash.Text)
         End If
 
         btnCopyTextHashResultsToClipboard.Enabled = True
@@ -1117,7 +1068,33 @@
         My.Settings.windowSize = Me.Size
     End Sub
 
-    Private Sub chkPerSecondStatusUpdates_Click(sender As Object, e As EventArgs) Handles chkPerSecondStatusUpdates.Click
-        My.Settings.boolEnablePerSecondStatusUpdates = chkPerSecondStatusUpdates.Checked
-    End Sub
+    Public Function MD5String(inputString As String) As String
+        Dim MD5Engine As New Security.Cryptography.MD5CryptoServiceProvider
+        Dim Output As Byte() = MD5Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
+    End Function
+
+    Public Function SHA160String(inputString As String) As String
+        Dim SHA1Engine As New Security.Cryptography.SHA1CryptoServiceProvider
+        Dim Output As Byte() = SHA1Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
+    End Function
+
+    Public Function SHA256String(inputString As String) As String
+        Dim SHA1Engine As New Security.Cryptography.SHA256Managed
+        Dim Output As Byte() = SHA1Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
+    End Function
+
+    Public Function SHA384String(inputString As String) As String
+        Dim SHA1Engine As New Security.Cryptography.SHA384Managed
+        Dim Output As Byte() = SHA1Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
+    End Function
+
+    Public Function SHA512String(inputString As String) As String
+        Dim SHA1Engine As New Security.Cryptography.SHA512Managed
+        Dim Output As Byte() = SHA1Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
+    End Function
 End Class

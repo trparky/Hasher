@@ -11,8 +11,5 @@
     <Setting Name="windowSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">1088, 446</Value>
     </Setting>
-    <Setting Name="boolEnablePerSecondStatusUpdates" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

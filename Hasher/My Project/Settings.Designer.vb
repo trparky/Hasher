@@ -89,18 +89,6 @@ Namespace My
                 Me("windowSize") = value
             End Set
         End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property boolEnablePerSecondStatusUpdates() As Boolean
-            Get
-                Return CType(Me("boolEnablePerSecondStatusUpdates"),Boolean)
-            End Get
-            Set
-                Me("boolEnablePerSecondStatusUpdates") = value
-            End Set
-        End Property
     End Class
 End Namespace
 

@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form1
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Form1
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
@@ -105,7 +105,6 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.chkPerSecondStatusUpdates = New System.Windows.Forms.CheckBox()
         Me.tabCompareAgainstKnownHash = New System.Windows.Forms.TabPage()
         Me.btnBrowseFileForCompareKnownHash = New System.Windows.Forms.Button()
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
@@ -924,7 +923,6 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
-        Me.tabSettings.Controls.Add(Me.chkPerSecondStatusUpdates)
         Me.tabSettings.Controls.Add(Me.chkSSL)
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
@@ -977,15 +975,6 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.TabIndex = 6
         Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
         '
-        'chkPerSecondStatusUpdates
-        '
-        Me.chkPerSecondStatusUpdates.AutoSize = True
-        Me.chkPerSecondStatusUpdates.Location = New System.Drawing.Point(15, 59)
-        Me.chkPerSecondStatusUpdates.Name = "chkPerSecondStatusUpdates"
-        Me.chkPerSecondStatusUpdates.Size = New System.Drawing.Size(351, 17)
-        Me.chkPerSecondStatusUpdates.TabIndex = 2
-        Me.chkPerSecondStatusUpdates.Text = "Enable ""Per Second"" status updates while calculating the checksum, disabling this option makes status updates on the user interface to be real-time meaning instant updates"
-        Me.chkPerSecondStatusUpdates.UseVisualStyleBackColor = True
         '
         'btnBrowseFileForCompareKnownHash
         '
@@ -1191,5 +1180,4 @@ Partial Class Form1
     Friend WithEvents lblCompareAgainstKnownHashStatus As Label
     Friend WithEvents btnCompareAgainstKnownHash As Button
     Friend WithEvents lblCompareFileAgainstKnownHashType As Label
-    Friend WithEvents chkPerSecondStatusUpdates As CheckBox
 End Class
