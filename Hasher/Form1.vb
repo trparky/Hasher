@@ -444,24 +444,42 @@
     End Sub
 
     Private Sub addFilesFromDirectory(directoryPath As String)
-        Dim listOfFiles As New List(Of ListViewItem)
-        Dim listViewItem As myListViewItem
-        Dim directorySearchOptions As IO.SearchOption = If(My.Settings.boolRecurrsiveDirectorySearch, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly)
+        Threading.ThreadPool.QueueUserWorkItem(Sub()
+                                                   Dim listOfFiles As New List(Of ListViewItem)
+                                                   Dim listViewItem As myListViewItem
+                                                   Dim directorySearchOptions As IO.SearchOption = If(My.Settings.boolRecurrsiveDirectorySearch, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly)
+                                                   Dim index As Integer = 0
 
-        For Each strFileName As String In IO.Directory.GetFiles(directoryPath, "*.*", directorySearchOptions)
-            If Not isFileInListOfListViewItems(strFileName, listOfFiles) Then
-                listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
-                listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                listViewItem.SubItems.Add(strToBeComputed)
-                listViewItem.fileName = strFileName
-                listOfFiles.Add(listViewItem)
-                listViewItem = Nothing
-            End If
-        Next
+                                                   btnAddFilesInFolder.Enabled = False
 
-        listFiles.BeginUpdate()
-        listFiles.Items.AddRange(listOfFiles.ToArray())
-        listFiles.EndUpdate()
+                                                   Dim filesInFolder As String() = IO.Directory.GetFiles(directoryPath, "*.*", directorySearchOptions)
+
+                                                   For Each strFileName As String In filesInFolder
+                                                       index += 1
+
+                                                       lblIndividualFilesStatusProcessingFile.Text = String.Format("Scanning directory... processing file {0} of {1}.", index.ToString("N0"), filesInFolder.Count.ToString("N0"))
+                                                       IndividualFilesProgressBar.Value = (index / filesInFolder.Count) * 100
+
+                                                       If Not isFileInListOfListViewItems(strFileName, listOfFiles) Then
+                                                           listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
+                                                           listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
+                                                           listViewItem.SubItems.Add(strToBeComputed)
+                                                           listViewItem.fileName = strFileName
+                                                           listOfFiles.Add(listViewItem)
+                                                           listViewItem = Nothing
+                                                       End If
+                                                   Next
+
+                                                   lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please Wait."
+
+                                                   listFiles.BeginUpdate()
+                                                   listFiles.Items.AddRange(listOfFiles.ToArray())
+                                                   listFiles.EndUpdate()
+
+                                                   lblIndividualFilesStatusProcessingFile.Text = Nothing
+                                                   IndividualFilesProgressBar.Value = 0
+                                                   btnAddFilesInFolder.Enabled = True
+                                               End Sub)
     End Sub
 
     Private Sub btnAddFilesInFolder_Click(sender As Object, e As EventArgs) Handles btnAddFilesInFolder.Click
