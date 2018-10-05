@@ -435,24 +435,44 @@
         End Try
     End Sub
 
+    Private Sub recursiveDirectorySearch(ByVal strDirectory As String, ByRef files As List(Of String))
+        Try
+            files.AddRange(IO.Directory.EnumerateFiles(strDirectory))
+        Catch ex As Exception
+        End Try
+
+        Try
+            For Each directory As String In IO.Directory.EnumerateDirectories(strDirectory)
+                recursiveDirectorySearch(directory, files)
+            Next
+        Catch ex As Exception
+        End Try
+    End Sub
+
     Private Sub addFilesFromDirectory(directoryPath As String)
         Threading.ThreadPool.QueueUserWorkItem(Sub()
                                                    Dim listOfFiles As New List(Of ListViewItem)
                                                    Dim listViewItem As myListViewItem
-                                                   Dim directorySearchOptions As IO.SearchOption = If(My.Settings.boolRecurrsiveDirectorySearch, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly)
                                                    Dim index As Integer = 0
+
+                                                   lblIndividualFilesStatus.Text = "Enumerating files in directory... Please Wait."
 
                                                    btnAddFilesInFolder.Enabled = False
 
-                                                   Dim filesInFolder As String() = IO.Directory.GetFiles(directoryPath, "*.*", directorySearchOptions)
+                                                   Dim filesInFolder As New List(Of String)
+                                                   If My.Settings.boolRecurrsiveDirectorySearch Then
+                                                       recursiveDirectorySearch(directoryPath, filesInFolder)
+                                                   Else
+                                                       filesInFolder.AddRange(IO.Directory.EnumerateFiles(directoryPath))
+                                                   End If
 
                                                    For Each strFileName As String In filesInFolder
                                                        index += 1
 
-                                                       lblIndividualFilesStatusProcessingFile.Text = String.Format("Scanning directory... processing file {0} of {1}.", index.ToString("N0"), filesInFolder.Count.ToString("N0"))
+                                                       lblIndividualFilesStatusProcessingFile.Text = String.Format("Scanning directory... processing file {0} of {1}. Please Wait.", index.ToString("N0"), filesInFolder.Count.ToString("N0"))
                                                        IndividualFilesProgressBar.Value = (index / filesInFolder.Count) * 100
 
-                                                       If Not isFileInListOfListViewItems(strFileName, listOfFiles) Then
+                                                       If Not isFileInListOfListViewItems(strFileName, listOfFiles) And Not isFileInListView(strFileName) Then
                                                            listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
                                                            listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                                                            listViewItem.SubItems.Add(strToBeComputed)
@@ -469,16 +489,16 @@
                                                    listFiles.EndUpdate()
 
                                                    lblIndividualFilesStatusProcessingFile.Text = Nothing
+                                                   lblIndividualFilesStatus.Text = strNoBackgroundProcesses
                                                    IndividualFilesProgressBar.Value = 0
                                                    btnAddFilesInFolder.Enabled = True
+
+                                                   updateFilesListCountHeader()
                                                End Sub)
     End Sub
 
     Private Sub btnAddFilesInFolder_Click(sender As Object, e As EventArgs) Handles btnAddFilesInFolder.Click
-        If FolderBrowserDialog.ShowDialog = DialogResult.OK Then
-            addFilesFromDirectory(FolderBrowserDialog.SelectedPath)
-        End If
-        updateFilesListCountHeader()
+        If FolderBrowserDialog.ShowDialog = DialogResult.OK Then addFilesFromDirectory(FolderBrowserDialog.SelectedPath)
     End Sub
 
     Private Sub processExistingHashFile(strFile As String)
