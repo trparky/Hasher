@@ -599,6 +599,7 @@
         OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
+            lblVerifyFileNameLabel.Text = "File Name: " & OpenFileDialog.FileName
             processExistingHashFile(OpenFileDialog.FileName)
         Else
             btnOpenExistingHashFile.Enabled = True

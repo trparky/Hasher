@@ -115,6 +115,7 @@ Partial Class Form1
         Me.compareAgainstKnownHashProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblCompareAgainstKnownHashStatus = New System.Windows.Forms.Label()
         Me.lblCompareFileAgainstKnownHashType = New System.Windows.Forms.Label()
+        Me.lblVerifyFileNameLabel = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -653,6 +654,7 @@ Partial Class Form1
         'tabVerifySavedHashes
         '
         Me.tabVerifySavedHashes.BackColor = System.Drawing.SystemColors.Control
+        Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyFileNameLabel)
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyHashStatusProcessingFile)
         Me.tabVerifySavedHashes.Controls.Add(Me.VerifyHashProgressBar)
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyHashStatus)
@@ -700,9 +702,9 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults})
         Me.verifyHashesListFiles.FullRowSelect = True
-        Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 12)
+        Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
-        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 306)
+        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 290)
         Me.verifyHashesListFiles.TabIndex = 6
         Me.verifyHashesListFiles.UseCompatibleStateImageBehavior = False
         Me.verifyHashesListFiles.View = System.Windows.Forms.View.Details
@@ -1059,6 +1061,15 @@ Partial Class Form1
         Me.lblCompareFileAgainstKnownHashType.TabIndex = 34
         Me.lblCompareFileAgainstKnownHashType.Text = "Label9"
         '
+        'lblVerifyFileNameLabel
+        '
+        Me.lblVerifyFileNameLabel.AutoSize = True
+        Me.lblVerifyFileNameLabel.Location = New System.Drawing.Point(160, 12)
+        Me.lblVerifyFileNameLabel.Name = "lblVerifyFileNameLabel"
+        Me.lblVerifyFileNameLabel.Size = New System.Drawing.Size(39, 13)
+        Me.lblVerifyFileNameLabel.TabIndex = 19
+        Me.lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1180,4 +1191,5 @@ Partial Class Form1
     Friend WithEvents lblCompareAgainstKnownHashStatus As Label
     Friend WithEvents btnCompareAgainstKnownHash As Button
     Friend WithEvents lblCompareFileAgainstKnownHashType As Label
+    Friend WithEvents lblVerifyFileNameLabel As Label
 End Class
