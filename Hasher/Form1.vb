@@ -455,9 +455,10 @@
                                                    Dim listViewItem As myListViewItem
                                                    Dim index As Integer = 0
 
-                                                   lblIndividualFilesStatus.Text = "Enumerating files in directory... Please Wait."
-
-                                                   btnAddFilesInFolder.Enabled = False
+                                                   Me.Invoke(Sub()
+                                                                 lblIndividualFilesStatus.Text = "Enumerating files in directory... Please Wait."
+                                                                 btnAddFilesInFolder.Enabled = False
+                                                             End Sub)
 
                                                    Dim filesInFolder As New List(Of String)
                                                    If My.Settings.boolRecurrsiveDirectorySearch Then
@@ -469,8 +470,10 @@
                                                    For Each strFileName As String In filesInFolder
                                                        index += 1
 
-                                                       lblIndividualFilesStatusProcessingFile.Text = String.Format("Scanning directory... processing file {0} of {1}. Please Wait.", index.ToString("N0"), filesInFolder.Count.ToString("N0"))
-                                                       IndividualFilesProgressBar.Value = (index / filesInFolder.Count) * 100
+                                                       Me.Invoke(Sub()
+                                                                     lblIndividualFilesStatusProcessingFile.Text = String.Format("Scanning directory... processing file {0} of {1}. Please Wait.", index.ToString("N0"), filesInFolder.Count.ToString("N0"))
+                                                                     IndividualFilesProgressBar.Value = (index / filesInFolder.Count) * 100
+                                                                 End Sub)
 
                                                        If Not isFileInListOfListViewItems(strFileName, listOfFiles) And Not isFileInListView(strFileName) Then
                                                            listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
@@ -482,18 +485,20 @@
                                                        End If
                                                    Next
 
-                                                   lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please Wait."
+                                                   Me.Invoke(Sub()
+                                                                 lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please Wait."
 
-                                                   listFiles.BeginUpdate()
-                                                   listFiles.Items.AddRange(listOfFiles.ToArray())
-                                                   listFiles.EndUpdate()
+                                                                 listFiles.BeginUpdate()
+                                                                 listFiles.Items.AddRange(listOfFiles.ToArray())
+                                                                 listFiles.EndUpdate()
 
-                                                   lblIndividualFilesStatusProcessingFile.Text = Nothing
-                                                   lblIndividualFilesStatus.Text = strNoBackgroundProcesses
-                                                   IndividualFilesProgressBar.Value = 0
-                                                   btnAddFilesInFolder.Enabled = True
+                                                                 lblIndividualFilesStatusProcessingFile.Text = Nothing
+                                                                 lblIndividualFilesStatus.Text = strNoBackgroundProcesses
+                                                                 IndividualFilesProgressBar.Value = 0
+                                                                 btnAddFilesInFolder.Enabled = True
 
-                                                   updateFilesListCountHeader()
+                                                                 updateFilesListCountHeader()
+                                                             End Sub)
                                                End Sub)
     End Sub
 
