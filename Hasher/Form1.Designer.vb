@@ -779,6 +779,7 @@ Partial Class Form1
         '
         'compareFilesProgressBar
         '
+        Me.compareFilesProgressBar.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.compareFilesProgressBar.Location = New System.Drawing.Point(166, 115)
         Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
         Me.compareFilesProgressBar.Size = New System.Drawing.Size(861, 23)
@@ -1037,7 +1038,7 @@ Partial Class Form1
         '
         'compareAgainstKnownHashProgressBar
         '
-        Me.compareAgainstKnownHashProgressBar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.compareAgainstKnownHashProgressBar.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.compareAgainstKnownHashProgressBar.Location = New System.Drawing.Point(158, 83)
         Me.compareAgainstKnownHashProgressBar.Name = "compareAgainstKnownHashProgressBar"
         Me.compareAgainstKnownHashProgressBar.Size = New System.Drawing.Size(861, 23)
