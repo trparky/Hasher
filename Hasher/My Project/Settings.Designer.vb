@@ -89,6 +89,78 @@ Namespace My
                 Me("windowSize") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("528")>  _
+        Public Property hashIndividualFilesFileNameColumnSize() As Integer
+            Get
+                Return CType(Me("hashIndividualFilesFileNameColumnSize"),Integer)
+            End Get
+            Set
+                Me("hashIndividualFilesFileNameColumnSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("70")>  _
+        Public Property hashIndividualFilesFileSizeColumnSize() As Integer
+            Get
+                Return CType(Me("hashIndividualFilesFileSizeColumnSize"),Integer)
+            End Get
+            Set
+                Me("hashIndividualFilesFileSizeColumnSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("241")>  _
+        Public Property hashIndividualFilesChecksumColumnSize() As Integer
+            Get
+                Return CType(Me("hashIndividualFilesChecksumColumnSize"),Integer)
+            End Get
+            Set
+                Me("hashIndividualFilesChecksumColumnSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("557")>  _
+        Public Property verifyHashFileNameColumnSize() As Integer
+            Get
+                Return CType(Me("verifyHashFileNameColumnSize"),Integer)
+            End Get
+            Set
+                Me("verifyHashFileNameColumnSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("87")>  _
+        Public Property verifyHashFileSizeColumnSize() As Integer
+            Get
+                Return CType(Me("verifyHashFileSizeColumnSize"),Integer)
+            End Get
+            Set
+                Me("verifyHashFileSizeColumnSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("72")>  _
+        Public Property verifyHashFileResults() As Integer
+            Get
+                Return CType(Me("verifyHashFileResults"),Integer)
+            End Get
+            Set
+                Me("verifyHashFileResults") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

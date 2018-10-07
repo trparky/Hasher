@@ -11,5 +11,23 @@
     <Setting Name="windowSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">1088, 446</Value>
     </Setting>
+    <Setting Name="hashIndividualFilesFileNameColumnSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">528</Value>
+    </Setting>
+    <Setting Name="hashIndividualFilesFileSizeColumnSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">70</Value>
+    </Setting>
+    <Setting Name="hashIndividualFilesChecksumColumnSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">241</Value>
+    </Setting>
+    <Setting Name="verifyHashFileNameColumnSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">557</Value>
+    </Setting>
+    <Setting Name="verifyHashFileSizeColumnSize" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">87</Value>
+    </Setting>
+    <Setting Name="verifyHashFileResults" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">72</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -10,6 +10,7 @@
     Private workingThread As Threading.Thread
     Private boolClosingWindow As Boolean = False
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
+    Private boolDoneLoading As Boolean = False
 
     Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
@@ -425,6 +426,16 @@
                 End If
             End If
         End If
+
+        colFileName.Width = My.Settings.hashIndividualFilesFileNameColumnSize
+        colFileSize.Width = My.Settings.hashIndividualFilesFileSizeColumnSize
+        colChecksum.Width = My.Settings.hashIndividualFilesChecksumColumnSize
+
+        colFile.Width = My.Settings.verifyHashFileNameColumnSize
+        colFileSize2.Width = My.Settings.verifyHashFileSizeColumnSize
+        colResults.Width = My.Settings.verifyHashFileResults
+
+        boolDoneLoading = True
     End Sub
 
     Private Sub deleteTemporaryNewEXEFile()
@@ -1113,4 +1124,18 @@
         Dim Output As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
         Return BitConverter.ToString(Output).ToLower().Replace("-", "")
     End Function
+
+    Private Sub listFiles_ColumnWidthChanged(sender As Object, e As ColumnWidthChangedEventArgs) Handles listFiles.ColumnWidthChanged
+        If Not boolDoneLoading Then Exit Sub
+        My.Settings.hashIndividualFilesFileNameColumnSize = colFileName.Width
+        My.Settings.hashIndividualFilesFileSizeColumnSize = colFileSize.Width
+        My.Settings.hashIndividualFilesChecksumColumnSize = colChecksum.Width
+    End Sub
+
+    Private Sub verifyHashesListFiles_ColumnWidthChanged(sender As Object, e As ColumnWidthChangedEventArgs) Handles verifyHashesListFiles.ColumnWidthChanged
+        If Not boolDoneLoading Then Exit Sub
+        My.Settings.verifyHashFileNameColumnSize = colFile.Width
+        My.Settings.verifyHashFileSizeColumnSize = colFileSize2.Width
+        My.Settings.verifyHashFileResults = colResults.Width
+    End Sub
 End Class
