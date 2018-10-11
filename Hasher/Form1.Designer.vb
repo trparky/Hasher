@@ -230,6 +230,7 @@ Partial Class Form1
         Me.btnCopyTextHashResultsToClipboard.TabIndex = 31
         Me.btnCopyTextHashResultsToClipboard.Text = "Copy Results to Clipboard"
         Me.btnCopyTextHashResultsToClipboard.UseVisualStyleBackColor = True
+        Me.btnCopyTextHashResultsToClipboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         '
         'txtHashResults
         '
