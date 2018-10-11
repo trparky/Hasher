@@ -1138,4 +1138,52 @@
         My.Settings.verifyHashFileSizeColumnSize = colFileSize2.Width
         My.Settings.verifyHashFileResults = colResults.Width
     End Sub
+
+    Private Sub txtFile1_DragEnter(sender As Object, e As DragEventArgs) Handles txtFile1.DragEnter
+        e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.All, DragDropEffects.None)
+    End Sub
+
+    Private Sub txtFile1_DragDrop(sender As Object, e As DragEventArgs) Handles txtFile1.DragDrop
+        Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
+        If receivedData.Count = 1 Then txtFile1.Text = receivedData(0)
+    End Sub
+
+    Private Sub txtFile2_DragEnter(sender As Object, e As DragEventArgs) Handles txtFile2.DragEnter
+        e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.All, DragDropEffects.None)
+    End Sub
+
+    Private Sub txtFile2_DragDrop(sender As Object, e As DragEventArgs) Handles txtFile2.DragDrop
+        Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
+        If receivedData.Count = 1 Then txtFile2.Text = receivedData(0)
+    End Sub
+
+    Private Sub txtFileForKnownHash_DragEnter(sender As Object, e As DragEventArgs) Handles txtFileForKnownHash.DragEnter
+        e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.All, DragDropEffects.None)
+    End Sub
+
+    Private Sub txtFileForKnownHash_DragDrop(sender As Object, e As DragEventArgs) Handles txtFileForKnownHash.DragDrop
+        Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
+        If receivedData.Count = 1 Then txtFileForKnownHash.Text = receivedData(0)
+    End Sub
+
+    Private Sub btnOpenExistingHashFile_DragEnter(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragEnter
+        e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.All, DragDropEffects.None)
+    End Sub
+
+    Private Sub btnOpenExistingHashFile_DragDrop(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragDrop
+        Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
+        If receivedData.Count = 1 Then
+            Dim strReceivedFileName As String = receivedData(0)
+            Dim fileInfo As New IO.FileInfo(strReceivedFileName)
+
+            If fileInfo.Extension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                verifyHashesListFiles.Items.Clear()
+                btnOpenExistingHashFile.Enabled = False
+                lblVerifyFileNameLabel.Text = "File Name: " & strReceivedFileName
+                processExistingHashFile(strReceivedFileName)
+            Else
+                MsgBox("Invalid file type.", MsgBoxStyle.Critical, Me.Text)
+            End If
+        End If
+    End Sub
 End Class

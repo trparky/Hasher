@@ -732,6 +732,7 @@ Partial Class Form1
         Me.btnOpenExistingHashFile.TabIndex = 0
         Me.btnOpenExistingHashFile.Text = "Open Hash File"
         Me.btnOpenExistingHashFile.UseVisualStyleBackColor = True
+        Me.btnOpenExistingHashFile.AllowDrop = True
         '
         'tabCompareFiles
         '
@@ -903,6 +904,7 @@ Partial Class Form1
         Me.txtFile2.ReadOnly = True
         Me.txtFile2.Size = New System.Drawing.Size(459, 20)
         Me.txtFile2.TabIndex = 2
+        Me.txtFile2.AllowDrop = True
         '
         'txtFile1
         '
@@ -912,6 +914,7 @@ Partial Class Form1
         Me.txtFile1.ReadOnly = True
         Me.txtFile1.Size = New System.Drawing.Size(459, 20)
         Me.txtFile1.TabIndex = 1
+        Me.txtFile1.AllowDrop = True
         '
         'Label4
         '
@@ -997,6 +1000,7 @@ Partial Class Form1
         Me.txtFileForKnownHash.ReadOnly = True
         Me.txtFileForKnownHash.Size = New System.Drawing.Size(510, 20)
         Me.txtFileForKnownHash.TabIndex = 6
+        Me.txtFileForKnownHash.AllowDrop = True
         '
         'Label7
         '
