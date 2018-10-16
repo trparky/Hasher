@@ -1176,6 +1176,7 @@
         FileAssociation.SelfCreateAssociation(".sha256", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
         FileAssociation.SelfCreateAssociation(".sha384", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
         FileAssociation.SelfCreateAssociation(".sha512", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
+        MsgBox("File association complete.", MsgBoxStyle.Information, Me.Text)
     End Sub
 
     Private Sub btnOpenExistingHashFile_DragDrop(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragDrop
