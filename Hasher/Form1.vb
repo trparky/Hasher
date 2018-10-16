@@ -1170,6 +1170,14 @@
         e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.All, DragDropEffects.None)
     End Sub
 
+    Private Sub btnAssociate_Click(sender As Object, e As EventArgs) Handles btnAssociate.Click
+        FileAssociation.SelfCreateAssociation(".md5", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha1", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha256", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha384", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha512", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
+    End Sub
+
     Private Sub btnOpenExistingHashFile_DragDrop(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragDrop
         Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
         If receivedData.Count = 1 Then

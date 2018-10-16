@@ -105,6 +105,7 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnAssociate = New System.Windows.Forms.Button()
         Me.tabCompareAgainstKnownHash = New System.Windows.Forms.TabPage()
         Me.btnBrowseFileForCompareKnownHash = New System.Windows.Forms.Button()
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
@@ -930,6 +931,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.btnAssociate)
         Me.tabSettings.Controls.Add(Me.chkSSL)
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
@@ -981,7 +983,6 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 363)
         Me.tabCompareAgainstKnownHash.TabIndex = 6
         Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
-        '
         '
         'btnBrowseFileForCompareKnownHash
         '
@@ -1066,6 +1067,15 @@ Partial Class Form1
         Me.lblCompareFileAgainstKnownHashType.Size = New System.Drawing.Size(39, 13)
         Me.lblCompareFileAgainstKnownHashType.TabIndex = 34
         Me.lblCompareFileAgainstKnownHashType.Text = "Label9"
+        '
+        'btnAssociate
+        '
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 59)
+        Me.btnAssociate.Name = "btnAssociate"
+        Me.btnAssociate.Size = New System.Drawing.Size(237, 23)
+        Me.btnAssociate.TabIndex = 2
+        Me.btnAssociate.Text = "Associate File Hash Files with Hasher"
+        Me.btnAssociate.UseVisualStyleBackColor = True
         '
         'lblVerifyFileNameLabel
         '
@@ -1198,4 +1208,5 @@ Partial Class Form1
     Friend WithEvents btnCompareAgainstKnownHash As Button
     Friend WithEvents lblCompareFileAgainstKnownHashType As Label
     Friend WithEvents lblVerifyFileNameLabel As Label
+    Friend WithEvents btnAssociate As Button
 End Class
