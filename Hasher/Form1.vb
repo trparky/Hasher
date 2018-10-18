@@ -2,6 +2,7 @@
     Private Const strToBeComputed As String = "To Be Computed"
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
     Private Const intBufferSize As Integer = 16 * 1024 * 1024
+    Private Const strWindowTitle As String = "Hasher"
 
     Private hashResultArray As New Dictionary(Of String, String)
     Private hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
@@ -195,7 +196,7 @@
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             If OpenFileDialog.FileNames.Count() = 0 Then
-                MsgBox("You must select some files.", MsgBoxStyle.Critical, Me.Text)
+                MsgBox("You must select some files.", MsgBoxStyle.Critical, strWindowTitle)
             ElseIf OpenFileDialog.FileNames.Count() = 1 Then
                 If Not isFileInListView(OpenFileDialog.FileName) Then
                     itemToBeAdded = New myListViewItem(OpenFileDialog.FileName) With {.fileSize = New IO.FileInfo(OpenFileDialog.FileName).Length}
@@ -282,7 +283,7 @@
                                                      radioSHA384.Enabled = True
                                                      radioSHA512.Enabled = True
 
-                                                     Me.Invoke(Sub() MsgBox("Complete.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                     Me.Invoke(Sub() MsgBox("Complete.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
                                                      resetHashIndividualFilesProgress()
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
@@ -296,7 +297,7 @@
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
                                                  Finally
                                                      btnComputeHash.Enabled = True
                                                  End Try
@@ -331,7 +332,7 @@
     End Function
 
     Private Sub btnIndividualFilesCopyToClipboard_Click(sender As Object, e As EventArgs) Handles btnIndividualFilesCopyToClipboard.Click
-        If copyTextToWindowsClipboard(strGetIndividualHashesInStringFormat().Trim) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, Me.Text)
+        If copyTextToWindowsClipboard(strGetIndividualHashesInStringFormat().Trim) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
     End Sub
 
     Private Function copyTextToWindowsClipboard(strTextToBeCopiedToClipboard As String) As Boolean
@@ -339,7 +340,7 @@
             Clipboard.SetDataObject(strTextToBeCopiedToClipboard, True, 5, 200)
             Return True
         Catch ex As Exception
-            MsgBox("Unable to open Windows Clipboard to copy text to it.", MsgBoxStyle.Critical, Me.Text)
+            MsgBox("Unable to open Windows Clipboard to copy text to it.", MsgBoxStyle.Critical, strWindowTitle)
             Return False
         End Try
     End Function
@@ -363,7 +364,7 @@
             Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
                 streamWriter.Write(strGetIndividualHashesInStringFormat())
             End Using
-            MsgBox("Your hash results have been written to disk.", MsgBoxStyle.Information, Me.Text)
+            MsgBox("Your hash results have been written to disk.", MsgBoxStyle.Information, strWindowTitle)
         End If
     End Sub
 
@@ -545,7 +546,7 @@
         ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
             checksumType = checksumType.sha512
         Else
-            MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, Me.Text)
+            MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strWindowTitle)
             Exit Sub
         End If
 
@@ -581,7 +582,7 @@
 
                                                      verifyHashesListFiles.Items.AddRange(listOfFiles.ToArray())
                                                      verifyHashesListFiles.EndUpdate()
-                                                     Me.Invoke(Sub() MsgBox(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification.", longFilesThatPassedVerification, linesInFile.Count), MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                     Me.Invoke(Sub() MsgBox(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification.", longFilesThatPassedVerification, linesInFile.Count), MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
                                                  Catch ex As Threading.ThreadAbortException
@@ -594,7 +595,7 @@
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
                                                  Finally
                                                      btnOpenExistingHashFile.Enabled = True
                                                  End Try
@@ -732,7 +733,7 @@
     End Sub
 
     Private Sub btnCopyTextHashResultsToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyTextHashResultsToClipboard.Click
-        If copyTextToWindowsClipboard(txtHashResults.Text) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, Me.Text)
+        If copyTextToWindowsClipboard(txtHashResults.Text) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
     End Sub
 
     Private Sub textRadioSHA256_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA256.CheckedChanged
@@ -756,7 +757,7 @@
     End Sub
 
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
-        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, do you want to abort?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, Me.Text) = MsgBoxResult.No Then
+        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, do you want to abort?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, strWindowTitle) = MsgBoxResult.No Then
             e.Cancel = True
             Exit Sub
         Else
@@ -768,7 +769,7 @@
     End Sub
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, do you want to abort?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, Me.Text) = MsgBoxResult.No Then
+        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, do you want to abort?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, strWindowTitle) = MsgBoxResult.No Then
             e.Cancel = True
             Exit Sub
         Else
@@ -849,7 +850,7 @@
             Next
         End If
 
-        If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, Me.Text)
+        If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
     End Sub
 
     Private Sub verifyHashesListFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles verifyHashesListFiles.ColumnClick
@@ -894,15 +895,15 @@
 
     Private Sub btnCompareFiles_Click(sender As Object, e As EventArgs) Handles btnCompareFiles.Click
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
-            MsgBox("Please select two different files.", MsgBoxStyle.Information, Me.Text)
+            MsgBox("Please select two different files.", MsgBoxStyle.Information, strWindowTitle)
             Exit Sub
         End If
         If Not IO.File.Exists(txtFile1.Text) Then
-            MsgBox("File #1 doesn't exist.", MsgBoxStyle.Critical, Me.Text)
+            MsgBox("File #1 doesn't exist.", MsgBoxStyle.Critical, strWindowTitle)
             Exit Sub
         End If
         If Not IO.File.Exists(txtFile2.Text) Then
-            MsgBox("File #2 doesn't exist.", MsgBoxStyle.Critical, Me.Text)
+            MsgBox("File #2 doesn't exist.", MsgBoxStyle.Critical, strWindowTitle)
             Exit Sub
         End If
 
@@ -956,9 +957,9 @@
                                                      lblCompareFilesStatus.Text = strNoBackgroundProcesses
 
                                                      If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
-                                                         MsgBox("Both files are the same.", MsgBoxStyle.Information, Me.Text)
+                                                         MsgBox("Both files are the same.", MsgBoxStyle.Information, strWindowTitle)
                                                      Else
-                                                         MsgBox("The two files don't match.", MsgBoxStyle.Critical, Me.Text)
+                                                         MsgBox("The two files don't match.", MsgBoxStyle.Critical, strWindowTitle)
                                                      End If
 
                                                      boolBackgroundThreadWorking = False
@@ -980,7 +981,7 @@
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
                                                  Finally
                                                      btnComputeHash.Enabled = True
                                                  End Try
@@ -1057,7 +1058,7 @@
         txtFileForKnownHash.Text = txtFileForKnownHash.Text.Trim
 
         If Not IO.File.Exists(txtFileForKnownHash.Text) Then
-            MsgBox("File doesn't exist.", MsgBoxStyle.Critical, Me.Text)
+            MsgBox("File doesn't exist.", MsgBoxStyle.Critical, strWindowTitle)
             Exit Sub
         End If
 
@@ -1092,9 +1093,9 @@
                                                      lblCompareFilesStatus.Text = strNoBackgroundProcesses
 
                                                      If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
-                                                         MsgBox("The checksums match!", MsgBoxStyle.Information, Me.Text)
+                                                         MsgBox("The checksums match!", MsgBoxStyle.Information, strWindowTitle)
                                                      Else
-                                                         MsgBox("The checksums DON'T match!", MsgBoxStyle.Critical, Me.Text)
+                                                         MsgBox("The checksums DON'T match!", MsgBoxStyle.Critical, strWindowTitle)
                                                      End If
 
                                                      boolBackgroundThreadWorking = False
@@ -1110,7 +1111,7 @@
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, Me.Text))
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
                                                  Finally
                                                      btnComputeHash.Enabled = True
                                                  End Try
@@ -1194,7 +1195,7 @@
             process.WaitForExit()
         End If
 
-        MsgBox("File association complete.", MsgBoxStyle.Information, Me.Text)
+        MsgBox("File association complete.", MsgBoxStyle.Information, strWindowTitle)
     End Sub
 
     Private Sub btnOpenExistingHashFile_DragDrop(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragDrop
@@ -1209,7 +1210,7 @@
                 lblVerifyFileNameLabel.Text = "File Name: " & strReceivedFileName
                 processExistingHashFile(strReceivedFileName)
             Else
-                MsgBox("Invalid file type.", MsgBoxStyle.Critical, Me.Text)
+                MsgBox("Invalid file type.", MsgBoxStyle.Critical, strWindowTitle)
             End If
         End If
     End Sub
