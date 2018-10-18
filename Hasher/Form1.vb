@@ -398,6 +398,13 @@
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If areWeAnAdministrator() Then
+            Me.Text &= " (Running as Administrator)"
+        Else
+            btnAssociate.FlatStyle = FlatStyle.System
+            NativeMethod.NativeMethods.SendMessage(btnAssociate.Handle, NativeMethod.NativeMethods.BCM_SETSHIELD, 0, &HFFFFFFFF)
+        End If
+
         Control.CheckForIllegalCrossThreadCalls = False
         lblIndividualFilesStatusProcessingFile.Text = ""
         lblVerifyHashStatusProcessingFile.Text = ""
@@ -1171,11 +1178,22 @@
     End Sub
 
     Private Sub btnAssociate_Click(sender As Object, e As EventArgs) Handles btnAssociate.Click
-        FileAssociation.SelfCreateAssociation(".md5", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
-        FileAssociation.SelfCreateAssociation(".sha1", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
-        FileAssociation.SelfCreateAssociation(".sha256", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
-        FileAssociation.SelfCreateAssociation(".sha384", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
-        FileAssociation.SelfCreateAssociation(".sha512", FileAssociation.KeyHiveSmall.CurrentUser, "Checksum File")
+        If areWeAnAdministrator() Then
+            FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
+            FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
+            FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
+            FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
+            FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
+        Else
+            Dim startInfo As New ProcessStartInfo With {
+                .FileName = Application.ExecutablePath,
+                .Arguments = "-associatefiletype",
+                .Verb = "runas"
+            }
+            Dim process As Process = Process.Start(startInfo)
+            process.WaitForExit()
+        End If
+
         MsgBox("File association complete.", MsgBoxStyle.Information, Me.Text)
     End Sub
 

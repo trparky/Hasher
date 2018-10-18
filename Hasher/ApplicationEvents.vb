@@ -30,6 +30,13 @@ Namespace My
                         MsgBox("The environment is not ready for an update. This process will now terminate.", MsgBoxStyle.Critical, "Add Adobe Flash to Microsoft EMET")
                         Process.GetCurrentProcess.Kill()
                     End If
+                ElseIf commandLineArgument.Equals("-associatefiletype", StringComparison.OrdinalIgnoreCase) Then
+                    FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
+                    FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
+                    FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
+                    FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
+                    FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
+                    Process.GetCurrentProcess.Kill()
                 End If
             End If
         End Sub

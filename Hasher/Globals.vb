@@ -1,4 +1,7 @@
-﻿Public Module Globals
+﻿Imports System.Runtime.InteropServices
+Imports System.Security.Principal
+
+Public Module Globals
     Public Enum checksumType As Short
         md5
         sha160
@@ -6,6 +9,15 @@
         sha384
         sha512
     End Enum
+
+    Public Function areWeAnAdministrator() As Boolean
+        Try
+            Dim principal As WindowsPrincipal = New WindowsPrincipal(WindowsIdentity.GetCurrent())
+            Return principal.IsInRole(WindowsBuiltInRole.Administrator)
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
 
     Public Function getHashEngine(hashType As checksumType) As Security.Cryptography.HashAlgorithm
         If hashType = checksumType.md5 Then
