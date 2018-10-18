@@ -400,7 +400,7 @@
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If areWeAnAdministrator() Then
-            Me.Text &= " (Running as Administrator)"
+            Me.Text &= " (WARNING!!! Running as Administrator.)"
         Else
             btnAssociate.FlatStyle = FlatStyle.System
             NativeMethod.NativeMethods.SendMessage(btnAssociate.Handle, NativeMethod.NativeMethods.BCM_SETSHIELD, 0, &HFFFFFFFF)
