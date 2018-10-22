@@ -73,37 +73,40 @@
         End Try
     End Function
 
-    Function getChecksumForComparison(strFile As String, checksumType As checksumType) As String
-        Dim strChecksum As String = Nothing
+    Function getChecksumForComparison(strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
+        Try
+            If IO.File.Exists(strFile) Then
+                Dim oldLocationInFile As ULong = 0
+                Dim checksums As New checksums With {
+                    .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
+                                                          Try
+                                                              Me.Invoke(Sub()
+                                                                            oldLocationInFile = totalBytesRead
 
-        If IO.File.Exists(strFile) Then
-            Dim oldLocationInFile As ULong = 0
-            Dim checksums As New checksums With {
-                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                      Try
-                                                          Me.Invoke(Sub()
-                                                                        oldLocationInFile = totalBytesRead
+                                                                            If totalBytesRead <> 0 And size <> 0 Then
+                                                                                compareFilesProgressBar.Value = totalBytesRead / size * 100
+                                                                            Else
+                                                                                compareFilesProgressBar.Value = 0
+                                                                            End If
 
-                                                                        If totalBytesRead <> 0 And size <> 0 Then
-                                                                            compareFilesProgressBar.Value = totalBytesRead / size * 100
-                                                                        Else
-                                                                            compareFilesProgressBar.Value = 0
-                                                                        End If
+                                                                            lblCompareFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                            oldLocationInFile = totalBytesRead
+                                                                        End Sub)
+                                                          Catch ex As Exception
+                                                          End Try
+                                                      End Sub
+                }
 
-                                                                        lblCompareFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
-                                                                        oldLocationInFile = totalBytesRead
-                                                                    End Sub)
-                                                      Catch ex As Exception
-                                                      End Try
-                                                  End Sub
-            }
+                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
+                Return True
+            Else
+                Return False
+            End If
 
-            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
-        Else
-            strChecksum = Nothing
-        End If
-
-        Return strChecksum
+            Return False
+        Catch ex As Exception
+            Return False
+        End Try
     End Function
 
     Function performIndividualFilesChecksum(index As Short, strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
@@ -920,13 +923,17 @@
                                                          checksumType = checksumType.sha512
                                                      End If
 
-                                                     Dim strChecksum1 As String = getChecksumForComparison(txtFile1.Text, checksumType)
-                                                     Dim strChecksum2 As String = getChecksumForComparison(txtFile2.Text, checksumType)
+                                                     Dim strChecksum1 As String = Nothing
+                                                     Dim strChecksum2 As String = Nothing
+                                                     Dim boolSuccessful As Boolean = False
 
-                                                     lblFile1Hash.Text = "Hash/Checksum: " & strChecksum1
-                                                     lblFile2Hash.Text = "Hash/Checksum: " & strChecksum2
-                                                     ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
-                                                     ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+                                                     If getChecksumForComparison(txtFile1.Text, checksumType, strChecksum1) AndAlso getChecksumForComparison(txtFile2.Text, checksumType, strChecksum2) Then
+                                                         lblFile1Hash.Text = "Hash/Checksum: " & strChecksum1
+                                                         lblFile2Hash.Text = "Hash/Checksum: " & strChecksum2
+                                                         ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
+                                                         ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+                                                         boolSuccessful = True
+                                                     End If
 
                                                      btnCompareFilesBrowseFile1.Enabled = True
                                                      btnCompareFilesBrowseFile2.Enabled = True
@@ -940,10 +947,14 @@
                                                      compareRadioSHA512.Enabled = True
                                                      lblCompareFilesStatus.Text = strNoBackgroundProcesses
 
-                                                     If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
-                                                         MsgBox("Both files are the same.", MsgBoxStyle.Information, strWindowTitle)
+                                                     If boolSuccessful Then
+                                                         If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
+                                                             MsgBox("Both files are the same.", MsgBoxStyle.Information, strWindowTitle)
+                                                         Else
+                                                             MsgBox("The two files don't match.", MsgBoxStyle.Critical, strWindowTitle)
+                                                         End If
                                                      Else
-                                                         MsgBox("The two files don't match.", MsgBoxStyle.Critical, strWindowTitle)
+                                                         MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
                                                      End If
 
                                                      boolBackgroundThreadWorking = False
@@ -1068,7 +1079,8 @@
                                                          checksumType = checksumType.sha512
                                                      End If
 
-                                                     Dim strChecksum As String = getChecksumForComparison(txtFileForKnownHash.Text, checksumType)
+                                                     Dim strChecksum As String = Nothing
+                                                     Dim boolSuccessful As Boolean = getChecksumForComparison(txtFileForKnownHash.Text, checksumType, strChecksum)
 
                                                      txtFileForKnownHash.Enabled = True
                                                      btnBrowseFileForCompareKnownHash.Enabled = True
@@ -1076,10 +1088,14 @@
                                                      btnCompareAgainstKnownHash.Enabled = True
                                                      lblCompareFilesStatus.Text = strNoBackgroundProcesses
 
-                                                     If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
-                                                         MsgBox("The checksums match!", MsgBoxStyle.Information, strWindowTitle)
+                                                     If boolSuccessful Then
+                                                         If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
+                                                             MsgBox("The checksums match!", MsgBoxStyle.Information, strWindowTitle)
+                                                         Else
+                                                             MsgBox("The checksums DON'T match!", MsgBoxStyle.Critical, strWindowTitle)
+                                                         End If
                                                      Else
-                                                         MsgBox("The checksums DON'T match!", MsgBoxStyle.Critical, strWindowTitle)
+                                                         MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
                                                      End If
 
                                                      boolBackgroundThreadWorking = False
