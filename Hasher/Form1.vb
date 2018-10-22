@@ -73,39 +73,6 @@
         End Try
     End Function
 
-    Function getChecksumForComparisonAgainstKnownHash(strFile As String, checksumType As checksumType) As String
-        Dim strChecksum As String = Nothing
-
-        If IO.File.Exists(strFile) Then
-            Dim oldLocationInFile As ULong = 0
-            Dim checksums As New checksums With {
-                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                      Try
-                                                          Me.Invoke(Sub()
-                                                                        oldLocationInFile = totalBytesRead
-
-                                                                        If totalBytesRead <> 0 And size <> 0 Then
-                                                                            compareAgainstKnownHashProgressBar.Value = totalBytesRead / size * 100
-                                                                        Else
-                                                                            compareAgainstKnownHashProgressBar.Value = 0
-                                                                        End If
-
-                                                                        lblCompareAgainstKnownHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
-                                                                        oldLocationInFile = totalBytesRead
-                                                                    End Sub)
-                                                      Catch ex As Exception
-                                                      End Try
-                                                  End Sub
-            }
-
-            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
-        Else
-            strChecksum = Nothing
-        End If
-
-        Return strChecksum
-    End Function
-
     Function getChecksumForComparison(strFile As String, checksumType As checksumType) As String
         Dim strChecksum As String = Nothing
 
