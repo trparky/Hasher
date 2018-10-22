@@ -136,38 +136,41 @@
         Return strChecksum
     End Function
 
-    Function performIndividualFilesChecksum(index As Short, strFile As String, checksumType As checksumType) As String
-        Dim strChecksum As String = Nothing
+    Function performIndividualFilesChecksum(index As Short, strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
+        Try
+            If IO.File.Exists(strFile) Then
+                Dim oldLocationInFile As ULong = 0
+                Dim checksums As New checksums With {
+                    .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
+                                                          Try
+                                                              Me.Invoke(Sub()
+                                                                            oldLocationInFile = totalBytesRead
 
-        If IO.File.Exists(strFile) Then
-            Dim oldLocationInFile As ULong = 0
-            Dim checksums As New checksums With {
-                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                      Try
-                                                          Me.Invoke(Sub()
-                                                                        oldLocationInFile = totalBytesRead
+                                                                            If totalBytesRead <> 0 And size <> 0 Then
+                                                                                IndividualFilesProgressBar.Value = totalBytesRead / size * 100
+                                                                            Else
+                                                                                IndividualFilesProgressBar.Value = 0
+                                                                            End If
 
-                                                                        If totalBytesRead <> 0 And size <> 0 Then
-                                                                            IndividualFilesProgressBar.Value = totalBytesRead / size * 100
-                                                                        Else
-                                                                            IndividualFilesProgressBar.Value = 0
-                                                                        End If
+                                                                            lblIndividualFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                            lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s).", index.ToString("N0"), listFiles.Items.Count().ToString("N0"))
+                                                                            oldLocationInFile = totalBytesRead
+                                                                        End Sub)
+                                                          Catch ex As Exception
+                                                          End Try
+                                                      End Sub
+                }
 
-                                                                        lblIndividualFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
-                                                                        lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s).", index.ToString("N0"), listFiles.Items.Count().ToString("N0"))
-                                                                        oldLocationInFile = totalBytesRead
-                                                                    End Sub)
-                                                      Catch ex As Exception
-                                                      End Try
-                                                  End Sub
-            }
+                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
+                Return True
+            Else
+                Return False
+            End If
 
-            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
-        Else
-            strChecksum = Nothing
-        End If
-
-        Return strChecksum
+            Return False
+        Catch ex As Exception
+            Return False
+        End Try
     End Function
 
     Private Sub updateFilesListCountHeader()
@@ -235,7 +238,8 @@
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
-                                                     Dim strFileName, strChecksum As String
+                                                     Dim strFileName As String
+                                                     Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksumType
                                                      Dim index As Short = 1
                                                      hashResultArray.Clear()
@@ -264,10 +268,11 @@
                                                          strFileName = item.SubItems(0).Text
 
                                                          If Not hashResultArray.ContainsKey(strFileName) Then
-                                                             strChecksum = performIndividualFilesChecksum(index, strFileName, checksumType)
-                                                             item.SubItems(2).Text = strChecksum
-                                                             item.hash = strChecksum
-                                                             hashResultArray.Add(strFileName, strChecksum)
+                                                             If performIndividualFilesChecksum(index, strFileName, checksumType, strChecksum) Then
+                                                                 item.SubItems(2).Text = strChecksum
+                                                                 item.hash = strChecksum
+                                                                 hashResultArray.Add(strFileName, strChecksum)
+                                                             End If
                                                          End If
 
                                                          index += 1
