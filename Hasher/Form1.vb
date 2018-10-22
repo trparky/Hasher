@@ -272,6 +272,8 @@
                                                                  item.SubItems(2).Text = strChecksum
                                                                  item.hash = strChecksum
                                                                  hashResultArray.Add(strFileName, strChecksum)
+                                                             Else
+                                                                 item.SubItems(2).Text = "(Error while calculating checksum)"
                                                              End If
                                                          End If
 
