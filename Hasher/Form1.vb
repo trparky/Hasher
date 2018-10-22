@@ -913,7 +913,7 @@
         End If
 
         btnCompareFilesBrowseFile1.Enabled = False
-        btnCompareFilesBrowseFile1.Enabled = False
+        btnCompareFilesBrowseFile2.Enabled = False
         txtFile1.Enabled = False
         txtFile2.Enabled = False
         btnCompareFiles.Enabled = False
@@ -950,7 +950,7 @@
                                                      ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
 
                                                      btnCompareFilesBrowseFile1.Enabled = True
-                                                     btnCompareFilesBrowseFile1.Enabled = True
+                                                     btnCompareFilesBrowseFile2.Enabled = True
                                                      txtFile1.Enabled = True
                                                      txtFile2.Enabled = True
                                                      btnCompareFiles.Enabled = True
