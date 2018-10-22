@@ -36,38 +36,41 @@
         Return result
     End Function
 
-    Function verifyChecksum(strFile As String, checksumType As checksumType) As String
-        Dim strChecksum As String = Nothing
+    Function verifyChecksum(strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
+        Try
+            If IO.File.Exists(strFile) Then
+                Dim oldLocationInFile As ULong = 0
 
-        If IO.File.Exists(strFile) Then
-            Dim oldLocationInFile As ULong = 0
+                Dim checksums As New checksums With {
+                    .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
+                                                          Try
+                                                              Me.Invoke(Sub()
+                                                                            oldLocationInFile = totalBytesRead
 
-            Dim checksums As New checksums With {
-                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                      Try
-                                                          Me.Invoke(Sub()
-                                                                        oldLocationInFile = totalBytesRead
+                                                                            If totalBytesRead <> 0 And size <> 0 Then
+                                                                                VerifyHashProgressBar.Value = totalBytesRead / size * 100
+                                                                            Else
+                                                                                VerifyHashProgressBar.Value = 0
+                                                                            End If
 
-                                                                        If totalBytesRead <> 0 And size <> 0 Then
-                                                                            VerifyHashProgressBar.Value = totalBytesRead / size * 100
-                                                                        Else
-                                                                            VerifyHashProgressBar.Value = 0
-                                                                        End If
+                                                                            lblVerifyHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                            oldLocationInFile = totalBytesRead
+                                                                        End Sub)
+                                                          Catch ex As Exception
+                                                          End Try
+                                                      End Sub
+                }
 
-                                                                        lblVerifyHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
-                                                                        oldLocationInFile = totalBytesRead
-                                                                    End Sub)
-                                                      Catch ex As Exception
-                                                      End Try
-                                                  End Sub
-            }
+                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
+                Return True
+            Else
+                Return False
+            End If
 
-            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
-        Else
-            strChecksum = Nothing
-        End If
-
-        Return strChecksum
+            Return False
+        Catch ex As Exception
+            Return False
+        End Try
     End Function
 
     Function getChecksumForComparisonAgainstKnownHash(strFile As String, checksumType As checksumType) As String
@@ -646,18 +649,25 @@
         listViewItem = New myListViewItem(strFileName)
 
         If IO.File.Exists(strFileName) Then
-            Dim strChecksumInFile As String = verifyChecksum(strFileName, hashFileType)
-            listViewItem.fileSize = New IO.FileInfo(strFileName).Length
+            Dim strChecksumInFile As String = Nothing
 
-            If strChecksum.Equals(strChecksumInFile, StringComparison.OrdinalIgnoreCase) Then
-                listViewItem.BackColor = Color.LightGreen
-                listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                listViewItem.SubItems.Add("Valid")
-                longFilesThatPassedVerification += 1
+            If verifyChecksum(strFileName, hashFileType, strChecksumInFile) Then
+                listViewItem.fileSize = New IO.FileInfo(strFileName).Length
+
+                If strChecksum.Equals(strChecksumInFile, StringComparison.OrdinalIgnoreCase) Then
+                    listViewItem.BackColor = Color.LightGreen
+                    listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
+                    listViewItem.SubItems.Add("Valid")
+                    longFilesThatPassedVerification += 1
+                Else
+                    listViewItem.BackColor = Color.Pink
+                    listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
+                    listViewItem.SubItems.Add("NOT Valid")
+                End If
             Else
-                listViewItem.BackColor = Color.Pink
-                listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                listViewItem.SubItems.Add("NOT Valid")
+                listViewItem.BackColor = Color.LightGray
+                listViewItem.SubItems.Add("")
+                listViewItem.SubItems.Add("(Error while calculating checksum)")
             End If
         Else
             listViewItem.BackColor = Color.LightGray
