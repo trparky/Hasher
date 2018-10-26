@@ -21,6 +21,8 @@ Namespace My
                     If currentProcessFileName.caseInsensitiveContains(".new.exe", True) Then
                         Dim mainEXEName As String = Regex.Replace(currentProcessFileName, Regex.Escape(".new.exe"), "", RegexOptions.IgnoreCase)
 
+                        searchForProcessAndKillIt(mainEXEName, False)
+
                         IO.File.Delete(mainEXEName)
                         IO.File.Copy(currentProcessFileName, mainEXEName)
 
