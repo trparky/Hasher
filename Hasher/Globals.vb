@@ -69,6 +69,7 @@ Public Module Globals
             End Try
         End If
 
+        NativeMethod.NativeMethods.CloseHandle(processHandle)
         Return Nothing
     End Function
 
