@@ -27,7 +27,6 @@ Partial Class Form1
         Me.tabWelcome = New System.Windows.Forms.TabPage()
         Me.lblDownloadNotification = New System.Windows.Forms.Label()
         Me.btnCheckForUpdates = New System.Windows.Forms.Button()
-        Me.downloadProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblWelcomeText = New System.Windows.Forms.Label()
         Me.tabHashText = New System.Windows.Forms.TabPage()
         Me.btnCopyTextHashResultsToClipboard = New System.Windows.Forms.Button()
@@ -151,7 +150,6 @@ Partial Class Form1
         Me.tabWelcome.BackColor = System.Drawing.SystemColors.Control
         Me.tabWelcome.Controls.Add(Me.lblDownloadNotification)
         Me.tabWelcome.Controls.Add(Me.btnCheckForUpdates)
-        Me.tabWelcome.Controls.Add(Me.downloadProgressBar)
         Me.tabWelcome.Controls.Add(Me.lblWelcomeText)
         Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
         Me.tabWelcome.Name = "tabWelcome"
@@ -163,7 +161,7 @@ Partial Class Form1
         'lblDownloadNotification
         '
         Me.lblDownloadNotification.AutoSize = True
-        Me.lblDownloadNotification.Location = New System.Drawing.Point(173, 71)
+        Me.lblDownloadNotification.Location = New System.Drawing.Point(176, 74)
         Me.lblDownloadNotification.Name = "lblDownloadNotification"
         Me.lblDownloadNotification.Size = New System.Drawing.Size(133, 13)
         Me.lblDownloadNotification.TabIndex = 8
@@ -178,14 +176,6 @@ Partial Class Form1
         Me.btnCheckForUpdates.TabIndex = 7
         Me.btnCheckForUpdates.Text = "Check for Updates"
         Me.btnCheckForUpdates.UseVisualStyleBackColor = True
-        '
-        'downloadProgressBar
-        '
-        Me.downloadProgressBar.Location = New System.Drawing.Point(176, 90)
-        Me.downloadProgressBar.Name = "downloadProgressBar"
-        Me.downloadProgressBar.Size = New System.Drawing.Size(277, 23)
-        Me.downloadProgressBar.TabIndex = 6
-        Me.downloadProgressBar.Visible = False
         '
         'lblWelcomeText
         '
@@ -1177,7 +1167,6 @@ Partial Class Form1
     Friend WithEvents chkSSL As CheckBox
     Friend WithEvents lblDownloadNotification As Label
     Friend WithEvents btnCheckForUpdates As Button
-    Friend WithEvents downloadProgressBar As ProgressBar
     Friend WithEvents tabCompareFiles As TabPage
     Friend WithEvents btnCompareFilesBrowseFile1 As Button
     Friend WithEvents Label5 As Label

@@ -243,13 +243,13 @@ Class Check_for_Update_Stuff
         ' We have to do this stuff on the thread that the form belongs to or we will get an error.
         windowObject.Invoke(Sub()
                                 windowObject.lblDownloadNotification.Visible = True
-                                windowObject.downloadProgressBar.Visible = True
-                                windowObject.downloadProgressBar.Value = 0
                             End Sub)
 
         Dim httpHelper As httpHelper = createNewHTTPHelperObject()
         httpHelper.setDownloadStatusUpdateRoutine = Function(downloadStatusDetails As downloadStatusDetails)
-                                                        windowObject.downloadProgressBar.Value = downloadStatusDetails.percentageDownloaded
+                                                        windowObject.Invoke(Sub()
+                                                                                windowObject.lblDownloadNotification.Text = String.Format("{0}% Downloaded.", downloadStatusDetails.percentageDownloaded.ToString)
+                                                                            End Sub)
                                                         Return Nothing
                                                     End Function
 
