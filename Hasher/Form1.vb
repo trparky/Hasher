@@ -73,6 +73,38 @@
         End Try
     End Function
 
+    Function getChecksumForComparisonAgainstKnownHash(strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
+        If IO.File.Exists(strFile) Then
+            Dim oldLocationInFile As ULong = 0
+            Dim checksums As New checksums With {
+                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
+                                                      Try
+                                                          Me.Invoke(Sub()
+                                                                        oldLocationInFile = totalBytesRead
+
+                                                                        If totalBytesRead <> 0 And size <> 0 Then
+                                                                            compareAgainstKnownHashProgressBar.Value = totalBytesRead / size * 100
+                                                                        Else
+                                                                            compareAgainstKnownHashProgressBar.Value = 0
+                                                                        End If
+
+                                                                        lblCompareAgainstKnownHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                        oldLocationInFile = totalBytesRead
+                                                                    End Sub)
+                                                      Catch ex As Exception
+                                                      End Try
+                                                  End Sub
+            }
+
+            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
+            Return True
+        Else
+            Return False
+        End If
+
+        Return False
+    End Function
+
     Function getChecksumForComparison(strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
         Try
             If IO.File.Exists(strFile) Then
@@ -1080,13 +1112,13 @@
                                                      End If
 
                                                      Dim strChecksum As String = Nothing
-                                                     Dim boolSuccessful As Boolean = getChecksumForComparison(txtFileForKnownHash.Text, checksumType, strChecksum)
+                                                     Dim boolSuccessful As Boolean = getChecksumForComparisonAgainstKnownHash(txtFileForKnownHash.Text, checksumType, strChecksum)
 
                                                      txtFileForKnownHash.Enabled = True
                                                      btnBrowseFileForCompareKnownHash.Enabled = True
                                                      txtKnownHash.Enabled = True
                                                      btnCompareAgainstKnownHash.Enabled = True
-                                                     lblCompareFilesStatus.Text = strNoBackgroundProcesses
+                                                     lblCompareAgainstKnownHashStatus.Text = strNoBackgroundProcesses
 
                                                      If boolSuccessful Then
                                                          If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
