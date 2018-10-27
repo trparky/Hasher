@@ -978,6 +978,7 @@
                                                      compareRadioSHA384.Enabled = True
                                                      compareRadioSHA512.Enabled = True
                                                      lblCompareFilesStatus.Text = strNoBackgroundProcesses
+                                                     compareFilesProgressBar.Value = 0
 
                                                      If boolSuccessful Then
                                                          If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
@@ -1119,6 +1120,7 @@
                                                      txtKnownHash.Enabled = True
                                                      btnCompareAgainstKnownHash.Enabled = True
                                                      lblCompareAgainstKnownHashStatus.Text = strNoBackgroundProcesses
+                                                     compareAgainstKnownHashProgressBar.Value = 0
 
                                                      If boolSuccessful Then
                                                          If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
