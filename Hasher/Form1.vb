@@ -411,6 +411,8 @@
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
+
         If areWeAnAdministrator() Then
             Me.Text &= " (WARNING!!! Running as Administrator.)"
         Else
