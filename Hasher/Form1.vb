@@ -466,7 +466,9 @@
             Me.Text &= " (WARNING!!! Running as Administrator.)"
         Else
             btnAssociate.FlatStyle = FlatStyle.System
+            btnAddHasherToAllFiles.FlatStyle = FlatStyle.System
             NativeMethod.NativeMethods.SendMessage(btnAssociate.Handle, NativeMethod.NativeMethods.BCM_SETSHIELD, 0, &HFFFFFFFF)
+            NativeMethod.NativeMethods.SendMessage(btnAddHasherToAllFiles.Handle, NativeMethod.NativeMethods.BCM_SETSHIELD, 0, &HFFFFFFFF)
         End If
 
         Control.CheckForIllegalCrossThreadCalls = False
@@ -1279,6 +1281,22 @@
             Dim startInfo As New ProcessStartInfo With {
                 .FileName = Application.ExecutablePath,
                 .Arguments = "-associatefiletype",
+                .Verb = "runas"
+            }
+            Dim process As Process = Process.Start(startInfo)
+            process.WaitForExit()
+        End If
+
+        MsgBox("File association complete.", MsgBoxStyle.Information, strWindowTitle)
+    End Sub
+
+    Private Sub btnAddHasherToAllFiles_Click(sender As Object, e As EventArgs) Handles btnAddHasherToAllFiles.Click
+        If areWeAnAdministrator() Then
+            FileAssociation.addAssociationWithAllFiles()
+        Else
+            Dim startInfo As New ProcessStartInfo With {
+                .FileName = Application.ExecutablePath,
+                .Arguments = "-associateallfiles",
                 .Verb = "runas"
             }
             Dim process As Process = Process.Start(startInfo)

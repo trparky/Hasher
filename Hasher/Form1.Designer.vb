@@ -116,6 +116,7 @@ Partial Class Form1
         Me.lblCompareAgainstKnownHashStatus = New System.Windows.Forms.Label()
         Me.lblCompareFileAgainstKnownHashType = New System.Windows.Forms.Label()
         Me.lblVerifyFileNameLabel = New System.Windows.Forms.Label()
+        Me.btnAddHasherToAllFiles = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -921,6 +922,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.btnAddHasherToAllFiles)
         Me.tabSettings.Controls.Add(Me.btnAssociate)
         Me.tabSettings.Controls.Add(Me.chkSSL)
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
@@ -1067,6 +1069,16 @@ Partial Class Form1
         Me.btnAssociate.Text = "Associate File Hash Files with Hasher"
         Me.btnAssociate.UseVisualStyleBackColor = True
         '
+        '
+        'btnAddHasherToAllFiles
+        '
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 59)
+        Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
+        Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(204, 23)
+        Me.btnAddHasherToAllFiles.TabIndex = 3
+        Me.btnAddHasherToAllFiles.Text = "Add Hasher to All Files"
+        Me.btnAddHasherToAllFiles.UseVisualStyleBackColor = True
+        '
         'lblVerifyFileNameLabel
         '
         Me.lblVerifyFileNameLabel.AutoSize = True
@@ -1198,4 +1210,5 @@ Partial Class Form1
     Friend WithEvents lblCompareFileAgainstKnownHashType As Label
     Friend WithEvents lblVerifyFileNameLabel As Label
     Friend WithEvents btnAssociate As Button
+    Friend WithEvents btnAddHasherToAllFiles As Button
 End Class

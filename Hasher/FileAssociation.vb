@@ -53,4 +53,15 @@ Class FileAssociation
         Dim FileLocation As String = Reflection.Assembly.GetExecutingAssembly().Location
         CreateAssociation(extension, description, FileLocation, FileLocation & ",0")
     End Sub
+
+    Public Shared Sub addAssociationWithAllFiles()
+        Dim selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey("*\Shell", True)
+        Dim FileLocation As String = Reflection.Assembly.GetExecutingAssembly().Location
+
+        If selectedKey IsNot Nothing Then
+            selectedKey = selectedKey.CreateSubKey("Hash with Hasher")
+            selectedKey.SetValue("icon", FileLocation & ",0", RegistryValueKind.ExpandString)
+            selectedKey.CreateSubKey("command").SetValue("", """" & FileLocation & """" & " --addfile=""%1""", RegistryValueKind.ExpandString)
+        End If
+    End Sub
 End Class

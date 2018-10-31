@@ -39,6 +39,9 @@ Namespace My
                     FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
                     FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
                     Process.GetCurrentProcess.Kill()
+                ElseIf commandLineArgument.Equals("-associateallfiles", StringComparison.OrdinalIgnoreCase) Then
+                    FileAssociation.addAssociationWithAllFiles()
+                    Process.GetCurrentProcess.Kill()
                 End If
             End If
         End Sub
