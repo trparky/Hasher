@@ -485,7 +485,7 @@
         deleteTemporaryNewEXEFile()
 
         If My.Application.CommandLineArgs.Count = 1 Then
-            Dim commandLineArgument As String = My.Application.CommandLineArgs(0).ToLower.Trim
+            Dim commandLineArgument As String = My.Application.CommandLineArgs(0).Trim
 
             If commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
                 commandLineArgument = System.Text.RegularExpressions.Regex.Replace(commandLineArgument, "--hashfile=", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
