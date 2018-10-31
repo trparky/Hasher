@@ -436,7 +436,7 @@
                     Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
                     strReceivedFileName = strReceivedFileName.caseInsensitiveReplace("--file=", "")
 
-                    If IO.File.Exists(strReceivedFileName) Then
+                    If IO.File.Exists(strReceivedFileName) AndAlso Not isFileInListView(strReceivedFileName) Then
                         Dim itemToBeAdded As myListViewItem
                         itemToBeAdded = New myListViewItem(strReceivedFileName) With {.fileSize = New IO.FileInfo(strReceivedFileName).Length}
                         itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
