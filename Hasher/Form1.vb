@@ -3,6 +3,7 @@
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
     Private Const intBufferSize As Integer = 16 * 1024 * 1024
     Private Const strWindowTitle As String = "Hasher"
+    Private Const shortUDPServerPort As Short = 32589
 
     Private hashResultArray As New Dictionary(Of String, String)
     Private hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
@@ -12,6 +13,7 @@
     Private boolClosingWindow As Boolean = False
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
     Private boolDoneLoading As Boolean = False
+    Private udpClient As Net.Sockets.UdpClient = Nothing
 
     Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
@@ -410,7 +412,54 @@
         disableIndividualFilesResultsButtonsAndClearResults()
     End Sub
 
+    Private Sub sendToServer(strData As String)
+        Dim udpClient As New Net.Sockets.UdpClient()
+        udpClient.Connect("localhost", shortUDPServerPort)
+        Dim senddata As Byte()
+        senddata = System.Text.Encoding.UTF8.GetBytes(strData)
+        udpClient.Send(senddata, senddata.Length)
+    End Sub
+
+    Private Sub udpServer()
+        Try
+            Dim randomPortNumber As Short = New Random().Next(31000, 32000)
+            udpClient = New Net.Sockets.UdpClient(shortUDPServerPort)
+            My.Settings.Save()
+            Dim strReceivedFileName As String
+
+            While True
+                Dim remoteIPEndPoint As New Net.IPEndPoint(Net.IPAddress.Any, 0)
+                strReceivedFileName = System.Text.Encoding.UTF8.GetString(udpClient.Receive(remoteIPEndPoint))
+
+                If strReceivedFileName.StartsWith("--file=", StringComparison.OrdinalIgnoreCase) Then
+                    TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
+                    Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
+                    strReceivedFileName = strReceivedFileName.caseInsensitiveReplace("--file=", "")
+
+                    If IO.File.Exists(strReceivedFileName) Then
+                        Dim itemToBeAdded As myListViewItem
+                        itemToBeAdded = New myListViewItem(strReceivedFileName) With {.fileSize = New IO.FileInfo(strReceivedFileName).Length}
+                        itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
+                        itemToBeAdded.SubItems.Add(strToBeComputed)
+                        itemToBeAdded.fileName = strReceivedFileName
+                        listFiles.Items.Add(itemToBeAdded)
+                        itemToBeAdded = Nothing
+                        updateFilesListCountHeader()
+                    End If
+                End If
+            End While
+        Catch ex As Net.Sockets.SocketException
+            If My.Application.CommandLineArgs.Count = 1 AndAlso My.Application.CommandLineArgs(0).Trim.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                ' Since there is already a server, let's kill this instance of the program.
+                Application.Exit()
+            End If
+        Catch ex As Exception
+            MsgBox(ex.GetType.ToString & " -- " & ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Threading.ThreadPool.QueueUserWorkItem(AddressOf udpServer)
         Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
 
         If areWeAnAdministrator() Then
@@ -446,6 +495,10 @@
                     verifyHashesListFiles.Items.Clear()
                     processExistingHashFile(commandLineArgument)
                 End If
+            ElseIf commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                commandLineArgument = System.Text.RegularExpressions.Regex.Replace(commandLineArgument, "--addfile=", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                commandLineArgument = commandLineArgument.Replace(Chr(34), "")
+                sendToServer("--file=" & commandLineArgument)
             End If
         End If
 
@@ -796,6 +849,7 @@
         Else
             If workingThread IsNot Nothing Then
                 boolClosingWindow = True
+                If udpClient IsNot Nothing Then udpClient.Close()
                 workingThread.Abort()
             End If
         End If

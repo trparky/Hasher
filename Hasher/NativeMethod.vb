@@ -5,6 +5,10 @@ Namespace NativeMethod
         Public Const BCM_FIRST As Integer = &H1600
         Public Const BCM_SETSHIELD As Integer = (BCM_FIRST + &HC)
 
+        <DllImport("User32.dll", EntryPoint:="SetForegroundWindow")>
+        Public Shared Function SetForegroundWindow(ByVal hWnd As Integer) As Int32
+        End Function
+
         <DllImport("user32.dll", EntryPoint:="SendMessageW")>
         Public Shared Function SendMessage(ByVal hWnd As IntPtr, ByVal Msg As UInteger, ByVal wParam As IntPtr, ByVal lParam As IntPtr) As Integer
         End Function
