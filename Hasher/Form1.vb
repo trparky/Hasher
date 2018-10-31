@@ -459,7 +459,7 @@
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Threading.ThreadPool.QueueUserWorkItem(AddressOf udpServer)
+        If My.Settings.boolEnableServer Then Threading.ThreadPool.QueueUserWorkItem(AddressOf udpServer)
         Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
 
         If areWeAnAdministrator() Then
@@ -471,6 +471,8 @@
             NativeMethod.NativeMethods.SendMessage(btnAddHasherToAllFiles.Handle, NativeMethod.NativeMethods.BCM_SETSHIELD, 0, &HFFFFFFFF)
         End If
 
+        If Not My.Settings.boolEnableServer Then btnAddHasherToAllFiles.Visible = False
+
         Control.CheckForIllegalCrossThreadCalls = False
         lblIndividualFilesStatusProcessingFile.Text = ""
         lblVerifyHashStatusProcessingFile.Text = ""
@@ -479,6 +481,7 @@
         lblCompareFileAgainstKnownHashType.Text = ""
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
+        chkEnableInterprocessCommunicationServer.Checked = My.Settings.boolEnableServer
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString)
         Me.Size = My.Settings.windowSize
 
@@ -1321,5 +1324,12 @@
                 MsgBox("Invalid file type.", MsgBoxStyle.Critical, strWindowTitle)
             End If
         End If
+    End Sub
+
+    Private Sub chkEnableInterprocessCommunicationServer_Click(sender As Object, e As EventArgs) Handles chkEnableInterprocessCommunicationServer.Click
+        My.Settings.boolEnableServer = chkEnableInterprocessCommunicationServer.Checked
+        MsgBox("Hasher needs to restart, the application will now close and restart.", MsgBoxStyle.Information, strWindowTitle)
+        Process.Start(Application.ExecutablePath)
+        Process.GetCurrentProcess.Kill()
     End Sub
 End Class

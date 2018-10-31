@@ -29,5 +29,8 @@
     <Setting Name="verifyHashFileResults" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">72</Value>
     </Setting>
+    <Setting Name="boolEnableServer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -117,6 +117,7 @@ Partial Class Form1
         Me.lblCompareFileAgainstKnownHashType = New System.Windows.Forms.Label()
         Me.lblVerifyFileNameLabel = New System.Windows.Forms.Label()
         Me.btnAddHasherToAllFiles = New System.Windows.Forms.Button()
+        Me.chkEnableInterprocessCommunicationServer = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -926,6 +927,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.btnAssociate)
         Me.tabSettings.Controls.Add(Me.chkSSL)
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
+        Me.tabSettings.Controls.Add(Me.chkEnableInterprocessCommunicationServer)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
@@ -1062,17 +1064,26 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 59)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 82)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 23)
         Me.btnAssociate.TabIndex = 2
         Me.btnAssociate.Text = "Associate File Hash Files with Hasher"
         Me.btnAssociate.UseVisualStyleBackColor = True
         '
+        'chkEnableInterprocessCommunicationServer
+        '
+        Me.chkEnableInterprocessCommunicationServer.Location = New System.Drawing.Point(15, 59)
+        Me.chkEnableInterprocessCommunicationServer.Name = "chkEnableInterprocessCommunicationServer"
+        Me.chkEnableInterprocessCommunicationServer.Size = New System.Drawing.Size(237, 17)
+        Me.chkEnableInterprocessCommunicationServer.TabIndex = 2
+        Me.chkEnableInterprocessCommunicationServer.Text = "Enable Interprocess Communication Server"
+        Me.chkEnableInterprocessCommunicationServer.UseVisualStyleBackColor = True
+        '
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 59)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 82)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(204, 23)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1211,4 +1222,5 @@ Partial Class Form1
     Friend WithEvents lblVerifyFileNameLabel As Label
     Friend WithEvents btnAssociate As Button
     Friend WithEvents btnAddHasherToAllFiles As Button
+    Friend WithEvents chkEnableInterprocessCommunicationServer As CheckBox
 End Class
