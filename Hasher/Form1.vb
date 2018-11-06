@@ -491,7 +491,7 @@
             Dim commandLineArgument As String = My.Application.CommandLineArgs(0).Trim
 
             If commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = System.Text.RegularExpressions.Regex.Replace(commandLineArgument, "--hashfile=", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--hashfile=", "")
                 commandLineArgument = commandLineArgument.Replace(Chr(34), "")
 
                 If IO.File.Exists(commandLineArgument) Then
@@ -501,11 +501,11 @@
                     processExistingHashFile(commandLineArgument)
                 End If
             ElseIf commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = System.Text.RegularExpressions.Regex.Replace(commandLineArgument, "--addfile=", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", "")
                 commandLineArgument = commandLineArgument.Replace(Chr(34), "")
                 sendToServer("--file=" & commandLineArgument)
             ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = System.Text.RegularExpressions.Regex.Replace(commandLineArgument, "--knownhashfile=", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--knownhashfile=", "")
                 commandLineArgument = commandLineArgument.Replace(Chr(34), "")
                 TabControl1.SelectTab(5)
                 txtFileForKnownHash.Text = commandLineArgument

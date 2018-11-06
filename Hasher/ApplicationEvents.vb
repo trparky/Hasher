@@ -1,5 +1,4 @@
-﻿Imports System.Text.RegularExpressions
-Imports Microsoft.VisualBasic.ApplicationServices
+﻿Imports Microsoft.VisualBasic.ApplicationServices
 
 Namespace My
     ' The following events are available for MyApplication:
@@ -19,7 +18,7 @@ Namespace My
                     Dim currentProcessFileName As String = New IO.FileInfo(Windows.Forms.Application.ExecutablePath).Name
 
                     If currentProcessFileName.caseInsensitiveContains(".new.exe", True) Then
-                        Dim mainEXEName As String = Regex.Replace(currentProcessFileName, Regex.Escape(".new.exe"), "", RegexOptions.IgnoreCase)
+                        Dim mainEXEName As String = currentProcessFileName.caseInsensitiveReplace(".new.exe", "")
 
                         searchForProcessAndKillIt(mainEXEName, False)
 
