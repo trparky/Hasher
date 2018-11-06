@@ -504,6 +504,11 @@
                 commandLineArgument = System.Text.RegularExpressions.Regex.Replace(commandLineArgument, "--addfile=", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
                 commandLineArgument = commandLineArgument.Replace(Chr(34), "")
                 sendToServer("--file=" & commandLineArgument)
+            ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
+                commandLineArgument = System.Text.RegularExpressions.Regex.Replace(commandLineArgument, "--knownhashfile=", "", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                commandLineArgument = commandLineArgument.Replace(Chr(34), "")
+                TabControl1.SelectTab(5)
+                txtFileForKnownHash.Text = commandLineArgument
             End If
         End If
 
