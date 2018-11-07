@@ -14,6 +14,7 @@
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
     Private boolDoneLoading As Boolean = False
     Private udpClient As Net.Sockets.UdpClient = Nothing
+    Private communicationChannelClassSerializer As New Xml.Serialization.XmlSerializer((New communicationChannelClass).GetType)
 
     Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
@@ -412,12 +413,15 @@
         disableIndividualFilesResultsButtonsAndClearResults()
     End Sub
 
-    Private Sub sendToServer(strData As String)
-        Dim udpClient As New Net.Sockets.UdpClient()
-        udpClient.Connect("localhost", shortUDPServerPort)
-        Dim senddata As Byte()
-        senddata = System.Text.Encoding.UTF8.GetBytes(strData)
-        udpClient.Send(senddata, senddata.Length)
+    Private Sub sendToServer(strFileName As String)
+        Using memStream As New IO.MemoryStream
+            communicationChannelClassSerializer.Serialize(memStream, New communicationChannelClass With {.strFileName = strFileName})
+
+            Dim udpClient As New Net.Sockets.UdpClient()
+            udpClient.Connect("localhost", shortUDPServerPort)
+            Dim senddata As Byte() = memStream.ToArray()
+            udpClient.Send(senddata, senddata.Length)
+        End Using
     End Sub
 
     Private Sub udpServer()
@@ -425,28 +429,31 @@
             Dim randomPortNumber As Short = New Random().Next(31000, 32000)
             udpClient = New Net.Sockets.UdpClient(shortUDPServerPort)
             My.Settings.Save()
-            Dim strReceivedFileName As String
 
             While True
                 Dim remoteIPEndPoint As New Net.IPEndPoint(Net.IPAddress.Any, 0)
-                strReceivedFileName = System.Text.Encoding.UTF8.GetString(udpClient.Receive(remoteIPEndPoint))
+                Dim byteArray As Byte() = udpClient.Receive(remoteIPEndPoint)
 
-                If strReceivedFileName.StartsWith("--file=", StringComparison.OrdinalIgnoreCase) Then
-                    TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
-                    Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
-                    strReceivedFileName = strReceivedFileName.caseInsensitiveReplace("--file=", "")
+                TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
+                Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
 
-                    If IO.File.Exists(strReceivedFileName) AndAlso Not isFileInListView(strReceivedFileName) Then
-                        Dim itemToBeAdded As myListViewItem
-                        itemToBeAdded = New myListViewItem(strReceivedFileName) With {.fileSize = New IO.FileInfo(strReceivedFileName).Length}
-                        itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-                        itemToBeAdded.SubItems.Add(strToBeComputed)
-                        itemToBeAdded.fileName = strReceivedFileName
-                        listFiles.Items.Add(itemToBeAdded)
-                        itemToBeAdded = Nothing
-                        updateFilesListCountHeader()
-                    End If
-                End If
+                Using memStream As New IO.MemoryStream(byteArray)
+                    Try
+                        Dim receivedClassObject As communicationChannelClass = communicationChannelClassSerializer.Deserialize(memStream)
+
+                        If IO.File.Exists(receivedClassObject.strFileName) AndAlso Not isFileInListView(receivedClassObject.strFileName) Then
+                            Dim itemToBeAdded As myListViewItem
+                            itemToBeAdded = New myListViewItem(receivedClassObject.strFileName) With {.fileSize = New IO.FileInfo(receivedClassObject.strFileName).Length}
+                            itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
+                            itemToBeAdded.SubItems.Add(strToBeComputed)
+                            itemToBeAdded.fileName = receivedClassObject.strFileName
+                            listFiles.Items.Add(itemToBeAdded)
+                            itemToBeAdded = Nothing
+                            updateFilesListCountHeader()
+                        End If
+                    Catch ex As Exception
+                    End Try
+                End Using
             End While
         Catch ex As Net.Sockets.SocketException
             If My.Application.CommandLineArgs.Count = 1 AndAlso My.Application.CommandLineArgs(0).Trim.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
@@ -454,7 +461,7 @@
                 Application.Exit()
             End If
         Catch ex As Exception
-            MsgBox(ex.GetType.ToString & " -- " & ex.Message & ex.StackTrace)
+            Debug.WriteLine(ex.GetType.ToString & " -- " & ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -503,7 +510,7 @@
             ElseIf commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
                 commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", "")
                 commandLineArgument = commandLineArgument.Replace(Chr(34), "")
-                sendToServer("--file=" & commandLineArgument)
+                sendToServer(commandLineArgument) ' This is the file name.
             ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
                 commandLineArgument = commandLineArgument.caseInsensitiveReplace("--knownhashfile=", "")
                 commandLineArgument = commandLineArgument.Replace(Chr(34), "")
