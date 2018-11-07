@@ -71,5 +71,13 @@ Class FileAssociation
             selectedKey.SetValue("icon", FileLocation & ",0", RegistryValueKind.ExpandString)
             selectedKey.CreateSubKey("command").SetValue("", """" & FileLocation & """" & " --knownhashfile=""%1""", RegistryValueKind.ExpandString)
         End If
+
+        selectedKey = Registry.ClassesRoot.OpenSubKey("Folder\Shell", True)
+
+        If selectedKey IsNot Nothing Then
+            selectedKey = selectedKey.CreateSubKey("Hash with Hasher")
+            selectedKey.SetValue("icon", FileLocation & ",0", RegistryValueKind.ExpandString)
+            selectedKey.CreateSubKey("command").SetValue("", """" & FileLocation & """" & " --addfile=""%1""", RegistryValueKind.ExpandString)
+        End If
     End Sub
 End Class
