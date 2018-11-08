@@ -443,44 +443,7 @@
                         Dim isDirectory As Boolean = (IO.File.GetAttributes(receivedClassObject.strFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
 
                         If isDirectory Then
-                            Dim index As Integer = 0
-                            Dim filesInFolder As New List(Of String)
-                            Dim listOfFiles As New List(Of ListViewItem)
-                            Dim itemToBeAdded As myListViewItem
-                            recursiveDirectorySearch(receivedClassObject.strFileName, filesInFolder)
-
-                            For Each strFileName As String In filesInFolder
-                                index += 1
-
-                                Me.Invoke(Sub()
-                                              lblIndividualFilesStatusProcessingFile.Text = String.Format("Scanning directory... processing file {0} of {1}. Please Wait.", index.ToString("N0"), filesInFolder.Count.ToString("N0"))
-                                              IndividualFilesProgressBar.Value = index / filesInFolder.Count * 100
-                                          End Sub)
-
-                                If Not isFileInListOfListViewItems(strFileName, listOfFiles) And Not isFileInListView(strFileName) Then
-                                    itemToBeAdded = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
-                                    itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-                                    itemToBeAdded.SubItems.Add(strToBeComputed)
-                                    itemToBeAdded.fileName = strFileName
-                                    listOfFiles.Add(itemToBeAdded)
-                                    itemToBeAdded = Nothing
-                                End If
-                            Next
-
-                            Me.Invoke(Sub()
-                                          lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please Wait."
-
-                                          listFiles.BeginUpdate()
-                                          listFiles.Items.AddRange(listOfFiles.ToArray())
-                                          listFiles.EndUpdate()
-
-                                          lblIndividualFilesStatusProcessingFile.Text = Nothing
-                                          lblIndividualFilesStatus.Text = strNoBackgroundProcesses
-                                          IndividualFilesProgressBar.Value = 0
-                                          btnAddFilesInFolder.Enabled = True
-
-                                          updateFilesListCountHeader()
-                                      End Sub)
+                            addFilesFromDirectory(receivedClassObject.strFileName)
                         Else
                             If IO.File.Exists(receivedClassObject.strFileName) AndAlso Not isFileInListView(receivedClassObject.strFileName) Then
                                 Dim itemToBeAdded As myListViewItem
