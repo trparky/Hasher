@@ -45,6 +45,7 @@ Partial Class Form1
         Me.txtTextToHash = New System.Windows.Forms.TextBox()
         Me.lblTextToHash = New System.Windows.Forms.Label()
         Me.tabHashIndividualFiles = New System.Windows.Forms.TabPage()
+        Me.lblProcessingFile = New System.Windows.Forms.Label()
         Me.lblLine = New System.Windows.Forms.Label()
         Me.lblHashIndividualFilesStep3 = New System.Windows.Forms.Label()
         Me.lblHashIndividualFilesStep2 = New System.Windows.Forms.Label()
@@ -71,6 +72,7 @@ Partial Class Form1
         Me.btnAddFilesInFolder = New System.Windows.Forms.Button()
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
+        Me.lblProcessingFileVerify = New System.Windows.Forms.Label()
         Me.lblVerifyFileNameLabel = New System.Windows.Forms.Label()
         Me.lblVerifyHashStatusProcessingFile = New System.Windows.Forms.Label()
         Me.VerifyHashProgressBar = New System.Windows.Forms.ProgressBar()
@@ -381,6 +383,7 @@ Partial Class Form1
         'tabHashIndividualFiles
         '
         Me.tabHashIndividualFiles.BackColor = System.Drawing.SystemColors.Control
+        Me.tabHashIndividualFiles.Controls.Add(Me.lblProcessingFile)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblLine)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep3)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep2)
@@ -406,6 +409,16 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 363)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
+        '
+        'lblProcessingFile
+        '
+        Me.lblProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblProcessingFile.AutoSize = True
+        Me.lblProcessingFile.Location = New System.Drawing.Point(237, 302)
+        Me.lblProcessingFile.Name = "lblProcessingFile"
+        Me.lblProcessingFile.Size = New System.Drawing.Size(39, 13)
+        Me.lblProcessingFile.TabIndex = 22
+        Me.lblProcessingFile.Text = "Label9"
         '
         'lblLine
         '
@@ -648,6 +661,7 @@ Partial Class Form1
         'tabVerifySavedHashes
         '
         Me.tabVerifySavedHashes.BackColor = System.Drawing.SystemColors.Control
+        Me.tabVerifySavedHashes.Controls.Add(Me.lblProcessingFileVerify)
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyFileNameLabel)
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyHashStatusProcessingFile)
         Me.tabVerifySavedHashes.Controls.Add(Me.VerifyHashProgressBar)
@@ -659,6 +673,16 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 363)
         Me.tabVerifySavedHashes.TabIndex = 3
         Me.tabVerifySavedHashes.Text = "Verify Saved Hashes"
+        '
+        'lblProcessingFileVerify
+        '
+        Me.lblProcessingFileVerify.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblProcessingFileVerify.AutoSize = True
+        Me.lblProcessingFileVerify.Location = New System.Drawing.Point(157, 345)
+        Me.lblProcessingFileVerify.Name = "lblProcessingFileVerify"
+        Me.lblProcessingFileVerify.Size = New System.Drawing.Size(39, 13)
+        Me.lblProcessingFileVerify.TabIndex = 20
+        Me.lblProcessingFileVerify.Text = "Label9"
         '
         'lblVerifyFileNameLabel
         '
@@ -673,7 +697,7 @@ Partial Class Form1
         '
         Me.lblVerifyHashStatusProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblVerifyHashStatusProcessingFile.AutoSize = True
-        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(677, 321)
+        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(677, 303)
         Me.lblVerifyHashStatusProcessingFile.Name = "lblVerifyHashStatusProcessingFile"
         Me.lblVerifyHashStatusProcessingFile.Size = New System.Drawing.Size(37, 13)
         Me.lblVerifyHashStatusProcessingFile.TabIndex = 18
@@ -683,7 +707,7 @@ Partial Class Form1
         '
         Me.VerifyHashProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.VerifyHashProgressBar.Location = New System.Drawing.Point(157, 337)
+        Me.VerifyHashProgressBar.Location = New System.Drawing.Point(157, 319)
         Me.VerifyHashProgressBar.Name = "VerifyHashProgressBar"
         Me.VerifyHashProgressBar.Size = New System.Drawing.Size(880, 23)
         Me.VerifyHashProgressBar.TabIndex = 16
@@ -692,7 +716,7 @@ Partial Class Form1
         '
         Me.lblVerifyHashStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblVerifyHashStatus.AutoSize = True
-        Me.lblVerifyHashStatus.Location = New System.Drawing.Point(157, 321)
+        Me.lblVerifyHashStatus.Location = New System.Drawing.Point(157, 303)
         Me.lblVerifyHashStatus.Name = "lblVerifyHashStatus"
         Me.lblVerifyHashStatus.Size = New System.Drawing.Size(140, 13)
         Me.lblVerifyHashStatus.TabIndex = 15
@@ -707,7 +731,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.FullRowSelect = True
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
-        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 290)
+        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 272)
         Me.verifyHashesListFiles.TabIndex = 6
         Me.verifyHashesListFiles.UseCompatibleStateImageBehavior = False
         Me.verifyHashesListFiles.View = System.Windows.Forms.View.Details
@@ -1224,4 +1248,6 @@ Partial Class Form1
     Friend WithEvents btnAssociate As Button
     Friend WithEvents btnAddHasherToAllFiles As Button
     Friend WithEvents chkEnableInterprocessCommunicationServer As CheckBox
+    Friend WithEvents lblProcessingFile As Label
+    Friend WithEvents lblProcessingFileVerify As Label
 End Class

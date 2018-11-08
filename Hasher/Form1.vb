@@ -148,6 +148,8 @@
         Try
             If IO.File.Exists(strFile) Then
                 Dim oldLocationInFile As ULong = 0
+                lblProcessingFile.Text = String.Format("Now processing file {0}.", New IO.FileInfo(strFile).Name)
+
                 Dim checksums As New checksums With {
                     .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
                                                           Try
@@ -333,6 +335,7 @@
 
         lblIndividualFilesStatus.Text = strNoBackgroundProcesses
         lblIndividualFilesStatusProcessingFile.Text = ""
+        lblProcessingFile.Text = ""
         IndividualFilesProgressBar.Value = 0
     End Sub
 
@@ -490,6 +493,8 @@
         lblVerifyHashStatusProcessingFile.Text = ""
         lblFile1Hash.Text = ""
         lblFile2Hash.Text = ""
+        lblProcessingFile.Text = ""
+        lblProcessingFileVerify.Text = ""
         lblCompareFileAgainstKnownHashType.Text = ""
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
@@ -667,6 +672,7 @@
 
                                                      lblVerifyHashStatusProcessingFile.Text = ""
                                                      lblVerifyHashStatus.Text = strNoBackgroundProcesses
+                                                     lblProcessingFileVerify.Text = ""
                                                      VerifyHashProgressBar.Value = 0
 
                                                      verifyHashesListFiles.Items.AddRange(listOfFiles.ToArray())
@@ -678,6 +684,7 @@
                                                      If Not boolClosingWindow Then
                                                          lblVerifyHashStatusProcessingFile.Text = ""
                                                          lblVerifyHashStatus.Text = strNoBackgroundProcesses
+                                                         lblProcessingFileVerify.Text = ""
                                                          VerifyHashProgressBar.Value = 0
                                                          verifyHashesListFiles.Items.Clear()
                                                      End If
@@ -728,10 +735,12 @@
         listViewItem = New myListViewItem(strFileName)
 
         If IO.File.Exists(strFileName) Then
+            Dim fileInfo As New IO.FileInfo(strFileName)
             Dim strChecksumInFile As String = Nothing
+            lblProcessingFileVerify.Text = String.Format("Now processing file {0}.", fileInfo.Name)
 
             If verifyChecksum(strFileName, hashFileType, strChecksumInFile) Then
-                listViewItem.fileSize = New IO.FileInfo(strFileName).Length
+                listViewItem.fileSize = fileInfo.Length
 
                 If strChecksum.Equals(strChecksumInFile, StringComparison.OrdinalIgnoreCase) Then
                     listViewItem.BackColor = Color.LightGreen
@@ -748,6 +757,8 @@
                 listViewItem.SubItems.Add("")
                 listViewItem.SubItems.Add("(Error while calculating checksum)")
             End If
+
+            fileInfo = Nothing
         Else
             listViewItem.BackColor = Color.LightGray
             listViewItem.SubItems.Add("")
