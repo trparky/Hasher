@@ -6,15 +6,15 @@
     Private Const shortUDPServerPort As Short = 32589
 
     Private hashResultArray As New Dictionary(Of String, String)
-    Private hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
-    Private hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
+    Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
+    Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
     Private boolClosingWindow As Boolean = False
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
     Private boolDoneLoading As Boolean = False
     Private udpClient As Net.Sockets.UdpClient = Nothing
-    Private communicationChannelClassSerializer As New Xml.Serialization.XmlSerializer((New communicationChannelClass).GetType)
+    Private ReadOnly communicationChannelClassSerializer As New Xml.Serialization.XmlSerializer((New communicationChannelClass).GetType)
 
     Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
