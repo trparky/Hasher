@@ -39,138 +39,10 @@
         Return result
     End Function
 
-    Function verifyChecksum(strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
+    Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate]) As Boolean
         Try
             If IO.File.Exists(strFile) Then
-                Dim oldLocationInFile As ULong = 0
-
-                Dim checksums As New checksums With {
-                    .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                          Try
-                                                              Me.Invoke(Sub()
-                                                                            oldLocationInFile = totalBytesRead
-
-                                                                            If totalBytesRead <> 0 And size <> 0 Then
-                                                                                VerifyHashProgressBar.Value = totalBytesRead / size * 100
-                                                                            Else
-                                                                                VerifyHashProgressBar.Value = 0
-                                                                            End If
-
-                                                                            lblVerifyHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
-                                                                            oldLocationInFile = totalBytesRead
-                                                                        End Sub)
-                                                          Catch ex As Exception
-                                                          End Try
-                                                      End Sub
-                }
-
-                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
-                Return True
-            Else
-                Return False
-            End If
-
-            Return False
-        Catch ex As Exception
-            Return False
-        End Try
-    End Function
-
-    Function getChecksumForComparisonAgainstKnownHash(strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
-        If IO.File.Exists(strFile) Then
-            Dim oldLocationInFile As ULong = 0
-            Dim checksums As New checksums With {
-                .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                      Try
-                                                          Me.Invoke(Sub()
-                                                                        oldLocationInFile = totalBytesRead
-
-                                                                        If totalBytesRead <> 0 And size <> 0 Then
-                                                                            compareAgainstKnownHashProgressBar.Value = totalBytesRead / size * 100
-                                                                        Else
-                                                                            compareAgainstKnownHashProgressBar.Value = 0
-                                                                        End If
-
-                                                                        lblCompareAgainstKnownHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
-                                                                        oldLocationInFile = totalBytesRead
-                                                                    End Sub)
-                                                      Catch ex As Exception
-                                                      End Try
-                                                  End Sub
-            }
-
-            strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
-            Return True
-        Else
-            Return False
-        End If
-
-        Return False
-    End Function
-
-    Function getChecksumForComparison(strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
-        Try
-            If IO.File.Exists(strFile) Then
-                Dim oldLocationInFile As ULong = 0
-                Dim checksums As New checksums With {
-                    .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                          Try
-                                                              Me.Invoke(Sub()
-                                                                            oldLocationInFile = totalBytesRead
-
-                                                                            If totalBytesRead <> 0 And size <> 0 Then
-                                                                                compareFilesProgressBar.Value = totalBytesRead / size * 100
-                                                                            Else
-                                                                                compareFilesProgressBar.Value = 0
-                                                                            End If
-
-                                                                            lblCompareFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
-                                                                            oldLocationInFile = totalBytesRead
-                                                                        End Sub)
-                                                          Catch ex As Exception
-                                                          End Try
-                                                      End Sub
-                }
-
-                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
-                Return True
-            Else
-                Return False
-            End If
-
-            Return False
-        Catch ex As Exception
-            Return False
-        End Try
-    End Function
-
-    Function performIndividualFilesChecksum(index As Short, strFile As String, checksumType As checksumType, ByRef strChecksum As String) As Boolean
-        Try
-            If IO.File.Exists(strFile) Then
-                Dim oldLocationInFile As ULong = 0
-                lblProcessingFile.Text = String.Format("Now processing file {0}.", New IO.FileInfo(strFile).Name)
-
-                Dim checksums As New checksums With {
-                    .setChecksumStatusUpdateRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                          Try
-                                                              Me.Invoke(Sub()
-                                                                            oldLocationInFile = totalBytesRead
-
-                                                                            If totalBytesRead <> 0 And size <> 0 Then
-                                                                                IndividualFilesProgressBar.Value = totalBytesRead / size * 100
-                                                                            Else
-                                                                                IndividualFilesProgressBar.Value = 0
-                                                                            End If
-
-                                                                            lblIndividualFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
-                                                                            lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s).", index.ToString("N0"), listFiles.Items.Count().ToString("N0"))
-                                                                            oldLocationInFile = totalBytesRead
-                                                                        End Sub)
-                                                          Catch ex As Exception
-                                                          End Try
-                                                      End Sub
-                }
-
+                Dim checksums As New checksums With {.setChecksumStatusUpdateRoutine = subRoutine}
                 strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
                 Return True
             Else
@@ -252,6 +124,26 @@
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksumType
                                                      Dim index As Short = 1
+                                                     Dim oldLocationInFile As ULong = 0
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                                                                        Try
+                                                                                            Me.Invoke(Sub()
+                                                                                                          oldLocationInFile = totalBytesRead
+
+                                                                                                          If totalBytesRead <> 0 And size <> 0 Then
+                                                                                                              IndividualFilesProgressBar.Value = totalBytesRead / size * 100
+                                                                                                          Else
+                                                                                                              IndividualFilesProgressBar.Value = 0
+                                                                                                          End If
+
+                                                                                                          lblIndividualFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                                                          lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s).", index.ToString("N0"), listFiles.Items.Count().ToString("N0"))
+                                                                                                          oldLocationInFile = totalBytesRead
+                                                                                                      End Sub)
+                                                                                        Catch ex As Exception
+                                                                                        End Try
+                                                                                    End Sub
+
                                                      hashResultArray.Clear()
 
                                                      radioMD5.Enabled = False
@@ -278,7 +170,7 @@
                                                          strFileName = item.SubItems(0).Text
 
                                                          If Not hashResultArray.ContainsKey(strFileName) Then
-                                                             If performIndividualFilesChecksum(index, strFileName, checksumType, strChecksum) Then
+                                                             If doChecksumWithAttachedSubRoutine(strFileName, checksumType, strChecksum, subRoutine) Then
                                                                  item.SubItems(2).Text = strChecksum
                                                                  item.hash = strChecksum
                                                                  hashResultArray.Add(strFileName, strChecksum)
@@ -737,9 +629,28 @@
         If IO.File.Exists(strFileName) Then
             Dim fileInfo As New IO.FileInfo(strFileName)
             Dim strChecksumInFile As String = Nothing
+            Dim oldLocationInFile As ULong = 0
+            Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                               Try
+                                                   Me.Invoke(Sub()
+                                                                 oldLocationInFile = totalBytesRead
+
+                                                                 If totalBytesRead <> 0 And size <> 0 Then
+                                                                     VerifyHashProgressBar.Value = totalBytesRead / size * 100
+                                                                 Else
+                                                                     VerifyHashProgressBar.Value = 0
+                                                                 End If
+
+                                                                 lblVerifyHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                 oldLocationInFile = totalBytesRead
+                                                             End Sub)
+                                               Catch ex As Exception
+                                               End Try
+                                           End Sub
+
             lblProcessingFileVerify.Text = String.Format("Now processing file {0}.", fileInfo.Name)
 
-            If verifyChecksum(strFileName, hashFileType, strChecksumInFile) Then
+            If doChecksumWithAttachedSubRoutine(strFileName, hashFileType, strChecksumInFile, subRoutine) Then
                 listViewItem.fileSize = fileInfo.Length
 
                 If strChecksum.Equals(strChecksumInFile, StringComparison.OrdinalIgnoreCase) Then
@@ -1047,8 +958,26 @@
                                                      Dim strChecksum1 As String = Nothing
                                                      Dim strChecksum2 As String = Nothing
                                                      Dim boolSuccessful As Boolean = False
+                                                     Dim oldLocationInFile As ULong = 0
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                                                                        Try
+                                                                                            Me.Invoke(Sub()
+                                                                                                          oldLocationInFile = totalBytesRead
 
-                                                     If getChecksumForComparison(txtFile1.Text, checksumType, strChecksum1) AndAlso getChecksumForComparison(txtFile2.Text, checksumType, strChecksum2) Then
+                                                                                                          If totalBytesRead <> 0 And size <> 0 Then
+                                                                                                              compareFilesProgressBar.Value = totalBytesRead / size * 100
+                                                                                                          Else
+                                                                                                              compareFilesProgressBar.Value = 0
+                                                                                                          End If
+
+                                                                                                          lblCompareFilesStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                                                          oldLocationInFile = totalBytesRead
+                                                                                                      End Sub)
+                                                                                        Catch ex As Exception
+                                                                                        End Try
+                                                                                    End Sub
+
+                                                     If doChecksumWithAttachedSubRoutine(txtFile1.Text, checksumType, strChecksum1, subRoutine) AndAlso doChecksumWithAttachedSubRoutine(txtFile2.Text, checksumType, strChecksum2, subRoutine) Then
                                                          lblFile1Hash.Text = "Hash/Checksum: " & strChecksum1
                                                          lblFile2Hash.Text = "Hash/Checksum: " & strChecksum2
                                                          ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
@@ -1202,7 +1131,26 @@
                                                      End If
 
                                                      Dim strChecksum As String = Nothing
-                                                     Dim boolSuccessful As Boolean = getChecksumForComparisonAgainstKnownHash(txtFileForKnownHash.Text, checksumType, strChecksum)
+                                                     Dim oldLocationInFile As ULong = 0
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                                                                        Try
+                                                                                            Me.Invoke(Sub()
+                                                                                                          oldLocationInFile = totalBytesRead
+
+                                                                                                          If totalBytesRead <> 0 And size <> 0 Then
+                                                                                                              compareAgainstKnownHashProgressBar.Value = totalBytesRead / size * 100
+                                                                                                          Else
+                                                                                                              compareAgainstKnownHashProgressBar.Value = 0
+                                                                                                          End If
+
+                                                                                                          lblCompareAgainstKnownHashStatus.Text = String.Format("{0} of {1} have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size))
+                                                                                                          oldLocationInFile = totalBytesRead
+                                                                                                      End Sub)
+                                                                                        Catch ex As Exception
+                                                                                        End Try
+                                                                                    End Sub
+
+                                                     Dim boolSuccessful As Boolean = doChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, checksumType, strChecksum, subRoutine)
 
                                                      txtFileForKnownHash.Enabled = True
                                                      btnBrowseFileForCompareKnownHash.Enabled = True
