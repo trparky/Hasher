@@ -546,13 +546,12 @@
                                                      Dim longFilesThatPassedVerification As Long = 0
 
                                                      Using fileStream As New IO.StreamReader(strFile, System.Text.Encoding.UTF8)
-                                                         strLineInFile = fileStream.ReadLine()
+                                                         While Not fileStream.EndOfStream
+                                                             strLineInFile = fileStream.ReadLine()
 
-                                                         While Not String.IsNullOrEmpty(strLineInFile)
-                                                             If hashLineParser.IsMatch(strLineInFile) And Not strLineInFile.StartsWith("'") Then
+                                                             If Not String.IsNullOrEmpty(strLineInFile) AndAlso hashLineParser.IsMatch(strLineInFile) Then
                                                                  linesInFile.Add(strLineInFile)
                                                              End If
-                                                             strLineInFile = fileStream.ReadLine()
                                                          End While
                                                      End Using
 
