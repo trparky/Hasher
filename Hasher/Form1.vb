@@ -512,6 +512,8 @@
     End Sub
 
     Private Sub processExistingHashFile(strFile As String)
+        lblVerifyFileNameLabel.Text = "File Name: " & strFile
+
         Dim checksumType As checksumType
         Dim listOfFiles As New List(Of ListViewItem)
         Dim checksumFileInfo As New IO.FileInfo(strFile)
@@ -617,7 +619,6 @@
         OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
-            lblVerifyFileNameLabel.Text = "File Name: " & OpenFileDialog.FileName
             processExistingHashFile(OpenFileDialog.FileName)
         Else
             btnOpenExistingHashFile.Enabled = True
@@ -1305,7 +1306,6 @@
             If fileInfo.Extension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
                 verifyHashesListFiles.Items.Clear()
                 btnOpenExistingHashFile.Enabled = False
-                lblVerifyFileNameLabel.Text = "File Name: " & strReceivedFileName
                 processExistingHashFile(strReceivedFileName)
             Else
                 MsgBox("Invalid file type.", MsgBoxStyle.Critical, strWindowTitle)
