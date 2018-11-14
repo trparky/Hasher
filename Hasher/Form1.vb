@@ -568,7 +568,19 @@
 
                                                      verifyHashesListFiles.Items.AddRange(listOfFiles.ToArray())
                                                      verifyHashesListFiles.EndUpdate()
-                                                     Me.Invoke(Sub() MsgBox(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification.", longFilesThatPassedVerification, linesInFile.Count), MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
+
+                                                     Me.Invoke(Sub()
+                                                                   Dim strMessageBoxText As String
+
+                                                                   If longFilesThatPassedVerification = linesInFile.Count Then
+                                                                       strMessageBoxText = "Processing of hash file complete. All files have passed verification."
+                                                                   Else
+                                                                       strMessageBoxText = String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", longFilesThatPassedVerification, linesInFile.Count, linesInFile.Count - longFilesThatPassedVerification)
+                                                                   End If
+
+                                                                   MsgBox(strMessageBoxText, MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle)
+                                                               End Sub)
+
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
                                                  Catch ex As Threading.ThreadAbortException
