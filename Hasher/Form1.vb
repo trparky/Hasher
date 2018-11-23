@@ -321,7 +321,6 @@
 
     Private Sub udpServer()
         Try
-            Dim randomPortNumber As Short = New Random().Next(31000, 32000)
             udpClient = New Net.Sockets.UdpClient(shortUDPServerPort)
             My.Settings.Save()
 
