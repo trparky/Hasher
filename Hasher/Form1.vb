@@ -333,26 +333,7 @@
                 Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
 
                 Using memStream As New IO.MemoryStream(byteArray)
-                    Try
-                        Dim receivedClassObject As communicationChannelClass = communicationChannelClassSerializer.Deserialize(memStream)
-                        Dim isDirectory As Boolean = (IO.File.GetAttributes(receivedClassObject.strFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
-
-                        If isDirectory Then
-                            addFilesFromDirectory(receivedClassObject.strFileName)
-                        Else
-                            If IO.File.Exists(receivedClassObject.strFileName) AndAlso Not isFileInListView(receivedClassObject.strFileName) Then
-                                Dim itemToBeAdded As myListViewItem
-                                itemToBeAdded = New myListViewItem(receivedClassObject.strFileName) With {.fileSize = New IO.FileInfo(receivedClassObject.strFileName).Length}
-                                itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-                                itemToBeAdded.SubItems.Add(strToBeComputed)
-                                itemToBeAdded.fileName = receivedClassObject.strFileName
-                                listFiles.Items.Add(itemToBeAdded)
-                                itemToBeAdded = Nothing
-                                updateFilesListCountHeader()
-                            End If
-                        End If
-                    Catch ex As Exception
-                    End Try
+                    processIncomingDataFromServer(memStream)
                 End Using
             End While
         Catch ex As Net.Sockets.SocketException
@@ -362,6 +343,29 @@
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.GetType.ToString & " -- " & ex.Message & ex.StackTrace)
+        End Try
+    End Sub
+
+    Private Sub processIncomingDataFromServer(ByRef memStream As IO.MemoryStream)
+        Try
+            Dim receivedClassObject As communicationChannelClass = communicationChannelClassSerializer.Deserialize(memStream)
+            Dim isDirectory As Boolean = (IO.File.GetAttributes(receivedClassObject.strFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
+
+            If isDirectory Then
+                addFilesFromDirectory(receivedClassObject.strFileName)
+            Else
+                If IO.File.Exists(receivedClassObject.strFileName) AndAlso Not isFileInListView(receivedClassObject.strFileName) Then
+                    Dim itemToBeAdded As myListViewItem
+                    itemToBeAdded = New myListViewItem(receivedClassObject.strFileName) With {.fileSize = New IO.FileInfo(receivedClassObject.strFileName).Length}
+                    itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
+                    itemToBeAdded.SubItems.Add(strToBeComputed)
+                    itemToBeAdded.fileName = receivedClassObject.strFileName
+                    listFiles.Items.Add(itemToBeAdded)
+                    itemToBeAdded = Nothing
+                    updateFilesListCountHeader()
+                End If
+            End If
+        Catch ex As Exception
         End Try
     End Sub
 
