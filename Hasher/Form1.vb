@@ -115,7 +115,6 @@
         btnAddIndividualFiles.Enabled = False
         btnRemoveAllFiles.Enabled = False
         btnRemoveSelectedFiles.Enabled = False
-        listFiles.Enabled = False
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -164,8 +163,6 @@
                                                          checksumType = checksumType.sha512
                                                      End If
 
-                                                     listFiles.BeginUpdate()
-
                                                      For Each item As myListViewItem In listFiles.Items
                                                          strFileName = item.SubItems(0).Text
 
@@ -181,8 +178,6 @@
 
                                                          index += 1
                                                      Next
-
-                                                     listFiles.EndUpdate()
 
                                                      btnIndividualFilesCopyToClipboard.Enabled = True
                                                      btnIndividualFilesSaveResultsToDisk.Enabled = True
@@ -223,7 +218,6 @@
         btnAddIndividualFiles.Enabled = True
         btnRemoveAllFiles.Enabled = True
         btnRemoveSelectedFiles.Enabled = True
-        listFiles.Enabled = True
 
         lblIndividualFilesStatus.Text = strNoBackgroundProcesses
         lblIndividualFilesStatusProcessingFile.Text = ""
@@ -514,27 +508,26 @@
         If FolderBrowserDialog.ShowDialog = DialogResult.OK Then addFilesFromDirectory(FolderBrowserDialog.SelectedPath)
     End Sub
 
-    Private Sub processExistingHashFile(strFile As String)
-        lblVerifyFileNameLabel.Text = "File Name: " & strFile
+    Private Sub processExistingHashFile(strPathToChecksumFile As String)
+        lblVerifyFileNameLabel.Text = "File Name: " & strPathToChecksumFile
 
         Dim checksumType As checksumType
-        Dim listOfFiles As New List(Of ListViewItem)
-        Dim checksumFileInfo As New IO.FileInfo(strFile)
-        Dim strFileExtension, strPathOfChecksumFile As String
+        Dim checksumFileInfo As New IO.FileInfo(strPathToChecksumFile)
+        Dim strChecksumFileExtension, strDirectoryThatContainsTheChecksumFile As String
 
-        strFileExtension = checksumFileInfo.Extension
-        strPathOfChecksumFile = checksumFileInfo.DirectoryName
+        strChecksumFileExtension = checksumFileInfo.Extension
+        strDirectoryThatContainsTheChecksumFile = checksumFileInfo.DirectoryName
         checksumFileInfo = Nothing
 
-        If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
+        If strChecksumFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
             checksumType = checksumType.md5
-        ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
+        ElseIf strChecksumFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
             checksumType = checksumType.sha160
-        ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
+        ElseIf strChecksumFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
             checksumType = checksumType.sha256
-        ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
+        ElseIf strChecksumFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
             checksumType = checksumType.sha384
-        ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+        ElseIf strChecksumFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
             checksumType = checksumType.sha512
         Else
             MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strWindowTitle)
@@ -545,25 +538,45 @@
                                                  Try
                                                      verifyHashesListFiles.BeginUpdate()
                                                      boolBackgroundThreadWorking = True
-                                                     Dim linesInFile As New Specialized.StringCollection()
-                                                     Dim strLineInFile As String
+                                                     Dim strLineInFile, strChecksum, strFileName As String
                                                      Dim index As Integer = 1
                                                      Dim longFilesThatPassedVerification As Long = 0
+                                                     Dim listViewItem As myListViewItem
 
-                                                     Using fileStream As New IO.StreamReader(strFile, System.Text.Encoding.UTF8)
+                                                     Using fileStream As New IO.StreamReader(strPathToChecksumFile, System.Text.Encoding.UTF8)
                                                          While Not fileStream.EndOfStream
                                                              strLineInFile = fileStream.ReadLine()
 
                                                              If Not String.IsNullOrEmpty(strLineInFile) AndAlso hashLineParser.IsMatch(strLineInFile) Then
-                                                                 linesInFile.Add(strLineInFile)
+                                                                 strChecksum = hashLineParser.Match(strLineInFile).Groups(1).Value
+                                                                 strFileName = hashLineParser.Match(strLineInFile).Groups(2).Value
+
+                                                                 If Not hashLineFilePathChecker.IsMatch(strFileName) Then
+                                                                     strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
+                                                                 End If
+
+                                                                 listViewItem = New myListViewItem(strFileName) With {
+                                                                     .hash = strChecksum,
+                                                                     .fileName = strFileName
+                                                                 }
+                                                                 listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                                                                 listViewItem.SubItems.Add("To Be Tested")
+                                                                 verifyHashesListFiles.Items.Add(listViewItem)
+                                                                 listViewItem = Nothing
                                                              End If
                                                          End While
                                                      End Using
 
-                                                     For Each strLineInCollection As String In linesInFile
-                                                         lblVerifyHashStatusProcessingFile.Text = String.Format("Processing {0} of {1} file(s)", index.ToString("N0"), linesInFile.Count().ToString("N0"))
-                                                         processLineInHashFile(strPathOfChecksumFile, strLineInCollection, checksumType, listOfFiles, longFilesThatPassedVerification)
+                                                     verifyHashesListFiles.EndUpdate()
+
+                                                     For Each item As myListViewItem In verifyHashesListFiles.Items
+                                                         lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} file(s)", index.ToString("N0"), verifyHashesListFiles.Items.Count().ToString("N0"))
+                                                         processFileInVerifyFileList(item, checksumType, longFilesThatPassedVerification)
                                                          index += 1
+                                                     Next
+
+                                                     For Each item As myListViewItem In verifyHashesListFiles.Items
+                                                         item.BackColor = item.color
                                                      Next
 
                                                      lblVerifyHashStatusProcessingFile.Text = ""
@@ -571,16 +584,13 @@
                                                      lblProcessingFileVerify.Text = ""
                                                      VerifyHashProgressBar.Value = 0
 
-                                                     verifyHashesListFiles.Items.AddRange(listOfFiles.ToArray())
-                                                     verifyHashesListFiles.EndUpdate()
-
                                                      Me.Invoke(Sub()
                                                                    Dim strMessageBoxText As String
 
-                                                                   If longFilesThatPassedVerification = linesInFile.Count Then
+                                                                   If longFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
                                                                        strMessageBoxText = "Processing of hash file complete. All files have passed verification."
                                                                    Else
-                                                                       strMessageBoxText = String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", longFilesThatPassedVerification, linesInFile.Count, linesInFile.Count - longFilesThatPassedVerification)
+                                                                       strMessageBoxText = String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", longFilesThatPassedVerification, verifyHashesListFiles.Items.Count, verifyHashesListFiles.Items.Count - longFilesThatPassedVerification)
                                                                    End If
 
                                                                    MsgBox(strMessageBoxText, MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle)
@@ -630,16 +640,9 @@
         OpenFileDialog.Multiselect = oldMultiValue
     End Sub
 
-    Private Sub processLineInHashFile(strPathOfChecksumFile As String, strLineInFile As String, hashFileType As checksumType, ByRef listOfFiles As List(Of ListViewItem), ByRef longFilesThatPassedVerification As Long)
-        Dim strChecksum As String = hashLineParser.Match(strLineInFile).Groups(1).Value
-        Dim strFileName As String = hashLineParser.Match(strLineInFile).Groups(2).Value
-
-        If Not hashLineFilePathChecker.IsMatch(strFileName) Then
-            strFileName = IO.Path.Combine(strPathOfChecksumFile, strFileName)
-        End If
-
-        Dim listViewItem As myListViewItem
-        listViewItem = New myListViewItem(strFileName)
+    Private Sub processFileInVerifyFileList(ByRef item As myListViewItem, hashFileType As checksumType, ByRef longFilesThatPassedVerification As Long)
+        Dim strChecksum As String = item.hash
+        Dim strFileName As String = item.fileName
 
         If IO.File.Exists(strFileName) Then
             Dim fileInfo As New IO.FileInfo(strFileName)
@@ -666,33 +669,24 @@
             lblProcessingFileVerify.Text = String.Format("Now processing file {0}.", fileInfo.Name)
 
             If doChecksumWithAttachedSubRoutine(strFileName, hashFileType, strChecksumInFile, subRoutine) Then
-                listViewItem.fileSize = fileInfo.Length
-
-                If strChecksum.Equals(strChecksumInFile, StringComparison.OrdinalIgnoreCase) Then
-                    listViewItem.BackColor = Color.LightGreen
-                    listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                    listViewItem.SubItems.Add("Valid")
+                If strChecksum.Equals(item.hash, StringComparison.OrdinalIgnoreCase) Then
+                    item.color = Color.LightGreen
+                    item.SubItems(2).Text = "Valid"
                     longFilesThatPassedVerification += 1
                 Else
-                    listViewItem.BackColor = Color.Pink
-                    listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                    listViewItem.SubItems.Add("NOT Valid")
+                    item.color = Color.Pink
+                    item.SubItems(2).Text = "NOT Valid"
                 End If
             Else
-                listViewItem.BackColor = Color.LightGray
-                listViewItem.SubItems.Add("")
-                listViewItem.SubItems.Add("(Error while calculating checksum)")
+                item.color = Color.LightGray
+                item.SubItems(2).Text = "(Error while calculating checksum)"
             End If
 
             fileInfo = Nothing
         Else
-            listViewItem.BackColor = Color.LightGray
-            listViewItem.SubItems.Add("")
-            listViewItem.SubItems.Add("Doesn't Exist")
+            item.color = Color.LightGray
+            item.SubItems(2).Text = "Doesn't Exist"
         End If
-
-        verifyHashesListFiles.Items.Add(listViewItem)
-        listViewItem = Nothing
     End Sub
 
     Private Sub listFiles_DragDrop(sender As Object, e As DragEventArgs) Handles listFiles.DragDrop
