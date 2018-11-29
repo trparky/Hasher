@@ -456,6 +456,7 @@
                                                    Dim listOfFiles As New List(Of ListViewItem)
                                                    Dim listViewItem As myListViewItem
                                                    Dim index As Integer = 0
+                                                   Dim dblPercentage As Double
 
                                                    Me.Invoke(Sub()
                                                                  btnAddIndividualFiles.Enabled = False
@@ -486,8 +487,9 @@
                                                        index += 1
 
                                                        Me.Invoke(Sub()
-                                                                     lblIndividualFilesStatusProcessingFile.Text = String.Format("Scanning directory... processing file {0} of {1}. Please Wait.", index.ToString("N0"), filesInFolder.Count.ToString("N0"))
-                                                                     IndividualFilesProgressBar.Value = (index / filesInFolder.Count) * 100
+                                                                     dblPercentage = Math.Round(index / filesInFolder.Count * 100, 2)
+                                                                     lblIndividualFilesStatusProcessingFile.Text = String.Format("Scanning directory... processing file {0} of {1} ({2}%). Please Wait.", index.ToString("N0"), filesInFolder.Count.ToString("N0"), dblPercentage.ToString)
+                                                                     IndividualFilesProgressBar.Value = dblPercentage
                                                                  End Sub)
 
                                                        If Not isFileInListOfListViewItems(strFileName, listOfFiles) And Not isFileInListView(strFileName) Then
