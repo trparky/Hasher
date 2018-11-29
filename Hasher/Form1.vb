@@ -5,6 +5,7 @@
     Private Const strWindowTitle As String = "Hasher"
     Private Const shortUDPServerPort As Short = 32589
 
+    Private filesInListFiles As New Specialized.StringCollection
     Private hashResultArray As New Dictionary(Of String, String)
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
@@ -55,20 +56,34 @@
         End Try
     End Function
 
-    Private Sub updateFilesListCountHeader()
-        lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files", listFiles.Items.Count().ToString("N0"))
+    Private Sub updateFilesListCountHeader(Optional boolIncludeSelectedItemCount As Boolean = False)
+        If boolIncludeSelectedItemCount Then
+            lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files ({1} {2} are selected)", listFiles.Items.Count().ToString("N0"), listFiles.SelectedItems.Count().ToString("N0"), If(listFiles.SelectedItems.Count() = 1, "item", "items"))
+        Else
+            lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files", listFiles.Items.Count().ToString("N0"))
+        End If
+
         btnComputeHash.Enabled = If(listFiles.Items.Count() = 0, False, True)
     End Sub
 
     Private Sub btnRemoveAllFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveAllFiles.Click
         listFiles.Items.Clear()
+        filesInListFiles.Clear()
         updateFilesListCountHeader()
     End Sub
 
     Private Sub btnRemoveSelectedFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveSelectedFiles.Click
-        For Each item In listFiles.SelectedItems
+        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox(String.Format("It would be recommended to use the ""Remove All Files"" button instead, removing this many items ({0} items) from the list is a slow process and will make the program appear locked up." & vbCrLf & vbCrLf & "Are you sure you want to remove the items this way?", listFiles.SelectedItems.Count.ToString("N0")), MsgBoxStyle.Question + MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
+            Exit Sub
+        End If
+
+        listFiles.BeginUpdate()
+        For Each item As myListViewItem In listFiles.SelectedItems
+            filesInListFiles.Remove(item.Text)
             listFiles.Items.Remove(item)
         Next
+        listFiles.EndUpdate()
+
         updateFilesListCountHeader()
     End Sub
 
@@ -83,7 +98,8 @@
             If OpenFileDialog.FileNames.Count() = 0 Then
                 MsgBox("You must select some files.", MsgBoxStyle.Critical, strWindowTitle)
             ElseIf OpenFileDialog.FileNames.Count() = 1 Then
-                If Not isFileInListView(OpenFileDialog.FileName) Then
+                If Not filesInListFiles.Contains(OpenFileDialog.FileName) Then
+                    filesInListFiles.Add(OpenFileDialog.FileName)
                     itemToBeAdded = New myListViewItem(OpenFileDialog.FileName) With {.fileSize = New IO.FileInfo(OpenFileDialog.FileName).Length}
                     itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
                     itemToBeAdded.SubItems.Add(strToBeComputed)
@@ -94,7 +110,8 @@
             Else
                 listFiles.BeginUpdate()
                 For Each strFileName As String In OpenFileDialog.FileNames
-                    If Not isFileInListView(strFileName) Then
+                    If Not filesInListFiles.Contains(strFileName) Then
+                        filesInListFiles.Add(strFileName)
                         itemToBeAdded = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
                         itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
                         itemToBeAdded.SubItems.Add(strToBeComputed)
@@ -347,7 +364,8 @@
             If isDirectory Then
                 addFilesFromDirectory(receivedClassObject.strFileName)
             Else
-                If IO.File.Exists(receivedClassObject.strFileName) AndAlso Not isFileInListView(receivedClassObject.strFileName) Then
+                If IO.File.Exists(receivedClassObject.strFileName) AndAlso Not filesInListFiles.Contains(receivedClassObject.strFileName) Then
+                    filesInListFiles.Add(receivedClassObject.strFileName)
                     Dim itemToBeAdded As myListViewItem
                     itemToBeAdded = New myListViewItem(receivedClassObject.strFileName) With {.fileSize = New IO.FileInfo(receivedClassObject.strFileName).Length}
                     itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
@@ -492,7 +510,8 @@
                                                                      IndividualFilesProgressBar.Value = dblPercentage
                                                                  End Sub)
 
-                                                       If Not isFileInListView(strFileName) Then
+                                                       If Not filesInListFiles.Contains(strFileName) Then
+                                                           filesInListFiles.Add(strFileName)
                                                            listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
                                                            listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                                                            listViewItem.SubItems.Add(strToBeComputed)
@@ -724,7 +743,8 @@
             If IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) Then
                 addFilesFromDirectory(strItem)
             Else
-                If Not isFileInListView(strItem) Then
+                If Not filesInListFiles.Contains(strItem) Then
+                    filesInListFiles.Add(strItem)
                     listViewItem = New myListViewItem(strItem) With {.fileSize = New IO.FileInfo(strItem).Length}
                     listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                     listViewItem.SubItems.Add(strToBeComputed)
@@ -739,12 +759,6 @@
     Private Sub listFiles_DragEnter(sender As Object, e As DragEventArgs) Handles listFiles.DragEnter
         e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.All, DragDropEffects.None)
     End Sub
-
-    Private Function isFileInListView(strFile As String) As Boolean
-        Dim itemCountWithMatch As Integer = listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase)).Count() <> 0
-        'Dim itemCountWithMatch As Integer = (From item As myListViewItem In listFiles.Items Where item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase) Select item).Count
-        Return If(itemCountWithMatch = 0, False, True)
-    End Function
 
     Private Sub chkRecurrsiveDirectorySearch_Click(sender As Object, e As EventArgs) Handles chkRecurrsiveDirectorySearch.Click
         My.Settings.boolRecurrsiveDirectorySearch = chkRecurrsiveDirectorySearch.Checked
@@ -1337,5 +1351,9 @@
         MsgBox("Hasher needs to restart, the application will now close and restart.", MsgBoxStyle.Information, strWindowTitle)
         Process.Start(Application.ExecutablePath)
         Process.GetCurrentProcess.Kill()
+    End Sub
+
+    Private Sub listFiles_ItemSelectionChanged(sender As Object, e As ListViewItemSelectionChangedEventArgs) Handles listFiles.ItemSelectionChanged
+        updateFilesListCountHeader(True)
     End Sub
 End Class
