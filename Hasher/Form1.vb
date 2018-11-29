@@ -603,11 +603,18 @@
                                                                  End If
 
                                                                  listViewItem = New myListViewItem(strFileName) With {
-                                                                     .hash = strChecksum,
-                                                                     .fileName = strFileName
+                                                                    .hash = strChecksum,
+                                                                    .fileName = strFileName
                                                                  }
-                                                                 listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
-                                                                 listViewItem.SubItems.Add("To Be Tested")
+
+                                                                 If IO.File.Exists(strFileName) Then
+                                                                     listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                                                                     listViewItem.SubItems.Add("To Be Tested")
+                                                                 Else
+                                                                     listViewItem.SubItems.Add("")
+                                                                     listViewItem.SubItems.Add("Doesn't Exist")
+                                                                 End If
+
                                                                  verifyHashesListFiles.Items.Add(listViewItem)
                                                                  listViewItem = Nothing
                                                              End If
