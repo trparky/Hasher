@@ -458,6 +458,19 @@
                                                    Dim index As Integer = 0
 
                                                    Me.Invoke(Sub()
+                                                                 btnAddIndividualFiles.Enabled = False
+                                                                 btnAddFilesInFolder.Enabled = False
+                                                                 btnRemoveSelectedFiles.Enabled = False
+                                                                 btnRemoveAllFiles.Enabled = False
+                                                                 radioSHA256.Enabled = False
+                                                                 radioSHA384.Enabled = False
+                                                                 radioSHA512.Enabled = False
+                                                                 radioSHA1.Enabled = False
+                                                                 radioMD5.Enabled = False
+                                                                 btnComputeHash.Enabled = False
+                                                                 btnIndividualFilesCopyToClipboard.Enabled = False
+                                                                 btnIndividualFilesSaveResultsToDisk.Enabled = False
+
                                                                  lblIndividualFilesStatus.Text = "Enumerating files in directory... Please Wait."
                                                                  btnAddFilesInFolder.Enabled = False
                                                              End Sub)
@@ -500,6 +513,19 @@
                                                                  btnAddFilesInFolder.Enabled = True
 
                                                                  updateFilesListCountHeader()
+
+                                                                 btnAddIndividualFiles.Enabled = True
+                                                                 btnAddFilesInFolder.Enabled = True
+                                                                 btnRemoveSelectedFiles.Enabled = True
+                                                                 btnRemoveAllFiles.Enabled = True
+                                                                 radioSHA256.Enabled = True
+                                                                 radioSHA384.Enabled = True
+                                                                 radioSHA512.Enabled = True
+                                                                 radioSHA1.Enabled = True
+                                                                 radioMD5.Enabled = True
+                                                                 btnComputeHash.Enabled = True
+                                                                 btnIndividualFilesCopyToClipboard.Enabled = True
+                                                                 btnIndividualFilesSaveResultsToDisk.Enabled = True
                                                              End Sub)
                                                End Sub)
     End Sub
