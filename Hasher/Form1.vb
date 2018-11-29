@@ -492,7 +492,7 @@
                                                                      IndividualFilesProgressBar.Value = dblPercentage
                                                                  End Sub)
 
-                                                       If Not isFileInListOfListViewItems(strFileName, listOfFiles) And Not isFileInListView(strFileName) Then
+                                                       If Not isFileInListView(strFileName) Then
                                                            listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
                                                            listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                                                            listViewItem.SubItems.Add(strToBeComputed)
@@ -743,12 +743,6 @@
     Private Function isFileInListView(strFile As String) As Boolean
         Dim itemCountWithMatch As Integer = listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase)).Count() <> 0
         'Dim itemCountWithMatch As Integer = (From item As myListViewItem In listFiles.Items Where item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase) Select item).Count
-        Return If(itemCountWithMatch = 0, False, True)
-    End Function
-
-    Private Function isFileInListOfListViewItems(strFile As String, ByRef listOfListViewItems As List(Of ListViewItem)) As Boolean
-        Dim itemCountWithMatch As Integer = listOfListViewItems.Cast(Of ListViewItem).Where(Function(item As ListViewItem) item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase)).Count() <> 0
-        'Dim itemCountWithMatch As Integer = (From item As ListViewItem In listFiles.Items Where item.Text.Equals(strFile, StringComparison.OrdinalIgnoreCase) Select item).Count
         Return If(itemCountWithMatch = 0, False, True)
     End Function
 
