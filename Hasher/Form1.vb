@@ -1363,4 +1363,8 @@
     Private Sub listFiles_ItemSelectionChanged(sender As Object, e As ListViewItemSelectionChangedEventArgs) Handles listFiles.ItemSelectionChanged
         updateFilesListCountHeader(True)
     End Sub
+
+    Private Sub listFiles_KeyUp(sender As Object, e As KeyEventArgs) Handles listFiles.KeyUp
+        If e.KeyCode = Keys.Delete Then btnRemoveSelectedFiles.PerformClick()
+    End Sub
 End Class

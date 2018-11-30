@@ -1130,6 +1130,7 @@ Partial Class Form1
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1072, 407)
         Me.Controls.Add(Me.TabControl1)
+        Me.KeyPreview = True
         Me.MinimumSize = New System.Drawing.Size(904, 446)
         Me.Name = "Form1"
         Me.Text = "Hasher"
