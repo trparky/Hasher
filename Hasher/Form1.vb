@@ -585,18 +585,26 @@
                                                  Try
                                                      verifyHashesListFiles.BeginUpdate()
                                                      boolBackgroundThreadWorking = True
-                                                     Dim strLineInFile, strChecksum, strFileName As String
+                                                     Dim strChecksum, strFileName As String
                                                      Dim index As Integer = 1
                                                      Dim longFilesThatPassedVerification As Long = 0
                                                      Dim listViewItem As myListViewItem
+                                                     Dim regExMatchObject As Text.RegularExpressions.Match
+                                                     Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
+                                                     Dim longLineCounter As Long = 0
 
-                                                     Using fileStream As New IO.StreamReader(strPathToChecksumFile, System.Text.Encoding.UTF8)
-                                                         While Not fileStream.EndOfStream
-                                                             strLineInFile = fileStream.ReadLine()
+                                                     lblVerifyHashStatus.Text = "Reading hash file into memory... Please Wait."
 
-                                                             If Not String.IsNullOrEmpty(strLineInFile) AndAlso hashLineParser.IsMatch(strLineInFile) Then
-                                                                 strChecksum = hashLineParser.Match(strLineInFile).Groups(1).Value
-                                                                 strFileName = hashLineParser.Match(strLineInFile).Groups(2).Value
+                                                     For Each strLineInFile As String In dataInFileArray
+                                                         longLineCounter += 1
+                                                         VerifyHashProgressBar.Value = longLineCounter / dataInFileArray.LongLength * 100
+
+                                                         If Not String.IsNullOrEmpty(strLineInFile) Then
+                                                             regExMatchObject = hashLineParser.Match(strLineInFile)
+
+                                                             If regExMatchObject.Success Then
+                                                                 strChecksum = regExMatchObject.Groups(1).Value
+                                                                 strFileName = regExMatchObject.Groups(2).Value
 
                                                                  If Not hashLineFilePathChecker.IsMatch(strFileName) Then
                                                                      strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
@@ -610,27 +618,36 @@
                                                                  If IO.File.Exists(strFileName) Then
                                                                      listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
                                                                      listViewItem.SubItems.Add("To Be Tested")
+                                                                     listViewItem.boolFileExists = True
                                                                  Else
                                                                      listViewItem.SubItems.Add("")
                                                                      listViewItem.SubItems.Add("Doesn't Exist")
+                                                                     listViewItem.boolFileExists = False
+                                                                     listViewItem.BackColor = Color.LightGray
                                                                  End If
 
                                                                  verifyHashesListFiles.Items.Add(listViewItem)
                                                                  listViewItem = Nothing
                                                              End If
-                                                         End While
-                                                     End Using
 
+                                                             regExMatchObject = Nothing
+                                                         End If
+                                                     Next
+
+                                                     lblVerifyHashStatus.Text = strNoBackgroundProcesses
+                                                     VerifyHashProgressBar.Value = 0
+
+                                                     dataInFileArray = Nothing
                                                      verifyHashesListFiles.EndUpdate()
 
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
                                                          lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} file(s)", index.ToString("N0"), verifyHashesListFiles.Items.Count().ToString("N0"))
-                                                         processFileInVerifyFileList(item, checksumType, longFilesThatPassedVerification)
+                                                         If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, longFilesThatPassedVerification)
                                                          index += 1
                                                      Next
 
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
-                                                         item.BackColor = item.color
+                                                         If item.boolFileExists Then item.BackColor = item.color
                                                      Next
 
                                                      lblVerifyHashStatusProcessingFile.Text = ""
@@ -737,9 +754,6 @@
             End If
 
             fileInfo = Nothing
-        Else
-            item.color = Color.LightGray
-            item.SubItems(2).Text = "Doesn't Exist"
         End If
     End Sub
 

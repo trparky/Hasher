@@ -4,6 +4,7 @@ Public Class myListViewItem
     Public fileSize As Long
     Public hash, fileName As String
     Public color As Color
+    Public boolFileExists As Boolean
 
     Public Sub New(strInput As String)
         Me.Text = strInput
