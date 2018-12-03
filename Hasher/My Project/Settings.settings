@@ -32,5 +32,8 @@
     <Setting Name="boolEnableServer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="boolSortByFileSizeAfterLoadingHashFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

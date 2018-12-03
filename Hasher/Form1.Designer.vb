@@ -120,6 +120,7 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.chkSortByFileSizeAfterLoadingHashFile = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1061,6 +1062,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkSortByFileSizeAfterLoadingHashFile)
         Me.tabSettings.Controls.Add(Me.btnAddHasherToAllFiles)
         Me.tabSettings.Controls.Add(Me.btnAssociate)
         Me.tabSettings.Controls.Add(Me.chkSSL)
@@ -1074,7 +1076,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 82)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 105)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(204, 23)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1083,7 +1085,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 82)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 105)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 23)
         Me.btnAssociate.TabIndex = 2
@@ -1124,6 +1126,16 @@ Partial Class Form1
         '
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
+        '
+        'chkSortByFileSizeAfterLoadingHashFile
+        '
+        Me.chkSortByFileSizeAfterLoadingHashFile.AutoSize = True
+        Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 82)
+        Me.chkSortByFileSizeAfterLoadingHashFile.Name = "chkSortByFileSizeAfterLoadingHashFile"
+        Me.chkSortByFileSizeAfterLoadingHashFile.Size = New System.Drawing.Size(244, 17)
+        Me.chkSortByFileSizeAfterLoadingHashFile.TabIndex = 4
+        Me.chkSortByFileSizeAfterLoadingHashFile.Text = "Sort file listing by file size after loading hash file"
+        Me.chkSortByFileSizeAfterLoadingHashFile.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1252,4 +1264,5 @@ Partial Class Form1
     Friend WithEvents chkEnableInterprocessCommunicationServer As CheckBox
     Friend WithEvents lblProcessingFile As Label
     Friend WithEvents lblProcessingFileVerify As Label
+    Friend WithEvents chkSortByFileSizeAfterLoadingHashFile As CheckBox
 End Class

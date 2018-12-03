@@ -406,6 +406,7 @@
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
         chkEnableInterprocessCommunicationServer.Checked = My.Settings.boolEnableServer
+        chkSortByFileSizeAfterLoadingHashFile.Checked = My.Settings.boolSortByFileSizeAfterLoadingHashFile
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
 
@@ -616,10 +617,12 @@
                                                                  }
 
                                                                  If IO.File.Exists(strFileName) Then
-                                                                     listViewItem.SubItems.Add(fileSizeToHumanSize(New IO.FileInfo(strFileName).Length))
+                                                                     listViewItem.fileSize = New IO.FileInfo(strFileName).Length
+                                                                     listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                                                                      listViewItem.SubItems.Add("To Be Tested")
                                                                      listViewItem.boolFileExists = True
                                                                  Else
+                                                                     listViewItem.fileSize = 0
                                                                      listViewItem.SubItems.Add("")
                                                                      listViewItem.SubItems.Add("Doesn't Exist")
                                                                      listViewItem.boolFileExists = False
@@ -638,6 +641,8 @@
 
                                                      verifyHashesListFiles.Items.AddRange(listOfItemsToAddToListView.ToArray())
                                                      listOfItemsToAddToListView = Nothing
+
+                                                     If My.Settings.boolSortByFileSizeAfterLoadingHashFile Then applyFileSizeSortingToVerifyList()
 
                                                      lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                      VerifyHashProgressBar.Value = 0
@@ -940,6 +945,17 @@
         End If
 
         If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
+    End Sub
+
+    Private Sub applyFileSizeSortingToVerifyList()
+        Dim new_sorting_column As ColumnHeader = verifyHashesListFiles.Columns(1)
+        Dim sort_order As SortOrder = SortOrder.Ascending
+
+        m_SortingColumn1 = new_sorting_column
+        m_SortingColumn1.Text = "> File Size"
+
+        verifyHashesListFiles.ListViewItemSorter = New ListViewComparer(1, sort_order)
+        verifyHashesListFiles.Sort()
     End Sub
 
     Private Sub verifyHashesListFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles verifyHashesListFiles.ColumnClick
@@ -1384,5 +1400,9 @@
 
     Private Sub listFiles_KeyUp(sender As Object, e As KeyEventArgs) Handles listFiles.KeyUp
         If e.KeyCode = Keys.Delete Then btnRemoveSelectedFiles.PerformClick()
+    End Sub
+
+    Private Sub chkSortByFileSizeAfterLoadingHashFile_Click(sender As Object, e As EventArgs) Handles chkSortByFileSizeAfterLoadingHashFile.Click
+        My.Settings.boolSortByFileSizeAfterLoadingHashFile = chkSortByFileSizeAfterLoadingHashFile.Checked
     End Sub
 End Class
