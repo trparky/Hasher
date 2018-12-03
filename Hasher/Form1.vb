@@ -583,7 +583,6 @@
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
-                                                     verifyHashesListFiles.BeginUpdate()
                                                      boolBackgroundThreadWorking = True
                                                      Dim strChecksum, strFileName As String
                                                      Dim index As Integer = 1
@@ -592,6 +591,7 @@
                                                      Dim regExMatchObject As Text.RegularExpressions.Match
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim longLineCounter As Long = 0
+                                                     Dim listOfItemsToAddToListView As New List(Of myListViewItem)
 
                                                      lblVerifyHashStatus.Text = "Reading hash file into memory... Please Wait."
 
@@ -626,7 +626,7 @@
                                                                      listViewItem.BackColor = Color.LightGray
                                                                  End If
 
-                                                                 verifyHashesListFiles.Items.Add(listViewItem)
+                                                                 listOfItemsToAddToListView.Add(listViewItem)
                                                                  listViewItem = Nothing
                                                              End If
 
@@ -634,11 +634,15 @@
                                                          End If
                                                      Next
 
+                                                     lblVerifyHashStatus.Text = "Creating ListView Item Objects... Please Wait."
+
+                                                     verifyHashesListFiles.Items.AddRange(listOfItemsToAddToListView.ToArray())
+                                                     listOfItemsToAddToListView = Nothing
+
                                                      lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                      VerifyHashProgressBar.Value = 0
 
                                                      dataInFileArray = Nothing
-                                                     verifyHashesListFiles.EndUpdate()
 
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
                                                          lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} file(s)", index.ToString("N0"), verifyHashesListFiles.Items.Count().ToString("N0"))
