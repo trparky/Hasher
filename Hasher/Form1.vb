@@ -293,6 +293,13 @@
         btnIndividualFilesCopyToClipboard.Enabled = False
         btnIndividualFilesSaveResultsToDisk.Enabled = False
         hashResultArray.Clear()
+
+        listFiles.BeginUpdate()
+        For Each item As myListViewItem In listFiles.Items
+            item.SubItems(2).Text = strToBeComputed
+            item.hash = Nothing
+        Next
+        listFiles.EndUpdate()
     End Sub
 
     Private Sub radioMD5_Click(sender As Object, e As EventArgs) Handles radioMD5.Click
