@@ -81,14 +81,6 @@ Class Check_for_Update_Stuff
         End Try
     End Function
 
-    Private Function transformURL(strURLInput As String) As String
-        If Not strURLInput.Trim.ToLower.StartsWith("http") Then
-            Return If(My.Settings.boolSSL, "https://", "http://") & strURLInput
-        Else
-            Return strURLInput
-        End If
-    End Function
-
     Private Function canIWriteToTheCurrentDirectory() As Boolean
         Return canIWriteThere(New IO.FileInfo(Application.ExecutablePath).DirectoryName)
     End Function
@@ -278,22 +270,6 @@ Class Check_for_Update_Stuff
 
         Process.GetCurrentProcess.Kill()
     End Sub
-
-    ''' <summary>Converts a Dictionary of Strings into a String ready to be POSTed to a URL.</summary>
-    ''' <param name="postData">A Dictionary(Of String, String) containing the data needed to by POSTed to a web server.</param>
-    ''' <returns>Returns a String value containing the POST data.</returns>
-    Private Function getPostDataString(postData As Dictionary(Of String, String)) As String
-        Dim postDataString As String = ""
-        For Each entry As KeyValuePair(Of String, String) In postData
-            postDataString &= entry.Key.Trim & "=" & Web.HttpUtility.UrlEncode(entry.Value.Trim) & "&"
-        Next
-
-        If postDataString.EndsWith("&") Then
-            postDataString = postDataString.Substring(0, postDataString.Length - 1)
-        End If
-
-        Return postDataString
-    End Function
 
     ''' <summary>Creates a User Agent String for this program to be used in HTTP requests.</summary>
     ''' <returns>String type.</returns>
