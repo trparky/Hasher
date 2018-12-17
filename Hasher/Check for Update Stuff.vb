@@ -25,10 +25,10 @@ Class Check_for_Update_Stuff
     End Sub
 
     Private Sub extractFileFromZIPFile(ByRef memoryStream As MemoryStream, fileToExtract As String, fileToWriteExtractedFileTo As String)
-        Dim zipFileObject As New Compression.ZipArchive(memoryStream, Compression.ZipArchiveMode.Read)
-
-        Using fileStream As New FileStream(fileToWriteExtractedFileTo, FileMode.Create)
-            zipFileObject.GetEntry(fileToExtract).Open().CopyTo(fileStream)
+        Using zipFileObject As New Compression.ZipArchive(memoryStream, Compression.ZipArchiveMode.Read)
+            Using fileStream As New FileStream(fileToWriteExtractedFileTo, FileMode.Create)
+                zipFileObject.GetEntry(fileToExtract).Open().CopyTo(fileStream)
+            End Using
         End Using
     End Sub
 
@@ -40,7 +40,7 @@ Class Check_for_Update_Stuff
 
     Private versionStringWithoutBuild As String = String.Format("{0}.{1}", versionInfo(versionPieces.major), versionInfo(versionPieces.minor))
 
-    ''' <summary>This parses the XML updata data and determines if an update is needed.</summary>
+    ''' <summary>This parses the XML update data and determines if an update is needed.</summary>
     ''' <param name="xmlData">The XML data from the web site.</param>
     ''' <returns>A Boolean value indicating if the program has been updated or not.</returns>
     Private Function processUpdateXMLData(ByVal xmlData As String) As Boolean
@@ -82,14 +82,12 @@ Class Check_for_Update_Stuff
     End Function
 
     Private Function canIWriteToTheCurrentDirectory() As Boolean
-        Return canIWriteThere(New IO.FileInfo(Application.ExecutablePath).DirectoryName)
+        Return canIWriteThere(New FileInfo(Application.ExecutablePath).DirectoryName)
     End Function
 
     Private Function canIWriteThere(folderPath As String) As Boolean
         ' We make sure we get valid folder path by taking off the leading slash.
-        If folderPath.EndsWith("\") Then
-            folderPath = folderPath.Substring(0, folderPath.Length - 1)
-        End If
+        If folderPath.EndsWith("\") Then folderPath = folderPath.Substring(0, folderPath.Length - 1)
 
         If String.IsNullOrEmpty(folderPath) Or Not Directory.Exists(folderPath) Then Return False
 
@@ -146,19 +144,11 @@ Class Check_for_Update_Stuff
         httpHelper.setURLPreProcessor = Function(ByVal strURLInput As String) As String
                                             Try
                                                 If Not strURLInput.Trim.ToLower.StartsWith("http") Then
-                                                    If My.Settings.boolSSL Then
-                                                        Debug.WriteLine("setURLPreProcessor code -- https://" & strURLInput)
-                                                        Return "https://" & strURLInput
-                                                    Else
-                                                        Debug.WriteLine("setURLPreProcessor code -- http://" & strURLInput)
-                                                        Return "http://" & strURLInput
-                                                    End If
+                                                    Return If(My.Settings.boolSSL, "https://", "http://") & strURLInput
                                                 Else
-                                                    Debug.WriteLine("setURLPreProcessor code -- " & strURLInput)
                                                     Return strURLInput
                                                 End If
                                             Catch ex As Exception
-                                                Debug.WriteLine("setURLPreProcessor code -- " & strURLInput)
                                                 Return strURLInput
                                             End Try
                                         End Function
@@ -168,9 +158,7 @@ Class Check_for_Update_Stuff
 
     Private Function SHA256ChecksumStream(ByRef stream As Stream) As String
         Dim SHA256Engine As New Security.Cryptography.SHA256CryptoServiceProvider
-
-        Dim Output As Byte() = SHA256Engine.ComputeHash(stream)
-        Return BitConverter.ToString(Output).ToLower().Replace("-", "").Trim
+        Return BitConverter.ToString(SHA256Engine.ComputeHash(stream)).ToLower().Replace("-", "").Trim
     End Function
 
     Private Function verifyChecksum(urlOfChecksumFile As String, ByRef memStream As MemoryStream, ByRef httpHelper As httpHelper, boolGiveUserAnErrorMessage As Boolean) As Boolean
@@ -337,8 +325,7 @@ Class Check_for_Update_Stuff
                     MsgBox("There was an error checking for updates.", MsgBoxStyle.Information, "Scheduled Task Scanner")
                 End If
             Catch ex As Exception
-                ' Ok, we crashed but who cares.  We give an error message.
-                'MsgBox("Error while checking for new version.", MsgBoxStyle.Information, Me.Text)
+                ' Ok, we crashed but who cares.
             Finally
                 windowObject.Invoke(Sub()
                                         windowObject.btnCheckForUpdates.Enabled = True
