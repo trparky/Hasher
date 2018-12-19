@@ -43,15 +43,15 @@ Class Check_for_Update_Stuff
     ''' <summary>This parses the XML update data and determines if an update is needed.</summary>
     ''' <param name="xmlData">The XML data from the web site.</param>
     ''' <returns>A Boolean value indicating if the program has been updated or not.</returns>
-    Private Function processUpdateXMLData(ByVal xmlData As String) As Boolean
+    Private Function processUpdateXMLData(ByVal xmlData As String, ByRef remoteVersion As String, ByRef remoteBuild As String) As Boolean
         Try
             Dim xmlDocument As New XmlDocument() ' First we create an XML Document Object.
             xmlDocument.Load(New StringReader(xmlData)) ' Now we try and parse the XML data.
 
             Dim xmlNode As XmlNode = xmlDocument.SelectSingleNode("/xmlroot")
 
-            Dim remoteVersion As String = xmlNode.SelectSingleNode("version").InnerText.Trim
-            Dim remoteBuild As String = xmlNode.SelectSingleNode("build").InnerText.Trim
+            remoteVersion = xmlNode.SelectSingleNode("version").InnerText.Trim
+            remoteBuild = xmlNode.SelectSingleNode("build").InnerText.Trim
             Dim shortRemoteBuild As Short
 
             ' This checks to see if current version and the current build matches that of the remote values in the XML document.
@@ -310,19 +310,25 @@ Class Check_for_Update_Stuff
         If Not checkForInternetConnection() Then
             MsgBox("No Internet connection detected.", MsgBoxStyle.Information, windowObject.Text)
         Else
-            'Debug.WriteLine("internet connection detected")
             Try
                 Dim xmlData As String = Nothing
                 Dim httpHelper As httpHelper = createNewHTTPHelperObject()
 
                 If httpHelper.getWebData(programUpdateCheckerXMLFile, xmlData, False) Then
-                    If processUpdateXMLData(xmlData) Then
-                        downloadAndPerformUpdate()
+                    Dim remoteVersion As String = Nothing
+                    Dim remoteBuild As String = Nothing
+
+                    If processUpdateXMLData(xmlData, remoteVersion, remoteBuild) Then
+                        If MsgBox(String.Format("An update to Hasher (version {0} Build {1}) is available to be downloaded, do you want to download and update to this new version?", remoteVersion, remoteBuild), MsgBoxStyle.Question + MsgBoxStyle.YesNo, windowObject.Text) = MsgBoxResult.Yes Then
+                            downloadAndPerformUpdate()
+                        Else
+                            MsgBox("The update will not be downloaded.", MsgBoxStyle.Information, windowObject.Text)
+                        End If
                     Else
                         MsgBox("You already have the latest version.", MsgBoxStyle.Information, windowObject.Text)
                     End If
                 Else
-                    MsgBox("There was an error checking for updates.", MsgBoxStyle.Information, "Scheduled Task Scanner")
+                    MsgBox("There was an error checking for updates.", MsgBoxStyle.Information, windowObject.Text)
                 End If
             Catch ex As Exception
                 ' Ok, we crashed but who cares.
