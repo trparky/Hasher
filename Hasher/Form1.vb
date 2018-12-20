@@ -1396,6 +1396,7 @@
 
     Private Sub chkEnableInterprocessCommunicationServer_Click(sender As Object, e As EventArgs) Handles chkEnableInterprocessCommunicationServer.Click
         My.Settings.boolEnableServer = chkEnableInterprocessCommunicationServer.Checked
+        My.Settings.Save()
         MsgBox("Hasher needs to restart, the application will now close and restart.", MsgBoxStyle.Information, strWindowTitle)
         Process.Start(Application.ExecutablePath)
         Process.GetCurrentProcess.Kill()
