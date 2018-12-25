@@ -485,26 +485,39 @@
         End Try
     End Sub
 
-    Private Sub recursiveDirectorySearch(ByVal strDirectory As String, ByRef files As List(Of String))
+    Private Sub recursiveDirectorySearch(ByVal strDirectory As String, ByRef collectionOfListViewItems As List(Of ListViewItem))
         Try
-            files.AddRange(IO.Directory.EnumerateFiles(strDirectory))
+            For Each strFileName As String In IO.Directory.EnumerateFiles(strDirectory)
+                addFileToList(strFileName, collectionOfListViewItems)
+            Next
         Catch ex As Exception
         End Try
 
         Try
             For Each directory As String In IO.Directory.EnumerateDirectories(strDirectory)
-                recursiveDirectorySearch(directory, files)
+                recursiveDirectorySearch(directory, collectionOfListViewItems)
             Next
         Catch ex As Exception
         End Try
     End Sub
 
+    Sub addFileToList(strFileName As String, ByRef collectionOfListViewItems As List(Of ListViewItem))
+        Dim fileInfo As New IO.FileInfo(strFileName)
+
+        If Not filesInListFiles.Contains(strFileName) Then
+            Dim listViewItem As New myListViewItem(strFileName) With {.fileSize = fileInfo.Length}
+            listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
+            listViewItem.SubItems.Add(strToBeComputed)
+            listViewItem.fileName = strFileName
+            collectionOfListViewItems.Add(listViewItem)
+            listViewItem = Nothing
+        End If
+    End Sub
+
     Private Sub addFilesFromDirectory(directoryPath As String)
         Threading.ThreadPool.QueueUserWorkItem(Sub()
-                                                   Dim listOfFiles As New List(Of ListViewItem)
-                                                   Dim listViewItem As myListViewItem
+                                                   Dim collectionOfListViewItems As New List(Of ListViewItem)
                                                    Dim index As Integer = 0
-                                                   Dim dblPercentage As Double
 
                                                    Me.Invoke(Sub()
                                                                  btnAddIndividualFiles.Enabled = False
@@ -524,38 +537,19 @@
                                                                  btnAddFilesInFolder.Enabled = False
                                                              End Sub)
 
-                                                   Dim filesInFolder As New List(Of String)
                                                    If My.Settings.boolRecurrsiveDirectorySearch Then
-                                                       recursiveDirectorySearch(directoryPath, filesInFolder)
+                                                       recursiveDirectorySearch(directoryPath, collectionOfListViewItems)
                                                    Else
-                                                       filesInFolder.AddRange(IO.Directory.EnumerateFiles(directoryPath))
+                                                       For Each strFileName As String In IO.Directory.EnumerateFiles(directoryPath)
+                                                           addFileToList(strFileName, collectionOfListViewItems)
+                                                       Next
                                                    End If
-
-                                                   For Each strFileName As String In filesInFolder
-                                                       index += 1
-
-                                                       Me.Invoke(Sub()
-                                                                     dblPercentage = Math.Round(index / filesInFolder.Count * 100, 2)
-                                                                     lblIndividualFilesStatusProcessingFile.Text = String.Format("Scanning directory... processing file {0} of {1} ({2}%). Please Wait.", index.ToString("N0"), filesInFolder.Count.ToString("N0"), dblPercentage.ToString)
-                                                                     IndividualFilesProgressBar.Value = dblPercentage
-                                                                 End Sub)
-
-                                                       If Not filesInListFiles.Contains(strFileName) Then
-                                                           filesInListFiles.Add(strFileName)
-                                                           listViewItem = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
-                                                           listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                                                           listViewItem.SubItems.Add(strToBeComputed)
-                                                           listViewItem.fileName = strFileName
-                                                           listOfFiles.Add(listViewItem)
-                                                           listViewItem = Nothing
-                                                       End If
-                                                   Next
 
                                                    Me.Invoke(Sub()
                                                                  lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please Wait."
 
                                                                  listFiles.BeginUpdate()
-                                                                 listFiles.Items.AddRange(listOfFiles.ToArray())
+                                                                 listFiles.Items.AddRange(collectionOfListViewItems.ToArray())
                                                                  listFiles.EndUpdate()
 
                                                                  lblIndividualFilesStatusProcessingFile.Text = Nothing
