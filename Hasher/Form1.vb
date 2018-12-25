@@ -243,26 +243,30 @@
     End Sub
 
     Private Function strGetIndividualHashesInStringFormat(strPathOfChecksumFile As String) As String
-        Dim folderOfChecksumFile As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName
+        Dim folderOfChecksumFile As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName & "\"
         Dim stringBuilder As New Text.StringBuilder()
         Dim strFile As String
+
         addHashFileHeader(stringBuilder)
 
         For Each item As KeyValuePair(Of String, String) In hashResultArray
             strFile = item.Key
-            If My.Settings.boolSaveChecksumFilesWithRelativePaths Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile & "\", "")
-            stringBuilder.AppendLine(item.Value.ToString() & " *" & strFile)
+            If My.Settings.boolSaveChecksumFilesWithRelativePaths Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile, "")
+            stringBuilder.AppendLine(item.Value & " *" & strFile)
         Next
+
         Return stringBuilder.ToString()
     End Function
 
     Private Function strGetIndividualHashesInStringFormat() As String
         Dim stringBuilder As New Text.StringBuilder()
+
         addHashFileHeader(stringBuilder)
 
         For Each item As KeyValuePair(Of String, String) In hashResultArray
             stringBuilder.AppendLine(item.Value.ToString() & " *" & item.Key)
         Next
+
         Return stringBuilder.ToString()
     End Function
 
