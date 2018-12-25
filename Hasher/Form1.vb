@@ -242,6 +242,20 @@
         IndividualFilesProgressBar.Value = 0
     End Sub
 
+    Private Function strGetIndividualHashesInStringFormat(strPathOfChecksumFile As String) As String
+        Dim folderOfChecksumFile As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName
+        Dim stringBuilder As New Text.StringBuilder()
+        Dim strFile As String
+        addHashFileHeader(stringBuilder)
+
+        For Each item As KeyValuePair(Of String, String) In hashResultArray
+            strFile = item.Key
+            If My.Settings.boolSaveChecksumFilesWithRelativePaths Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile & "\", "")
+            stringBuilder.AppendLine(item.Value.ToString() & " *" & strFile)
+        Next
+        Return stringBuilder.ToString()
+    End Function
+
     Private Function strGetIndividualHashesInStringFormat() As String
         Dim stringBuilder As New Text.StringBuilder()
         addHashFileHeader(stringBuilder)
@@ -283,7 +297,7 @@
 
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
             Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
-                streamWriter.Write(strGetIndividualHashesInStringFormat())
+                streamWriter.Write(strGetIndividualHashesInStringFormat(SaveFileDialog.FileName))
             End Using
             MsgBox("Your hash results have been written to disk.", MsgBoxStyle.Information, strWindowTitle)
         End If
@@ -414,6 +428,7 @@
         chkSSL.Checked = My.Settings.boolSSL
         chkEnableInterprocessCommunicationServer.Checked = My.Settings.boolEnableServer
         chkSortByFileSizeAfterLoadingHashFile.Checked = My.Settings.boolSortByFileSizeAfterLoadingHashFile
+        chkSaveChecksumFilesWithRelativePaths.Checked = My.Settings.boolSaveChecksumFilesWithRelativePaths
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
 
@@ -1412,5 +1427,9 @@
 
     Private Sub chkSortByFileSizeAfterLoadingHashFile_Click(sender As Object, e As EventArgs) Handles chkSortByFileSizeAfterLoadingHashFile.Click
         My.Settings.boolSortByFileSizeAfterLoadingHashFile = chkSortByFileSizeAfterLoadingHashFile.Checked
+    End Sub
+
+    Private Sub chkSaveChecksumFilesWithRelativePaths_Click(sender As Object, e As EventArgs) Handles chkSaveChecksumFilesWithRelativePaths.Click
+        My.Settings.boolSaveChecksumFilesWithRelativePaths = chkSaveChecksumFilesWithRelativePaths.Checked
     End Sub
 End Class
