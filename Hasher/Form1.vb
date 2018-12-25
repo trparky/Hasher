@@ -64,6 +64,8 @@
         End If
 
         btnComputeHash.Enabled = If(listFiles.Items.Count() = 0, False, True)
+
+        If My.Settings.boolSortFileListingAfterAddingFilesToHash Then applyFileSizeSortingToHashList()
     End Sub
 
     Private Sub btnRemoveAllFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveAllFiles.Click
@@ -432,6 +434,7 @@
         chkSSL.Checked = My.Settings.boolSSL
         chkEnableInterprocessCommunicationServer.Checked = My.Settings.boolEnableServer
         chkSortByFileSizeAfterLoadingHashFile.Checked = My.Settings.boolSortByFileSizeAfterLoadingHashFile
+        chkSortFileListingAfterAddingFilesToHash.Checked = My.Settings.boolSortFileListingAfterAddingFilesToHash
         chkSaveChecksumFilesWithRelativePaths.Checked = My.Settings.boolSaveChecksumFilesWithRelativePaths
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
@@ -973,6 +976,17 @@
         If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
     End Sub
 
+    Private Sub applyFileSizeSortingToHashList()
+        Dim new_sorting_column As ColumnHeader = listFiles.Columns(1)
+        Dim sort_order As SortOrder = SortOrder.Ascending
+
+        m_SortingColumn2 = new_sorting_column
+        m_SortingColumn2.Text = "> File Size"
+
+        listFiles.ListViewItemSorter = New ListViewComparer(1, sort_order)
+        listFiles.Sort()
+    End Sub
+
     Private Sub applyFileSizeSortingToVerifyList()
         Dim new_sorting_column As ColumnHeader = verifyHashesListFiles.Columns(1)
         Dim sort_order As SortOrder = SortOrder.Ascending
@@ -1435,5 +1449,9 @@
 
     Private Sub chkSaveChecksumFilesWithRelativePaths_Click(sender As Object, e As EventArgs) Handles chkSaveChecksumFilesWithRelativePaths.Click
         My.Settings.boolSaveChecksumFilesWithRelativePaths = chkSaveChecksumFilesWithRelativePaths.Checked
+    End Sub
+
+    Private Sub chkSortFileListingAfterAddingFilesToHash_Click(sender As Object, e As EventArgs) Handles chkSortFileListingAfterAddingFilesToHash.Click
+        My.Settings.boolSortFileListingAfterAddingFilesToHash = chkSortFileListingAfterAddingFilesToHash.Checked
     End Sub
 End Class

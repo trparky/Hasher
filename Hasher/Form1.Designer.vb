@@ -122,6 +122,7 @@ Partial Class Form1
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.chkSortByFileSizeAfterLoadingHashFile = New System.Windows.Forms.CheckBox()
         Me.chkSaveChecksumFilesWithRelativePaths = New System.Windows.Forms.CheckBox()
+        Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1063,6 +1064,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkSortFileListingAfterAddingFilesToHash)
         Me.tabSettings.Controls.Add(Me.chkSaveChecksumFilesWithRelativePaths)
         Me.tabSettings.Controls.Add(Me.chkSortByFileSizeAfterLoadingHashFile)
         Me.tabSettings.Controls.Add(Me.btnAddHasherToAllFiles)
@@ -1078,7 +1080,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 128)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 151)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(204, 23)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1087,7 +1089,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 128)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 151)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 23)
         Me.btnAssociate.TabIndex = 2
@@ -1142,12 +1144,22 @@ Partial Class Form1
         'chkSaveChecksumFilesWithRelativePaths
         '
         Me.chkSaveChecksumFilesWithRelativePaths.AutoSize = True
-        Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 105)
+        Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 128)
         Me.chkSaveChecksumFilesWithRelativePaths.Name = "chkSaveChecksumFilesWithRelativePaths"
         Me.chkSaveChecksumFilesWithRelativePaths.Size = New System.Drawing.Size(222, 17)
         Me.chkSaveChecksumFilesWithRelativePaths.TabIndex = 5
         Me.chkSaveChecksumFilesWithRelativePaths.Text = "Save Checksum Files with Relative Paths"
         Me.chkSaveChecksumFilesWithRelativePaths.UseVisualStyleBackColor = True
+        '
+        'chkSortFileListingAfterAddingFilesToHash
+        '
+        Me.chkSortFileListingAfterAddingFilesToHash.AutoSize = True
+        Me.chkSortFileListingAfterAddingFilesToHash.Location = New System.Drawing.Point(15, 105)
+        Me.chkSortFileListingAfterAddingFilesToHash.Name = "chkSortFileListingAfterAddingFilesToHash"
+        Me.chkSortFileListingAfterAddingFilesToHash.Size = New System.Drawing.Size(210, 17)
+        Me.chkSortFileListingAfterAddingFilesToHash.TabIndex = 6
+        Me.chkSortFileListingAfterAddingFilesToHash.Text = "Sort file listing after adding files to Hash"
+        Me.chkSortFileListingAfterAddingFilesToHash.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1278,4 +1290,5 @@ Partial Class Form1
     Friend WithEvents lblProcessingFileVerify As Label
     Friend WithEvents chkSortByFileSizeAfterLoadingHashFile As CheckBox
     Friend WithEvents chkSaveChecksumFilesWithRelativePaths As CheckBox
+    Friend WithEvents chkSortFileListingAfterAddingFilesToHash As CheckBox
 End Class
