@@ -274,7 +274,8 @@
     End Sub
 
     Private Function strGetIndividualHashesInStringFormat(strPathOfChecksumFile As String) As String
-        Dim folderOfChecksumFile As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName & "\"
+        Dim fileInfo As New IO.FileInfo(strPathOfChecksumFile)
+        Dim folderOfChecksumFile As String = If(fileInfo.DirectoryName.Length = 3, fileInfo.DirectoryName, fileInfo.DirectoryName & "\")
         Dim stringBuilder As New Text.StringBuilder()
         Dim strFile As String
 
