@@ -128,6 +128,28 @@
         updateFilesListCountHeader()
     End Sub
 
+    Private Function timespanToHMS(timeSpan As TimeSpan) As String
+        Dim strReturnedString As String = Nothing
+
+        If timeSpan.Hours <> 0 Then strReturnedString = timeSpan.Hours & If(timeSpan.Hours = 1, " Hour", " Hours")
+        If timeSpan.Minutes <> 0 Then
+            If String.IsNullOrWhiteSpace(strReturnedString) Then
+                strReturnedString = timeSpan.Minutes & If(timeSpan.Minutes = 1, " Minute", " Minutes")
+            Else
+                strReturnedString &= ", " & timeSpan.Minutes & If(timeSpan.Minutes = 1, " Minute", " Minutes")
+            End If
+        End If
+        If timeSpan.Seconds <> 0 Then
+            If String.IsNullOrWhiteSpace(strReturnedString) Then
+                strReturnedString = timeSpan.Seconds & If(timeSpan.Seconds = 1, " Second", " Seconds")
+            Else
+                strReturnedString &= " and " & timeSpan.Seconds & If(timeSpan.Seconds = 1, " Second", " Seconds")
+            End If
+        End If
+
+        Return strReturnedString
+    End Function
+
     Private Sub btnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
         btnComputeHash.Enabled = False
         btnAddFilesInFolder.Enabled = False
@@ -182,6 +204,8 @@
                                                          checksumType = checksumType.sha512
                                                      End If
 
+                                                     Dim stopWatch As Stopwatch = Stopwatch.StartNew
+
                                                      For Each item As myListViewItem In listFiles.Items
                                                          strFileName = item.SubItems(0).Text
 
@@ -206,7 +230,7 @@
                                                      radioSHA384.Enabled = True
                                                      radioSHA512.Enabled = True
 
-                                                     Me.Invoke(Sub() MsgBox("Complete.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
+                                                     Me.Invoke(Sub() MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
                                                      resetHashIndividualFilesProgress()
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
@@ -616,6 +640,7 @@
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim longLineCounter As Long = 0
                                                      Dim listOfItemsToAddToListView As New List(Of myListViewItem)
+                                                     Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      lblVerifyHashStatus.Text = "Reading hash file into memory... Please Wait."
 
@@ -695,6 +720,8 @@
                                                                    Else
                                                                        strMessageBoxText = String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", longFilesThatPassedVerification, verifyHashesListFiles.Items.Count, verifyHashesListFiles.Items.Count - longFilesThatPassedVerification)
                                                                    End If
+
+                                                                   strMessageBoxText &= vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & "."
 
                                                                    MsgBox(strMessageBoxText, MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle)
                                                                End Sub)
@@ -1097,6 +1124,8 @@
                                                                                         End Try
                                                                                     End Sub
 
+                                                     Dim stopWatch As Stopwatch = Stopwatch.StartNew
+
                                                      If doChecksumWithAttachedSubRoutine(txtFile1.Text, checksumType, strChecksum1, subRoutine) AndAlso doChecksumWithAttachedSubRoutine(txtFile2.Text, checksumType, strChecksum2, subRoutine) Then
                                                          lblFile1Hash.Text = "Hash/Checksum: " & strChecksum1
                                                          lblFile2Hash.Text = "Hash/Checksum: " & strChecksum2
@@ -1120,9 +1149,9 @@
 
                                                      If boolSuccessful Then
                                                          If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
-                                                             MsgBox("Both files are the same.", MsgBoxStyle.Information, strWindowTitle)
+                                                             MsgBox("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
                                                          Else
-                                                             MsgBox("The two files don't match.", MsgBoxStyle.Critical, strWindowTitle)
+                                                             MsgBox("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
                                                          End If
                                                      Else
                                                          MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
@@ -1270,6 +1299,7 @@
                                                                                         End Try
                                                                                     End Sub
 
+                                                     Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim boolSuccessful As Boolean = doChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, checksumType, strChecksum, subRoutine)
 
                                                      txtFileForKnownHash.Enabled = True
@@ -1281,9 +1311,9 @@
 
                                                      If boolSuccessful Then
                                                          If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
-                                                             MsgBox("The checksums match!", MsgBoxStyle.Information, strWindowTitle)
+                                                             MsgBox("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
                                                          Else
-                                                             MsgBox("The checksums DON'T match!", MsgBoxStyle.Critical, strWindowTitle)
+                                                             MsgBox("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
                                                          End If
                                                      Else
                                                          MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
