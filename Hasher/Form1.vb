@@ -156,6 +156,8 @@
         btnAddIndividualFiles.Enabled = False
         btnRemoveAllFiles.Enabled = False
         btnRemoveSelectedFiles.Enabled = False
+        btnIndividualFilesCopyToClipboard.Enabled = False
+        btnIndividualFilesSaveResultsToDisk.Enabled = False
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -210,6 +212,8 @@
                                                          strFileName = item.SubItems(0).Text
 
                                                          If Not hashResultArray.ContainsKey(strFileName) Then
+                                                             lblProcessingFile.Text = String.Format("Now processing file {0}.", New IO.FileInfo(strFileName).Name)
+
                                                              If doChecksumWithAttachedSubRoutine(strFileName, checksumType, strChecksum, subRoutine) Then
                                                                  item.SubItems(2).Text = strChecksum
                                                                  item.hash = strChecksum
@@ -236,6 +240,7 @@
                                                      workingThread = Nothing
                                                  Catch ex As Threading.ThreadAbortException
                                                      If Not boolClosingWindow Then
+                                                         lblProcessingFile.Text = Nothing
                                                          lblIndividualFilesStatus.Text = strNoBackgroundProcesses
                                                          lblIndividualFilesStatusProcessingFile.Text = ""
                                                          IndividualFilesProgressBar.Value = 0
