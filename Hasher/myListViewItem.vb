@@ -6,6 +6,7 @@ Public Class myListViewItem
     Public Property fileName As String
     Public Property color As Color
     Public Property boolFileExists As Boolean
+    Public Property boolComputedHash As Boolean = False
 
     Public Sub New(strInput As String)
         Me.Text = strInput
