@@ -212,7 +212,7 @@
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      For Each item As myListViewItem In listFiles.Items
-                                                         If Not item.boolComputedHash Then
+                                                         If String.IsNullOrWhiteSpace(item.hash) Then
                                                              strFileName = item.fileName
 
                                                              If Not hashResultArray.ContainsKey(strFileName) Then
@@ -222,7 +222,6 @@
                                                                      item.SubItems(2).Text = strChecksum
                                                                      item.hash = strChecksum
                                                                      hashResultArray.Add(strFileName, strChecksum)
-                                                                     item.boolComputedHash = True
                                                                  Else
                                                                      item.SubItems(2).Text = "(Error while calculating checksum)"
                                                                  End If
