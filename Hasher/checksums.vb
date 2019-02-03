@@ -2,19 +2,16 @@ Public Class checksums
     Private checksumStatusUpdater As [Delegate]
 
     ''' <summary>This allows you to set up a function to be run while your checksum is being processed. This function can be used to update things on the GUI during a checksum.</summary>
-    ''' <value>A Lambda</value>
     ''' <example>
     ''' A VB.NET Example...
-    ''' checksum.setChecksumStatusUpdateRoutine(Function(ByVal checksumStatusDetails As checksumStatusDetails)
+    ''' Dim checksums As New checksum(Function(ByVal checksumStatusDetails As checksumStatusDetails)
     ''' End Function)
     ''' OR A C# Example...
-    ''' checksum.setChecksumStatusUpdateRoutine((checksumStatusDetails checksumStatusDetails) => { })
+    ''' checksum checksums = new checksum((checksumStatusDetails checksumStatusDetails) => { });
     ''' </example>
-    Public WriteOnly Property setChecksumStatusUpdateRoutine As [Delegate]
-        Set(value As [Delegate])
-            checksumStatusUpdater = value
-        End Set
-    End Property
+    Public Sub New(ByRef inputDelegate As [Delegate])
+        checksumStatusUpdater = inputDelegate
+    End Sub
 
     Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType) As String
         Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType)

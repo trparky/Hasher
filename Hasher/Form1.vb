@@ -43,7 +43,7 @@
     Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate]) As Boolean
         Try
             If IO.File.Exists(strFile) Then
-                Dim checksums As New checksums With {.setChecksumStatusUpdateRoutine = subRoutine}
+                Dim checksums As New checksums(subRoutine)
                 strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
                 Return True
             Else
