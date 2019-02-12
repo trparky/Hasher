@@ -400,9 +400,6 @@
                 Dim remoteIPEndPoint As New Net.IPEndPoint(Net.IPAddress.Any, 0)
                 Dim byteArray As Byte() = udpClient.Receive(remoteIPEndPoint)
 
-                TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
-                Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
-
                 Using memStream As New IO.MemoryStream(byteArray)
                     processIncomingDataFromServer(memStream)
                 End Using
@@ -426,6 +423,9 @@
                 addFilesFromDirectory(receivedClassObject.strFileName)
             Else
                 If IO.File.Exists(receivedClassObject.strFileName) AndAlso Not filesInListFiles.Contains(receivedClassObject.strFileName) Then
+                    TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
+                    Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
+
                     filesInListFiles.Add(receivedClassObject.strFileName)
                     Dim itemToBeAdded As myListViewItem
                     itemToBeAdded = New myListViewItem(receivedClassObject.strFileName) With {.fileSize = New IO.FileInfo(receivedClassObject.strFileName).Length}
