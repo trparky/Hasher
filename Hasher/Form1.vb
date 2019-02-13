@@ -16,6 +16,7 @@
     Private boolDoneLoading As Boolean = False
     Private udpClient As Net.Sockets.UdpClient = Nothing
     Private ReadOnly communicationChannelClassSerializer As New Xml.Serialization.XmlSerializer((New communicationChannelClass).GetType)
+    Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
 
     Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
@@ -378,6 +379,53 @@
 
     Private Sub textRadioRIPEMD160_Click(sender As Object, e As EventArgs)
         disableIndividualFilesResultsButtonsAndClearResults()
+    End Sub
+
+    Private Function getFileAssociation(ByVal fileExtension As String, ByRef associatedApplication As String) As Boolean
+        Try
+            fileExtension = fileExtension.ToLower.Trim
+            If Not fileExtension.StartsWith(".") Then
+                fileExtension = "." & fileExtension
+            End If
+
+            Dim subPath As String = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(fileExtension, False).GetValue(vbNullString)
+            Dim rawExecutablePath As String = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(subPath & "\shell\open\command", False).GetValue(vbNullString)
+
+            ' We use this to parse out the executable path out of the regular junk in the string.
+            Dim matches As Text.RegularExpressions.Match = System.Text.RegularExpressions.Regex.Match(rawExecutablePath, "(""{0, 1}[A-Za-z]:  \\.*\.(?:bat|bin|cmd|com|cpl|exe|gadget|inf1|ins|inx|isu|job|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|sct|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf)""{0,1})", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+
+            associatedApplication = matches.Groups(1).Value.Trim ' And return the value.
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+    Private Sub launchURLInWebBrowser(url As String, Optional errorMessage As String = "An error occurred when trying the URL In your Default browser. The URL has been copied to your Windows Clipboard for you to paste into the address bar in the web browser of your choice.")
+        If Not url.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then url = If(My.Settings.boolSSL, "https://" & url, "http://" & url)
+
+        Try
+            Dim associatedApplication As String = Nothing
+
+            If Not getFileAssociation(".html", associatedApplication) Then
+                Process.Start(url)
+            Else
+                If IO.File.Exists(associatedApplication) Then
+                    Process.Start(associatedApplication, Chr(34) & url & Chr(34))
+                Else
+                    Process.Start(url)
+                End If
+            End If
+        Catch ex2 As ComponentModel.Win32Exception
+            MsgBox("There was an error attempting to launch your web browser. Perhaps rebooting your system will correct this issue.", MsgBoxStyle.Information, strWindowTitle)
+        Catch ex As Exception
+            copyTextToWindowsClipboard(url)
+            MsgBox(errorMessage, MsgBoxStyle.Information, strWindowTitle)
+        End Try
+    End Sub
+
+    Private Sub btnDonate_Click(sender As Object, e As EventArgs) Handles btnDonate.Click
+        launchURLInWebBrowser(strPayPal)
     End Sub
 
     Private Sub sendToServer(strFileName As String)

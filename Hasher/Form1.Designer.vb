@@ -121,6 +121,7 @@ Partial Class Form1
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.chkSortByFileSizeAfterLoadingHashFile = New System.Windows.Forms.CheckBox()
+        Me.btnDonate = New System.Windows.Forms.Button()
         Me.chkSaveChecksumFilesWithRelativePaths = New System.Windows.Forms.CheckBox()
         Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
@@ -133,6 +134,18 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.SuspendLayout()
         Me.tabSettings.SuspendLayout()
         Me.SuspendLayout()
+        '
+        'btnDonate
+        '
+        Me.btnDonate.Image = Global.Hasher.My.Resources.Resources.green_dollar
+        Me.btnDonate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnDonate.Location = New System.Drawing.Point(19, 119)
+        Me.btnDonate.Name = "btnDonate"
+        Me.btnDonate.Size = New System.Drawing.Size(163, 39)
+        Me.btnDonate.TabIndex = 9
+        Me.btnDonate.Text = "Donate Money to Developer"
+        Me.btnDonate.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnDonate.UseVisualStyleBackColor = True
         '
         'TabControl1
         '
@@ -155,6 +168,7 @@ Partial Class Form1
         'tabWelcome
         '
         Me.tabWelcome.BackColor = System.Drawing.SystemColors.Control
+        Me.tabWelcome.Controls.Add(Me.btnDonate)
         Me.tabWelcome.Controls.Add(Me.lblDownloadNotification)
         Me.tabWelcome.Controls.Add(Me.btnCheckForUpdates)
         Me.tabWelcome.Controls.Add(Me.lblWelcomeText)
@@ -168,7 +182,7 @@ Partial Class Form1
         'lblDownloadNotification
         '
         Me.lblDownloadNotification.AutoSize = True
-        Me.lblDownloadNotification.Location = New System.Drawing.Point(176, 74)
+        Me.lblDownloadNotification.Location = New System.Drawing.Point(188, 74)
         Me.lblDownloadNotification.Name = "lblDownloadNotification"
         Me.lblDownloadNotification.Size = New System.Drawing.Size(133, 13)
         Me.lblDownloadNotification.TabIndex = 8
@@ -179,7 +193,7 @@ Partial Class Form1
         '
         Me.btnCheckForUpdates.Location = New System.Drawing.Point(19, 74)
         Me.btnCheckForUpdates.Name = "btnCheckForUpdates"
-        Me.btnCheckForUpdates.Size = New System.Drawing.Size(151, 39)
+        Me.btnCheckForUpdates.Size = New System.Drawing.Size(163, 39)
         Me.btnCheckForUpdates.TabIndex = 7
         Me.btnCheckForUpdates.Text = "Check for Updates"
         Me.btnCheckForUpdates.UseVisualStyleBackColor = True
@@ -1291,4 +1305,5 @@ Partial Class Form1
     Friend WithEvents chkSortByFileSizeAfterLoadingHashFile As CheckBox
     Friend WithEvents chkSaveChecksumFilesWithRelativePaths As CheckBox
     Friend WithEvents chkSortFileListingAfterAddingFilesToHash As CheckBox
+    Friend WithEvents btnDonate As Button
 End Class
