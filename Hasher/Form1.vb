@@ -1,4 +1,6 @@
-﻿Public Class Form1
+﻿Imports System.IO.Pipes
+
+Public Class Form1
     Private Const strToBeComputed As String = "To Be Computed"
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
     Private Const intBufferSize As Integer = 16 * 1024 * 1024
@@ -14,7 +16,8 @@
     Private boolClosingWindow As Boolean = False
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
     Private boolDoneLoading As Boolean = False
-    Private udpClient As Net.Sockets.UdpClient = Nothing
+    Private pipeServer As NamedPipeServerStream = Nothing
+    Private ReadOnly strNamedPipeServerName As String = "hasher_" & Environment.UserName
     Private ReadOnly communicationChannelClassSerializer As New Xml.Serialization.XmlSerializer((New communicationChannelClass).GetType)
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
 
@@ -432,33 +435,23 @@
         Using memStream As New IO.MemoryStream
             communicationChannelClassSerializer.Serialize(memStream, New communicationChannelClass With {.strFileName = strFileName})
 
-            Dim udpClient As New Net.Sockets.UdpClient()
-            udpClient.Connect("localhost", shortUDPServerPort)
-            Dim senddata As Byte() = memStream.ToArray()
-            udpClient.Send(senddata, senddata.Length)
+            Dim pipeStream As NamedPipeClientStream = New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
+            pipeStream.Connect(5000)
+            Debug.WriteLine("[Client] Pipe connection established")
+            Dim _buffer As Byte() = memStream.ToArray
+            pipeStream.BeginWrite(_buffer, 0, _buffer.Length, New AsyncCallback(AddressOf AsyncSend), pipeStream)
         End Using
     End Sub
 
-    Private Sub udpServer()
+    Private Sub namedPipeServerThread()
         Try
-            udpClient = New Net.Sockets.UdpClient(shortUDPServerPort)
-            My.Settings.Save()
-
-            While True
-                Dim remoteIPEndPoint As New Net.IPEndPoint(Net.IPAddress.Any, 0)
-                Dim byteArray As Byte() = udpClient.Receive(remoteIPEndPoint)
-
-                Using memStream As New IO.MemoryStream(byteArray)
-                    processIncomingDataFromServer(memStream)
-                End Using
-            End While
-        Catch ex As Net.Sockets.SocketException
+            Dim pipeServer As NamedPipeServerStream = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
+            pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
+        Catch oEX As Exception
             If My.Application.CommandLineArgs.Count = 1 AndAlso My.Application.CommandLineArgs(0).Trim.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
                 ' Since there is already a server, let's kill this instance of the program.
                 Application.Exit()
             End If
-        Catch ex As Exception
-            Debug.WriteLine(ex.GetType.ToString & " -- " & ex.Message & ex.StackTrace)
         End Try
     End Sub
 
@@ -490,7 +483,7 @@
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If My.Settings.boolEnableServer Then Threading.ThreadPool.QueueUserWorkItem(AddressOf udpServer)
+        If My.Settings.boolEnableServer Then Threading.ThreadPool.QueueUserWorkItem(AddressOf namedPipeServerThread)
         Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
 
         If areWeAnAdministrator() Then
@@ -979,7 +972,12 @@
         Else
             If workingThread IsNot Nothing Then
                 boolClosingWindow = True
-                If udpClient IsNot Nothing Then udpClient.Close()
+
+                If pipeServer IsNot Nothing Then
+                    pipeServer.Disconnect()
+                    pipeServer.Close()
+                End If
+
                 workingThread.Abort()
             End If
         End If
@@ -1544,5 +1542,38 @@
 
     Private Sub chkSortFileListingAfterAddingFilesToHash_Click(sender As Object, e As EventArgs) Handles chkSortFileListingAfterAddingFilesToHash.Click
         My.Settings.boolSortFileListingAfterAddingFilesToHash = chkSortFileListingAfterAddingFilesToHash.Checked
+    End Sub
+
+    Private Sub AsyncSend(ByVal iar As IAsyncResult)
+        Try
+            Dim pipeStream As NamedPipeClientStream = CType(iar.AsyncState, NamedPipeClientStream)
+            pipeStream.EndWrite(iar)
+            pipeStream.Flush()
+            pipeStream.Close()
+            pipeStream.Dispose()
+        Catch oEX As Exception
+            Debug.WriteLine(oEX.Message)
+        End Try
+    End Sub
+
+    Private Sub WaitForConnectionCallBack(ByVal iar As IAsyncResult)
+        Try
+            Dim pipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
+            pipeServer.EndWaitForConnection(iar)
+            Dim buffer As Byte() = New Byte(254) {}
+            pipeServer.Read(buffer, 0, 255)
+            Dim stringData As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length)
+
+            Using memStream As New IO.MemoryStream(buffer)
+                processIncomingDataFromServer(memStream)
+            End Using
+
+            pipeServer.Close()
+            pipeServer = Nothing
+            pipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
+            pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
+        Catch
+            Return
+        End Try
     End Sub
 End Class
