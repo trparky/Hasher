@@ -440,19 +440,19 @@ Public Class Form1
         End Using
     End Sub
 
-    Private Sub namedPipeServerThread()
+    ''' <summary>Creates a named pipe server. Returns a Boolean value indicating if the function was able to create a named pipe server.</summary>
+    ''' <returns>Returns a Boolean value indicating if the function was able to create a named pipe server.</returns>
+    Private Function startNamedPipeServer() As Boolean
         Try
             Dim pipeServer As NamedPipeServerStream = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
             pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
+            Return True ' We were able to create a named pipe server. Yay!
         Catch oEX As Exception
-            If My.Application.CommandLineArgs.Count = 1 AndAlso My.Application.CommandLineArgs(0).Trim.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                ' Since there is already a server, let's kill this instance of the program.
-                Application.Exit()
-            End If
+            Return False ' OK, there's already a named pipe server in operation already so we return a False value.
         End Try
-    End Sub
+    End Function
 
-    Private Sub processIncomingDataFromServer(strReceivedFileName As String)
+    Private Sub addFileOrDirectoryToHashFileList(strReceivedFileName As String)
         Try
             Dim isDirectory As Boolean = (IO.File.GetAttributes(strReceivedFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
 
@@ -479,7 +479,29 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        namedPipeServerThread()
+        Dim boolNamedPipeServerStarted As Boolean = startNamedPipeServer()
+        Dim commandLineArgument As String
+
+        If My.Application.CommandLineArgs.Count = 1 Then
+            commandLineArgument = My.Application.CommandLineArgs(0).Trim
+
+            If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", "").Replace(Chr(34), "")
+
+                If boolNamedPipeServerStarted Then
+                    ' In this case this instance of the program is the first executed instance so it has a named pipe server running
+                    ' in it, but we still need to process the first incoming file passed to it via command line arguments.
+                    addFileOrDirectoryToHashFileList(commandLineArgument)
+                Else
+                    ' OK, there's already a named pipe server running so we send the file that's been passed to this
+                    ' instance via the command line argument to the first instance via the IPC named pipe server
+                    ' and then exit out of this instance in a very quick way by killing this current process.
+                    sendToServer(commandLineArgument)
+                    Process.GetCurrentProcess.Kill()
+                End If
+            End If
+        End If
+
         Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
 
         If areWeAnAdministrator() Then
@@ -510,7 +532,7 @@ Public Class Form1
         deleteTemporaryNewEXEFile()
 
         If My.Application.CommandLineArgs.Count = 1 Then
-            Dim commandLineArgument As String = My.Application.CommandLineArgs(0).Trim
+            commandLineArgument = My.Application.CommandLineArgs(0).Trim
 
             If commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
                 commandLineArgument = commandLineArgument.caseInsensitiveReplace("--hashfile=", "")
@@ -522,10 +544,6 @@ Public Class Form1
                     verifyHashesListFiles.Items.Clear()
                     processExistingHashFile(commandLineArgument)
                 End If
-            ElseIf commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", "")
-                commandLineArgument = commandLineArgument.Replace(Chr(34), "")
-                sendToServer(commandLineArgument) ' This is the file name.
             ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
                 commandLineArgument = commandLineArgument.caseInsensitiveReplace("--knownhashfile=", "")
                 commandLineArgument = commandLineArgument.Replace(Chr(34), "")
@@ -1550,7 +1568,7 @@ Public Class Form1
 
             Dim strReceivedFileName As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
             Debug.WriteLine("strReceivedFileName = """ & strReceivedFileName & """")
-            processIncomingDataFromServer(strReceivedFileName)
+            addFileOrDirectoryToHashFileList(strReceivedFileName)
 
             pipeServer.Close()
             pipeServer = Nothing
