@@ -115,7 +115,6 @@ Partial Class Form1
         Me.btnAssociate = New System.Windows.Forms.Button()
         Me.chkSSL = New System.Windows.Forms.CheckBox()
         Me.chkRecurrsiveDirectorySearch = New System.Windows.Forms.CheckBox()
-        Me.chkEnableInterprocessCommunicationServer = New System.Windows.Forms.CheckBox()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
@@ -1085,7 +1084,6 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.btnAssociate)
         Me.tabSettings.Controls.Add(Me.chkSSL)
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
-        Me.tabSettings.Controls.Add(Me.chkEnableInterprocessCommunicationServer)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
@@ -1094,7 +1092,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 151)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 128)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(204, 23)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1103,7 +1101,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 151)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 128)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 23)
         Me.btnAssociate.TabIndex = 2
@@ -1131,15 +1129,6 @@ Partial Class Form1
     "ub-folders"
         Me.chkRecurrsiveDirectorySearch.UseVisualStyleBackColor = True
         '
-        'chkEnableInterprocessCommunicationServer
-        '
-        Me.chkEnableInterprocessCommunicationServer.Location = New System.Drawing.Point(15, 59)
-        Me.chkEnableInterprocessCommunicationServer.Name = "chkEnableInterprocessCommunicationServer"
-        Me.chkEnableInterprocessCommunicationServer.Size = New System.Drawing.Size(237, 17)
-        Me.chkEnableInterprocessCommunicationServer.TabIndex = 2
-        Me.chkEnableInterprocessCommunicationServer.Text = "Enable Interprocess Communication Server"
-        Me.chkEnableInterprocessCommunicationServer.UseVisualStyleBackColor = True
-        '
         'OpenFileDialog
         '
         Me.OpenFileDialog.Multiselect = True
@@ -1148,7 +1137,7 @@ Partial Class Form1
         'chkSortByFileSizeAfterLoadingHashFile
         '
         Me.chkSortByFileSizeAfterLoadingHashFile.AutoSize = True
-        Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 82)
+        Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 59)
         Me.chkSortByFileSizeAfterLoadingHashFile.Name = "chkSortByFileSizeAfterLoadingHashFile"
         Me.chkSortByFileSizeAfterLoadingHashFile.Size = New System.Drawing.Size(244, 17)
         Me.chkSortByFileSizeAfterLoadingHashFile.TabIndex = 4
@@ -1158,7 +1147,7 @@ Partial Class Form1
         'chkSaveChecksumFilesWithRelativePaths
         '
         Me.chkSaveChecksumFilesWithRelativePaths.AutoSize = True
-        Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 128)
+        Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 105)
         Me.chkSaveChecksumFilesWithRelativePaths.Name = "chkSaveChecksumFilesWithRelativePaths"
         Me.chkSaveChecksumFilesWithRelativePaths.Size = New System.Drawing.Size(222, 17)
         Me.chkSaveChecksumFilesWithRelativePaths.TabIndex = 5
@@ -1168,7 +1157,7 @@ Partial Class Form1
         'chkSortFileListingAfterAddingFilesToHash
         '
         Me.chkSortFileListingAfterAddingFilesToHash.AutoSize = True
-        Me.chkSortFileListingAfterAddingFilesToHash.Location = New System.Drawing.Point(15, 105)
+        Me.chkSortFileListingAfterAddingFilesToHash.Location = New System.Drawing.Point(15, 82)
         Me.chkSortFileListingAfterAddingFilesToHash.Name = "chkSortFileListingAfterAddingFilesToHash"
         Me.chkSortFileListingAfterAddingFilesToHash.Size = New System.Drawing.Size(210, 17)
         Me.chkSortFileListingAfterAddingFilesToHash.TabIndex = 6
@@ -1299,7 +1288,6 @@ Partial Class Form1
     Friend WithEvents lblVerifyFileNameLabel As Label
     Friend WithEvents btnAssociate As Button
     Friend WithEvents btnAddHasherToAllFiles As Button
-    Friend WithEvents chkEnableInterprocessCommunicationServer As CheckBox
     Friend WithEvents lblProcessingFile As Label
     Friend WithEvents lblProcessingFileVerify As Label
     Friend WithEvents chkSortByFileSizeAfterLoadingHashFile As CheckBox

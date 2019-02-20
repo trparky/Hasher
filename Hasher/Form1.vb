@@ -479,7 +479,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If My.Settings.boolEnableServer Then Threading.ThreadPool.QueueUserWorkItem(AddressOf namedPipeServerThread)
+        namedPipeServerThread()
         Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
 
         If areWeAnAdministrator() Then
@@ -491,8 +491,6 @@ Public Class Form1
             NativeMethod.NativeMethods.SendMessage(btnAddHasherToAllFiles.Handle, NativeMethod.NativeMethods.BCM_SETSHIELD, 0, &HFFFFFFFF)
         End If
 
-        If Not My.Settings.boolEnableServer Then btnAddHasherToAllFiles.Visible = False
-
         Control.CheckForIllegalCrossThreadCalls = False
         lblIndividualFilesStatusProcessingFile.Text = ""
         lblVerifyHashStatusProcessingFile.Text = ""
@@ -503,7 +501,6 @@ Public Class Form1
         lblCompareFileAgainstKnownHashType.Text = ""
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
-        chkEnableInterprocessCommunicationServer.Checked = My.Settings.boolEnableServer
         chkSortByFileSizeAfterLoadingHashFile.Checked = My.Settings.boolSortByFileSizeAfterLoadingHashFile
         chkSortFileListingAfterAddingFilesToHash.Checked = My.Settings.boolSortFileListingAfterAddingFilesToHash
         chkSaveChecksumFilesWithRelativePaths.Checked = My.Settings.boolSaveChecksumFilesWithRelativePaths
@@ -1510,14 +1507,6 @@ Public Class Form1
                 MsgBox("Invalid file type.", MsgBoxStyle.Critical, strWindowTitle)
             End If
         End If
-    End Sub
-
-    Private Sub chkEnableInterprocessCommunicationServer_Click(sender As Object, e As EventArgs) Handles chkEnableInterprocessCommunicationServer.Click
-        My.Settings.boolEnableServer = chkEnableInterprocessCommunicationServer.Checked
-        My.Settings.Save()
-        MsgBox("Hasher needs to restart, the application will now close and restart.", MsgBoxStyle.Information, strWindowTitle)
-        Process.Start(Application.ExecutablePath)
-        Process.GetCurrentProcess.Kill()
     End Sub
 
     Private Sub listFiles_ItemSelectionChanged(sender As Object, e As ListViewItemSelectionChangedEventArgs) Handles listFiles.ItemSelectionChanged

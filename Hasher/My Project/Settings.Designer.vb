@@ -165,18 +165,6 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property boolEnableServer() As Boolean
-            Get
-                Return CType(Me("boolEnableServer"),Boolean)
-            End Get
-            Set
-                Me("boolEnableServer") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolSortByFileSizeAfterLoadingHashFile() As Boolean
             Get
                 Return CType(Me("boolSortByFileSizeAfterLoadingHashFile"),Boolean)
