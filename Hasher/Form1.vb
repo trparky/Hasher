@@ -18,7 +18,6 @@ Public Class Form1
     Private boolDoneLoading As Boolean = False
     Private pipeServer As NamedPipeServerStream = Nothing
     Private ReadOnly strNamedPipeServerName As String = "hasher_" & getHashOfString(Environment.UserName, checksumType.sha256).Substring(0, 10)
-    Private ReadOnly communicationChannelClassSerializer As New Xml.Serialization.XmlSerializer((New communicationChannelClass).GetType)
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
 
     Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
@@ -432,9 +431,7 @@ Public Class Form1
     End Sub
 
     Private Sub sendToServer(strFileName As String)
-        Using memStream As New IO.MemoryStream
-            communicationChannelClassSerializer.Serialize(memStream, New communicationChannelClass With {.strFileName = strFileName})
-
+        Using memStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strFileName))
             Dim pipeStream As NamedPipeClientStream = New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
             pipeStream.Connect(5000)
             Debug.WriteLine("[Client] Pipe connection established")
@@ -455,24 +452,23 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub processIncomingDataFromServer(ByRef memStream As IO.MemoryStream)
+    Private Sub processIncomingDataFromServer(strReceivedFileName As String)
         Try
-            Dim receivedClassObject As communicationChannelClass = communicationChannelClassSerializer.Deserialize(memStream)
-            Dim isDirectory As Boolean = (IO.File.GetAttributes(receivedClassObject.strFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
+            Dim isDirectory As Boolean = (IO.File.GetAttributes(strReceivedFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
 
             If isDirectory Then
-                addFilesFromDirectory(receivedClassObject.strFileName)
+                addFilesFromDirectory(strReceivedFileName)
             Else
-                If IO.File.Exists(receivedClassObject.strFileName) AndAlso Not filesInListFiles.Contains(receivedClassObject.strFileName) Then
+                If IO.File.Exists(strReceivedFileName) AndAlso Not filesInListFiles.Contains(strReceivedFileName) Then
                     TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
                     Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
 
-                    filesInListFiles.Add(receivedClassObject.strFileName)
+                    filesInListFiles.Add(strReceivedFileName)
                     Dim itemToBeAdded As myListViewItem
-                    itemToBeAdded = New myListViewItem(receivedClassObject.strFileName) With {.fileSize = New IO.FileInfo(receivedClassObject.strFileName).Length}
+                    itemToBeAdded = New myListViewItem(strReceivedFileName) With {.fileSize = New IO.FileInfo(strReceivedFileName).Length}
                     itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
                     itemToBeAdded.SubItems.Add(strToBeComputed)
-                    itemToBeAdded.fileName = receivedClassObject.strFileName
+                    itemToBeAdded.fileName = strReceivedFileName
                     listFiles.Items.Add(itemToBeAdded)
                     itemToBeAdded = Nothing
                     updateFilesListCountHeader()
@@ -1562,11 +1558,10 @@ Public Class Form1
             pipeServer.EndWaitForConnection(iar)
             Dim buffer As Byte() = New Byte(499) {}
             pipeServer.Read(buffer, 0, 500)
-            Dim stringData As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length)
 
-            Using memStream As New IO.MemoryStream(buffer)
-                processIncomingDataFromServer(memStream)
-            End Using
+            Dim strReceivedFileName As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
+            Debug.WriteLine("strReceivedFileName = """ & strReceivedFileName & """")
+            processIncomingDataFromServer(strReceivedFileName)
 
             pipeServer.Close()
             pipeServer = Nothing

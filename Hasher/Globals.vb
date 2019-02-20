@@ -1,9 +1,5 @@
 ﻿Imports System.Security.Principal
 
-Public Class communicationChannelClass
-    Public strFileName As String
-End Class
-
 Public Module Globals
     Public Enum checksumType As Short
         md5
