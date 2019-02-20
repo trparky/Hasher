@@ -1560,8 +1560,8 @@ Public Class Form1
         Try
             Dim pipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
             pipeServer.EndWaitForConnection(iar)
-            Dim buffer As Byte() = New Byte(254) {}
-            pipeServer.Read(buffer, 0, 255)
+            Dim buffer As Byte() = New Byte(499) {}
+            pipeServer.Read(buffer, 0, 500)
             Dim stringData As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length)
 
             Using memStream As New IO.MemoryStream(buffer)
