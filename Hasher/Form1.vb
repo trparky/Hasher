@@ -594,6 +594,7 @@ Public Class Form1
         Dim fileInfo As New IO.FileInfo(strFileName)
 
         If Not filesInListFiles.Contains(strFileName) Then
+            filesInListFiles.Add(strFileName)
             Dim listViewItem As New myListViewItem(strFileName) With {.fileSize = fileInfo.Length}
             listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
             listViewItem.SubItems.Add(strToBeComputed)
