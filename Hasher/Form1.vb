@@ -457,6 +457,9 @@ Public Class Form1
             Dim isDirectory As Boolean = (IO.File.GetAttributes(strReceivedFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
 
             If isDirectory Then
+                TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
+                Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
+
                 addFilesFromDirectory(strReceivedFileName)
             Else
                 If IO.File.Exists(strReceivedFileName) AndAlso Not filesInListFiles.Contains(strReceivedFileName) Then
