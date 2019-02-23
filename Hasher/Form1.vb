@@ -92,9 +92,20 @@ Public Class Form1
         updateFilesListCountHeader()
     End Sub
 
-    Private Sub btnAddIndividualFiles_Click(sender As Object, e As EventArgs) Handles btnAddIndividualFiles.Click
-        Dim itemToBeAdded As myListViewItem
+    Private Function createListFilesObject(strFileName As String) As myListViewItem
+        filesInListFiles.Add(strFileName)
 
+        Dim itemToBeAdded As New myListViewItem(strFileName) With {
+            .fileSize = New IO.FileInfo(strFileName).Length,
+            .fileName = strFileName
+        }
+        itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
+        itemToBeAdded.SubItems.Add(strToBeComputed)
+
+        Return itemToBeAdded
+    End Function
+
+    Private Sub btnAddIndividualFiles_Click(sender As Object, e As EventArgs) Handles btnAddIndividualFiles.Click
         OpenFileDialog.Title = "Select Files to be Hashed..."
         OpenFileDialog.Multiselect = True
         OpenFileDialog.Filter = "Show All Files|*.*"
@@ -104,25 +115,13 @@ Public Class Form1
                 MsgBox("You must select some files.", MsgBoxStyle.Critical, strWindowTitle)
             ElseIf OpenFileDialog.FileNames.Count() = 1 Then
                 If Not filesInListFiles.Contains(OpenFileDialog.FileName) Then
-                    filesInListFiles.Add(OpenFileDialog.FileName)
-                    itemToBeAdded = New myListViewItem(OpenFileDialog.FileName) With {.fileSize = New IO.FileInfo(OpenFileDialog.FileName).Length}
-                    itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-                    itemToBeAdded.SubItems.Add(strToBeComputed)
-                    itemToBeAdded.fileName = OpenFileDialog.FileName
-                    listFiles.Items.Add(itemToBeAdded)
-                    itemToBeAdded = Nothing
+                    listFiles.Items.Add(createListFilesObject(OpenFileDialog.FileName))
                 End If
             Else
                 listFiles.BeginUpdate()
                 For Each strFileName As String In OpenFileDialog.FileNames
                     If Not filesInListFiles.Contains(strFileName) Then
-                        filesInListFiles.Add(strFileName)
-                        itemToBeAdded = New myListViewItem(strFileName) With {.fileSize = New IO.FileInfo(strFileName).Length}
-                        itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-                        itemToBeAdded.SubItems.Add(strToBeComputed)
-                        itemToBeAdded.fileName = strFileName
-                        listFiles.Items.Add(itemToBeAdded)
-                        itemToBeAdded = Nothing
+                        listFiles.Items.Add(createListFilesObject(strFileName))
                     End If
                 Next
                 listFiles.EndUpdate()
@@ -466,14 +465,7 @@ Public Class Form1
                     TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
                     Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
 
-                    filesInListFiles.Add(strReceivedFileName)
-                    Dim itemToBeAdded As myListViewItem
-                    itemToBeAdded = New myListViewItem(strReceivedFileName) With {.fileSize = New IO.FileInfo(strReceivedFileName).Length}
-                    itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-                    itemToBeAdded.SubItems.Add(strToBeComputed)
-                    itemToBeAdded.fileName = strReceivedFileName
-                    listFiles.Items.Add(itemToBeAdded)
-                    itemToBeAdded = Nothing
+                    listFiles.Items.Add(createListFilesObject(strReceivedFileName))
                     updateFilesListCountHeader()
                 End If
             End If
@@ -594,13 +586,7 @@ Public Class Form1
         Dim fileInfo As New IO.FileInfo(strFileName)
 
         If Not filesInListFiles.Contains(strFileName) Then
-            filesInListFiles.Add(strFileName)
-            Dim listViewItem As New myListViewItem(strFileName) With {.fileSize = fileInfo.Length}
-            listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-            listViewItem.SubItems.Add(strToBeComputed)
-            listViewItem.fileName = strFileName
-            collectionOfListViewItems.Add(listViewItem)
-            listViewItem = Nothing
+            collectionOfListViewItems.Add(createListFilesObject(strFileName))
         End If
     End Sub
 
@@ -886,19 +872,12 @@ Public Class Form1
     End Sub
 
     Private Sub listFiles_DragDrop(sender As Object, e As DragEventArgs) Handles listFiles.DragDrop
-        Dim listViewItem As myListViewItem
-
         For Each strItem As String In e.Data.GetData(DataFormats.FileDrop)
             If IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) Then
                 addFilesFromDirectory(strItem)
             Else
                 If Not filesInListFiles.Contains(strItem) Then
-                    filesInListFiles.Add(strItem)
-                    listViewItem = New myListViewItem(strItem) With {.fileSize = New IO.FileInfo(strItem).Length, .fileName = strItem}
-                    listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                    listViewItem.SubItems.Add(strToBeComputed)
-                    listFiles.Items.Add(listViewItem)
-                    listViewItem = Nothing
+                    listFiles.Items.Add(createListFilesObject(strItem))
                 End If
             End If
         Next
