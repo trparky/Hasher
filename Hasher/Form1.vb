@@ -429,7 +429,7 @@ Public Class Form1
         launchURLInWebBrowser(strPayPal)
     End Sub
 
-    Private Sub sendToServer(strFileName As String)
+    Private Sub sendToIPCNamedPipeServer(strFileName As String)
         Try
             Using memStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strFileName))
                 Dim pipeStream As NamedPipeClientStream = New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
@@ -495,7 +495,7 @@ Public Class Form1
                     ' OK, there's already a named pipe server running so we send the file that's been passed to this
                     ' instance via the command line argument to the first instance via the IPC named pipe server
                     ' and then exit out of this instance in a very quick way by killing this current process.
-                    sendToServer(commandLineArgument)
+                    sendToIPCNamedPipeServer(commandLineArgument)
                     Process.GetCurrentProcess.Kill()
                 End If
             End If
