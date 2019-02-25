@@ -431,12 +431,11 @@ Public Class Form1
 
     Private Sub sendToIPCNamedPipeServer(strFileName As String)
         Try
-            Using memStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strFileName))
-                Dim pipeStream As NamedPipeClientStream = New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
-                pipeStream.Connect(5000)
-                Debug.WriteLine("[Client] Pipe connection established")
-                Dim _buffer As Byte() = memStream.ToArray
-                pipeStream.BeginWrite(_buffer, 0, _buffer.Length, New AsyncCallback(AddressOf AsyncSend), pipeStream)
+            Using memoryStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strFileName))
+                Dim namedPipeDataStream As New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
+                namedPipeDataStream.Connect(5000)
+                Dim dataBufferByteArray As Byte() = memoryStream.ToArray
+                namedPipeDataStream.BeginWrite(dataBufferByteArray, 0, dataBufferByteArray.Length, New AsyncCallback(AddressOf AsyncSend), namedPipeDataStream)
             End Using
         Catch ex As IO.IOException
             MsgBox("There was an error sending data to the named pipe server used for interprocess communication, please close all Hasher instances and try again.", MsgBoxStyle.Critical, strWindowTitle)
@@ -1536,11 +1535,11 @@ Public Class Form1
 
     Private Sub AsyncSend(ByVal iar As IAsyncResult)
         Try
-            Dim pipeStream As NamedPipeClientStream = CType(iar.AsyncState, NamedPipeClientStream)
-            pipeStream.EndWrite(iar)
-            pipeStream.Flush()
-            pipeStream.Close()
-            pipeStream.Dispose()
+            Dim namedPipeClientDataStream As NamedPipeClientStream = CType(iar.AsyncState, NamedPipeClientStream)
+            namedPipeClientDataStream.EndWrite(iar)
+            namedPipeClientDataStream.Flush()
+            namedPipeClientDataStream.Close()
+            namedPipeClientDataStream.Dispose()
         Catch oEX As Exception
             Debug.WriteLine(oEX.Message)
         End Try
@@ -1548,19 +1547,18 @@ Public Class Form1
 
     Private Sub WaitForConnectionCallBack(ByVal iar As IAsyncResult)
         Try
-            Dim pipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
-            pipeServer.EndWaitForConnection(iar)
+            Dim namedPipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
+            namedPipeServer.EndWaitForConnection(iar)
             Dim buffer As Byte() = New Byte(499) {}
-            pipeServer.Read(buffer, 0, 500)
+            namedPipeServer.Read(buffer, 0, 500)
 
             Dim strReceivedFileName As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
             Debug.WriteLine("strReceivedFileName = """ & strReceivedFileName & """")
             addFileOrDirectoryToHashFileList(strReceivedFileName)
 
-            pipeServer.Close()
-            pipeServer = Nothing
-            pipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
-            pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
+            namedPipeServer.Dispose()
+            namedPipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
+            namedPipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), namedPipeServer)
         Catch
             Return
         End Try
