@@ -430,13 +430,17 @@ Public Class Form1
     End Sub
 
     Private Sub sendToServer(strFileName As String)
-        Using memStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strFileName))
-            Dim pipeStream As NamedPipeClientStream = New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
-            pipeStream.Connect(5000)
-            Debug.WriteLine("[Client] Pipe connection established")
-            Dim _buffer As Byte() = memStream.ToArray
-            pipeStream.BeginWrite(_buffer, 0, _buffer.Length, New AsyncCallback(AddressOf AsyncSend), pipeStream)
-        End Using
+        Try
+            Using memStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strFileName))
+                Dim pipeStream As NamedPipeClientStream = New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
+                pipeStream.Connect(5000)
+                Debug.WriteLine("[Client] Pipe connection established")
+                Dim _buffer As Byte() = memStream.ToArray
+                pipeStream.BeginWrite(_buffer, 0, _buffer.Length, New AsyncCallback(AddressOf AsyncSend), pipeStream)
+            End Using
+        Catch ex As IO.IOException
+            MsgBox("There was an error sending data to the named pipe server used for interprocess communication, please close all Hasher instances and try again.", MsgBoxStyle.Critical, strWindowTitle)
+        End Try
     End Sub
 
     ''' <summary>Creates a named pipe server. Returns a Boolean value indicating if the function was able to create a named pipe server.</summary>
