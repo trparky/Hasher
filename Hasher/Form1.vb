@@ -434,8 +434,7 @@ Public Class Form1
             Using memoryStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strFileName))
                 Dim namedPipeDataStream As New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
                 namedPipeDataStream.Connect(5000)
-                Dim dataBufferByteArray As Byte() = memoryStream.ToArray
-                namedPipeDataStream.BeginWrite(dataBufferByteArray, 0, dataBufferByteArray.Length, New AsyncCallback(AddressOf AsyncSend), namedPipeDataStream)
+                memoryStream.CopyTo(namedPipeDataStream)
             End Using
         Catch ex As IO.IOException
             MsgBox("There was an error sending data to the named pipe server used for interprocess communication, please close all Hasher instances and try again.", MsgBoxStyle.Critical, strWindowTitle)
@@ -1531,18 +1530,6 @@ Public Class Form1
 
     Private Sub chkSortFileListingAfterAddingFilesToHash_Click(sender As Object, e As EventArgs) Handles chkSortFileListingAfterAddingFilesToHash.Click
         My.Settings.boolSortFileListingAfterAddingFilesToHash = chkSortFileListingAfterAddingFilesToHash.Checked
-    End Sub
-
-    Private Sub AsyncSend(ByVal iar As IAsyncResult)
-        Try
-            Dim namedPipeClientDataStream As NamedPipeClientStream = CType(iar.AsyncState, NamedPipeClientStream)
-            namedPipeClientDataStream.EndWrite(iar)
-            namedPipeClientDataStream.Flush()
-            namedPipeClientDataStream.Close()
-            namedPipeClientDataStream.Dispose()
-        Catch oEX As Exception
-            Debug.WriteLine(oEX.Message)
-        End Try
     End Sub
 
     Private Sub WaitForConnectionCallBack(ByVal iar As IAsyncResult)
