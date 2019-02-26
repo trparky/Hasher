@@ -1540,7 +1540,6 @@ Public Class Form1
             namedPipeServer.Read(buffer, 0, 500)
 
             Dim strReceivedFileName As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
-            Debug.WriteLine("strReceivedFileName = """ & strReceivedFileName & """")
             addFileOrDirectoryToHashFileList(strReceivedFileName)
 
             namedPipeServer.Dispose()
