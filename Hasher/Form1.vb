@@ -455,20 +455,22 @@ Public Class Form1
 
     Private Sub addFileOrDirectoryToHashFileList(strReceivedFileName As String)
         Try
-            Dim isDirectory As Boolean = (IO.File.GetAttributes(strReceivedFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
+            If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
+                Dim isDirectory As Boolean = (IO.File.GetAttributes(strReceivedFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
 
-            If isDirectory Then
-                TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
-                Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
-
-                addFilesFromDirectory(strReceivedFileName)
-            Else
-                If IO.File.Exists(strReceivedFileName) AndAlso Not filesInListFiles.Contains(strReceivedFileName) Then
+                If isDirectory Then
                     TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
                     Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
 
-                    listFiles.Items.Add(createListFilesObject(strReceivedFileName))
-                    updateFilesListCountHeader()
+                    addFilesFromDirectory(strReceivedFileName)
+                Else
+                    If Not filesInListFiles.Contains(strReceivedFileName) Then
+                        TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
+                        Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
+
+                        listFiles.Items.Add(createListFilesObject(strReceivedFileName))
+                        updateFilesListCountHeader()
+                    End If
                 End If
             End If
         Catch ex As Exception
