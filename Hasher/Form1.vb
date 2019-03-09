@@ -378,10 +378,6 @@ Public Class Form1
         disableIndividualFilesResultsButtonsAndClearResults()
     End Sub
 
-    Private Sub textRadioRIPEMD160_Click(sender As Object, e As EventArgs)
-        disableIndividualFilesResultsButtonsAndClearResults()
-    End Sub
-
     Private Function getFileAssociation(ByVal fileExtension As String, ByRef associatedApplication As String) As Boolean
         Try
             fileExtension = fileExtension.ToLower.Trim
