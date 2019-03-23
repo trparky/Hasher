@@ -1,14 +1,6 @@
 ﻿Imports System.Security.Principal
 
 Public Module Globals
-    Public Enum checksumType As Short
-        md5
-        sha160
-        sha256
-        sha384
-        sha512
-    End Enum
-
     ''' <summary>Checks to see if a Process ID or PID exists on the system.</summary>
     ''' <param name="PID">The PID of the process you are checking the existance of.</param>
     ''' <param name="processObject">If the PID does exist, the function writes back to this argument in a ByRef way a Process Object that can be interacted with outside of this function.</param>
