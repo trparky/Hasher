@@ -175,13 +175,7 @@ Public Class Form1
                                                                                         Try
                                                                                             Me.Invoke(Sub()
                                                                                                           oldLocationInFile = totalBytesRead
-
-                                                                                                          If totalBytesRead <> 0 And size <> 0 Then
-                                                                                                              percentage = totalBytesRead / size * 100
-                                                                                                          Else
-                                                                                                              percentage = 0
-                                                                                                          End If
-
+                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           IndividualFilesProgressBar.Value = percentage
                                                                                                           lblIndividualFilesStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
                                                                                                           lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} {2}.", index.ToString("N0"), listFiles.Items.Count().ToString("N0"), If(listFiles.Items.Count = 1, "file", "files"))
@@ -835,15 +829,8 @@ Public Class Form1
                                                Try
                                                    Me.Invoke(Sub()
                                                                  oldLocationInFile = totalBytesRead
-
-                                                                 If totalBytesRead <> 0 And size <> 0 Then
-                                                                     percentage = totalBytesRead / size * 100
-                                                                 Else
-                                                                     percentage = 0
-                                                                 End If
-
+                                                                 percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                  VerifyHashProgressBar.Value = percentage
-
                                                                  lblVerifyHashStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
                                                                  oldLocationInFile = totalBytesRead
                                                              End Sub)
@@ -1164,15 +1151,8 @@ Public Class Form1
                                                                                         Try
                                                                                             Me.Invoke(Sub()
                                                                                                           oldLocationInFile = totalBytesRead
-
-                                                                                                          If totalBytesRead <> 0 And size <> 0 Then
-                                                                                                              percentage = totalBytesRead / size * 100
-                                                                                                          Else
-                                                                                                              percentage = 0
-                                                                                                          End If
-
+                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareFilesProgressBar.Value = percentage
-
                                                                                                           lblCompareFilesStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
                                                                                                           oldLocationInFile = totalBytesRead
                                                                                                       End Sub)
@@ -1342,15 +1322,8 @@ Public Class Form1
                                                                                         Try
                                                                                             Me.Invoke(Sub()
                                                                                                           oldLocationInFile = totalBytesRead
-
-                                                                                                          If totalBytesRead <> 0 And size <> 0 Then
-                                                                                                              percentage = totalBytesRead / size * 100
-                                                                                                          Else
-                                                                                                              percentage = 0
-                                                                                                          End If
-
+                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareAgainstKnownHashProgressBar.Value = percentage
-
                                                                                                           lblCompareAgainstKnownHashStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
                                                                                                           oldLocationInFile = totalBytesRead
                                                                                                       End Sub)
