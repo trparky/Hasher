@@ -1381,7 +1381,7 @@ Public Class Form1
     End Sub
 
     Private Function getHashOfString(inputString As String, hashType As checksumType) As String
-        Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType)
+        Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(hashType)
         Dim Output As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
         Return BitConverter.ToString(Output).ToLower().Replace("-", "")
     End Function
