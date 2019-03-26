@@ -120,6 +120,7 @@ Partial Class Form1
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.chkSortByFileSizeAfterLoadingHashFile = New System.Windows.Forms.CheckBox()
+        Me.chkUseMilliseconds = New System.Windows.Forms.CheckBox()
         Me.btnDonate = New System.Windows.Forms.Button()
         Me.colComputeTime = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colComputeTime2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -1079,6 +1080,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkUseMilliseconds)
         Me.tabSettings.Controls.Add(Me.chkSortFileListingAfterAddingFilesToHash)
         Me.tabSettings.Controls.Add(Me.chkSaveChecksumFilesWithRelativePaths)
         Me.tabSettings.Controls.Add(Me.chkSortByFileSizeAfterLoadingHashFile)
@@ -1094,7 +1096,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 128)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 151)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(204, 23)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1103,7 +1105,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 128)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 151)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 23)
         Me.btnAssociate.TabIndex = 2
@@ -1135,6 +1137,16 @@ Partial Class Form1
         '
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
+        '
+        'chkUseMilliseconds
+        '
+        Me.chkUseMilliseconds.AutoSize = True
+        Me.chkUseMilliseconds.Location = New System.Drawing.Point(15, 128)
+        Me.chkUseMilliseconds.Name = "chkUseMilliseconds"
+        Me.chkUseMilliseconds.Size = New System.Drawing.Size(272, 17)
+        Me.chkUseMilliseconds.TabIndex = 7
+        Me.chkUseMilliseconds.Text = "Display compute times that are less than a second in milliseconds"
+        Me.chkUseMilliseconds.UseVisualStyleBackColor = True
         '
         'colComputeTime
         '
@@ -1308,4 +1320,5 @@ Partial Class Form1
     Friend WithEvents btnDonate As Button
     Friend WithEvents colComputeTime As ColumnHeader
     Friend WithEvents colComputeTime2 As ColumnHeader
+    Friend WithEvents chkUseMilliseconds As CheckBox
 End Class

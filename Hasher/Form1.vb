@@ -132,7 +132,14 @@ Public Class Form1
     End Sub
 
     Private Function timespanToHMS(timeSpan As TimeSpan) As String
-        If timeSpan.TotalMilliseconds < 1000 Then Return Math.Round(timeSpan.TotalMilliseconds, 2) & "ms (less than one second)"
+        If timeSpan.TotalMilliseconds < 1000 Then
+            If My.Settings.boolUseMilliseconds Then
+                Return Math.Round(timeSpan.TotalMilliseconds, 2) & "ms (less than one second)"
+            Else
+                Return Math.Round(timeSpan.TotalMilliseconds / 1000, 2) & " seconds"
+            End If
+        End If
+
         Dim strReturnedString As String = Nothing
 
         If timeSpan.Hours <> 0 Then strReturnedString = timeSpan.Hours & If(timeSpan.Hours = 1, " Hour", " Hours")
@@ -520,6 +527,7 @@ Public Class Form1
         chkSortByFileSizeAfterLoadingHashFile.Checked = My.Settings.boolSortByFileSizeAfterLoadingHashFile
         chkSortFileListingAfterAddingFilesToHash.Checked = My.Settings.boolSortFileListingAfterAddingFilesToHash
         chkSaveChecksumFilesWithRelativePaths.Checked = My.Settings.boolSaveChecksumFilesWithRelativePaths
+        chkUseMilliseconds.Checked = My.Settings.boolUseMilliseconds
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
 
@@ -1532,5 +1540,9 @@ Public Class Form1
         Catch
             Return
         End Try
+    End Sub
+
+    Private Sub chkUseMilliseconds_Click(sender As Object, e As EventArgs) Handles chkUseMilliseconds.Click
+        My.Settings.boolUseMilliseconds = chkUseMilliseconds.Checked
     End Sub
 End Class

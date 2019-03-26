@@ -221,6 +221,18 @@ Namespace My
                 Me("verifyHashComputeTimeColumnSize") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property boolUseMilliseconds() As Boolean
+            Get
+                Return CType(Me("boolUseMilliseconds"),Boolean)
+            End Get
+            Set
+                Me("boolUseMilliseconds") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
