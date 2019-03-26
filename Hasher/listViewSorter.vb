@@ -14,6 +14,7 @@ Class ListViewComparer
     ' for objects x and y.
     Public Function Compare(ByVal lvInputFirstListView As Object, ByVal lvInputSecondListView As Object) As Integer Implements IComparer.Compare
         Dim long1, long2 As Long
+        Dim timespan1, timespan2 As TimeSpan
         Dim strFirstString, strSecondString As String
         Dim lvFirstListView As ListViewItem = lvInputFirstListView
         Dim lvSecondListView As ListViewItem = lvInputSecondListView
@@ -28,6 +29,11 @@ Class ListViewComparer
             long2 = DirectCast(lvSecondListView, myListViewItem).fileSize
 
             Return If(soSortOrder = SortOrder.Ascending, long1.CompareTo(long2), long2.CompareTo(long1))
+        ElseIf (lvFirstListView.ListView.Name = "verifyHashesListFiles" Or lvFirstListView.ListView.Name = "listFiles") And intColumnNumber = 3 Then
+            timespan1 = DirectCast(lvFirstListView, myListViewItem).computeTime
+            timespan2 = DirectCast(lvSecondListView, myListViewItem).computeTime
+
+            Return If(soSortOrder = SortOrder.Ascending, timespan1.CompareTo(timespan2), timespan2.CompareTo(timespan1))
         Else
             If Long.TryParse(strFirstString, long1) And Long.TryParse(strSecondString, long2) Then
                 Return If(soSortOrder = SortOrder.Ascending, long1.CompareTo(long2), long2.CompareTo(long1))

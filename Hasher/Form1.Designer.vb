@@ -121,6 +121,8 @@ Partial Class Form1
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.chkSortByFileSizeAfterLoadingHashFile = New System.Windows.Forms.CheckBox()
         Me.btnDonate = New System.Windows.Forms.Button()
+        Me.colComputeTime = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colComputeTime2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.chkSaveChecksumFilesWithRelativePaths = New System.Windows.Forms.CheckBox()
         Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
@@ -602,7 +604,7 @@ Partial Class Form1
         Me.listFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.listFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFileName, Me.colFileSize, Me.colChecksum})
+        Me.listFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFileName, Me.colFileSize, Me.colChecksum, Me.colComputeTime})
         Me.listFiles.ContextMenuStrip = Me.listFilesContextMenu
         Me.listFiles.FullRowSelect = True
         Me.listFiles.Location = New System.Drawing.Point(160, 20)
@@ -744,7 +746,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults})
+        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2})
         Me.verifyHashesListFiles.FullRowSelect = True
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
@@ -1134,6 +1136,16 @@ Partial Class Form1
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
         '
+        'colComputeTime
+        '
+        Me.colComputeTime.Text = "Compute Time"
+        Me.colComputeTime.Width = 150
+        '
+        'colComputeTime2
+        '
+        Me.colComputeTime2.Text = "Compute Time"
+        Me.colComputeTime2.Width = 150
+        '
         'chkSortByFileSizeAfterLoadingHashFile
         '
         Me.chkSortByFileSizeAfterLoadingHashFile.AutoSize = True
@@ -1294,4 +1306,6 @@ Partial Class Form1
     Friend WithEvents chkSaveChecksumFilesWithRelativePaths As CheckBox
     Friend WithEvents chkSortFileListingAfterAddingFilesToHash As CheckBox
     Friend WithEvents btnDonate As Button
+    Friend WithEvents colComputeTime As ColumnHeader
+    Friend WithEvents colComputeTime2 As ColumnHeader
 End Class

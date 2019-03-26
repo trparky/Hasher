@@ -101,6 +101,7 @@ Public Class Form1
         }
         itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
         itemToBeAdded.SubItems.Add(strToBeComputed)
+        itemToBeAdded.SubItems.Add("")
 
         Return itemToBeAdded
     End Function
@@ -206,6 +207,7 @@ Public Class Form1
                                                      End If
 
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
+                                                     Dim computeStopwatch As Stopwatch
 
                                                      For Each item As myListViewItem In listFiles.Items
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
@@ -213,9 +215,12 @@ Public Class Form1
 
                                                              If Not hashResultArray.ContainsKey(strFileName) Then
                                                                  lblProcessingFile.Text = String.Format("Now processing file {0}.", New IO.FileInfo(strFileName).Name)
+                                                                 computeStopwatch = Stopwatch.StartNew
 
                                                                  If doChecksumWithAttachedSubRoutine(strFileName, checksumType, strChecksum, subRoutine) Then
                                                                      item.SubItems(2).Text = strChecksum
+                                                                     item.computeTime = computeStopwatch.Elapsed
+                                                                     item.SubItems(3).Text = timespanToHMS(item.computeTime)
                                                                      item.hash = strChecksum
                                                                      hashResultArray.Add(strFileName, strChecksum)
                                                                  Else
@@ -544,10 +549,12 @@ Public Class Form1
         colFileName.Width = My.Settings.hashIndividualFilesFileNameColumnSize
         colFileSize.Width = My.Settings.hashIndividualFilesFileSizeColumnSize
         colChecksum.Width = My.Settings.hashIndividualFilesChecksumColumnSize
+        colComputeTime.Width = My.Settings.hashIndividualFilesComputeTimeColumnSize
 
         colFile.Width = My.Settings.verifyHashFileNameColumnSize
         colFileSize2.Width = My.Settings.verifyHashFileSizeColumnSize
         colResults.Width = My.Settings.verifyHashFileResults
+        colComputeTime2.Width = My.Settings.verifyHashComputeTimeColumnSize
 
         boolDoneLoading = True
     End Sub
@@ -723,6 +730,7 @@ Public Class Form1
                                                                      listViewItem.BackColor = Color.LightGray
                                                                  End If
 
+                                                                 listViewItem.SubItems.Add("To Be Tested")
                                                                  listOfItemsToAddToListView.Add(listViewItem)
                                                                  listViewItem = Nothing
                                                              End If
@@ -839,11 +847,14 @@ Public Class Form1
                                            End Sub
 
             lblProcessingFileVerify.Text = String.Format("Now processing file {0}.", fileInfo.Name)
+            Dim computeStopwatch As Stopwatch = Stopwatch.StartNew
 
             If doChecksumWithAttachedSubRoutine(strFileName, hashFileType, strChecksumInFile, subRoutine) Then
                 If strChecksum.Equals(item.hash, StringComparison.OrdinalIgnoreCase) Then
                     item.color = Color.LightGreen
                     item.SubItems(2).Text = "Valid"
+                    item.computeTime = computeStopwatch.Elapsed
+                    item.SubItems(3).Text = timespanToHMS(item.computeTime)
                     longFilesThatPassedVerification += 1
                 Else
                     item.color = Color.Pink
@@ -1391,6 +1402,7 @@ Public Class Form1
         My.Settings.hashIndividualFilesFileNameColumnSize = colFileName.Width
         My.Settings.hashIndividualFilesFileSizeColumnSize = colFileSize.Width
         My.Settings.hashIndividualFilesChecksumColumnSize = colChecksum.Width
+        My.Settings.hashIndividualFilesComputeTimeColumnSize = colComputeTime.Width
     End Sub
 
     Private Sub verifyHashesListFiles_ColumnWidthChanged(sender As Object, e As ColumnWidthChangedEventArgs) Handles verifyHashesListFiles.ColumnWidthChanged
@@ -1398,6 +1410,7 @@ Public Class Form1
         My.Settings.verifyHashFileNameColumnSize = colFile.Width
         My.Settings.verifyHashFileSizeColumnSize = colFileSize2.Width
         My.Settings.verifyHashFileResults = colResults.Width
+        My.Settings.verifyHashComputeTimeColumnSize = colComputeTime2.Width
     End Sub
 
     Private Sub txtFile1_DragEnter(sender As Object, e As DragEventArgs) Handles txtFile1.DragEnter

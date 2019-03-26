@@ -197,6 +197,30 @@ Namespace My
                 Me("boolSortFileListingAfterAddingFilesToHash") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("150")>  _
+        Public Property hashIndividualFilesComputeTimeColumnSize() As Integer
+            Get
+                Return CType(Me("hashIndividualFilesComputeTimeColumnSize"),Integer)
+            End Get
+            Set
+                Me("hashIndividualFilesComputeTimeColumnSize") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("150")>  _
+        Public Property verifyHashComputeTimeColumnSize() As String
+            Get
+                Return CType(Me("verifyHashComputeTimeColumnSize"),String)
+            End Get
+            Set
+                Me("verifyHashComputeTimeColumnSize") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
