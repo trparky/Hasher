@@ -240,8 +240,13 @@ Public Class Form1
                                                                      hashResultArray.Add(strFileName, strChecksum)
                                                                  Else
                                                                      item.SubItems(2).Text = "(Error while calculating checksum)"
+                                                                     item.SubItems(3).Text = ""
+                                                                     item.computeTime = Nothing
                                                                  End If
                                                              End If
+                                                         Else
+                                                             item.SubItems(3).Text = ""
+                                                             item.computeTime = Nothing
                                                          End If
 
                                                          index += 1
