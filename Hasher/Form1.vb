@@ -713,10 +713,10 @@ Public Class Form1
                                                      Dim regExMatchObject As Text.RegularExpressions.Match
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim longLineCounter As Long = 0
-                                                     Dim listOfItemsToAddToListView As New List(Of myListViewItem)
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      lblVerifyHashStatus.Text = "Reading hash file into memory... Please Wait."
+                                                     verifyHashesListFiles.BeginUpdate()
 
                                                      For Each strLineInFile As String In dataInFileArray
                                                          longLineCounter += 1
@@ -742,17 +742,19 @@ Public Class Form1
                                                                      listViewItem.fileSize = New IO.FileInfo(strFileName).Length
                                                                      listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                                                                      listViewItem.SubItems.Add("To Be Tested")
+                                                                     listViewItem.SubItems.Add("To Be Tested")
                                                                      listViewItem.boolFileExists = True
                                                                  Else
                                                                      listViewItem.fileSize = 0
+                                                                     listViewItem.computeTime = Nothing
                                                                      listViewItem.SubItems.Add("")
                                                                      listViewItem.SubItems.Add("Doesn't Exist")
+                                                                     listViewItem.SubItems.Add("")
                                                                      listViewItem.boolFileExists = False
                                                                      listViewItem.BackColor = Color.LightGray
                                                                  End If
 
-                                                                 listViewItem.SubItems.Add("To Be Tested")
-                                                                 listOfItemsToAddToListView.Add(listViewItem)
+                                                                 verifyHashesListFiles.Items.Add(listViewItem)
                                                                  listViewItem = Nothing
                                                              End If
 
@@ -760,10 +762,7 @@ Public Class Form1
                                                          End If
                                                      Next
 
-                                                     lblVerifyHashStatus.Text = "Creating ListView Item Objects... Please Wait."
-
-                                                     verifyHashesListFiles.Items.AddRange(listOfItemsToAddToListView.ToArray())
-                                                     listOfItemsToAddToListView = Nothing
+                                                     verifyHashesListFiles.EndUpdate()
 
                                                      If My.Settings.boolSortByFileSizeAfterLoadingHashFile Then applyFileSizeSortingToVerifyList()
 
