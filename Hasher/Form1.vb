@@ -140,6 +140,14 @@ Public Class Form1
             End If
         End If
 
+        If timeSpan.Seconds = 0 Then
+            If My.Settings.boolUseMilliseconds Then
+                Return Math.Round(timeSpan.TotalMilliseconds, 2) & "ms (less than one second)"
+            Else
+                Return Math.Round(timeSpan.TotalMilliseconds / 1000, 2) & " seconds"
+            End If
+        End If
+
         Dim strReturnedString As String = Nothing
 
         If timeSpan.Hours <> 0 Then strReturnedString = timeSpan.Hours & If(timeSpan.Hours = 1, " Hour", " Hours")
