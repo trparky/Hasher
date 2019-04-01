@@ -715,7 +715,7 @@ Public Class Form1
                                                      Dim longLineCounter As Long = 0
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
-                                                     lblVerifyHashStatus.Text = "Reading hash file into memory... Please Wait."
+                                                     lblVerifyHashStatus.Text = "Reading hash file into memory and creating ListView item objects... Please Wait."
                                                      verifyHashesListFiles.BeginUpdate()
 
                                                      For Each strLineInFile As String In dataInFileArray
