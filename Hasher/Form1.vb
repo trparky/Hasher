@@ -5,7 +5,6 @@ Public Class Form1
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
     Private Const intBufferSize As Integer = 16 * 1024 * 1024
     Private Const strWindowTitle As String = "Hasher"
-    Private Const shortUDPServerPort As Short = 32589
 
     Private filesInListFiles As New Specialized.StringCollection
     Private hashResultArray As New Dictionary(Of String, String)
