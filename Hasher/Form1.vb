@@ -185,7 +185,7 @@ Public Class Form1
                                                      Dim strFileName As String
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksums.checksumType
-                                                     Dim index As Short = 1
+                                                     Dim index As Integer = 1
                                                      Dim oldLocationInFile As ULong = 0
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
                                                                                         Try
@@ -708,19 +708,19 @@ Public Class Form1
                                                      boolBackgroundThreadWorking = True
                                                      Dim strChecksum, strFileName As String
                                                      Dim index As Integer = 1
-                                                     Dim longFilesThatPassedVerification As Long = 0
+                                                     Dim intFilesThatPassedVerification As Integer = 0
                                                      Dim listViewItem As myListViewItem
                                                      Dim regExMatchObject As Text.RegularExpressions.Match
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
-                                                     Dim longLineCounter As Long = 0
+                                                     Dim intLineCounter As Integer = 0
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      lblVerifyHashStatus.Text = "Reading hash file into memory and creating ListView item objects... Please Wait."
                                                      verifyHashesListFiles.BeginUpdate()
 
                                                      For Each strLineInFile As String In dataInFileArray
-                                                         longLineCounter += 1
-                                                         VerifyHashProgressBar.Value = longLineCounter / dataInFileArray.LongLength * 100
+                                                         intLineCounter += 1
+                                                         VerifyHashProgressBar.Value = intLineCounter / dataInFileArray.LongLength * 100
 
                                                          If Not String.IsNullOrEmpty(strLineInFile) Then
                                                              regExMatchObject = hashLineParser.Match(strLineInFile)
@@ -773,7 +773,7 @@ Public Class Form1
 
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
                                                          lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}", index.ToString("N0"), verifyHashesListFiles.Items.Count().ToString("N0"), If(verifyHashesListFiles.Items.Count = 1, "file", "files"))
-                                                         If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, longFilesThatPassedVerification)
+                                                         If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, intFilesThatPassedVerification)
                                                          index += 1
                                                      Next
 
@@ -789,10 +789,10 @@ Public Class Form1
                                                      Me.Invoke(Sub()
                                                                    Dim strMessageBoxText As String
 
-                                                                   If longFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
+                                                                   If intFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
                                                                        strMessageBoxText = "Processing of hash file complete. All files have passed verification."
                                                                    Else
-                                                                       strMessageBoxText = String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", longFilesThatPassedVerification, verifyHashesListFiles.Items.Count, verifyHashesListFiles.Items.Count - longFilesThatPassedVerification)
+                                                                       strMessageBoxText = String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", intFilesThatPassedVerification, verifyHashesListFiles.Items.Count, verifyHashesListFiles.Items.Count - intFilesThatPassedVerification)
                                                                    End If
 
                                                                    strMessageBoxText &= vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & "."
