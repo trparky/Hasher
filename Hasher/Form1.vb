@@ -185,16 +185,13 @@ Public Class Form1
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksums.checksumType
                                                      Dim index As Integer = 1
-                                                     Dim oldLocationInFile As ULong = 0
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
                                                                                         Try
                                                                                             Me.Invoke(Sub()
-                                                                                                          oldLocationInFile = totalBytesRead
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           IndividualFilesProgressBar.Value = percentage
                                                                                                           lblIndividualFilesStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
                                                                                                           lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} {2}.", index.ToString("N0"), listFiles.Items.Count().ToString("N0"), If(listFiles.Items.Count = 1, "file", "files"))
-                                                                                                          oldLocationInFile = totalBytesRead
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -850,16 +847,13 @@ Public Class Form1
         If IO.File.Exists(strFileName) Then
             Dim fileInfo As New IO.FileInfo(strFileName)
             Dim strChecksumInFile As String = Nothing
-            Dim oldLocationInFile As ULong = 0
             Dim percentage As Double
             Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
                                                Try
                                                    Me.Invoke(Sub()
-                                                                 oldLocationInFile = totalBytesRead
                                                                  percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                  VerifyHashProgressBar.Value = percentage
                                                                  lblVerifyHashStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
-                                                                 oldLocationInFile = totalBytesRead
                                                              End Sub)
                                                Catch ex As Exception
                                                End Try
@@ -1175,16 +1169,13 @@ Public Class Form1
                                                      Dim strChecksum1 As String = Nothing
                                                      Dim strChecksum2 As String = Nothing
                                                      Dim boolSuccessful As Boolean = False
-                                                     Dim oldLocationInFile As ULong = 0
                                                      Dim percentage As Double
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
                                                                                         Try
                                                                                             Me.Invoke(Sub()
-                                                                                                          oldLocationInFile = totalBytesRead
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareFilesProgressBar.Value = percentage
                                                                                                           lblCompareFilesStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
-                                                                                                          oldLocationInFile = totalBytesRead
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -1346,16 +1337,13 @@ Public Class Form1
                                                      End If
 
                                                      Dim strChecksum As String = Nothing
-                                                     Dim oldLocationInFile As ULong = 0
                                                      Dim percentage As Double
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
                                                                                         Try
                                                                                             Me.Invoke(Sub()
-                                                                                                          oldLocationInFile = totalBytesRead
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                           lblCompareAgainstKnownHashStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
-                                                                                                          oldLocationInFile = totalBytesRead
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
