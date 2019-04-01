@@ -131,15 +131,7 @@ Public Class Form1
     End Sub
 
     Private Function timespanToHMS(timeSpan As TimeSpan) As String
-        If timeSpan.TotalMilliseconds < 1000 Then
-            If My.Settings.boolUseMilliseconds Then
-                Return Math.Round(timeSpan.TotalMilliseconds, 2) & "ms (less than one second)"
-            Else
-                Return Math.Round(timeSpan.TotalMilliseconds / 1000, 2) & " seconds"
-            End If
-        End If
-
-        If timeSpan.Seconds = 0 Then
+        If timeSpan.TotalMilliseconds < 1000 Or timeSpan.Seconds = 0 Then
             If My.Settings.boolUseMilliseconds Then
                 Return Math.Round(timeSpan.TotalMilliseconds, 2) & "ms (less than one second)"
             Else
