@@ -360,7 +360,9 @@ Public Class Form1
         listFiles.BeginUpdate()
         For Each item As myListViewItem In listFiles.Items
             item.SubItems(2).Text = strToBeComputed
+            item.SubItems(3).Text = Nothing
             item.hash = Nothing
+            item.computeTime = Nothing
         Next
         listFiles.EndUpdate()
     End Sub
