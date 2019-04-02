@@ -233,6 +233,18 @@ Namespace My
                 Me("boolUseMilliseconds") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property boolDisplayHashesInUpperCase() As Boolean
+            Get
+                Return CType(Me("boolDisplayHashesInUpperCase"),Boolean)
+            End Get
+            Set
+                Me("boolDisplayHashesInUpperCase") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

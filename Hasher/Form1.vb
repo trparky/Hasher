@@ -221,7 +221,7 @@ Public Class Form1
                                                                  computeStopwatch = Stopwatch.StartNew
 
                                                                  If doChecksumWithAttachedSubRoutine(strFileName, checksumType, strChecksum, subRoutine) Then
-                                                                     item.SubItems(2).Text = strChecksum
+                                                                     item.SubItems(2).Text = If(My.Settings.boolDisplayHashesInUpperCase, strChecksum.ToUpper, strChecksum.ToLower)
                                                                      item.computeTime = computeStopwatch.Elapsed
                                                                      item.SubItems(3).Text = timespanToHMS(item.computeTime)
                                                                      item.hash = strChecksum
@@ -518,8 +518,8 @@ Public Class Form1
         Control.CheckForIllegalCrossThreadCalls = False
         lblIndividualFilesStatusProcessingFile.Text = ""
         lblVerifyHashStatusProcessingFile.Text = ""
-        lblFile1Hash.Text = ""
-        lblFile2Hash.Text = ""
+        lblFile1Hash.Text = Nothing
+        lblFile2Hash.Text = Nothing
         lblProcessingFile.Text = ""
         lblProcessingFileVerify.Text = ""
         lblCompareFileAgainstKnownHashType.Text = ""
@@ -529,6 +529,7 @@ Public Class Form1
         chkSortFileListingAfterAddingFilesToHash.Checked = My.Settings.boolSortFileListingAfterAddingFilesToHash
         chkSaveChecksumFilesWithRelativePaths.Checked = My.Settings.boolSaveChecksumFilesWithRelativePaths
         chkUseMilliseconds.Checked = My.Settings.boolUseMilliseconds
+        chkDisplayHashesInUpperCase.Checked = My.Settings.boolDisplayHashesInUpperCase
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
 
@@ -907,18 +908,21 @@ Public Class Form1
     End Sub
 
     Private Sub btnComputeTextHash_Click(sender As Object, e As EventArgs) Handles btnComputeTextHash.Click
+        Dim strHash As String = Nothing
+
         If textRadioMD5.Checked Then
-            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksums.checksumType.md5)
+            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.md5)
         ElseIf textRadioSHA1.Checked Then
-            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha160)
+            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha160)
         ElseIf textRadioSHA256.Checked Then
-            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha256)
+            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha256)
         ElseIf textRadioSHA384.Checked Then
-            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha384)
+            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha384)
         ElseIf textRadioSHA512.Checked Then
-            txtHashResults.Text = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha512)
+            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha512)
         End If
 
+        txtHashResults.Text = If(My.Settings.boolDisplayHashesInUpperCase, strHash.ToUpper, strHash.ToLower)
         btnCopyTextHashResultsToClipboard.Enabled = True
     End Sub
 
@@ -1043,10 +1047,10 @@ Public Class Form1
 
         If listFiles.SelectedItems.Count = 1 Then
             Dim selectedItem As myListViewItem = listFiles.SelectedItems(0)
-            stringBuilder.AppendLine(selectedItem.hash & " *" & selectedItem.fileName)
+            stringBuilder.AppendLine(If(My.Settings.boolDisplayHashesInUpperCase, selectedItem.hash.ToUpper, selectedItem.hash.ToLower) & " *" & selectedItem.fileName)
         Else
             For Each item As myListViewItem In listFiles.SelectedItems
-                stringBuilder.AppendLine(item.hash & " *" & item.fileName)
+                stringBuilder.AppendLine(If(My.Settings.boolDisplayHashesInUpperCase, item.hash.ToUpper, item.hash.ToLower) & " *" & item.fileName)
             Next
         End If
 
@@ -1535,5 +1539,25 @@ Public Class Form1
 
     Private Sub chkUseMilliseconds_Click(sender As Object, e As EventArgs) Handles chkUseMilliseconds.Click
         My.Settings.boolUseMilliseconds = chkUseMilliseconds.Checked
+    End Sub
+
+    Private Sub chkDisplayHashesInUpperCase_Click(sender As Object, e As EventArgs) Handles chkDisplayHashesInUpperCase.Click
+        My.Settings.boolDisplayHashesInUpperCase = chkDisplayHashesInUpperCase.Checked
+
+        If listFiles.Items.Count <> 0 Then
+            For Each item As myListViewItem In listFiles.Items
+                item.SubItems(2).Text = If(My.Settings.boolDisplayHashesInUpperCase, item.hash.ToUpper, item.hash.ToLower)
+            Next
+        End If
+
+        If Not String.IsNullOrWhiteSpace(txtHashResults.Text) Then
+            txtHashResults.Text = If(My.Settings.boolDisplayHashesInUpperCase, txtHashResults.Text.ToUpper, txtHashResults.Text.ToLower)
+        End If
+        If Not String.IsNullOrWhiteSpace(lblFile1Hash.Text) Then
+            lblFile1Hash.Text = If(My.Settings.boolDisplayHashesInUpperCase, lblFile1Hash.Text.ToUpper, lblFile1Hash.Text.ToLower)
+        End If
+        If Not String.IsNullOrWhiteSpace(lblFile2Hash.Text) Then
+            lblFile2Hash.Text = If(My.Settings.boolDisplayHashesInUpperCase, lblFile2Hash.Text.ToUpper, lblFile2Hash.Text.ToLower)
+        End If
     End Sub
 End Class

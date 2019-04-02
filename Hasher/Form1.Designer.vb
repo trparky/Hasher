@@ -126,6 +126,7 @@ Partial Class Form1
         Me.colComputeTime2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.chkSaveChecksumFilesWithRelativePaths = New System.Windows.Forms.CheckBox()
         Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
+        Me.chkDisplayHashesInUpperCase = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1088,6 +1089,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.btnAssociate)
         Me.tabSettings.Controls.Add(Me.chkSSL)
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
+        Me.tabSettings.Controls.Add(Me.chkDisplayHashesInUpperCase)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
@@ -1096,7 +1098,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 151)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 175)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(204, 23)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1105,7 +1107,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 151)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 175)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 23)
         Me.btnAssociate.TabIndex = 2
@@ -1167,6 +1169,16 @@ Partial Class Form1
         Me.chkSortByFileSizeAfterLoadingHashFile.TabIndex = 4
         Me.chkSortByFileSizeAfterLoadingHashFile.Text = "Sort file listing by file size after loading hash file"
         Me.chkSortByFileSizeAfterLoadingHashFile.UseVisualStyleBackColor = True
+        '
+        'chkDisplayHashesInUpperCase
+        '
+        Me.chkDisplayHashesInUpperCase.AutoSize = True
+        Me.chkDisplayHashesInUpperCase.Location = New System.Drawing.Point(15, 152)
+        Me.chkDisplayHashesInUpperCase.Name = "chkDisplayHashesInUpperCase"
+        Me.chkDisplayHashesInUpperCase.Size = New System.Drawing.Size(81, 17)
+        Me.chkDisplayHashesInUpperCase.TabIndex = 8
+        Me.chkDisplayHashesInUpperCase.Text = "Display Hashes in Uppercase Letters"
+        Me.chkDisplayHashesInUpperCase.UseVisualStyleBackColor = True
         '
         'chkSaveChecksumFilesWithRelativePaths
         '
@@ -1321,4 +1333,5 @@ Partial Class Form1
     Friend WithEvents colComputeTime As ColumnHeader
     Friend WithEvents colComputeTime2 As ColumnHeader
     Friend WithEvents chkUseMilliseconds As CheckBox
+    Friend WithEvents chkDisplayHashesInUpperCase As CheckBox
 End Class
