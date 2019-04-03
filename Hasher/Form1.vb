@@ -161,7 +161,16 @@ Public Class Form1
     End Function
 
     Private Sub btnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
-        btnComputeHash.Enabled = False
+        If btnComputeHash.Text = "Abort Processing" Then
+            If workingThread IsNot Nothing Then
+                workingThread.Abort()
+                boolBackgroundThreadWorking = False
+            End If
+
+            Exit Sub
+        End If
+
+        btnComputeHash.Text = "Abort Processing"
         btnAddFilesInFolder.Enabled = False
         btnAddIndividualFiles.Enabled = False
         btnRemoveAllFiles.Enabled = False
@@ -264,6 +273,8 @@ Public Class Form1
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
                                                      If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
+                                                 Finally
+                                                     btnComputeHash.Text = "Compute Hash"
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -806,7 +817,7 @@ Public Class Form1
                                                      workingThread = Nothing
                                                      If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
                                                  Finally
-                                                     btnOpenExistingHashFile.Enabled = True
+                                                     btnOpenExistingHashFile.Text = "Open Hash File"
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -817,7 +828,16 @@ Public Class Form1
     End Sub
 
     Private Sub btnOpenExistingHashFile_Click(sender As Object, e As EventArgs) Handles btnOpenExistingHashFile.Click
-        btnOpenExistingHashFile.Enabled = False
+        If btnOpenExistingHashFile.Text = "Abort Processing" Then
+            If workingThread IsNot Nothing Then
+                workingThread.Abort()
+                boolBackgroundThreadWorking = False
+            End If
+
+            Exit Sub
+        End If
+
+        btnOpenExistingHashFile.Text = "Abort Processing"
         verifyHashesListFiles.Items.Clear()
 
         Dim oldMultiValue As Boolean = OpenFileDialog.Multiselect
@@ -829,7 +849,7 @@ Public Class Form1
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             processExistingHashFile(OpenFileDialog.FileName)
         Else
-            btnOpenExistingHashFile.Enabled = True
+            btnOpenExistingHashFile.Text = "Open Hash File"
         End If
 
         OpenFileDialog.Multiselect = oldMultiValue
