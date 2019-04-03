@@ -1299,6 +1299,8 @@ Public Class Form1
             lblCompareFileAgainstKnownHashType.Text = ""
             btnCompareAgainstKnownHash.Enabled = False
         Else
+            txtKnownHash.Text = txtKnownHash.Text.Trim
+
             If txtKnownHash.Text.Length = 128 Or txtKnownHash.Text.Length = 96 Or txtKnownHash.Text.Length = 64 Or txtKnownHash.Text.Length = 40 Or txtKnownHash.Text.Length = 32 Then
                 btnCompareAgainstKnownHash.Enabled = True
 
