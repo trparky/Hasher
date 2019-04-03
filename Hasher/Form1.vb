@@ -241,9 +241,6 @@ Public Class Form1
                                                                      item.computeTime = Nothing
                                                                  End If
                                                              End If
-                                                         Else
-                                                             item.SubItems(3).Text = ""
-                                                             item.computeTime = Nothing
                                                          End If
 
                                                          index += 1
