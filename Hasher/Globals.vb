@@ -14,7 +14,7 @@ Public Module Globals
         End Try
     End Function
 
-    Private Sub killProcess(processID As Integer, Optional boolLogToEventLog As Boolean = False)
+    Private Sub killProcess(processID As Integer)
         Dim processObject As Process = Nothing
 
         ' First we are going to check if the Process ID exists.
@@ -27,7 +27,6 @@ Public Module Globals
             End Try
         End If
 
-        processObject = Nothing
         Threading.Thread.Sleep(250) ' We're going to sleep to give the system some time to kill the process.
 
         '' Now we are going to check again if the Process ID exists and if it does, we're going to attempt to kill it again.
@@ -40,7 +39,6 @@ Public Module Globals
             End Try
         End If
 
-        processObject = Nothing
         Threading.Thread.Sleep(250) ' We're going to sleep (again) to give the system some time to kill the process.
     End Sub
 
@@ -75,29 +73,24 @@ Public Module Globals
                 Try
                     processExecutablePathFileInfo = New IO.FileInfo(processExecutablePath)
 
-                    If boolFullFilePathPassed = True Then
-                        If strFileName.Equals(processExecutablePathFileInfo.FullName, StringComparison.OrdinalIgnoreCase) = True Then
-                            killProcess(process.Id, True)
+                    If boolFullFilePathPassed Then
+                        If strFileName.Equals(processExecutablePathFileInfo.FullName, StringComparison.OrdinalIgnoreCase) Then
+                            killProcess(process.Id)
                         End If
-                    ElseIf boolFullFilePathPassed = False Then
-                        If strFileName.Equals(processExecutablePathFileInfo.Name, StringComparison.OrdinalIgnoreCase) = True Then
-                            killProcess(process.Id, True)
+                    Else
+                        If strFileName.Equals(processExecutablePathFileInfo.Name, StringComparison.OrdinalIgnoreCase) Then
+                            killProcess(process.Id)
                         End If
                     End If
-
-                    processExecutablePathFileInfo = Nothing
                 Catch ex As ArgumentException
                 End Try
             End If
-
-            processExecutablePath = Nothing
         Next
     End Sub
 
     Public Function areWeAnAdministrator() As Boolean
         Try
-            Dim principal As WindowsPrincipal = New WindowsPrincipal(WindowsIdentity.GetCurrent())
-            Return principal.IsInRole(WindowsBuiltInRole.Administrator)
+            Return New WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)
         Catch ex As Exception
             Return False
         End Try
