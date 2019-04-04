@@ -1,7 +1,7 @@
 ﻿Imports Microsoft.Win32
 
 Class FileAssociation
-    Private Shared Sub CreateAssociationSubRoutine(ByRef selectedKey As RegistryKey, ByVal extension As String, ByVal description As String, ByVal application As String, ByVal icon As String)
+    Private Shared Sub CreateAssociationSubRoutine(ByRef selectedKey As RegistryKey, ByVal description As String, ByVal application As String, ByVal icon As String)
         If selectedKey.OpenSubKey("Shell\Verify with Hasher") Is Nothing Then
             If description IsNot Nothing Then selectedKey.SetValue(vbNullString, description)
 
@@ -32,19 +32,19 @@ Class FileAssociation
             selectedKey = Registry.ClassesRoot.CreateSubKey(extension)
 
             If selectedKey IsNot Nothing Then
-                CreateAssociationSubRoutine(selectedKey, extension, description, application, icon)
+                CreateAssociationSubRoutine(selectedKey, description, application, icon)
             End If
         Else
             Dim strDefaultValue As String = Registry.ClassesRoot.OpenSubKey(extension).GetValue(vbNullString, Nothing)
 
             If String.IsNullOrWhiteSpace(strDefaultValue) Then
-                CreateAssociationSubRoutine(Registry.ClassesRoot.OpenSubKey(extension), extension, description, application, icon)
+                CreateAssociationSubRoutine(Registry.ClassesRoot.OpenSubKey(extension), description, application, icon)
             Else
                 selectedKey = Registry.ClassesRoot.OpenSubKey(strDefaultValue, True)
                 If selectedKey Is Nothing Then
                     selectedKey = Registry.ClassesRoot.CreateSubKey(strDefaultValue)
                 End If
-                CreateAssociationSubRoutine(selectedKey, extension, description, application, icon)
+                CreateAssociationSubRoutine(selectedKey, description, application, icon)
             End If
         End If
     End Sub
