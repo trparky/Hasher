@@ -8,15 +8,8 @@ Imports System.Security.Principal
 Class Check_for_Update_Stuff
     Private Const programZipFileURL = "www.toms-world.org/download/Hasher.zip"
     Private Const programZipFileSHA256URL = "www.toms-world.org/download/Hasher.zip.sha2"
-
-    Private Const zipFileName As String = "Hasher.zip"
     Private Const programFileNameInZIP As String = "Hasher.exe"
-
-    Private Const webSiteURL As String = "www.toms-world.org/blog/hasher"
-    Private Const programCodeName As String = "hasher"
-
     Private Const programUpdateCheckerXMLFile As String = "www.toms-world.org/updates/hasher_update.xml"
-    Private Const programName As String = "Hasher"
 
     Public windowObject As Form1
 
@@ -33,8 +26,6 @@ Class Check_for_Update_Stuff
     End Sub
 
     Public Shared versionInfo As String() = Application.ProductVersion.Split(".")
-    Private shortMajor As Short = Short.Parse(versionInfo(versionPieces.major).Trim)
-    Private shortMinor As Short = Short.Parse(versionInfo(versionPieces.minor).Trim)
     Private shortBuild As Short = Short.Parse(versionInfo(versionPieces.build).Trim)
     Public Shared versionString As String = String.Format("{0}.{1} Build {2}", versionInfo(0), versionInfo(1), versionInfo(2))
 
@@ -207,16 +198,7 @@ Class Check_for_Update_Stuff
         End Try
     End Function
 
-    Private Function convertLineFeeds(input As String) As String
-        ' Checks to see if the file is in Windows linefeed format or UNIX linefeed format.
-        If input.Contains(vbCrLf) Then
-            Return input ' It's in Windows linefeed format so we return the output as is.
-        Else
-            Return input.Replace(vbLf, vbCrLf) ' It's in UNIX linefeed format so we have to convert it to Windows before we return the output.
-        End If
-    End Function
-
-    Private Sub downloadAndPerformUpdate(Optional ByVal outputText As Boolean = False)
+    Private Sub downloadAndPerformUpdate()
         Dim fileInfo As New FileInfo(Application.ExecutablePath)
         Dim newExecutableName As String = fileInfo.Name & ".new.exe"
 
