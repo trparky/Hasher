@@ -1139,6 +1139,15 @@ Public Class Form1
     End Sub
 
     Private Sub btnCompareFiles_Click(sender As Object, e As EventArgs) Handles btnCompareFiles.Click
+        If btnCompareFiles.Text = "Abort Processing" Then
+            If workingThread IsNot Nothing Then
+                workingThread.Abort()
+                boolBackgroundThreadWorking = False
+            End If
+
+            Exit Sub
+        End If
+
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
             MsgBox("Please select two different files.", MsgBoxStyle.Information, strWindowTitle)
             Exit Sub
@@ -1156,7 +1165,7 @@ Public Class Form1
         btnCompareFilesBrowseFile2.Enabled = False
         txtFile1.Enabled = False
         txtFile2.Enabled = False
-        btnCompareFiles.Enabled = False
+        btnCompareFiles.Text = "Abort Processing"
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -1210,7 +1219,7 @@ Public Class Form1
                                                      btnCompareFilesBrowseFile2.Enabled = True
                                                      txtFile1.Enabled = True
                                                      txtFile2.Enabled = True
-                                                     btnCompareFiles.Enabled = True
+                                                     btnCompareFiles.Text = "Compare Files"
                                                      compareRadioMD5.Enabled = True
                                                      compareRadioSHA1.Enabled = True
                                                      compareRadioSHA256.Enabled = True
@@ -1237,7 +1246,8 @@ Public Class Form1
                                                          btnCompareFilesBrowseFile1.Enabled = True
                                                          txtFile1.Enabled = True
                                                          txtFile2.Enabled = True
-                                                         btnCompareFiles.Enabled = True
+                                                         compareFilesProgressBar.Value = 0
+                                                         btnCompareFiles.Text = "Compare Files"
                                                          compareRadioMD5.Enabled = True
                                                          compareRadioSHA1.Enabled = True
                                                          compareRadioSHA256.Enabled = True
@@ -1249,8 +1259,6 @@ Public Class Form1
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
                                                      If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
-                                                 Finally
-                                                     btnComputeHash.Enabled = True
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
