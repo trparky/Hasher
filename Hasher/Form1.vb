@@ -58,6 +58,23 @@ Public Class Form1
         End Try
     End Function
 
+    Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksums.checksumType, ByRef strChecksum As String, checksumSubRoutine As [Delegate], finishedChecksumSubRoutine As [Delegate]) As Boolean
+        Try
+            If IO.File.Exists(strFile) Then
+                Dim checksums As New checksums(checksumSubRoutine)
+                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
+                finishedChecksumSubRoutine.DynamicInvoke()
+                Return True
+            Else
+                Return False
+            End If
+
+            Return False
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
     Private Sub updateFilesListCountHeader(Optional boolIncludeSelectedItemCount As Boolean = False)
         If boolIncludeSelectedItemCount Then
             lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files ({1} {2} are selected)", listFiles.Items.Count().ToString("N0"), listFiles.SelectedItems.Count().ToString("N0"), If(listFiles.SelectedItems.Count() = 1, "item", "items"))
@@ -1207,11 +1224,16 @@ Public Class Form1
 
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
-                                                     If doChecksumWithAttachedSubRoutine(txtFile1.Text, checksumType, strChecksum1, subRoutine) AndAlso doChecksumWithAttachedSubRoutine(txtFile2.Text, checksumType, strChecksum2, subRoutine) Then
-                                                         lblFile1Hash.Text = "Hash/Checksum: " & strChecksum1
-                                                         lblFile2Hash.Text = "Hash/Checksum: " & strChecksum2
-                                                         ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
-                                                         ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+                                                     Dim checksum1FinishCode As [Delegate] = Sub()
+                                                                                                 lblFile1Hash.Text = "Hash/Checksum: " & strChecksum1
+                                                                                                 ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
+                                                                                             End Sub
+                                                     Dim checksum2FinishCode As [Delegate] = Sub()
+                                                                                                 lblFile2Hash.Text = "Hash/Checksum: " & strChecksum2
+                                                                                                 ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+                                                                                             End Sub
+
+                                                     If doChecksumWithAttachedSubRoutine(txtFile1.Text, checksumType, strChecksum1, subRoutine, checksum1FinishCode) AndAlso doChecksumWithAttachedSubRoutine(txtFile2.Text, checksumType, strChecksum2, subRoutine, checksum2FinishCode) Then
                                                          boolSuccessful = True
                                                      End If
 
