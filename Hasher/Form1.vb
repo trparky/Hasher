@@ -810,6 +810,7 @@ Public Class Form1
                                                      lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                      lblProcessingFileVerify.Text = ""
                                                      VerifyHashProgressBar.Value = 0
+                                                     Me.Text = "Hasher"
 
                                                      Me.Invoke(Sub()
                                                                    Dim strMessageBoxText As String
@@ -834,6 +835,8 @@ Public Class Form1
                                                          lblProcessingFileVerify.Text = ""
                                                          VerifyHashProgressBar.Value = 0
                                                          verifyHashesListFiles.Items.Clear()
+                                                         Me.Text = "Hasher"
+                                                         lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
                                                      End If
 
                                                      boolBackgroundThreadWorking = False
