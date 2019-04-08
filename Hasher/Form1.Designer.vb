@@ -127,6 +127,7 @@ Partial Class Form1
         Me.chkSaveChecksumFilesWithRelativePaths = New System.Windows.Forms.CheckBox()
         Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
         Me.chkDisplayHashesInUpperCase = New System.Windows.Forms.CheckBox()
+        Me.chkShowProgressPercentageInWindowTitle = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1081,6 +1082,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkShowProgressPercentageInWindowTitle)
         Me.tabSettings.Controls.Add(Me.chkUseMilliseconds)
         Me.tabSettings.Controls.Add(Me.chkSortFileListingAfterAddingFilesToHash)
         Me.tabSettings.Controls.Add(Me.chkSaveChecksumFilesWithRelativePaths)
@@ -1199,6 +1201,16 @@ Partial Class Form1
         Me.chkSortFileListingAfterAddingFilesToHash.TabIndex = 6
         Me.chkSortFileListingAfterAddingFilesToHash.Text = "Sort file listing after adding files to Hash"
         Me.chkSortFileListingAfterAddingFilesToHash.UseVisualStyleBackColor = True
+        '
+        'chkShowProgressPercentageInWindowTitle
+        '
+        Me.chkShowProgressPercentageInWindowTitle.AutoSize = True
+        Me.chkShowProgressPercentageInWindowTitle.Location = New System.Drawing.Point(15, 176)
+        Me.chkShowProgressPercentageInWindowTitle.Name = "chkShowProgressPercentageInWindowTitle"
+        Me.chkShowProgressPercentageInWindowTitle.Size = New System.Drawing.Size(231, 17)
+        Me.chkShowProgressPercentageInWindowTitle.TabIndex = 9
+        Me.chkShowProgressPercentageInWindowTitle.Text = "Show Progress Percentage in Window Title"
+        Me.chkShowProgressPercentageInWindowTitle.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1334,4 +1346,5 @@ Partial Class Form1
     Friend WithEvents colComputeTime2 As ColumnHeader
     Friend WithEvents chkUseMilliseconds As CheckBox
     Friend WithEvents chkDisplayHashesInUpperCase As CheckBox
+    Friend WithEvents chkShowProgressPercentageInWindowTitle As CheckBox
 End Class
