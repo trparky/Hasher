@@ -1332,6 +1332,15 @@ Public Class Form1
     End Sub
 
     Private Sub btnCompareAgainstKnownHash_Click(sender As Object, e As EventArgs) Handles btnCompareAgainstKnownHash.Click
+        If btnCompareAgainstKnownHash.Text = "Abort Processing" Then
+            If workingThread IsNot Nothing Then
+                workingThread.Abort()
+                boolBackgroundThreadWorking = False
+            End If
+
+            Exit Sub
+        End If
+
         txtFileForKnownHash.Text = txtFileForKnownHash.Text.Trim
 
         If Not IO.File.Exists(txtFileForKnownHash.Text) Then
@@ -1342,7 +1351,7 @@ Public Class Form1
         txtFileForKnownHash.Enabled = False
         btnBrowseFileForCompareKnownHash.Enabled = False
         txtKnownHash.Enabled = False
-        btnCompareAgainstKnownHash.Enabled = False
+        btnCompareAgainstKnownHash.Text = "Abort Processing"
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -1380,7 +1389,7 @@ Public Class Form1
                                                      txtFileForKnownHash.Enabled = True
                                                      btnBrowseFileForCompareKnownHash.Enabled = True
                                                      txtKnownHash.Enabled = True
-                                                     btnCompareAgainstKnownHash.Enabled = True
+                                                     btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
                                                      lblCompareAgainstKnownHashStatus.Text = strNoBackgroundProcesses
                                                      compareAgainstKnownHashProgressBar.Value = 0
 
@@ -1401,15 +1410,14 @@ Public Class Form1
                                                          txtFileForKnownHash.Enabled = True
                                                          btnBrowseFileForCompareKnownHash.Enabled = True
                                                          txtKnownHash.Enabled = True
-                                                         btnCompareAgainstKnownHash.Enabled = True
+                                                         btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
+                                                         compareAgainstKnownHashProgressBar.Value = 0
                                                          lblCompareFilesStatus.Text = strNoBackgroundProcesses
                                                      End If
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
                                                      If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
-                                                 Finally
-                                                     btnComputeHash.Enabled = True
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
