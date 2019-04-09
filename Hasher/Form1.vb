@@ -742,10 +742,14 @@ Public Class Form1
 
                                                      lblVerifyHashStatus.Text = "Reading hash file into memory and creating ListView item objects... Please Wait."
                                                      verifyHashesListFiles.BeginUpdate()
+                                                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal)
 
                                                      For Each strLineInFile As String In dataInFileArray
                                                          intLineCounter += 1
                                                          VerifyHashProgressBar.Value = intLineCounter / dataInFileArray.LongLength * 100
+
+                                                         If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & VerifyHashProgressBar.Value & "%)"
+                                                         TaskbarManager.Instance.SetProgressValue(VerifyHashProgressBar.Value, 100)
 
                                                          If Not String.IsNullOrEmpty(strLineInFile) Then
                                                              regExMatchObject = hashLineParser.Match(strLineInFile)
@@ -788,6 +792,8 @@ Public Class Form1
                                                      Next
 
                                                      verifyHashesListFiles.EndUpdate()
+                                                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress)
+                                                     Me.Text = "Hasher"
 
                                                      If My.Settings.boolSortByFileSizeAfterLoadingHashFile Then applyFileSizeSortingToVerifyList()
 
