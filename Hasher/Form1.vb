@@ -1,5 +1,4 @@
 ﻿Imports System.IO.Pipes
-Imports Microsoft.WindowsAPICodePack.Taskbar
 
 Public Class Form1
     Private Const strToBeComputed As String = "To Be Computed"
@@ -195,7 +194,6 @@ Public Class Form1
         btnRemoveSelectedFiles.Enabled = False
         btnIndividualFilesCopyToClipboard.Enabled = False
         btnIndividualFilesSaveResultsToDisk.Enabled = False
-        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal)
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -210,7 +208,6 @@ Public Class Form1
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           IndividualFilesProgressBar.Value = percentage
-                                                                                                          TaskbarManager.Instance.SetProgressValue(percentage, 100)
                                                                                                           If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                                                           lblIndividualFilesStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
                                                                                                           lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} {2}.", index.ToString("N0"), listFiles.Items.Count().ToString("N0"), If(listFiles.Items.Count = 1, "file", "files"))
@@ -275,7 +272,6 @@ Public Class Form1
                                                      radioSHA384.Enabled = True
                                                      radioSHA512.Enabled = True
 
-                                                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress)
                                                      Me.Text = "Hasher"
                                                      Me.Invoke(Sub() MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
                                                      resetHashIndividualFilesProgress()
@@ -288,7 +284,6 @@ Public Class Form1
                                                          lblIndividualFilesStatusProcessingFile.Text = ""
                                                          IndividualFilesProgressBar.Value = 0
                                                          resetHashIndividualFilesProgress()
-                                                         TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress)
                                                          Me.Text = "Hasher"
                                                      End If
 
@@ -742,14 +737,12 @@ Public Class Form1
 
                                                      lblVerifyHashStatus.Text = "Reading hash file into memory and creating ListView item objects... Please Wait."
                                                      verifyHashesListFiles.BeginUpdate()
-                                                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal)
 
                                                      For Each strLineInFile As String In dataInFileArray
                                                          intLineCounter += 1
                                                          VerifyHashProgressBar.Value = intLineCounter / dataInFileArray.LongLength * 100
 
                                                          If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & VerifyHashProgressBar.Value & "%)"
-                                                         TaskbarManager.Instance.SetProgressValue(VerifyHashProgressBar.Value, 100)
 
                                                          If Not String.IsNullOrEmpty(strLineInFile) Then
                                                              regExMatchObject = hashLineParser.Match(strLineInFile)
@@ -792,7 +785,6 @@ Public Class Form1
                                                      Next
 
                                                      verifyHashesListFiles.EndUpdate()
-                                                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress)
                                                      Me.Text = "Hasher"
 
                                                      If My.Settings.boolSortByFileSizeAfterLoadingHashFile Then applyFileSizeSortingToVerifyList()
@@ -890,7 +882,6 @@ Public Class Form1
     Private Sub processFileInVerifyFileList(ByRef item As myListViewItem, hashFileType As checksums.checksumType, ByRef longFilesThatPassedVerification As Long)
         Dim strChecksum As String = item.hash
         Dim strFileName As String = item.fileName
-        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal)
 
         If IO.File.Exists(strFileName) Then
             Dim fileInfo As New IO.FileInfo(strFileName)
@@ -901,7 +892,6 @@ Public Class Form1
                                                    Me.Invoke(Sub()
                                                                  percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                  VerifyHashProgressBar.Value = percentage
-                                                                 TaskbarManager.Instance.SetProgressValue(percentage, 100)
                                                                  If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                  lblVerifyHashStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
                                                              End Sub)
@@ -929,7 +919,6 @@ Public Class Form1
             End If
 
             fileInfo = Nothing
-            TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress)
             Me.Text = "Hasher"
         End If
     End Sub
@@ -1206,7 +1195,6 @@ Public Class Form1
         txtFile1.Enabled = False
         txtFile2.Enabled = False
         btnCompareFiles.Text = "Abort Processing"
-        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal)
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -1240,7 +1228,6 @@ Public Class Form1
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareFilesProgressBar.Value = percentage
-                                                                                                          TaskbarManager.Instance.SetProgressValue(percentage, 100)
                                                                                                           If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                                                           lblCompareFilesStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
                                                                                                       End Sub)
@@ -1275,7 +1262,6 @@ Public Class Form1
                                                      compareRadioSHA512.Enabled = True
                                                      lblCompareFilesStatus.Text = strNoBackgroundProcesses
                                                      compareFilesProgressBar.Value = 0
-                                                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress)
                                                      Me.Text = "Hasher"
 
                                                      If boolSuccessful Then
@@ -1304,7 +1290,6 @@ Public Class Form1
                                                          compareRadioSHA384.Enabled = True
                                                          compareRadioSHA512.Enabled = True
                                                          lblCompareFilesStatus.Text = strNoBackgroundProcesses
-                                                         TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress)
                                                          Me.Text = "Hasher"
                                                      End If
 
@@ -1404,7 +1389,6 @@ Public Class Form1
         btnBrowseFileForCompareKnownHash.Enabled = False
         txtKnownHash.Enabled = False
         btnCompareAgainstKnownHash.Text = "Abort Processing"
-        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal)
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -1430,7 +1414,6 @@ Public Class Form1
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareAgainstKnownHashProgressBar.Value = percentage
-                                                                                                          TaskbarManager.Instance.SetProgressValue(percentage, 100)
                                                                                                           If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                                                           lblCompareAgainstKnownHashStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
                                                                                                       End Sub)
@@ -1447,7 +1430,6 @@ Public Class Form1
                                                      btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
                                                      lblCompareAgainstKnownHashStatus.Text = strNoBackgroundProcesses
                                                      compareAgainstKnownHashProgressBar.Value = 0
-                                                     TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress)
                                                      Me.Text = "Hasher"
 
                                                      If boolSuccessful Then
@@ -1470,7 +1452,6 @@ Public Class Form1
                                                          btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
                                                          compareAgainstKnownHashProgressBar.Value = 0
                                                          lblCompareFilesStatus.Text = strNoBackgroundProcesses
-                                                         TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress)
                                                          Me.Text = "Hasher"
                                                      End If
 
