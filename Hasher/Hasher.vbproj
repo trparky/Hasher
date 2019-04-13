@@ -142,6 +142,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="calculator.ico" />
+    <None Include="Resources\bad check.png" />
+    <None Include="Resources\good check.png" />
     <None Include="Resources\green_dollar.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

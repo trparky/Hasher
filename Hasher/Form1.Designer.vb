@@ -120,6 +120,7 @@ Partial Class Form1
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.chkSortByFileSizeAfterLoadingHashFile = New System.Windows.Forms.CheckBox()
+        Me.pictureBoxVerifyAgainstResults = New System.Windows.Forms.PictureBox()
         Me.chkUseMilliseconds = New System.Windows.Forms.CheckBox()
         Me.btnDonate = New System.Windows.Forms.Button()
         Me.colComputeTime = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -137,6 +138,7 @@ Partial Class Form1
         Me.tabCompareFiles.SuspendLayout()
         Me.tabCompareAgainstKnownHash.SuspendLayout()
         Me.tabSettings.SuspendLayout()
+        CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnDonate
@@ -979,6 +981,7 @@ Partial Class Form1
         'tabCompareAgainstKnownHash
         '
         Me.tabCompareAgainstKnownHash.BackColor = System.Drawing.SystemColors.Control
+        Me.tabCompareAgainstKnownHash.Controls.Add(Me.pictureBoxVerifyAgainstResults)
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.lblCompareFileAgainstKnownHashType)
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.compareAgainstKnownHashProgressBar)
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.lblCompareAgainstKnownHashStatus)
@@ -1182,6 +1185,14 @@ Partial Class Form1
         Me.chkDisplayHashesInUpperCase.Text = "Display Hashes in Uppercase Letters"
         Me.chkDisplayHashesInUpperCase.UseVisualStyleBackColor = True
         '
+        'PictureBox1
+        '
+        Me.pictureBoxVerifyAgainstResults.Location = New System.Drawing.Point(691, 8)
+        Me.pictureBoxVerifyAgainstResults.Name = "PictureBox1"
+        Me.pictureBoxVerifyAgainstResults.Size = New System.Drawing.Size(64, 64)
+        Me.pictureBoxVerifyAgainstResults.TabIndex = 35
+        Me.pictureBoxVerifyAgainstResults.TabStop = False
+        '
         'chkSaveChecksumFilesWithRelativePaths
         '
         Me.chkSaveChecksumFilesWithRelativePaths.AutoSize = True
@@ -1238,6 +1249,7 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.PerformLayout()
         Me.tabSettings.ResumeLayout(False)
         Me.tabSettings.PerformLayout()
+        CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1347,4 +1359,5 @@ Partial Class Form1
     Friend WithEvents chkUseMilliseconds As CheckBox
     Friend WithEvents chkDisplayHashesInUpperCase As CheckBox
     Friend WithEvents chkShowProgressPercentageInWindowTitle As CheckBox
+    Friend WithEvents pictureBoxVerifyAgainstResults As PictureBox
 End Class
