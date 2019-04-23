@@ -1103,7 +1103,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 175)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 199)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(204, 23)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1112,7 +1112,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 175)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 199)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 23)
         Me.btnAssociate.TabIndex = 2
