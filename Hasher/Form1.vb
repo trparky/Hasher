@@ -1003,7 +1003,13 @@ Public Class Form1
     End Sub
 
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
-        If e.TabPageIndex = 5 Then pictureBoxVerifyAgainstResults.Image = Nothing
+        If e.TabPageIndex = 5 Then
+            pictureBoxVerifyAgainstResults.Image = Nothing
+            ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "")
+            txtFileForKnownHash.Text = Nothing
+            txtKnownHash.Text = Nothing
+            lblCompareFileAgainstKnownHashType.Text = Nothing
+        End If
 
         If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, do you want to abort?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, strWindowTitle) = MsgBoxResult.No Then
             e.Cancel = True
@@ -1338,11 +1344,15 @@ Public Class Form1
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Show All Files|*.*"
 
-        If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFileForKnownHash.Text = OpenFileDialog.FileName
+        If OpenFileDialog.ShowDialog() = DialogResult.OK Then
+            txtFileForKnownHash.Text = OpenFileDialog.FileName
+            btnCompareAgainstKnownHash.Enabled = True
+        End If
     End Sub
 
     Private Sub txtKnownHash_TextChanged(sender As Object, e As EventArgs) Handles txtKnownHash.TextChanged
         pictureBoxVerifyAgainstResults.Image = Nothing
+        ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "")
 
         If String.IsNullOrWhiteSpace(txtKnownHash.Text) Then
             lblCompareFileAgainstKnownHashType.Text = ""
@@ -1351,9 +1361,8 @@ Public Class Form1
             txtKnownHash.Text = txtKnownHash.Text.Trim
 
             If txtKnownHash.Text.Length = 128 Or txtKnownHash.Text.Length = 96 Or txtKnownHash.Text.Length = 64 Or txtKnownHash.Text.Length = 40 Or txtKnownHash.Text.Length = 32 Then
-                btnCompareAgainstKnownHash.Enabled = True
+                If Not String.IsNullOrWhiteSpace(txtFileForKnownHash.Text) Then btnCompareAgainstKnownHash.Enabled = True
 
-                'lblCompareFileAgainstKnownHashType
                 If txtKnownHash.Text.Length = 32 Then
                     lblCompareFileAgainstKnownHashType.Text = "Hash Type: MD5"
                 ElseIf txtKnownHash.Text.Length = 40 Then
@@ -1432,6 +1441,7 @@ Public Class Form1
                                                      btnBrowseFileForCompareKnownHash.Enabled = True
                                                      txtKnownHash.Enabled = True
                                                      btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
+                                                     btnCompareAgainstKnownHash.Enabled = False
                                                      lblCompareAgainstKnownHashStatus.Text = strNoBackgroundProcesses
                                                      compareAgainstKnownHashProgressBar.Value = 0
                                                      Me.Text = "Hasher"
@@ -1439,9 +1449,11 @@ Public Class Form1
                                                      If boolSuccessful Then
                                                          If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
                                                              pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.good_check
+                                                             ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum Verified!")
                                                              MsgBox("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
                                                          Else
                                                              pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
+                                                             ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum verification failed, checksum didn't match!")
                                                              MsgBox("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
                                                          End If
                                                      Else
