@@ -486,6 +486,13 @@ Public Class Form1
         End Try
     End Function
 
+    ''' <summary>
+    ''' This function will act upon either a file or a directory path.
+    ''' If it's passed a directory path it will call the addFilesFromDirectory() function.
+    ''' If it's passed a file path it will process and add the file to the list by itself
+    ''' with an included call to the createListFilesObject() function.
+    ''' </summary>
+    ''' <param name="strReceivedFileName">This parameter contains the path of either a file or a directory.</param>
     Private Sub addFileOrDirectoryToHashFileList(strReceivedFileName As String)
         Try
             If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
