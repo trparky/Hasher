@@ -76,6 +76,20 @@ Class Check_for_Update_Stuff
         Return canIWriteThere(New FileInfo(Application.ExecutablePath).DirectoryName)
     End Function
 
+    Private Function randomString(length As Integer) As String
+        Dim random As Random = New Random()
+        Dim builder As New Text.StringBuilder()
+        Dim ch As Char
+        Dim legalCharacters As String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
+
+        For cntr As Integer = 0 To length
+            ch = legalCharacters.Substring(random.Next(0, legalCharacters.Length), 1)
+            builder.Append(ch)
+        Next
+
+        Return builder.ToString()
+    End Function
+
     Private Function canIWriteThere(folderPath As String) As Boolean
         ' We make sure we get valid folder path by taking off the leading slash.
         If folderPath.EndsWith("\") Then folderPath = folderPath.Substring(0, folderPath.Length - 1)
@@ -84,8 +98,9 @@ Class Check_for_Update_Stuff
 
         If checkByFolderACLs(folderPath) Then
             Try
-                File.Create(Path.Combine(folderPath, "test.txt"), 1, FileOptions.DeleteOnClose).Close()
-                If File.Exists(Path.Combine(folderPath, "test.txt")) Then File.Delete(Path.Combine(folderPath, "test.txt"))
+                Dim strRandomFileName As String = randomString(15) & ".txt"
+                File.Create(Path.Combine(folderPath, strRandomFileName), 1, FileOptions.DeleteOnClose).Close()
+                If File.Exists(Path.Combine(folderPath, strRandomFileName)) Then File.Delete(Path.Combine(folderPath, strRandomFileName))
                 Return True
             Catch ex As Exception
                 Return False
