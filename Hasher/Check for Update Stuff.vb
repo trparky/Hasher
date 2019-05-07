@@ -12,6 +12,10 @@ Class Check_for_Update_Stuff
     Private Const programUpdateCheckerXMLFile As String = "www.toms-world.org/updates/hasher_update.xml"
 
     Public windowObject As Form1
+    Public Shared versionInfo As String() = Application.ProductVersion.Split(".")
+    Private shortBuild As Short = Short.Parse(versionInfo(versionPieces.build).Trim)
+    Public Shared versionString As String = String.Format("{0}.{1} Build {2}", versionInfo(0), versionInfo(1), versionInfo(2))
+    Private versionStringWithoutBuild As String = String.Format("{0}.{1}", versionInfo(versionPieces.major), versionInfo(versionPieces.minor))
 
     Public Sub New(inputWindowObject As Form1)
         windowObject = inputWindowObject
@@ -24,12 +28,6 @@ Class Check_for_Update_Stuff
             End Using
         End Using
     End Sub
-
-    Public Shared versionInfo As String() = Application.ProductVersion.Split(".")
-    Private shortBuild As Short = Short.Parse(versionInfo(versionPieces.build).Trim)
-    Public Shared versionString As String = String.Format("{0}.{1} Build {2}", versionInfo(0), versionInfo(1), versionInfo(2))
-
-    Private versionStringWithoutBuild As String = String.Format("{0}.{1}", versionInfo(versionPieces.major), versionInfo(versionPieces.minor))
 
     ''' <summary>This parses the XML update data and determines if an update is needed.</summary>
     ''' <param name="xmlData">The XML data from the web site.</param>
