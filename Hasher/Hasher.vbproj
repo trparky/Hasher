@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="myListViewItem.vb" />
     <Compile Include="NativeMethod.vb" />
+    <Compile Include="StringExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
