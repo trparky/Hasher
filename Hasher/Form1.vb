@@ -6,6 +6,7 @@ Public Class Form1
     Private Const intBufferSize As Integer = 16 * 1024 * 1024
     Private Const strWindowTitle As String = "Hasher"
 
+    Private strLastDirectoryWorkedOn As String
     Private filesInListFiles As New Specialized.StringCollection
     Private hashResultArray As New Dictionary(Of String, String)
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
@@ -131,13 +132,24 @@ Public Class Form1
             If OpenFileDialog.FileNames.Count() = 0 Then
                 MsgBox("You must select some files.", MsgBoxStyle.Critical, strWindowTitle)
             ElseIf OpenFileDialog.FileNames.Count() = 1 Then
+                strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
+
                 If Not filesInListFiles.Contains(OpenFileDialog.FileName) Then
                     listFiles.Items.Add(createListFilesObject(OpenFileDialog.FileName))
                 End If
             Else
+                Dim boolHasTheLastDirectoryWorkedOnBeenSet As Boolean = False
+
                 listFiles.BeginUpdate()
                 For Each strFileName As String In OpenFileDialog.FileNames
                     If Not filesInListFiles.Contains(strFileName) Then
+                        ' We do this because creating an IO.FileInfo() Object to get the Directory Name is computationally expensive since it
+                        ' requires a call to the underlying file system info objects of the file. So we only do this once on the first file.
+                        If Not boolHasTheLastDirectoryWorkedOnBeenSet Then
+                            strLastDirectoryWorkedOn = New IO.FileInfo(strFileName).DirectoryName
+                            boolHasTheLastDirectoryWorkedOnBeenSet = True
+                        End If
+
                         listFiles.Items.Add(createListFilesObject(strFileName))
                     End If
                 Next
@@ -369,6 +381,7 @@ Public Class Form1
             SaveFileDialog.Filter = "SHA512 File|*.sha512"
         End If
 
+        SaveFileDialog.InitialDirectory = strLastDirectoryWorkedOn
         SaveFileDialog.Title = "Save Hash Results to Disk"
 
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
@@ -508,6 +521,7 @@ Public Class Form1
                         TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
                         Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
 
+                        strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
                         listFiles.Items.Add(createListFilesObject(strReceivedFileName))
                         updateFilesListCountHeader()
                     End If
@@ -641,6 +655,7 @@ Public Class Form1
 
     Private Sub addFilesFromDirectory(directoryPath As String)
         Threading.ThreadPool.QueueUserWorkItem(Sub()
+                                                   strLastDirectoryWorkedOn = directoryPath
                                                    Dim collectionOfListViewItems As New List(Of ListViewItem)
                                                    Dim index As Integer = 0
 
