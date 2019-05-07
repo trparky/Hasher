@@ -173,10 +173,12 @@ Class Check_for_Update_Stuff
 
         Try
             If httpHelper.getWebData(urlOfChecksumFile, checksumFromWeb) Then
+                Dim regexObject As New Regex("([a-zA-Z0-9]{64})")
+
                 ' Checks to see if we have a valid SHA256 file.
-                If Regex.IsMatch(checksumFromWeb, "([a-zA-Z0-9]{64})") Then
+                If regexObject.IsMatch(checksumFromWeb) Then
                     ' Now that we have a valid SHA256 file we need to parse out what we want.
-                    checksumFromWeb = Regex.Match(checksumFromWeb, "([a-zA-Z0-9]{64})").Groups(1).Value.Trim
+                    checksumFromWeb = regexObject.Match(checksumFromWeb).Groups(1).Value.Trim()
 
                     ' Now we do the actual checksum verification by passing the name of the file to the SHA256() function
                     ' which calculates the checksum of the file on disk. We then compare it to the checksum from the web.
