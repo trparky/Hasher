@@ -596,7 +596,7 @@ Public Class Form1
 
                 If IO.File.Exists(commandLineArgument) Then
                     TabControl1.SelectTab(3)
-                    btnOpenExistingHashFile.Enabled = False
+                    btnOpenExistingHashFile.Text = "Abort Processing"
                     verifyHashesListFiles.Items.Clear()
                     processExistingHashFile(commandLineArgument)
                 End If
