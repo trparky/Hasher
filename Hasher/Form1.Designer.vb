@@ -129,6 +129,12 @@ Partial Class Form1
         Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
         Me.chkDisplayHashesInUpperCase = New System.Windows.Forms.CheckBox()
         Me.chkShowProgressPercentageInWindowTitle = New System.Windows.Forms.CheckBox()
+        Me.btnSetValidColor = New System.Windows.Forms.Button()
+        Me.btnSetNotValidColor = New System.Windows.Forms.Button()
+        Me.btnFileNotFoundColor = New System.Windows.Forms.Button()
+        Me.lblFileNotFoundColor = New System.Windows.Forms.Label()
+        Me.lblNotValidColor = New System.Windows.Forms.Label()
+        Me.lblValidColor = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1095,6 +1101,12 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.chkSSL)
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
         Me.tabSettings.Controls.Add(Me.chkDisplayHashesInUpperCase)
+        Me.tabSettings.Controls.Add(Me.btnFileNotFoundColor)
+        Me.tabSettings.Controls.Add(Me.btnSetNotValidColor)
+        Me.tabSettings.Controls.Add(Me.btnSetValidColor)
+        Me.tabSettings.Controls.Add(Me.lblFileNotFoundColor)
+        Me.tabSettings.Controls.Add(Me.lblNotValidColor)
+        Me.tabSettings.Controls.Add(Me.lblValidColor)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
@@ -1222,6 +1234,57 @@ Partial Class Form1
         Me.chkShowProgressPercentageInWindowTitle.TabIndex = 9
         Me.chkShowProgressPercentageInWindowTitle.Text = "Show Progress Percentage in Window Title"
         Me.chkShowProgressPercentageInWindowTitle.UseVisualStyleBackColor = True
+        '
+        'btnSetValidColor
+        '
+        Me.btnSetValidColor.Location = New System.Drawing.Point(601, 13)
+        Me.btnSetValidColor.Name = "btnSetValidColor"
+        Me.btnSetValidColor.Size = New System.Drawing.Size(163, 23)
+        Me.btnSetValidColor.TabIndex = 13
+        Me.btnSetValidColor.Text = "Set Valid Checksum Color"
+        Me.btnSetValidColor.UseVisualStyleBackColor = True
+        '
+        'btnSetNotValidColor
+        '
+        Me.btnSetNotValidColor.Location = New System.Drawing.Point(601, 42)
+        Me.btnSetNotValidColor.Name = "btnSetNotValidColor"
+        Me.btnSetNotValidColor.Size = New System.Drawing.Size(163, 23)
+        Me.btnSetNotValidColor.TabIndex = 14
+        Me.btnSetNotValidColor.Text = "Set Not Valid Checksum Color"
+        Me.btnSetNotValidColor.UseVisualStyleBackColor = True
+        '
+        'btnFileNotFoundColor
+        '
+        Me.btnFileNotFoundColor.Location = New System.Drawing.Point(601, 71)
+        Me.btnFileNotFoundColor.Name = "btnFileNotFoundColor"
+        Me.btnFileNotFoundColor.Size = New System.Drawing.Size(163, 23)
+        Me.btnFileNotFoundColor.TabIndex = 15
+        Me.btnFileNotFoundColor.Text = "Set File Not Found Color"
+        Me.btnFileNotFoundColor.UseVisualStyleBackColor = True
+        '
+        'lblFileNotFoundColor
+        '
+        Me.lblFileNotFoundColor.BackColor = System.Drawing.Color.LightGray
+        Me.lblFileNotFoundColor.Location = New System.Drawing.Point(495, 71)
+        Me.lblFileNotFoundColor.Name = "lblFileNotFoundColor"
+        Me.lblFileNotFoundColor.Size = New System.Drawing.Size(100, 23)
+        Me.lblFileNotFoundColor.TabIndex = 12
+        '
+        'lblNotValidColor
+        '
+        Me.lblNotValidColor.BackColor = System.Drawing.Color.Pink
+        Me.lblNotValidColor.Location = New System.Drawing.Point(495, 42)
+        Me.lblNotValidColor.Name = "lblNotValidColor"
+        Me.lblNotValidColor.Size = New System.Drawing.Size(100, 23)
+        Me.lblNotValidColor.TabIndex = 11
+        '
+        'lblValidColor
+        '
+        Me.lblValidColor.BackColor = System.Drawing.Color.LightGreen
+        Me.lblValidColor.Location = New System.Drawing.Point(495, 13)
+        Me.lblValidColor.Name = "lblValidColor"
+        Me.lblValidColor.Size = New System.Drawing.Size(100, 23)
+        Me.lblValidColor.TabIndex = 10
         '
         'Form1
         '
@@ -1360,4 +1423,10 @@ Partial Class Form1
     Friend WithEvents chkDisplayHashesInUpperCase As CheckBox
     Friend WithEvents chkShowProgressPercentageInWindowTitle As CheckBox
     Friend WithEvents pictureBoxVerifyAgainstResults As PictureBox
+    Friend WithEvents lblValidColor As Label
+    Friend WithEvents lblNotValidColor As Label
+    Friend WithEvents lblFileNotFoundColor As Label
+    Friend WithEvents btnSetValidColor As Button
+    Friend WithEvents btnFileNotFoundColor As Button
+    Friend WithEvents btnSetNotValidColor As Button
 End Class

@@ -584,6 +584,9 @@ Public Class Form1
         chkShowProgressPercentageInWindowTitle.Checked = My.Settings.boolShowProgressPercentageInWindowTitle
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
+        lblValidColor.BackColor = My.Settings.validColor
+        lblNotValidColor.BackColor = My.Settings.notValidColor
+        lblFileNotFoundColor.BackColor = My.Settings.fileNotFoundColor
 
         deleteTemporaryNewEXEFile()
 
@@ -926,17 +929,17 @@ Public Class Form1
 
             If doChecksumWithAttachedSubRoutine(strFileName, hashFileType, strChecksumInFile, subRoutine) Then
                 If strChecksum.Equals(item.hash, StringComparison.OrdinalIgnoreCase) Then
-                    item.color = Color.LightGreen
+                    item.color = My.Settings.validColor
                     item.SubItems(2).Text = "Valid"
                     item.computeTime = computeStopwatch.Elapsed
                     item.SubItems(3).Text = timespanToHMS(item.computeTime)
                     longFilesThatPassedVerification += 1
                 Else
-                    item.color = Color.Pink
+                    item.color = My.Settings.notValidColor
                     item.SubItems(2).Text = "NOT Valid"
                 End If
             Else
-                item.color = Color.LightGray
+                item.color = My.Settings.fileNotFoundColor
                 item.SubItems(2).Text = "(Error while calculating checksum)"
             End If
 
@@ -1681,5 +1684,35 @@ Public Class Form1
 
     Private Sub chkShowProgressPercentageInWindowTitle_Click(sender As Object, e As EventArgs) Handles chkShowProgressPercentageInWindowTitle.Click
         My.Settings.boolShowProgressPercentageInWindowTitle = chkShowProgressPercentageInWindowTitle.Checked
+    End Sub
+
+    Private Sub BtnSetValidColor_Click(sender As Object, e As EventArgs) Handles btnSetValidColor.Click
+        Dim colorDialog As New ColorDialog() With {.Color = My.Settings.validColor}
+
+        If colorDialog.ShowDialog() = DialogResult.OK Then
+            My.Settings.validColor = colorDialog.Color
+            lblValidColor.BackColor = colorDialog.Color
+            MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+        End If
+    End Sub
+
+    Private Sub BtnSetNotValidColor_Click(sender As Object, e As EventArgs) Handles btnSetNotValidColor.Click
+        Dim colorDialog As New ColorDialog() With {.Color = My.Settings.notValidColor}
+
+        If colorDialog.ShowDialog() = DialogResult.OK Then
+            My.Settings.notValidColor = colorDialog.Color
+            lblNotValidColor.BackColor = colorDialog.Color
+            MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+        End If
+    End Sub
+
+    Private Sub BtnFileNotFoundColor_Click(sender As Object, e As EventArgs) Handles btnFileNotFoundColor.Click
+        Dim colorDialog As New ColorDialog() With {.Color = My.Settings.fileNotFoundColor}
+
+        If colorDialog.ShowDialog() = DialogResult.OK Then
+            My.Settings.fileNotFoundColor = colorDialog.Color
+            lblFileNotFoundColor.BackColor = colorDialog.Color
+            MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+        End If
     End Sub
 End Class

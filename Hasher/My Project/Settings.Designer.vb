@@ -257,6 +257,42 @@ Namespace My
                 Me("boolShowProgressPercentageInWindowTitle") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("LightGreen")>  _
+        Public Property validColor() As Global.System.Drawing.Color
+            Get
+                Return CType(Me("validColor"),Global.System.Drawing.Color)
+            End Get
+            Set
+                Me("validColor") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Pink")>  _
+        Public Property notValidColor() As Global.System.Drawing.Color
+            Get
+                Return CType(Me("notValidColor"),Global.System.Drawing.Color)
+            End Get
+            Set
+                Me("notValidColor") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("LightGray")>  _
+        Public Property fileNotFoundColor() As Global.System.Drawing.Color
+            Get
+                Return CType(Me("fileNotFoundColor"),Global.System.Drawing.Color)
+            End Get
+            Set
+                Me("fileNotFoundColor") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
