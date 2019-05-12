@@ -144,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="calculator.ico" />
+    <None Include="Resources\UAC.png" />
     <None Include="Resources\bad check.png" />
     <None Include="Resources\good check.png" />
     <None Include="Resources\green_dollar.png" />

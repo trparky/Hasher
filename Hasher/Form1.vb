@@ -560,10 +560,10 @@ Public Class Form1
         If areWeAnAdministrator() Then
             Me.Text &= " (WARNING!!! Running as Administrator.)"
         Else
-            btnAssociate.FlatStyle = FlatStyle.System
-            btnAddHasherToAllFiles.FlatStyle = FlatStyle.System
-            NativeMethod.NativeMethods.SendMessage(btnAssociate.Handle, NativeMethod.NativeMethods.BCM_SETSHIELD, 0, &HFFFFFFFF)
-            NativeMethod.NativeMethods.SendMessage(btnAddHasherToAllFiles.Handle, NativeMethod.NativeMethods.BCM_SETSHIELD, 0, &HFFFFFFFF)
+            btnAssociate.ImageAlign = ContentAlignment.MiddleLeft
+            btnAssociate.Image = My.Resources.UAC
+            btnAddHasherToAllFiles.ImageAlign = ContentAlignment.MiddleLeft
+            btnAddHasherToAllFiles.Image = My.Resources.UAC
         End If
 
         Control.CheckForIllegalCrossThreadCalls = False

@@ -1117,7 +1117,7 @@ Partial Class Form1
         '
         Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 199)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
-        Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(204, 23)
+        Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
         Me.btnAddHasherToAllFiles.Text = "Add Hasher to All Files"
         Me.btnAddHasherToAllFiles.UseVisualStyleBackColor = True
@@ -1126,7 +1126,7 @@ Partial Class Form1
         '
         Me.btnAssociate.Location = New System.Drawing.Point(15, 199)
         Me.btnAssociate.Name = "btnAssociate"
-        Me.btnAssociate.Size = New System.Drawing.Size(237, 23)
+        Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
         Me.btnAssociate.Text = "Associate File Hash Files with Hasher"
         Me.btnAssociate.UseVisualStyleBackColor = True
