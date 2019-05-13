@@ -759,13 +759,15 @@ Public Class Form1
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim intLineCounter As Integer = 0
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
+                                                     Dim strReadingHashFileMessage As String = "Reading hash file into memory and creating ListView item objects... Please Wait."
 
-                                                     lblVerifyHashStatus.Text = "Reading hash file into memory and creating ListView item objects... Please Wait."
+                                                     lblVerifyHashStatus.Text = strReadingHashFileMessage
                                                      verifyHashesListFiles.BeginUpdate()
 
                                                      For Each strLineInFile As String In dataInFileArray
                                                          intLineCounter += 1
                                                          VerifyHashProgressBar.Value = intLineCounter / dataInFileArray.LongLength * 100
+                                                         lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & intLineCounter.ToString("N0") & " of " & dataInFileArray.LongLength.ToString("N0") & " (" & VerifyHashProgressBar.Value & "%)."
 
                                                          If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & VerifyHashProgressBar.Value & "%)"
 
