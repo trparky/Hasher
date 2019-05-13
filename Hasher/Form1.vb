@@ -221,8 +221,7 @@ Public Class Form1
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           IndividualFilesProgressBar.Value = percentage
                                                                                                           If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
-                                                                                                          lblIndividualFilesStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
-                                                                                                          lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing {0} of {1} {2}.", index.ToString("N0"), listFiles.Items.Count().ToString("N0"), If(listFiles.Items.Count = 1, "file", "files"))
+                                                                                                          lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -256,7 +255,8 @@ Public Class Form1
                                                              strFileName = item.fileName
 
                                                              If Not hashResultArray.ContainsKey(strFileName) Then
-                                                                 lblProcessingFile.Text = String.Format("Now processing file {0}.", New IO.FileInfo(strFileName).Name)
+                                                                 lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & "."
+                                                                 lblIndividualFilesStatusProcessingFile.Text = "Processing " & index.ToString("N0") & " of " & listFiles.Items.Count().ToString("N0") & If(listFiles.Items.Count = 1, " file", " files") & "."
                                                                  computeStopwatch = Stopwatch.StartNew
 
                                                                  If doChecksumWithAttachedSubRoutine(strFileName, checksumType, strChecksum, subRoutine) Then
@@ -920,13 +920,13 @@ Public Class Form1
                                                                  percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                  VerifyHashProgressBar.Value = percentage
                                                                  If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
-                                                                 lblVerifyHashStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
+                                                                 lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                              End Sub)
                                                Catch ex As Exception
                                                End Try
                                            End Sub
 
-            lblProcessingFileVerify.Text = String.Format("Now processing file {0}.", fileInfo.Name)
+            lblProcessingFileVerify.Text = "Now processing file " & fileInfo.Name & "."
             Dim computeStopwatch As Stopwatch = Stopwatch.StartNew
 
             If doChecksumWithAttachedSubRoutine(strFileName, hashFileType, strChecksumInFile, subRoutine) Then
@@ -1264,7 +1264,7 @@ Public Class Form1
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareFilesProgressBar.Value = percentage
                                                                                                           If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
-                                                                                                          lblCompareFilesStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
+                                                                                                          lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -1455,7 +1455,7 @@ Public Class Form1
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                           If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
-                                                                                                          lblCompareAgainstKnownHashStatus.Text = String.Format("{0} of {1} ({2}%) have been processed.", fileSizeToHumanSize(totalBytesRead), fileSizeToHumanSize(size), Math.Round(percentage, 2))
+                                                                                                          lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
