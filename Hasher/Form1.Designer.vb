@@ -132,6 +132,7 @@ Partial Class Form1
         Me.btnSetValidColor = New System.Windows.Forms.Button()
         Me.btnSetNotValidColor = New System.Windows.Forms.Button()
         Me.btnFileNotFoundColor = New System.Windows.Forms.Button()
+        Me.btnSetColorsBackToDefaults = New System.Windows.Forms.Button()
         Me.lblFileNotFoundColor = New System.Windows.Forms.Label()
         Me.lblNotValidColor = New System.Windows.Forms.Label()
         Me.lblValidColor = New System.Windows.Forms.Label()
@@ -1102,6 +1103,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
         Me.tabSettings.Controls.Add(Me.chkDisplayHashesInUpperCase)
         Me.tabSettings.Controls.Add(Me.btnFileNotFoundColor)
+        Me.tabSettings.Controls.Add(Me.btnSetColorsBackToDefaults)
         Me.tabSettings.Controls.Add(Me.btnSetNotValidColor)
         Me.tabSettings.Controls.Add(Me.btnSetValidColor)
         Me.tabSettings.Controls.Add(Me.lblFileNotFoundColor)
@@ -1197,10 +1199,10 @@ Partial Class Form1
         Me.chkDisplayHashesInUpperCase.Text = "Display Hashes in Uppercase Letters"
         Me.chkDisplayHashesInUpperCase.UseVisualStyleBackColor = True
         '
-        'PictureBox1
+        'pictureBoxVerifyAgainstResults
         '
         Me.pictureBoxVerifyAgainstResults.Location = New System.Drawing.Point(691, 8)
-        Me.pictureBoxVerifyAgainstResults.Name = "PictureBox1"
+        Me.pictureBoxVerifyAgainstResults.Name = "pictureBoxVerifyAgainstResults"
         Me.pictureBoxVerifyAgainstResults.Size = New System.Drawing.Size(64, 64)
         Me.pictureBoxVerifyAgainstResults.TabIndex = 35
         Me.pictureBoxVerifyAgainstResults.TabStop = False
@@ -1285,6 +1287,15 @@ Partial Class Form1
         Me.lblValidColor.Name = "lblValidColor"
         Me.lblValidColor.Size = New System.Drawing.Size(100, 23)
         Me.lblValidColor.TabIndex = 10
+        '
+        'btnSetColorsBackToDefaults
+        '
+        Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(601, 100)
+        Me.btnSetColorsBackToDefaults.Name = "btnSetColorsBackToDefaults"
+        Me.btnSetColorsBackToDefaults.Size = New System.Drawing.Size(163, 23)
+        Me.btnSetColorsBackToDefaults.TabIndex = 15
+        Me.btnSetColorsBackToDefaults.Text = "Set Colors Back to Defaults"
+        Me.btnSetColorsBackToDefaults.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1429,4 +1440,5 @@ Partial Class Form1
     Friend WithEvents btnSetValidColor As Button
     Friend WithEvents btnFileNotFoundColor As Button
     Friend WithEvents btnSetNotValidColor As Button
+    Friend WithEvents btnSetColorsBackToDefaults As Button
 End Class

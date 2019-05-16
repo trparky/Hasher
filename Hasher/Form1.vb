@@ -1717,4 +1717,17 @@ Public Class Form1
             MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
         End If
     End Sub
+
+    Private Sub BtnSetColorsBackToDefaults_Click(sender As Object, e As EventArgs) Handles btnSetColorsBackToDefaults.Click
+        My.Settings.validColor = Color.LightGreen
+        lblValidColor.BackColor = Color.LightGreen
+
+        My.Settings.notValidColor = Color.Pink
+        lblNotValidColor.BackColor = Color.Pink
+
+        My.Settings.fileNotFoundColor = Color.LightGray
+        lblFileNotFoundColor.BackColor = Color.LightGray
+
+        MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+    End Sub
 End Class
