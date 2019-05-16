@@ -1236,7 +1236,7 @@ Partial Class Form1
         '
         Me.btnFileNotFoundColor.Location = New System.Drawing.Point(601, 71)
         Me.btnFileNotFoundColor.Name = "btnFileNotFoundColor"
-        Me.btnFileNotFoundColor.Size = New System.Drawing.Size(163, 23)
+        Me.btnFileNotFoundColor.Size = New System.Drawing.Size(181, 23)
         Me.btnFileNotFoundColor.TabIndex = 15
         Me.btnFileNotFoundColor.Text = "Set File Not Found Color"
         Me.btnFileNotFoundColor.UseVisualStyleBackColor = True
@@ -1245,7 +1245,7 @@ Partial Class Form1
         '
         Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(601, 100)
         Me.btnSetColorsBackToDefaults.Name = "btnSetColorsBackToDefaults"
-        Me.btnSetColorsBackToDefaults.Size = New System.Drawing.Size(163, 23)
+        Me.btnSetColorsBackToDefaults.Size = New System.Drawing.Size(181, 23)
         Me.btnSetColorsBackToDefaults.TabIndex = 15
         Me.btnSetColorsBackToDefaults.Text = "Set Colors Back to Defaults"
         Me.btnSetColorsBackToDefaults.UseVisualStyleBackColor = True
@@ -1254,7 +1254,7 @@ Partial Class Form1
         '
         Me.btnSetNotValidColor.Location = New System.Drawing.Point(601, 42)
         Me.btnSetNotValidColor.Name = "btnSetNotValidColor"
-        Me.btnSetNotValidColor.Size = New System.Drawing.Size(163, 23)
+        Me.btnSetNotValidColor.Size = New System.Drawing.Size(181, 23)
         Me.btnSetNotValidColor.TabIndex = 14
         Me.btnSetNotValidColor.Text = "Set Not Valid Checksum Color"
         Me.btnSetNotValidColor.UseVisualStyleBackColor = True
@@ -1263,7 +1263,7 @@ Partial Class Form1
         '
         Me.btnSetValidColor.Location = New System.Drawing.Point(601, 13)
         Me.btnSetValidColor.Name = "btnSetValidColor"
-        Me.btnSetValidColor.Size = New System.Drawing.Size(163, 23)
+        Me.btnSetValidColor.Size = New System.Drawing.Size(181, 23)
         Me.btnSetValidColor.TabIndex = 13
         Me.btnSetValidColor.Text = "Set Valid Checksum Color"
         Me.btnSetValidColor.UseVisualStyleBackColor = True
