@@ -62,5 +62,8 @@
     <Setting Name="fileNotFoundColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">LightGray</Value>
     </Setting>
+    <Setting Name="boolShowEstimatedTime" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -115,6 +115,7 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.chkShowEstimatedTimeRemaining = New System.Windows.Forms.CheckBox()
         Me.chkShowProgressPercentageInWindowTitle = New System.Windows.Forms.CheckBox()
         Me.chkUseMilliseconds = New System.Windows.Forms.CheckBox()
         Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
@@ -1110,6 +1111,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkShowEstimatedTimeRemaining)
         Me.tabSettings.Controls.Add(Me.chkShowProgressPercentageInWindowTitle)
         Me.tabSettings.Controls.Add(Me.chkUseMilliseconds)
         Me.tabSettings.Controls.Add(Me.chkSortFileListingAfterAddingFilesToHash)
@@ -1132,6 +1134,17 @@ Partial Class Form1
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
+        '
+        'chkShowEstimatedTimeRemaining
+        '
+        Me.chkShowEstimatedTimeRemaining.AutoSize = True
+        Me.chkShowEstimatedTimeRemaining.Location = New System.Drawing.Point(15, 199)
+        Me.chkShowEstimatedTimeRemaining.Name = "chkShowEstimatedTimeRemaining"
+        Me.chkShowEstimatedTimeRemaining.Size = New System.Drawing.Size(148, 17)
+        Me.chkShowEstimatedTimeRemaining.TabIndex = 17
+        Me.chkShowEstimatedTimeRemaining.Text = "Show Estimated Time Left"
+        Me.ToolTip.SetToolTip(Me.chkShowEstimatedTimeRemaining, "Enabling this option may affect performance.")
+        Me.chkShowEstimatedTimeRemaining.UseVisualStyleBackColor = True
         '
         'chkShowProgressPercentageInWindowTitle
         '
@@ -1185,7 +1198,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 199)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 222)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1194,7 +1207,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 199)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 222)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1441,4 +1454,5 @@ Partial Class Form1
     Friend WithEvents btnFileNotFoundColor As Button
     Friend WithEvents btnSetNotValidColor As Button
     Friend WithEvents btnSetColorsBackToDefaults As Button
+    Friend WithEvents chkShowEstimatedTimeRemaining As CheckBox
 End Class

@@ -37,11 +37,20 @@ Public Class checksums
         End If
     End Function
 
+    Private Function getETATime(ByVal sw As Stopwatch, ByVal counter As Long, ByVal counterGoal As Long) As TimeSpan
+        If Not My.Settings.boolShowEstimatedTime Then Return TimeSpan.Zero
+        If counter = 0 Then Return TimeSpan.Zero
+        Dim elapsedMin As Single = CSng(sw.ElapsedMilliseconds) / 1000 / 60
+        Dim minLeft As Single = (elapsedMin / counter) * (counterGoal - counter)
+        Return TimeSpan.FromMinutes(minLeft)
+    End Function
+
     Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType) As String
         Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType)
         Dim readAheadBuffer As Byte(), buffer As Byte()
         Dim readAheadBytesRead As Integer, bytesRead As Integer
         Dim size As Long, totalBytesRead As Long = 0
+        Dim stopwatch As Stopwatch = Stopwatch.StartNew
 
         Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
             size = stream.Length
@@ -65,7 +74,7 @@ Public Class checksums
                     HashAlgorithm.TransformBlock(buffer, 0, bytesRead, buffer, 0)
                 End If
 
-                checksumStatusUpdater.DynamicInvoke(size, totalBytesRead)
+                checksumStatusUpdater.DynamicInvoke(size, totalBytesRead, getETATime(stopwatch, totalBytesRead, size))
             Loop While readAheadBytesRead <> 0
         End Using
 

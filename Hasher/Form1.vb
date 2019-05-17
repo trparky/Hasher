@@ -215,13 +215,14 @@ Public Class Form1
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksums.checksumType
                                                      Dim index As Integer = 1
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           IndividualFilesProgressBar.Value = percentage
                                                                                                           If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                                                           lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                                          If eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -582,6 +583,7 @@ Public Class Form1
         chkUseMilliseconds.Checked = My.Settings.boolUseMilliseconds
         chkDisplayHashesInUpperCase.Checked = My.Settings.boolDisplayHashesInUpperCase
         chkShowProgressPercentageInWindowTitle.Checked = My.Settings.boolShowProgressPercentageInWindowTitle
+        chkShowEstimatedTimeRemaining.Checked = My.Settings.boolShowEstimatedTime
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
         lblValidColor.BackColor = My.Settings.validColor
@@ -915,13 +917,14 @@ Public Class Form1
             Dim fileInfo As New IO.FileInfo(strFileName)
             Dim strChecksumInFile As String = Nothing
             Dim percentage As Double
-            Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+            Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                Try
                                                    Me.Invoke(Sub()
                                                                  percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                  VerifyHashProgressBar.Value = percentage
                                                                  If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                  lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                 If eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                              End Sub)
                                                Catch ex As Exception
                                                End Try
@@ -1259,13 +1262,14 @@ Public Class Form1
                                                      Dim strChecksum2 As String = Nothing
                                                      Dim boolSuccessful As Boolean = False
                                                      Dim percentage As Double
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareFilesProgressBar.Value = percentage
                                                                                                           If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                                                           lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                                          If eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -1450,13 +1454,14 @@ Public Class Form1
 
                                                      Dim strChecksum As String = Nothing
                                                      Dim percentage As Double
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                           If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                                                           lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                                          If eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -1730,5 +1735,9 @@ Public Class Form1
         lblFileNotFoundColor.BackColor = Color.LightGray
 
         MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+    End Sub
+
+    Private Sub chkShowEstimatedTimeRemaining_Click(sender As Object, e As EventArgs) Handles chkShowEstimatedTimeRemaining.Click
+        My.Settings.boolShowEstimatedTime = chkShowEstimatedTimeRemaining.Checked
     End Sub
 End Class
