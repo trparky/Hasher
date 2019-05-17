@@ -855,6 +855,7 @@ Public Class Form1
                                                      workingThread = Nothing
                                                  Catch ex As Threading.ThreadAbortException
                                                      If Not boolClosingWindow Then
+                                                         verifyHashesListFiles.EndUpdate()
                                                          lblVerifyHashStatusProcessingFile.Text = ""
                                                          lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                          lblProcessingFileVerify.Text = ""
