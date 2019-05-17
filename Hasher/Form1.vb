@@ -794,7 +794,7 @@ Public Class Form1
                                                                      listViewItem.SubItems.Add("To Be Tested")
                                                                      listViewItem.boolFileExists = True
                                                                  Else
-                                                                     listViewItem.fileSize = 0
+                                                                     listViewItem.fileSize = -1
                                                                      listViewItem.computeTime = Nothing
                                                                      listViewItem.SubItems.Add("")
                                                                      listViewItem.SubItems.Add("Doesn't Exist")
