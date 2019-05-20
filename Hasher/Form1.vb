@@ -138,18 +138,11 @@ Public Class Form1
                     listFiles.Items.Add(createListFilesObject(OpenFileDialog.FileName))
                 End If
             Else
-                Dim boolHasTheLastDirectoryWorkedOnBeenSet As Boolean = False
+                strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileNames(0)).DirectoryName
 
                 listFiles.BeginUpdate()
                 For Each strFileName As String In OpenFileDialog.FileNames
                     If Not filesInListFiles.Contains(strFileName) Then
-                        ' We do this because creating an IO.FileInfo() Object to get the Directory Name is computationally expensive since it
-                        ' requires a call to the underlying file system info objects of the file. So we only do this once on the first file.
-                        If Not boolHasTheLastDirectoryWorkedOnBeenSet Then
-                            strLastDirectoryWorkedOn = New IO.FileInfo(strFileName).DirectoryName
-                            boolHasTheLastDirectoryWorkedOnBeenSet = True
-                        End If
-
                         listFiles.Items.Add(createListFilesObject(strFileName))
                     End If
                 Next
