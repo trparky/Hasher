@@ -838,7 +838,7 @@ Public Class Form1
                                                                    If intFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
                                                                        strMessageBoxText = "Processing of hash file complete. All files have passed verification."
                                                                    Else
-                                                                       strMessageBoxText = String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", intFilesThatPassedVerification, verifyHashesListFiles.Items.Count, verifyHashesListFiles.Items.Count - intFilesThatPassedVerification)
+                                                                       strMessageBoxText = String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", intFilesThatPassedVerification.ToString("N0"), verifyHashesListFiles.Items.Count.ToString("N0"), (verifyHashesListFiles.Items.Count - intFilesThatPassedVerification).ToString("N0"))
                                                                    End If
 
                                                                    strMessageBoxText &= vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & "."
