@@ -1271,11 +1271,11 @@ Public Class Form1
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      Dim checksum1FinishCode As [Delegate] = Sub()
-                                                                                                 lblFile1Hash.Text = "Hash/Checksum: " & strChecksum1
+                                                                                                 lblFile1Hash.Text = "Hash/Checksum: " & If(My.Settings.boolDisplayHashesInUpperCase, strChecksum1.ToUpper, strChecksum1.ToLower)
                                                                                                  ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
                                                                                              End Sub
                                                      Dim checksum2FinishCode As [Delegate] = Sub()
-                                                                                                 lblFile2Hash.Text = "Hash/Checksum: " & strChecksum2
+                                                                                                 lblFile2Hash.Text = "Hash/Checksum: " & If(My.Settings.boolDisplayHashesInUpperCase, strChecksum2.ToUpper, strChecksum2.ToLower)
                                                                                                  ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
                                                                                              End Sub
 
