@@ -29,7 +29,6 @@ Partial Class ProgressForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.ClientSize = New System.Drawing.Size(1080, 413)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "ProgressForm"
         Me.ResumeLayout(False)
 

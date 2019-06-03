@@ -118,21 +118,4 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        AAABAAEAICAQAAAAAADoAgAAFgAAACgAAAAgAAAAQAAAAAEABAAAAAAAgAIAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAgICAAMDAwAAAAP8AAP8AAAD//wD/AAAA/wD/AP//
-        AAD///8AiId3d3d3d3d3d3d3d3d4iIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIeI//iIiI
-        iIiIiIiIiIiIh3iPiIiIiIiIiIiIiIiIiHd4iIiIiIiIiIiIiIh3eIh3eIiIiIiIiIiIiIiIh3iId3iP
-        /4iI+Ij4iIiP/4h4iHd4j/+IiPiI+IiIj/+IeIh3eIiIiIiIiIiIiIiIh3iId3iIiIiIiIiIiIiIiHd4
-        iHd4j/iIiIiIiIiIiIiIeIh3eI//iIj4iP+Ij4iPiHiId3iP+IiIiIiIiIiIiIh4iId4j4iIiIiIiIiI
-        iIh3eIiHeI+IiIiIiIiIiIiIh3iIh3iP/4iI+IiIiIiIiIh4iId4j//4j/iI/4iPiI/4iIiHeI//+I//
-        iP+I/4iP+IiIh3iP/////4j4iIiIiIiIiId4iIiIiIiIiIiIiIiIiIiHeIiIiIiIiIiIiIiIiIiIh3iI
-        iIiIiIiIiIiIiIiIiHd4iIiIiIiIiIiIiIiIiIh3eIiIiIiIiIiIiIiIiIiId3iIiIiIiIiIiIiIiIiI
-        iHd4j4iIiIiIiIiIiIiIiIh3eI////////+IiIiIiIiId3iP//////////+IiIiIiIeIiIiIiIiIiIiI
-        iIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiHd3d3d3d3d3d3d3d3eIgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
-</value>
-  </data>
 </root>
