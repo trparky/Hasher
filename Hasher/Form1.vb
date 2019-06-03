@@ -83,7 +83,15 @@ Public Class Form1
             lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files", listFiles.Items.Count().ToString("N0"))
         End If
 
-        btnComputeHash.Enabled = If(listFiles.Items.Count() = 0, False, True)
+        If listFiles.Items.Count = 0 Then
+            btnComputeHash.Enabled = False
+            btnIndividualFilesCopyToClipboard.Enabled = False
+            btnIndividualFilesSaveResultsToDisk.Enabled = False
+        Else
+            btnComputeHash.Enabled = True
+            btnIndividualFilesCopyToClipboard.Enabled = True
+            btnIndividualFilesSaveResultsToDisk.Enabled = True
+        End If
 
         If My.Settings.boolSortFileListingAfterAddingFilesToHash Then applyFileSizeSortingToHashList()
     End Sub
