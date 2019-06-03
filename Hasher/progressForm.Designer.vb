@@ -24,14 +24,7 @@ Partial Class ProgressForm
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ProgressForm))
         Me.SuspendLayout()
-        '
-        'ProgressForm
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.ClientSize = New System.Drawing.Size(1080, 413)
-        Me.Name = "ProgressForm"
         Me.ResumeLayout(False)
-
     End Sub
 
     Private m_State As ThumbnailProgressState = ThumbnailProgressState.NoProgress
@@ -41,12 +34,11 @@ Partial Class ProgressForm
     <Browsable(True)>
     <DefaultValue(ThumbnailProgressState.NoProgress)>
     <EditorBrowsable(EditorBrowsableState.Always)>
-    Public Property State As ThumbnailProgressState
+    Public Property TaskBarProgressBarState As ThumbnailProgressState
         Get
             Return m_State
         End Get
         Set(ByVal value As ThumbnailProgressState)
-
             Select Case value
                 Case ThumbnailProgressState.NoProgress, ThumbnailProgressState.Indeterminate, ThumbnailProgressState.Normal, ThumbnailProgressState.[Error], ThumbnailProgressState.Paused
                     m_State = value
@@ -60,12 +52,11 @@ Partial Class ProgressForm
     <Browsable(True)>
     <DefaultValue(0)>
     <EditorBrowsable(EditorBrowsableState.Always)>
-    Public Property Value As Integer
+    Public Property TaskBarProgressBarValue As Integer
         Get
             Return m_Value
         End Get
         Set(ByVal value As Integer)
-
             If (value < 0) OrElse (value > m_Maximum) Then
                 Throw New ArgumentException("The value specified is greater than the value of the System.Windows.Forms.ProgressForm.Maximum property. -or- The value specified is less than 0.")
             Else
@@ -78,12 +69,11 @@ Partial Class ProgressForm
     <Browsable(True)>
     <DefaultValue(100)>
     <EditorBrowsable(EditorBrowsableState.Always)>
-    Public Property Maximum As Integer
+    Public Property TaskBarProgressBarMaximumValue As Integer
         Get
             Return m_Maximum
         End Get
         Set(ByVal value As Integer)
-
             If value < 0 Then
                 Throw New ArgumentException("The value specified is less than 0.")
             Else
@@ -153,11 +143,8 @@ Partial Class ProgressForm
 
     Friend Shared ReadOnly Property TaskbarList As ITaskbarList3
         Get
-
             If _taskbarList Is Nothing Then
-
                 SyncLock GetType(ProgressForm)
-
                     If _taskbarList Is Nothing Then
                         _taskbarList = CType(New CTaskbarList(), ITaskbarList3)
                         _taskbarList.HrInit()
