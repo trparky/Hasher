@@ -137,6 +137,7 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.chkUseTaskBarProgressBarForOverallStatus = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -174,10 +175,10 @@ Partial Class Form1
         Me.tabWelcome.Controls.Add(Me.lblDownloadNotification)
         Me.tabWelcome.Controls.Add(Me.btnCheckForUpdates)
         Me.tabWelcome.Controls.Add(Me.lblWelcomeText)
-        Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
+        Me.tabWelcome.Location = New System.Drawing.Point(4, 24)
         Me.tabWelcome.Name = "tabWelcome"
         Me.tabWelcome.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabWelcome.Size = New System.Drawing.Size(1040, 363)
+        Me.tabWelcome.Size = New System.Drawing.Size(1040, 361)
         Me.tabWelcome.TabIndex = 0
         Me.tabWelcome.Text = "Welcome"
         '
@@ -241,10 +242,10 @@ Partial Class Form1
         Me.tabHashText.Controls.Add(Me.lblHashTextStep1)
         Me.tabHashText.Controls.Add(Me.txtTextToHash)
         Me.tabHashText.Controls.Add(Me.lblTextToHash)
-        Me.tabHashText.Location = New System.Drawing.Point(4, 22)
+        Me.tabHashText.Location = New System.Drawing.Point(4, 24)
         Me.tabHashText.Name = "tabHashText"
         Me.tabHashText.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabHashText.Size = New System.Drawing.Size(1040, 363)
+        Me.tabHashText.Size = New System.Drawing.Size(1040, 361)
         Me.tabHashText.TabIndex = 1
         Me.tabHashText.Text = "Hash Text"
         '
@@ -318,7 +319,7 @@ Partial Class Form1
         Me.textRadioMD5.AutoSize = True
         Me.textRadioMD5.Location = New System.Drawing.Point(506, 250)
         Me.textRadioMD5.Name = "textRadioMD5"
-        Me.textRadioMD5.Size = New System.Drawing.Size(295, 17)
+        Me.textRadioMD5.Size = New System.Drawing.Size(296, 17)
         Me.textRadioMD5.TabIndex = 24
         Me.textRadioMD5.Text = "MD5 (Seriously Not Recommended, Insecure Hash Type)"
         Me.textRadioMD5.UseVisualStyleBackColor = True
@@ -329,7 +330,7 @@ Partial Class Form1
         Me.textRadioSHA512.AutoSize = True
         Me.textRadioSHA512.Location = New System.Drawing.Point(167, 250)
         Me.textRadioSHA512.Name = "textRadioSHA512"
-        Me.textRadioSHA512.Size = New System.Drawing.Size(67, 17)
+        Me.textRadioSHA512.Size = New System.Drawing.Size(68, 17)
         Me.textRadioSHA512.TabIndex = 23
         Me.textRadioSHA512.Text = "SHA-512"
         Me.textRadioSHA512.UseVisualStyleBackColor = True
@@ -340,7 +341,7 @@ Partial Class Form1
         Me.textRadioSHA384.AutoSize = True
         Me.textRadioSHA384.Location = New System.Drawing.Point(93, 250)
         Me.textRadioSHA384.Name = "textRadioSHA384"
-        Me.textRadioSHA384.Size = New System.Drawing.Size(67, 17)
+        Me.textRadioSHA384.Size = New System.Drawing.Size(68, 17)
         Me.textRadioSHA384.TabIndex = 22
         Me.textRadioSHA384.Text = "SHA-384"
         Me.textRadioSHA384.UseVisualStyleBackColor = True
@@ -352,7 +353,7 @@ Partial Class Form1
         Me.textRadioSHA256.Checked = True
         Me.textRadioSHA256.Location = New System.Drawing.Point(19, 250)
         Me.textRadioSHA256.Name = "textRadioSHA256"
-        Me.textRadioSHA256.Size = New System.Drawing.Size(67, 17)
+        Me.textRadioSHA256.Size = New System.Drawing.Size(68, 17)
         Me.textRadioSHA256.TabIndex = 21
         Me.textRadioSHA256.TabStop = True
         Me.textRadioSHA256.Text = "SHA-256"
@@ -364,7 +365,7 @@ Partial Class Form1
         Me.textRadioSHA1.AutoSize = True
         Me.textRadioSHA1.Location = New System.Drawing.Point(241, 250)
         Me.textRadioSHA1.Name = "textRadioSHA1"
-        Me.textRadioSHA1.Size = New System.Drawing.Size(258, 17)
+        Me.textRadioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.textRadioSHA1.TabIndex = 20
         Me.textRadioSHA1.Text = "SHA-1 (Not Recommended, Insecure Hash Type)"
         Me.textRadioSHA1.UseVisualStyleBackColor = True
@@ -436,9 +437,9 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Controls.Add(Me.btnRemoveAllFiles)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddFilesInFolder)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddIndividualFiles)
-        Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 22)
+        Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 24)
         Me.tabHashIndividualFiles.Name = "tabHashIndividualFiles"
-        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 363)
+        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 361)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
         '
@@ -550,7 +551,7 @@ Partial Class Form1
         Me.radioMD5.AutoSize = True
         Me.radioMD5.Location = New System.Drawing.Point(505, 224)
         Me.radioMD5.Name = "radioMD5"
-        Me.radioMD5.Size = New System.Drawing.Size(295, 17)
+        Me.radioMD5.Size = New System.Drawing.Size(296, 17)
         Me.radioMD5.TabIndex = 11
         Me.radioMD5.Text = "MD5 (Seriously Not Recommended, Insecure Hash Type)"
         Me.radioMD5.UseVisualStyleBackColor = True
@@ -561,7 +562,7 @@ Partial Class Form1
         Me.radioSHA512.AutoSize = True
         Me.radioSHA512.Location = New System.Drawing.Point(166, 224)
         Me.radioSHA512.Name = "radioSHA512"
-        Me.radioSHA512.Size = New System.Drawing.Size(67, 17)
+        Me.radioSHA512.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA512.TabIndex = 10
         Me.radioSHA512.Text = "SHA-512"
         Me.radioSHA512.UseVisualStyleBackColor = True
@@ -572,7 +573,7 @@ Partial Class Form1
         Me.radioSHA384.AutoSize = True
         Me.radioSHA384.Location = New System.Drawing.Point(92, 224)
         Me.radioSHA384.Name = "radioSHA384"
-        Me.radioSHA384.Size = New System.Drawing.Size(67, 17)
+        Me.radioSHA384.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA384.TabIndex = 9
         Me.radioSHA384.Text = "SHA-384"
         Me.radioSHA384.UseVisualStyleBackColor = True
@@ -584,7 +585,7 @@ Partial Class Form1
         Me.radioSHA256.Checked = True
         Me.radioSHA256.Location = New System.Drawing.Point(18, 224)
         Me.radioSHA256.Name = "radioSHA256"
-        Me.radioSHA256.Size = New System.Drawing.Size(67, 17)
+        Me.radioSHA256.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA256.TabIndex = 8
         Me.radioSHA256.TabStop = True
         Me.radioSHA256.Text = "SHA-256"
@@ -596,7 +597,7 @@ Partial Class Form1
         Me.radioSHA1.AutoSize = True
         Me.radioSHA1.Location = New System.Drawing.Point(240, 224)
         Me.radioSHA1.Name = "radioSHA1"
-        Me.radioSHA1.Size = New System.Drawing.Size(258, 17)
+        Me.radioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.radioSHA1.TabIndex = 7
         Me.radioSHA1.Text = "SHA-1 (Not Recommended, Insecure Hash Type)"
         Me.radioSHA1.UseVisualStyleBackColor = True
@@ -620,6 +621,7 @@ Partial Class Form1
         Me.listFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFileName, Me.colFileSize, Me.colChecksum, Me.colComputeTime})
         Me.listFiles.ContextMenuStrip = Me.listFilesContextMenu
         Me.listFiles.FullRowSelect = True
+        Me.listFiles.HideSelection = False
         Me.listFiles.Location = New System.Drawing.Point(160, 20)
         Me.listFiles.Name = "listFiles"
         Me.listFiles.Size = New System.Drawing.Size(877, 185)
@@ -705,9 +707,9 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyHashStatus)
         Me.tabVerifySavedHashes.Controls.Add(Me.verifyHashesListFiles)
         Me.tabVerifySavedHashes.Controls.Add(Me.btnOpenExistingHashFile)
-        Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
+        Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 24)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
-        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 363)
+        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 361)
         Me.tabVerifySavedHashes.TabIndex = 3
         Me.tabVerifySavedHashes.Text = "Verify Saved Hashes"
         '
@@ -766,6 +768,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2})
         Me.verifyHashesListFiles.FullRowSelect = True
+        Me.verifyHashesListFiles.HideSelection = False
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
         Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 272)
@@ -823,9 +826,9 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.txtFile2)
         Me.tabCompareFiles.Controls.Add(Me.txtFile1)
         Me.tabCompareFiles.Controls.Add(Me.Label4)
-        Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
+        Me.tabCompareFiles.Location = New System.Drawing.Point(4, 24)
         Me.tabCompareFiles.Name = "tabCompareFiles"
-        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 363)
+        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 361)
         Me.tabCompareFiles.TabIndex = 5
         Me.tabCompareFiles.Text = "Compare Files"
         '
@@ -889,7 +892,7 @@ Partial Class Form1
         Me.compareRadioMD5.AutoSize = True
         Me.compareRadioMD5.Location = New System.Drawing.Point(505, 76)
         Me.compareRadioMD5.Name = "compareRadioMD5"
-        Me.compareRadioMD5.Size = New System.Drawing.Size(295, 17)
+        Me.compareRadioMD5.Size = New System.Drawing.Size(296, 17)
         Me.compareRadioMD5.TabIndex = 26
         Me.compareRadioMD5.Text = "MD5 (Seriously Not Recommended, Insecure Hash Type)"
         Me.compareRadioMD5.UseVisualStyleBackColor = True
@@ -899,7 +902,7 @@ Partial Class Form1
         Me.compareRadioSHA512.AutoSize = True
         Me.compareRadioSHA512.Location = New System.Drawing.Point(166, 76)
         Me.compareRadioSHA512.Name = "compareRadioSHA512"
-        Me.compareRadioSHA512.Size = New System.Drawing.Size(67, 17)
+        Me.compareRadioSHA512.Size = New System.Drawing.Size(68, 17)
         Me.compareRadioSHA512.TabIndex = 25
         Me.compareRadioSHA512.Text = "SHA-512"
         Me.compareRadioSHA512.UseVisualStyleBackColor = True
@@ -909,7 +912,7 @@ Partial Class Form1
         Me.compareRadioSHA384.AutoSize = True
         Me.compareRadioSHA384.Location = New System.Drawing.Point(92, 76)
         Me.compareRadioSHA384.Name = "compareRadioSHA384"
-        Me.compareRadioSHA384.Size = New System.Drawing.Size(67, 17)
+        Me.compareRadioSHA384.Size = New System.Drawing.Size(68, 17)
         Me.compareRadioSHA384.TabIndex = 24
         Me.compareRadioSHA384.Text = "SHA-384"
         Me.compareRadioSHA384.UseVisualStyleBackColor = True
@@ -920,7 +923,7 @@ Partial Class Form1
         Me.compareRadioSHA256.Checked = True
         Me.compareRadioSHA256.Location = New System.Drawing.Point(18, 76)
         Me.compareRadioSHA256.Name = "compareRadioSHA256"
-        Me.compareRadioSHA256.Size = New System.Drawing.Size(67, 17)
+        Me.compareRadioSHA256.Size = New System.Drawing.Size(68, 17)
         Me.compareRadioSHA256.TabIndex = 23
         Me.compareRadioSHA256.TabStop = True
         Me.compareRadioSHA256.Text = "SHA-256"
@@ -931,7 +934,7 @@ Partial Class Form1
         Me.compareRadioSHA1.AutoSize = True
         Me.compareRadioSHA1.Location = New System.Drawing.Point(240, 76)
         Me.compareRadioSHA1.Name = "compareRadioSHA1"
-        Me.compareRadioSHA1.Size = New System.Drawing.Size(258, 17)
+        Me.compareRadioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.compareRadioSHA1.TabIndex = 22
         Me.compareRadioSHA1.Text = "SHA-1 (Not Recommended, Insecure Hash Type)"
         Me.compareRadioSHA1.UseVisualStyleBackColor = True
@@ -1009,9 +1012,9 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.btnBrowseFileForCompareKnownHash)
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.txtFileForKnownHash)
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.Label7)
-        Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 22)
+        Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 24)
         Me.tabCompareAgainstKnownHash.Name = "tabCompareAgainstKnownHash"
-        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 363)
+        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 361)
         Me.tabCompareAgainstKnownHash.TabIndex = 6
         Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
         '
@@ -1111,6 +1114,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkUseTaskBarProgressBarForOverallStatus)
         Me.tabSettings.Controls.Add(Me.chkShowEstimatedTimeRemaining)
         Me.tabSettings.Controls.Add(Me.chkShowProgressPercentageInWindowTitle)
         Me.tabSettings.Controls.Add(Me.chkUseMilliseconds)
@@ -1129,9 +1133,9 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.lblFileNotFoundColor)
         Me.tabSettings.Controls.Add(Me.lblNotValidColor)
         Me.tabSettings.Controls.Add(Me.lblValidColor)
-        Me.tabSettings.Location = New System.Drawing.Point(4, 22)
+        Me.tabSettings.Location = New System.Drawing.Point(4, 24)
         Me.tabSettings.Name = "tabSettings"
-        Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
+        Me.tabSettings.Size = New System.Drawing.Size(1040, 361)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
         '
@@ -1140,7 +1144,7 @@ Partial Class Form1
         Me.chkShowEstimatedTimeRemaining.AutoSize = True
         Me.chkShowEstimatedTimeRemaining.Location = New System.Drawing.Point(15, 199)
         Me.chkShowEstimatedTimeRemaining.Name = "chkShowEstimatedTimeRemaining"
-        Me.chkShowEstimatedTimeRemaining.Size = New System.Drawing.Size(148, 17)
+        Me.chkShowEstimatedTimeRemaining.Size = New System.Drawing.Size(149, 17)
         Me.chkShowEstimatedTimeRemaining.TabIndex = 17
         Me.chkShowEstimatedTimeRemaining.Text = "Show Estimated Time Left"
         Me.ToolTip.SetToolTip(Me.chkShowEstimatedTimeRemaining, "Enabling this option may affect performance.")
@@ -1151,7 +1155,7 @@ Partial Class Form1
         Me.chkShowProgressPercentageInWindowTitle.AutoSize = True
         Me.chkShowProgressPercentageInWindowTitle.Location = New System.Drawing.Point(15, 176)
         Me.chkShowProgressPercentageInWindowTitle.Name = "chkShowProgressPercentageInWindowTitle"
-        Me.chkShowProgressPercentageInWindowTitle.Size = New System.Drawing.Size(230, 17)
+        Me.chkShowProgressPercentageInWindowTitle.Size = New System.Drawing.Size(231, 17)
         Me.chkShowProgressPercentageInWindowTitle.TabIndex = 9
         Me.chkShowProgressPercentageInWindowTitle.Text = "Show Progress Percentage in Window Title"
         Me.chkShowProgressPercentageInWindowTitle.UseVisualStyleBackColor = True
@@ -1161,7 +1165,7 @@ Partial Class Form1
         Me.chkUseMilliseconds.AutoSize = True
         Me.chkUseMilliseconds.Location = New System.Drawing.Point(15, 128)
         Me.chkUseMilliseconds.Name = "chkUseMilliseconds"
-        Me.chkUseMilliseconds.Size = New System.Drawing.Size(331, 17)
+        Me.chkUseMilliseconds.Size = New System.Drawing.Size(332, 17)
         Me.chkUseMilliseconds.TabIndex = 7
         Me.chkUseMilliseconds.Text = "Display compute times that are less than a second in milliseconds"
         Me.chkUseMilliseconds.UseVisualStyleBackColor = True
@@ -1171,7 +1175,7 @@ Partial Class Form1
         Me.chkSortFileListingAfterAddingFilesToHash.AutoSize = True
         Me.chkSortFileListingAfterAddingFilesToHash.Location = New System.Drawing.Point(15, 82)
         Me.chkSortFileListingAfterAddingFilesToHash.Name = "chkSortFileListingAfterAddingFilesToHash"
-        Me.chkSortFileListingAfterAddingFilesToHash.Size = New System.Drawing.Size(209, 17)
+        Me.chkSortFileListingAfterAddingFilesToHash.Size = New System.Drawing.Size(210, 17)
         Me.chkSortFileListingAfterAddingFilesToHash.TabIndex = 6
         Me.chkSortFileListingAfterAddingFilesToHash.Text = "Sort file listing after adding files to Hash"
         Me.chkSortFileListingAfterAddingFilesToHash.UseVisualStyleBackColor = True
@@ -1181,7 +1185,7 @@ Partial Class Form1
         Me.chkSaveChecksumFilesWithRelativePaths.AutoSize = True
         Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 105)
         Me.chkSaveChecksumFilesWithRelativePaths.Name = "chkSaveChecksumFilesWithRelativePaths"
-        Me.chkSaveChecksumFilesWithRelativePaths.Size = New System.Drawing.Size(221, 17)
+        Me.chkSaveChecksumFilesWithRelativePaths.Size = New System.Drawing.Size(222, 17)
         Me.chkSaveChecksumFilesWithRelativePaths.TabIndex = 5
         Me.chkSaveChecksumFilesWithRelativePaths.Text = "Save Checksum Files with Relative Paths"
         Me.chkSaveChecksumFilesWithRelativePaths.UseVisualStyleBackColor = True
@@ -1191,14 +1195,14 @@ Partial Class Form1
         Me.chkSortByFileSizeAfterLoadingHashFile.AutoSize = True
         Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 59)
         Me.chkSortByFileSizeAfterLoadingHashFile.Name = "chkSortByFileSizeAfterLoadingHashFile"
-        Me.chkSortByFileSizeAfterLoadingHashFile.Size = New System.Drawing.Size(243, 17)
+        Me.chkSortByFileSizeAfterLoadingHashFile.Size = New System.Drawing.Size(244, 17)
         Me.chkSortByFileSizeAfterLoadingHashFile.TabIndex = 4
         Me.chkSortByFileSizeAfterLoadingHashFile.Text = "Sort file listing by file size after loading hash file"
         Me.chkSortByFileSizeAfterLoadingHashFile.UseVisualStyleBackColor = True
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 222)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 245)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1207,7 +1211,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 222)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 245)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1219,7 +1223,7 @@ Partial Class Form1
         Me.chkSSL.AutoSize = True
         Me.chkSSL.Location = New System.Drawing.Point(15, 36)
         Me.chkSSL.Name = "chkSSL"
-        Me.chkSSL.Size = New System.Drawing.Size(360, 17)
+        Me.chkSSL.Size = New System.Drawing.Size(361, 17)
         Me.chkSSL.TabIndex = 1
         Me.chkSSL.Text = "Use SSL to check for and download program updates (Recommended)"
         Me.chkSSL.UseVisualStyleBackColor = True
@@ -1229,7 +1233,7 @@ Partial Class Form1
         Me.chkRecurrsiveDirectorySearch.AutoSize = True
         Me.chkRecurrsiveDirectorySearch.Location = New System.Drawing.Point(15, 13)
         Me.chkRecurrsiveDirectorySearch.Name = "chkRecurrsiveDirectorySearch"
-        Me.chkRecurrsiveDirectorySearch.Size = New System.Drawing.Size(433, 17)
+        Me.chkRecurrsiveDirectorySearch.Size = New System.Drawing.Size(434, 17)
         Me.chkRecurrsiveDirectorySearch.TabIndex = 0
         Me.chkRecurrsiveDirectorySearch.Text = "When processing directories, search recursively for all files in path including s" &
     "ub-folders"
@@ -1240,7 +1244,7 @@ Partial Class Form1
         Me.chkDisplayHashesInUpperCase.AutoSize = True
         Me.chkDisplayHashesInUpperCase.Location = New System.Drawing.Point(15, 152)
         Me.chkDisplayHashesInUpperCase.Name = "chkDisplayHashesInUpperCase"
-        Me.chkDisplayHashesInUpperCase.Size = New System.Drawing.Size(199, 17)
+        Me.chkDisplayHashesInUpperCase.Size = New System.Drawing.Size(200, 17)
         Me.chkDisplayHashesInUpperCase.TabIndex = 8
         Me.chkDisplayHashesInUpperCase.Text = "Display Hashes in Uppercase Letters"
         Me.chkDisplayHashesInUpperCase.UseVisualStyleBackColor = True
@@ -1309,6 +1313,19 @@ Partial Class Form1
         '
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
+        '
+        'chkUseTaskBarProgressBarForOverallStatus
+        '
+        Me.chkUseTaskBarProgressBarForOverallStatus.AutoSize = True
+        Me.chkUseTaskBarProgressBarForOverallStatus.Location = New System.Drawing.Point(15, 222)
+        Me.chkUseTaskBarProgressBarForOverallStatus.Name = "chkUseTaskBarProgressBarForOverallStatus"
+        Me.chkUseTaskBarProgressBarForOverallStatus.Size = New System.Drawing.Size(445, 17)
+        Me.chkUseTaskBarProgressBarForOverallStatus.TabIndex = 18
+        Me.chkUseTaskBarProgressBarForOverallStatus.Text = "Use taskbar progress bar to indicate overall processing status, not for individua" &
+    "l file status"
+        Me.ToolTip.SetToolTip(Me.chkUseTaskBarProgressBarForOverallStatus, "Enabling this option makes the program advance the taskbar progress bar when it's" &
+        " done processing a file.")
+        Me.chkUseTaskBarProgressBarForOverallStatus.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1455,4 +1472,5 @@ Partial Class Form1
     Friend WithEvents btnSetNotValidColor As Button
     Friend WithEvents btnSetColorsBackToDefaults As Button
     Friend WithEvents chkShowEstimatedTimeRemaining As CheckBox
+    Friend WithEvents chkUseTaskBarProgressBarForOverallStatus As CheckBox
 End Class
