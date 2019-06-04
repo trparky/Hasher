@@ -304,7 +304,7 @@ Class Check_for_Update_Stuff
                             End Sub)
 
         If Not checkForInternetConnection() Then
-            MsgBox("No Internet connection detected.", MsgBoxStyle.Information, windowObject.Text)
+            windowObject.showNotificationOrMessageBox("No Internet connection detected.", msgBoxOrNotificationType.Information, windowObject.Text)
         Else
             Try
                 Dim xmlData As String = Nothing
@@ -318,13 +318,13 @@ Class Check_for_Update_Stuff
                         If MsgBox(String.Format("An update to Hasher (version {0} Build {1}) is available to be downloaded, do you want to download and update to this new version?", remoteVersion, remoteBuild), MsgBoxStyle.Question + MsgBoxStyle.YesNo, windowObject.Text) = MsgBoxResult.Yes Then
                             downloadAndPerformUpdate()
                         Else
-                            MsgBox("The update will not be downloaded.", MsgBoxStyle.Information, windowObject.Text)
+                            windowObject.showNotificationOrMessageBox("The update will not be downloaded.", msgBoxOrNotificationType.Information, windowObject.Text)
                         End If
                     Else
-                        MsgBox("You already have the latest version.", MsgBoxStyle.Information, windowObject.Text)
+                        windowObject.showNotificationOrMessageBox("You already have the latest version.", msgBoxOrNotificationType.Information, windowObject.Text)
                     End If
                 Else
-                    MsgBox("There was an error checking for updates.", MsgBoxStyle.Information, windowObject.Text)
+                    windowObject.showNotificationOrMessageBox("There was an error checking for updates.", msgBoxOrNotificationType.Information, windowObject.Text)
                 End If
             Catch ex As Exception
                 ' Ok, we crashed but who cares.

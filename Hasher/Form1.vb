@@ -138,7 +138,7 @@ Public Class Form1
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             If OpenFileDialog.FileNames.Count() = 0 Then
-                MsgBox("You must select some files.", MsgBoxStyle.Critical, strWindowTitle)
+                showNotificationOrMessageBox("You must select some files.", msgBoxOrNotificationType.Critical, strWindowTitle)
             ElseIf OpenFileDialog.FileNames.Count() = 1 Then
                 strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
 
@@ -289,7 +289,7 @@ Public Class Form1
                                                      radioSHA512.Enabled = True
 
                                                      Me.Text = "Hasher"
-                                                     Me.Invoke(Sub() MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
+                                                     Me.Invoke(Sub() showNotificationOrMessageBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", msgBoxOrNotificationType.Information, strWindowTitle, True))
                                                      resetHashIndividualFilesProgress()
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
@@ -306,7 +306,7 @@ Public Class Form1
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() showNotificationOrMessageBox("Processing aborted.", msgBoxOrNotificationType.Information, strWindowTitle, True))
                                                  Finally
                                                      If Not boolClosingWindow Then
                                                          btnComputeHash.Text = "Compute Hash"
@@ -364,7 +364,7 @@ Public Class Form1
     End Function
 
     Private Sub btnIndividualFilesCopyToClipboard_Click(sender As Object, e As EventArgs) Handles btnIndividualFilesCopyToClipboard.Click
-        If copyTextToWindowsClipboard(strGetIndividualHashesInStringFormat().Trim) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
+        If copyTextToWindowsClipboard(strGetIndividualHashesInStringFormat().Trim) Then showNotificationOrMessageBox("Your hash results have been copied to the Windows Clipboard.", msgBoxOrNotificationType.Information, strWindowTitle)
     End Sub
 
     Private Function copyTextToWindowsClipboard(strTextToBeCopiedToClipboard As String) As Boolean
@@ -372,7 +372,7 @@ Public Class Form1
             Clipboard.SetDataObject(strTextToBeCopiedToClipboard, True, 5, 200)
             Return True
         Catch ex As Exception
-            MsgBox("Unable to open Windows Clipboard to copy text to it.", MsgBoxStyle.Critical, strWindowTitle)
+            showNotificationOrMessageBox("Unable to open Windows Clipboard to copy text to it.", msgBoxOrNotificationType.Critical, strWindowTitle)
             Return False
         End Try
     End Function
@@ -397,7 +397,7 @@ Public Class Form1
             Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
                 streamWriter.Write(strGetIndividualHashesInStringFormat(SaveFileDialog.FileName))
             End Using
-            MsgBox("Your hash results have been written to disk.", MsgBoxStyle.Information, strWindowTitle)
+            showNotificationOrMessageBox("Your hash results have been written to disk.", msgBoxOrNotificationType.Information, strWindowTitle)
         End If
     End Sub
 
@@ -473,7 +473,7 @@ Public Class Form1
                 End If
             End If
         Catch ex2 As ComponentModel.Win32Exception
-            MsgBox("There was an error attempting to launch your web browser. Perhaps rebooting your system will correct this issue.", MsgBoxStyle.Information, strWindowTitle)
+            showNotificationOrMessageBox("There was an error attempting to launch your web browser. Perhaps rebooting your system will correct this issue.", msgBoxOrNotificationType.Information, strWindowTitle)
         Catch ex As Exception
             copyTextToWindowsClipboard(url)
             MsgBox(errorMessage, MsgBoxStyle.Information, strWindowTitle)
@@ -492,7 +492,7 @@ Public Class Form1
                 memoryStream.CopyTo(namedPipeDataStream)
             End Using
         Catch ex As IO.IOException
-            MsgBox("There was an error sending data to the named pipe server used for interprocess communication, please close all Hasher instances and try again.", MsgBoxStyle.Critical, strWindowTitle)
+            showNotificationOrMessageBox("There was an error sending data to the named pipe server used for interprocess communication, please close all Hasher instances and try again.", msgBoxOrNotificationType.Critical, strWindowTitle)
         End Try
     End Sub
 
@@ -597,6 +597,21 @@ Public Class Form1
         lblNotValidColor.BackColor = My.Settings.notValidColor
         lblFileNotFoundColor.BackColor = My.Settings.fileNotFoundColor
         chkUseTaskBarProgressBarForOverallStatus.Checked = My.Settings.boolUseTaskBarProgressBarForOverallStatus
+        chkShowProgramMessagesAsNotifications.Checked = My.Settings.boolShowProgramMessagesAsNotifications
+
+        If chkShowProgramMessagesAsNotifications.Checked Then
+            lblHowLongLabel.Visible = True
+            txtShowNotificationsForHowLong.Visible = True
+            btnSetHowLong.Visible = True
+            NotifyIcon.Visible = True
+        Else
+            lblHowLongLabel.Visible = False
+            txtShowNotificationsForHowLong.Visible = False
+            btnSetHowLong.Visible = False
+            NotifyIcon.Visible = False
+        End If
+
+        NotifyIcon.Icon = Me.Icon
 
         deleteTemporaryNewEXEFile()
 
@@ -755,7 +770,7 @@ Public Class Form1
         ElseIf strChecksumFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
             checksumType = checksums.checksumType.sha512
         Else
-            MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strWindowTitle)
+            showNotificationOrMessageBox("Invalid Hash File Type.", msgBoxOrNotificationType.Critical, strWindowTitle)
             Exit Sub
         End If
 
@@ -861,7 +876,7 @@ Public Class Form1
 
                                                                    strMessageBoxText &= vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & "."
 
-                                                                   MsgBox(strMessageBoxText, MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle)
+                                                                   showNotificationOrMessageBox(strMessageBoxText, msgBoxOrNotificationType.Information, strWindowTitle, True)
                                                                End Sub)
 
                                                      boolBackgroundThreadWorking = False
@@ -881,7 +896,7 @@ Public Class Form1
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() showNotificationOrMessageBox("Processing aborted.", msgBoxOrNotificationType.Information, strWindowTitle, True))
                                                  Finally
                                                      If Not boolClosingWindow Then
                                                          btnOpenExistingHashFile.Text = "Open Hash File"
@@ -1025,7 +1040,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnCopyTextHashResultsToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyTextHashResultsToClipboard.Click
-        If copyTextToWindowsClipboard(txtHashResults.Text) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
+        If copyTextToWindowsClipboard(txtHashResults.Text) Then showNotificationOrMessageBox("Your hash results have been copied to the Windows Clipboard.", msgBoxOrNotificationType.Information, strWindowTitle)
     End Sub
 
     Private Sub textRadioSHA256_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA256.CheckedChanged
@@ -1156,7 +1171,7 @@ Public Class Form1
             Next
         End If
 
-        If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
+        If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then showNotificationOrMessageBox("The hash result has been copied to the Windows Clipboard.", msgBoxOrNotificationType.Information, strWindowTitle)
     End Sub
 
     Private Sub applyFileSizeSortingToHashList()
@@ -1232,15 +1247,15 @@ Public Class Form1
         End If
 
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
-            MsgBox("Please select two different files.", MsgBoxStyle.Information, strWindowTitle)
+            showNotificationOrMessageBox("Please select two different files.", msgBoxOrNotificationType.Information, strWindowTitle)
             Exit Sub
         End If
         If Not IO.File.Exists(txtFile1.Text) Then
-            MsgBox("File #1 doesn't exist.", MsgBoxStyle.Critical, strWindowTitle)
+            showNotificationOrMessageBox("File #1 doesn't exist.", msgBoxOrNotificationType.Critical, strWindowTitle)
             Exit Sub
         End If
         If Not IO.File.Exists(txtFile2.Text) Then
-            MsgBox("File #2 doesn't exist.", MsgBoxStyle.Critical, strWindowTitle)
+            showNotificationOrMessageBox("File #2 doesn't exist.", msgBoxOrNotificationType.Critical, strWindowTitle)
             Exit Sub
         End If
 
@@ -1322,12 +1337,12 @@ Public Class Form1
 
                                                      If boolSuccessful Then
                                                          If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
-                                                             MsgBox("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
+                                                             showNotificationOrMessageBox("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", msgBoxOrNotificationType.Information, strWindowTitle)
                                                          Else
-                                                             MsgBox("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
+                                                             showNotificationOrMessageBox("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", msgBoxOrNotificationType.Critical, strWindowTitle)
                                                          End If
                                                      Else
-                                                         MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
+                                                         showNotificationOrMessageBox("There was an error while calculating the checksum.", msgBoxOrNotificationType.Critical, strWindowTitle)
                                                      End If
 
                                                      boolBackgroundThreadWorking = False
@@ -1352,7 +1367,7 @@ Public Class Form1
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() showNotificationOrMessageBox("Processing aborted.", msgBoxOrNotificationType.Information, strWindowTitle, True))
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -1443,7 +1458,7 @@ Public Class Form1
         txtFileForKnownHash.Text = txtFileForKnownHash.Text.Trim
 
         If Not IO.File.Exists(txtFileForKnownHash.Text) Then
-            MsgBox("File doesn't exist.", MsgBoxStyle.Critical, strWindowTitle)
+            showNotificationOrMessageBox("File doesn't exist.", msgBoxOrNotificationType.Critical, strWindowTitle)
             Exit Sub
         End If
 
@@ -1501,15 +1516,15 @@ Public Class Form1
                                                          If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
                                                              pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.good_check
                                                              ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum Verified!")
-                                                             MsgBox("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
+                                                             showNotificationOrMessageBox("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", msgBoxOrNotificationType.Information, strWindowTitle)
                                                          Else
                                                              pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
                                                              ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum verification failed, checksum didn't match!")
-                                                             MsgBox("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
+                                                             showNotificationOrMessageBox("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", msgBoxOrNotificationType.Critical, strWindowTitle)
                                                          End If
                                                      Else
                                                          pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
-                                                         MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
+                                                         showNotificationOrMessageBox("There was an error while calculating the checksum.", msgBoxOrNotificationType.Critical, strWindowTitle)
                                                      End If
 
                                                      boolBackgroundThreadWorking = False
@@ -1528,7 +1543,7 @@ Public Class Form1
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                     If Not boolClosingWindow Then Me.Invoke(Sub() MsgBox("Processing aborted.", MsgBoxStyle.Information + MsgBoxStyle.ApplicationModal, strWindowTitle))
+                                                     If Not boolClosingWindow Then Me.Invoke(Sub() showNotificationOrMessageBox("Processing aborted.", msgBoxOrNotificationType.Information, strWindowTitle, True))
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -1612,7 +1627,7 @@ Public Class Form1
             process.WaitForExit()
         End If
 
-        MsgBox("File association complete.", MsgBoxStyle.Information, strWindowTitle)
+        showNotificationOrMessageBox("File association complete.", msgBoxOrNotificationType.Information, strWindowTitle)
     End Sub
 
     Private Sub btnAddHasherToAllFiles_Click(sender As Object, e As EventArgs) Handles btnAddHasherToAllFiles.Click
@@ -1628,7 +1643,7 @@ Public Class Form1
             process.WaitForExit()
         End If
 
-        MsgBox("File association complete.", MsgBoxStyle.Information, strWindowTitle)
+        showNotificationOrMessageBox("File association complete.", msgBoxOrNotificationType.Information, strWindowTitle)
     End Sub
 
     Private Sub btnOpenExistingHashFile_DragDrop(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragDrop
@@ -1642,7 +1657,7 @@ Public Class Form1
                 btnOpenExistingHashFile.Enabled = False
                 processExistingHashFile(strReceivedFileName)
             Else
-                MsgBox("Invalid file type.", MsgBoxStyle.Critical, strWindowTitle)
+                showNotificationOrMessageBox("Invalid file type.", msgBoxOrNotificationType.Critical, strWindowTitle)
             End If
         End If
     End Sub
@@ -1715,7 +1730,7 @@ Public Class Form1
         If colorDialog.ShowDialog() = DialogResult.OK Then
             My.Settings.validColor = colorDialog.Color
             lblValidColor.BackColor = colorDialog.Color
-            MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+            showNotificationOrMessageBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", msgBoxOrNotificationType.Information, Me.Text)
         End If
     End Sub
 
@@ -1725,7 +1740,7 @@ Public Class Form1
         If colorDialog.ShowDialog() = DialogResult.OK Then
             My.Settings.notValidColor = colorDialog.Color
             lblNotValidColor.BackColor = colorDialog.Color
-            MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+            showNotificationOrMessageBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", msgBoxOrNotificationType.Information, Me.Text)
         End If
     End Sub
 
@@ -1735,7 +1750,7 @@ Public Class Form1
         If colorDialog.ShowDialog() = DialogResult.OK Then
             My.Settings.fileNotFoundColor = colorDialog.Color
             lblFileNotFoundColor.BackColor = colorDialog.Color
-            MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+            showNotificationOrMessageBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", msgBoxOrNotificationType.Information, Me.Text)
         End If
     End Sub
 
@@ -1749,7 +1764,7 @@ Public Class Form1
         My.Settings.fileNotFoundColor = Color.LightGray
         lblFileNotFoundColor.BackColor = Color.LightGray
 
-        MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+        showNotificationOrMessageBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", msgBoxOrNotificationType.Information, Me.Text)
     End Sub
 
     Private Sub chkShowEstimatedTimeRemaining_Click(sender As Object, e As EventArgs) Handles chkShowEstimatedTimeRemaining.Click
@@ -1759,4 +1774,76 @@ Public Class Form1
     Private Sub chkUseTaskBarProgressBarForOverallStatus_Click(sender As Object, e As EventArgs) Handles chkUseTaskBarProgressBarForOverallStatus.Click
         My.Settings.boolUseTaskBarProgressBarForOverallStatus = chkUseTaskBarProgressBarForOverallStatus.Checked
     End Sub
+
+    Private Sub BtnSetHowLong_Click(sender As Object, e As EventArgs) Handles btnSetHowLong.Click
+        Dim shortHowLong As Short = Nothing
+        If Short.TryParse(txtShowNotificationsForHowLong.Text.Trim, shortHowLong) Then
+            My.Settings.shortNotificationsForHowLong = shortHowLong
+            showNotification("Setting saved.")
+        Else
+            My.Settings.shortNotificationsForHowLong = 10
+            txtShowNotificationsForHowLong.Text = "10"
+            showNotification("You inputted an invalid input, this setting has been set back to a default of 10 seconds.", ToolTipIcon.Error)
+        End If
+    End Sub
+
+    Private Sub chkShowProgramMessagesAsNotifications_Click(sender As Object, e As EventArgs) Handles chkShowProgramMessagesAsNotifications.Click
+        If chkShowProgramMessagesAsNotifications.Checked Then
+            lblHowLongLabel.Visible = True
+            txtShowNotificationsForHowLong.Visible = True
+            btnSetHowLong.Visible = True
+            NotifyIcon.Visible = True
+        Else
+            lblHowLongLabel.Visible = False
+            txtShowNotificationsForHowLong.Visible = False
+            btnSetHowLong.Visible = False
+            NotifyIcon.Visible = False
+        End If
+
+        My.Settings.boolShowProgramMessagesAsNotifications = chkShowProgramMessagesAsNotifications.Checked
+    End Sub
+
+    ''' <summary>Shows either a standard Messsage Box or a ToolTip (or Toast on Windows 10) Notification depending upon the user's preference.</summary>
+    ''' <param name="strMessageText">This is the text that will be part of the main body of the message to the user.</param>
+    ''' <param name="messageType">Indicates the type of a message that will be shown to the user.</param>
+    ''' <param name="strTitle">This is the text that will be used as the message's title.</param>
+    ''' <param name="modal">A Boolean Value, only used if the user has chosen to use standard Messsage Boxes.</param>
+    Public Sub showNotificationOrMessageBox(strMessageText As String, messageType As msgBoxOrNotificationType, strTitle As String, Optional modal As Boolean = False)
+        If My.Settings.boolShowProgramMessagesAsNotifications Then
+            If messageType = msgBoxOrNotificationType.Error Or messageType = msgBoxOrNotificationType.Critical Then
+                showNotification(strMessageText, ToolTipIcon.Error)
+            ElseIf messageType = msgBoxOrNotificationType.Warning Then
+                showNotification(strMessageText, ToolTipIcon.Warning)
+            ElseIf messageType = msgBoxOrNotificationType.Information Then
+                showNotification(strMessageText)
+            End If
+        Else
+            Dim messageBoxType As MsgBoxStyle = MsgBoxStyle.Information
+
+            If messageType = msgBoxOrNotificationType.Error Or messageType = msgBoxOrNotificationType.Critical Then
+                messageBoxType = MsgBoxStyle.Critical
+            ElseIf messageType = msgBoxOrNotificationType.Warning Then
+                messageBoxType = MsgBoxStyle.Exclamation
+            ElseIf messageType = msgBoxOrNotificationType.Information Then
+                messageBoxType = MsgBoxStyle.Information
+            End If
+
+            If modal Then
+                MsgBox(strMessageText, messageBoxType + MsgBoxStyle.ApplicationModal, strTitle)
+            Else
+                MsgBox(strMessageText, messageBoxType, strTitle)
+            End If
+        End If
+    End Sub
+
+    Private Sub showNotification(txtMessage As String, Optional icon As ToolTipIcon = ToolTipIcon.Info)
+        NotifyIcon.ShowBalloonTip(My.Settings.shortNotificationsForHowLong, "Hasher", txtMessage, icon)
+    End Sub
 End Class
+
+Public Enum msgBoxOrNotificationType As Short
+    Information
+    Warning
+    [Error]
+    Critical
+End Enum

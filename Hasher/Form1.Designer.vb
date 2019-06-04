@@ -115,6 +115,9 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.txtShowNotificationsForHowLong = New System.Windows.Forms.TextBox()
+        Me.lblHowLongLabel = New System.Windows.Forms.Label()
+        Me.chkShowProgramMessagesAsNotifications = New System.Windows.Forms.CheckBox()
         Me.chkUseTaskBarProgressBarForOverallStatus = New System.Windows.Forms.CheckBox()
         Me.chkShowEstimatedTimeRemaining = New System.Windows.Forms.CheckBox()
         Me.chkUseMilliseconds = New System.Windows.Forms.CheckBox()
@@ -137,6 +140,8 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.NotifyIcon = New System.Windows.Forms.NotifyIcon(Me.components)
+        Me.btnSetHowLong = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1113,6 +1118,10 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.btnSetHowLong)
+        Me.tabSettings.Controls.Add(Me.txtShowNotificationsForHowLong)
+        Me.tabSettings.Controls.Add(Me.lblHowLongLabel)
+        Me.tabSettings.Controls.Add(Me.chkShowProgramMessagesAsNotifications)
         Me.tabSettings.Controls.Add(Me.chkUseTaskBarProgressBarForOverallStatus)
         Me.tabSettings.Controls.Add(Me.chkShowEstimatedTimeRemaining)
         Me.tabSettings.Controls.Add(Me.chkUseMilliseconds)
@@ -1136,6 +1145,35 @@ Partial Class Form1
         Me.tabSettings.Size = New System.Drawing.Size(1040, 361)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
+        '
+        'txtShowNotificationsForHowLong
+        '
+        Me.txtShowNotificationsForHowLong.Location = New System.Drawing.Point(639, 219)
+        Me.txtShowNotificationsForHowLong.Name = "txtShowNotificationsForHowLong"
+        Me.txtShowNotificationsForHowLong.Size = New System.Drawing.Size(36, 20)
+        Me.txtShowNotificationsForHowLong.TabIndex = 21
+        Me.txtShowNotificationsForHowLong.Text = "10"
+        Me.txtShowNotificationsForHowLong.Visible = False
+        '
+        'lblHowLongLabel
+        '
+        Me.lblHowLongLabel.AutoSize = True
+        Me.lblHowLongLabel.Location = New System.Drawing.Point(410, 222)
+        Me.lblHowLongLabel.Name = "lblHowLongLabel"
+        Me.lblHowLongLabel.Size = New System.Drawing.Size(223, 13)
+        Me.lblHowLongLabel.TabIndex = 20
+        Me.lblHowLongLabel.Text = "Show Notification for How Long (In Seconds):"
+        Me.lblHowLongLabel.Visible = False
+        '
+        'chkShowProgramMessagesAsNotifications
+        '
+        Me.chkShowProgramMessagesAsNotifications.AutoSize = True
+        Me.chkShowProgramMessagesAsNotifications.Location = New System.Drawing.Point(15, 221)
+        Me.chkShowProgramMessagesAsNotifications.Name = "chkShowProgramMessagesAsNotifications"
+        Me.chkShowProgramMessagesAsNotifications.Size = New System.Drawing.Size(370, 17)
+        Me.chkShowProgramMessagesAsNotifications.TabIndex = 19
+        Me.chkShowProgramMessagesAsNotifications.Text = "Show program messages as notifications instead of using message boxes"
+        Me.chkShowProgramMessagesAsNotifications.UseVisualStyleBackColor = True
         '
         'chkUseTaskBarProgressBarForOverallStatus
         '
@@ -1203,7 +1241,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 221)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 244)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1212,7 +1250,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 221)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 244)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1314,6 +1352,21 @@ Partial Class Form1
         '
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
+        '
+        'NotifyIcon
+        '
+        Me.NotifyIcon.Text = "Hasher"
+        Me.NotifyIcon.Visible = True
+        '
+        'btnSetHowLong
+        '
+        Me.btnSetHowLong.Location = New System.Drawing.Point(681, 217)
+        Me.btnSetHowLong.Name = "btnSetHowLong"
+        Me.btnSetHowLong.Size = New System.Drawing.Size(34, 23)
+        Me.btnSetHowLong.TabIndex = 22
+        Me.btnSetHowLong.Text = "Set"
+        Me.btnSetHowLong.UseVisualStyleBackColor = True
+        Me.btnSetHowLong.Visible = False
         '
         'Form1
         '
@@ -1460,4 +1513,9 @@ Partial Class Form1
     Friend WithEvents btnSetColorsBackToDefaults As Button
     Friend WithEvents chkShowEstimatedTimeRemaining As CheckBox
     Friend WithEvents chkUseTaskBarProgressBarForOverallStatus As CheckBox
+    Friend WithEvents NotifyIcon As NotifyIcon
+    Friend WithEvents txtShowNotificationsForHowLong As TextBox
+    Friend WithEvents lblHowLongLabel As Label
+    Friend WithEvents chkShowProgramMessagesAsNotifications As CheckBox
+    Friend WithEvents btnSetHowLong As Button
 End Class
