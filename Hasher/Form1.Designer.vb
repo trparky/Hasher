@@ -115,8 +115,8 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.chkUseTaskBarProgressBarForOverallStatus = New System.Windows.Forms.CheckBox()
         Me.chkShowEstimatedTimeRemaining = New System.Windows.Forms.CheckBox()
-        Me.chkShowProgressPercentageInWindowTitle = New System.Windows.Forms.CheckBox()
         Me.chkUseMilliseconds = New System.Windows.Forms.CheckBox()
         Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
         Me.chkSaveChecksumFilesWithRelativePaths = New System.Windows.Forms.CheckBox()
@@ -137,7 +137,6 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.chkUseTaskBarProgressBarForOverallStatus = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1116,7 +1115,6 @@ Partial Class Form1
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
         Me.tabSettings.Controls.Add(Me.chkUseTaskBarProgressBarForOverallStatus)
         Me.tabSettings.Controls.Add(Me.chkShowEstimatedTimeRemaining)
-        Me.tabSettings.Controls.Add(Me.chkShowProgressPercentageInWindowTitle)
         Me.tabSettings.Controls.Add(Me.chkUseMilliseconds)
         Me.tabSettings.Controls.Add(Me.chkSortFileListingAfterAddingFilesToHash)
         Me.tabSettings.Controls.Add(Me.chkSaveChecksumFilesWithRelativePaths)
@@ -1139,26 +1137,29 @@ Partial Class Form1
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
         '
+        'chkUseTaskBarProgressBarForOverallStatus
+        '
+        Me.chkUseTaskBarProgressBarForOverallStatus.AutoSize = True
+        Me.chkUseTaskBarProgressBarForOverallStatus.Location = New System.Drawing.Point(15, 198)
+        Me.chkUseTaskBarProgressBarForOverallStatus.Name = "chkUseTaskBarProgressBarForOverallStatus"
+        Me.chkUseTaskBarProgressBarForOverallStatus.Size = New System.Drawing.Size(445, 17)
+        Me.chkUseTaskBarProgressBarForOverallStatus.TabIndex = 18
+        Me.chkUseTaskBarProgressBarForOverallStatus.Text = "Use taskbar progress bar to indicate overall processing status, not for individua" &
+    "l file status"
+        Me.ToolTip.SetToolTip(Me.chkUseTaskBarProgressBarForOverallStatus, "Enabling this option makes the program advance the taskbar progress bar when it's" &
+        " done processing a file.")
+        Me.chkUseTaskBarProgressBarForOverallStatus.UseVisualStyleBackColor = True
+        '
         'chkShowEstimatedTimeRemaining
         '
         Me.chkShowEstimatedTimeRemaining.AutoSize = True
-        Me.chkShowEstimatedTimeRemaining.Location = New System.Drawing.Point(15, 199)
+        Me.chkShowEstimatedTimeRemaining.Location = New System.Drawing.Point(15, 175)
         Me.chkShowEstimatedTimeRemaining.Name = "chkShowEstimatedTimeRemaining"
         Me.chkShowEstimatedTimeRemaining.Size = New System.Drawing.Size(149, 17)
         Me.chkShowEstimatedTimeRemaining.TabIndex = 17
         Me.chkShowEstimatedTimeRemaining.Text = "Show Estimated Time Left"
         Me.ToolTip.SetToolTip(Me.chkShowEstimatedTimeRemaining, "Enabling this option may affect performance.")
         Me.chkShowEstimatedTimeRemaining.UseVisualStyleBackColor = True
-        '
-        'chkShowProgressPercentageInWindowTitle
-        '
-        Me.chkShowProgressPercentageInWindowTitle.AutoSize = True
-        Me.chkShowProgressPercentageInWindowTitle.Location = New System.Drawing.Point(15, 176)
-        Me.chkShowProgressPercentageInWindowTitle.Name = "chkShowProgressPercentageInWindowTitle"
-        Me.chkShowProgressPercentageInWindowTitle.Size = New System.Drawing.Size(231, 17)
-        Me.chkShowProgressPercentageInWindowTitle.TabIndex = 9
-        Me.chkShowProgressPercentageInWindowTitle.Text = "Show Progress Percentage in Window Title"
-        Me.chkShowProgressPercentageInWindowTitle.UseVisualStyleBackColor = True
         '
         'chkUseMilliseconds
         '
@@ -1202,7 +1203,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 245)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 221)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1211,7 +1212,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 245)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 221)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1313,19 +1314,6 @@ Partial Class Form1
         '
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
-        '
-        'chkUseTaskBarProgressBarForOverallStatus
-        '
-        Me.chkUseTaskBarProgressBarForOverallStatus.AutoSize = True
-        Me.chkUseTaskBarProgressBarForOverallStatus.Location = New System.Drawing.Point(15, 222)
-        Me.chkUseTaskBarProgressBarForOverallStatus.Name = "chkUseTaskBarProgressBarForOverallStatus"
-        Me.chkUseTaskBarProgressBarForOverallStatus.Size = New System.Drawing.Size(445, 17)
-        Me.chkUseTaskBarProgressBarForOverallStatus.TabIndex = 18
-        Me.chkUseTaskBarProgressBarForOverallStatus.Text = "Use taskbar progress bar to indicate overall processing status, not for individua" &
-    "l file status"
-        Me.ToolTip.SetToolTip(Me.chkUseTaskBarProgressBarForOverallStatus, "Enabling this option makes the program advance the taskbar progress bar when it's" &
-        " done processing a file.")
-        Me.chkUseTaskBarProgressBarForOverallStatus.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1462,7 +1450,6 @@ Partial Class Form1
     Friend WithEvents colComputeTime2 As ColumnHeader
     Friend WithEvents chkUseMilliseconds As CheckBox
     Friend WithEvents chkDisplayHashesInUpperCase As CheckBox
-    Friend WithEvents chkShowProgressPercentageInWindowTitle As CheckBox
     Friend WithEvents pictureBoxVerifyAgainstResults As PictureBox
     Friend WithEvents lblValidColor As Label
     Friend WithEvents lblNotValidColor As Label

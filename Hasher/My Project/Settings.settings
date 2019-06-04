@@ -50,9 +50,6 @@
     <Setting Name="boolDisplayHashesInUpperCase" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="boolShowProgressPercentageInWindowTitle" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="validColor" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">LightGreen</Value>
     </Setting>

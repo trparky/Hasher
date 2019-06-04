@@ -248,18 +248,6 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
-        Public Property boolShowProgressPercentageInWindowTitle() As Boolean
-            Get
-                Return CType(Me("boolShowProgressPercentageInWindowTitle"),Boolean)
-            End Get
-            Set
-                Me("boolShowProgressPercentageInWindowTitle") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("LightGreen")>  _
         Public Property validColor() As Global.System.Drawing.Color
             Get

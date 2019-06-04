@@ -222,7 +222,6 @@ Public Class Form1
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           IndividualFilesProgressBar.Value = percentage
                                                                                                           If Not My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(IndividualFilesProgressBar.Value))
-                                                                                                          If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                                                           lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                           If eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
@@ -591,7 +590,6 @@ Public Class Form1
         chkSaveChecksumFilesWithRelativePaths.Checked = My.Settings.boolSaveChecksumFilesWithRelativePaths
         chkUseMilliseconds.Checked = My.Settings.boolUseMilliseconds
         chkDisplayHashesInUpperCase.Checked = My.Settings.boolDisplayHashesInUpperCase
-        chkShowProgressPercentageInWindowTitle.Checked = My.Settings.boolShowProgressPercentageInWindowTitle
         chkShowEstimatedTimeRemaining.Checked = My.Settings.boolShowEstimatedTime
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
@@ -783,8 +781,6 @@ Public Class Form1
                                                          Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value))
                                                          lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & intLineCounter.ToString("N0") & " of " & dataInFileArray.LongLength.ToString("N0") & " (" & VerifyHashProgressBar.Value & "%)."
 
-                                                         If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & VerifyHashProgressBar.Value & "%)"
-
                                                          If Not String.IsNullOrEmpty(strLineInFile) Then
                                                              regExMatchObject = hashLineParser.Match(strLineInFile)
 
@@ -942,7 +938,6 @@ Public Class Form1
                                                                  percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                  VerifyHashProgressBar.Value = percentage
                                                                  If Not My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value))
-                                                                 If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                  lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                  If eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                              End Sub)
@@ -1288,7 +1283,6 @@ Public Class Form1
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareFilesProgressBar.Value = percentage
                                                                                                           Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareFilesProgressBar.Value))
-                                                                                                          If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                                                           lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                           If eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
@@ -1483,7 +1477,6 @@ Public Class Form1
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                           Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value))
-                                                                                                          If chkShowProgressPercentageInWindowTitle.Checked Then Me.Text = "Hasher (" & Math.Round(percentage, 2) & "%)"
                                                                                                           lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                           If eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
@@ -1714,10 +1707,6 @@ Public Class Form1
         If Not String.IsNullOrWhiteSpace(lblFile2Hash.Text) Then
             lblFile2Hash.Text = If(My.Settings.boolDisplayHashesInUpperCase, lblFile2Hash.Text.ToUpper, lblFile2Hash.Text.ToLower)
         End If
-    End Sub
-
-    Private Sub chkShowProgressPercentageInWindowTitle_Click(sender As Object, e As EventArgs) Handles chkShowProgressPercentageInWindowTitle.Click
-        My.Settings.boolShowProgressPercentageInWindowTitle = chkShowProgressPercentageInWindowTitle.Checked
     End Sub
 
     Private Sub BtnSetValidColor_Click(sender As Object, e As EventArgs) Handles btnSetValidColor.Click
