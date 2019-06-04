@@ -598,6 +598,7 @@ Public Class Form1
         lblFileNotFoundColor.BackColor = My.Settings.fileNotFoundColor
         chkUseTaskBarProgressBarForOverallStatus.Checked = My.Settings.boolUseTaskBarProgressBarForOverallStatus
         chkShowProgramMessagesAsNotifications.Checked = My.Settings.boolShowProgramMessagesAsNotifications
+        txtShowNotificationsForHowLong.Text = My.Settings.shortNotificationsForHowLong.ToString
 
         If chkShowProgramMessagesAsNotifications.Checked Then
             lblHowLongLabel.Visible = True
@@ -1837,7 +1838,7 @@ Public Class Form1
     End Sub
 
     Private Sub showNotification(txtMessage As String, Optional icon As ToolTipIcon = ToolTipIcon.Info)
-        NotifyIcon.ShowBalloonTip(My.Settings.shortNotificationsForHowLong, "Hasher", txtMessage, icon)
+        NotifyIcon.ShowBalloonTip(My.Settings.shortNotificationsForHowLong * 1000, "Hasher", txtMessage, icon)
     End Sub
 End Class
 
