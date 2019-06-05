@@ -253,8 +253,6 @@ Public Class Form1
                                                      Dim computeStopwatch As Stopwatch
 
                                                      For Each item As myListViewItem In listFiles.Items
-                                                         If My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / listFiles.Items.Count * 100))
-
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
                                                              strFileName = item.fileName
 
@@ -277,6 +275,7 @@ Public Class Form1
                                                              End If
                                                          End If
 
+                                                         If My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / listFiles.Items.Count * 100))
                                                          index += 1
                                                      Next
 
@@ -849,9 +848,9 @@ Public Class Form1
                                                      dataInFileArray = Nothing
 
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
-                                                         If My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / verifyHashesListFiles.Items.Count * 100))
                                                          lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}", index.ToString("N0"), verifyHashesListFiles.Items.Count().ToString("N0"), If(verifyHashesListFiles.Items.Count = 1, "file", "files"))
                                                          If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, intFilesThatPassedVerification)
+                                                         If My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / verifyHashesListFiles.Items.Count * 100))
                                                          index += 1
                                                      Next
 
