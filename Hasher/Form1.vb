@@ -8,7 +8,6 @@ Public Class Form1
 
     Private strLastDirectoryWorkedOn As String
     Private filesInListFiles As New Specialized.StringCollection
-    Private hashResultArray As New Dictionary(Of String, String)
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private boolBackgroundThreadWorking As Boolean = False
@@ -212,7 +211,6 @@ Public Class Form1
                                                  Try
                                                      boolBackgroundThreadWorking = True
                                                      Dim percentage As Double
-                                                     Dim strFileName As String
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksums.checksumType
                                                      Dim index As Integer = 1
@@ -228,8 +226,6 @@ Public Class Form1
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     End Sub
-
-                                                     hashResultArray.Clear()
 
                                                      radioMD5.Enabled = False
                                                      radioSHA1.Enabled = False
@@ -254,24 +250,19 @@ Public Class Form1
 
                                                      For Each item As myListViewItem In listFiles.Items
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
-                                                             strFileName = item.fileName
+                                                             lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
+                                                             lblIndividualFilesStatusProcessingFile.Text = "Processing " & index.ToString("N0") & " of " & listFiles.Items.Count().ToString("N0") & If(listFiles.Items.Count = 1, " file", " files") & "."
+                                                             computeStopwatch = Stopwatch.StartNew
 
-                                                             If Not hashResultArray.ContainsKey(strFileName) Then
-                                                                 lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & "."
-                                                                 lblIndividualFilesStatusProcessingFile.Text = "Processing " & index.ToString("N0") & " of " & listFiles.Items.Count().ToString("N0") & If(listFiles.Items.Count = 1, " file", " files") & "."
-                                                                 computeStopwatch = Stopwatch.StartNew
-
-                                                                 If doChecksumWithAttachedSubRoutine(strFileName, checksumType, strChecksum, subRoutine) Then
-                                                                     item.SubItems(2).Text = If(My.Settings.boolDisplayHashesInUpperCase, strChecksum.ToUpper, strChecksum.ToLower)
-                                                                     item.computeTime = computeStopwatch.Elapsed
-                                                                     item.SubItems(3).Text = timespanToHMS(item.computeTime)
-                                                                     item.hash = strChecksum
-                                                                     hashResultArray.Add(strFileName, strChecksum)
-                                                                 Else
-                                                                     item.SubItems(2).Text = "(Error while calculating checksum)"
-                                                                     item.SubItems(3).Text = ""
-                                                                     item.computeTime = Nothing
-                                                                 End If
+                                                             If doChecksumWithAttachedSubRoutine(item.fileName, checksumType, strChecksum, subRoutine) Then
+                                                                 item.SubItems(2).Text = If(My.Settings.boolDisplayHashesInUpperCase, strChecksum.ToUpper, strChecksum.ToLower)
+                                                                 item.computeTime = computeStopwatch.Elapsed
+                                                                 item.SubItems(3).Text = timespanToHMS(item.computeTime)
+                                                                 item.hash = strChecksum
+                                                             Else
+                                                                 item.SubItems(2).Text = "(Error while calculating checksum)"
+                                                                 item.SubItems(3).Text = ""
+                                                                 item.computeTime = Nothing
                                                              End If
                                                          End If
 
@@ -341,10 +332,10 @@ Public Class Form1
 
         addHashFileHeader(stringBuilder)
 
-        For Each item As KeyValuePair(Of String, String) In hashResultArray
-            strFile = item.Key
+        For Each item As myListViewItem In listFiles.Items
+            strFile = item.fileName
             If My.Settings.boolSaveChecksumFilesWithRelativePaths Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile, "")
-            stringBuilder.AppendLine(item.Value & " *" & strFile)
+            stringBuilder.AppendLine(item.hash & " *" & strFile)
         Next
 
         Return stringBuilder.ToString()
@@ -355,8 +346,8 @@ Public Class Form1
 
         addHashFileHeader(stringBuilder)
 
-        For Each item As KeyValuePair(Of String, String) In hashResultArray
-            stringBuilder.AppendLine(item.Value.ToString() & " *" & item.Key)
+        For Each item As myListViewItem In listFiles.Items
+            stringBuilder.AppendLine(item.hash & " *" & item.fileName)
         Next
 
         Return stringBuilder.ToString()
@@ -404,7 +395,6 @@ Public Class Form1
         btnComputeHash.Enabled = True
         btnIndividualFilesCopyToClipboard.Enabled = False
         btnIndividualFilesSaveResultsToDisk.Enabled = False
-        hashResultArray.Clear()
 
         listFiles.BeginUpdate()
         For Each item As myListViewItem In listFiles.Items
