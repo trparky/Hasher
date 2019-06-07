@@ -738,6 +738,30 @@ Public Class Form1
         If FolderBrowserDialog.ShowDialog = DialogResult.OK Then addFilesFromDirectory(FolderBrowserDialog.SelectedPath)
     End Sub
 
+    Private Function createListViewItemForHashFileEntry(strFileName As String, strChecksum As String) As myListViewItem
+        Dim listViewItem As New myListViewItem(strFileName) With {.hash = strChecksum, .fileName = strFileName}
+
+        With listViewItem
+            If IO.File.Exists(strFileName) Then
+                .fileSize = New IO.FileInfo(strFileName).Length
+                .SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
+                .SubItems.Add("To Be Tested")
+                .SubItems.Add("To Be Tested")
+                .boolFileExists = True
+            Else
+                .fileSize = -1
+                .computeTime = Nothing
+                .SubItems.Add("")
+                .SubItems.Add("Doesn't Exist")
+                .SubItems.Add("")
+                .boolFileExists = False
+                .BackColor = Color.LightGray
+            End If
+        End With
+
+        Return listViewItem
+    End Function
+
     Private Sub processExistingHashFile(strPathToChecksumFile As String)
         lblVerifyFileNameLabel.Text = "File Name: " & strPathToChecksumFile
 
@@ -770,7 +794,6 @@ Public Class Form1
                                                      Dim strChecksum, strFileName As String
                                                      Dim index As Integer = 1
                                                      Dim intFilesThatPassedVerification As Integer = 0
-                                                     Dim listViewItem As myListViewItem
                                                      Dim regExMatchObject As Text.RegularExpressions.Match
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim intLineCounter As Integer = 0
@@ -797,29 +820,7 @@ Public Class Form1
                                                                      strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
                                                                  End If
 
-                                                                 listViewItem = New myListViewItem(strFileName) With {
-                                                                    .hash = strChecksum,
-                                                                    .fileName = strFileName
-                                                                 }
-
-                                                                 If IO.File.Exists(strFileName) Then
-                                                                     listViewItem.fileSize = New IO.FileInfo(strFileName).Length
-                                                                     listViewItem.SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                                                                     listViewItem.SubItems.Add("To Be Tested")
-                                                                     listViewItem.SubItems.Add("To Be Tested")
-                                                                     listViewItem.boolFileExists = True
-                                                                 Else
-                                                                     listViewItem.fileSize = -1
-                                                                     listViewItem.computeTime = Nothing
-                                                                     listViewItem.SubItems.Add("")
-                                                                     listViewItem.SubItems.Add("Doesn't Exist")
-                                                                     listViewItem.SubItems.Add("")
-                                                                     listViewItem.boolFileExists = False
-                                                                     listViewItem.BackColor = Color.LightGray
-                                                                 End If
-
-                                                                 verifyHashesListFiles.Items.Add(listViewItem)
-                                                                 listViewItem = Nothing
+                                                                 verifyHashesListFiles.Items.Add(createListViewItemForHashFileEntry(strFileName, strChecksum))
                                                              End If
 
                                                              regExMatchObject = Nothing
