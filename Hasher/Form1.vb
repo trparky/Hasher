@@ -1150,19 +1150,19 @@ Public Class Form1
     End Sub
 
     Private Sub CopyHashToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyHashToClipboardToolStripMenuItem.Click
-        Dim stringBuilder As New Text.StringBuilder
-        addHashFileHeader(stringBuilder)
-
         If listFiles.SelectedItems.Count = 1 Then
             Dim selectedItem As myListViewItem = listFiles.SelectedItems(0)
-            stringBuilder.AppendLine(If(My.Settings.boolDisplayHashesInUpperCase, selectedItem.hash.ToUpper, selectedItem.hash.ToLower) & " *" & selectedItem.fileName)
+            If copyTextToWindowsClipboard(If(My.Settings.boolDisplayHashesInUpperCase, selectedItem.hash.ToUpper, selectedItem.hash.ToLower)) Then showNotificationOrMessageBox("The hash result has been copied to the Windows Clipboard.", msgBoxOrNotificationType.Information, strWindowTitle)
         Else
+            Dim stringBuilder As New Text.StringBuilder
+            addHashFileHeader(stringBuilder)
+
             For Each item As myListViewItem In listFiles.SelectedItems
                 stringBuilder.AppendLine(If(My.Settings.boolDisplayHashesInUpperCase, item.hash.ToUpper, item.hash.ToLower) & " *" & item.fileName)
             Next
-        End If
 
-        If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then showNotificationOrMessageBox("The hash result has been copied to the Windows Clipboard.", msgBoxOrNotificationType.Information, strWindowTitle)
+            If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then showNotificationOrMessageBox("The hash result has been copied to the Windows Clipboard.", msgBoxOrNotificationType.Information, strWindowTitle)
+        End If
     End Sub
 
     Private Sub applyFileSizeSortingToHashList()
