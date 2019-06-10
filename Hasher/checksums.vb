@@ -46,36 +46,44 @@ Public Class checksums
     End Function
 
     Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType) As String
-        Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType)
+        Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType) ' Get our hashing engine.
+
+        ' Declare some variables.
         Dim byteReadAheadDataBuffer As Byte(), byteDataBuffer As Byte()
         Dim intReadAheadBytesRead As Integer, intBytesRead As Integer
         Dim longFileSize As Long, longTotalBytesRead As Long = 0
-        Dim stopwatch As Stopwatch = Stopwatch.StartNew
 
-        Using fileStream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
-            longFileSize = fileStream.Length
-            byteReadAheadDataBuffer = New Byte(intBufferSize - 1) {}
-            intReadAheadBytesRead = fileStream.Read(byteReadAheadDataBuffer, 0, byteReadAheadDataBuffer.Length)
-            longTotalBytesRead += intReadAheadBytesRead
+        Dim stopwatch As Stopwatch = Stopwatch.StartNew ' Create a stopwatch for compute timing.
 
+        ' Open the file for reading.
+        Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
+            longFileSize = stream.Length ' Get the size of the file.
+            byteReadAheadDataBuffer = New Byte(intBufferSize - 1) {} ' Create a data buffer in system memory to store some data.
+            intReadAheadBytesRead = stream.Read(byteReadAheadDataBuffer, 0, byteReadAheadDataBuffer.Length) ' Read some data from disk into the data buffer that was created above.
+            longTotalBytesRead += intReadAheadBytesRead ' Increment the amount of data that we've read by the amount we read above.
+
+            ' We're going to loop until all the data for the file we're processing has been read from disk.
             Do
                 intBytesRead = intReadAheadBytesRead
-                byteDataBuffer = byteReadAheadDataBuffer
+                byteDataBuffer = byteReadAheadDataBuffer ' Copy the contents of the buffer we read from disk into the global buffer.
 
-                byteReadAheadDataBuffer = New Byte(intBufferSize - 1) {}
-                intReadAheadBytesRead = fileStream.Read(byteReadAheadDataBuffer, 0, byteReadAheadDataBuffer.Length)
-                longTotalBytesRead += intReadAheadBytesRead
+                byteReadAheadDataBuffer = New Byte(intBufferSize - 1) {} ' Create a new data buffer in system memory to store some data.
+                intReadAheadBytesRead = stream.Read(byteReadAheadDataBuffer, 0, byteReadAheadDataBuffer.Length) ' Read some data from disk into the data buffer that was created above.
+                longTotalBytesRead += intReadAheadBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
                 If intReadAheadBytesRead = 0 Then
+                    ' We're done reading the file, we now need to finalize the data in the hasher function.
                     HashAlgorithm.TransformFinalBlock(byteDataBuffer, 0, intBytesRead)
                 Else
+                    ' Add the data that we've read from disk into the hasher function.
                     HashAlgorithm.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
                 End If
 
+                ' Update the status on the GUI.
                 checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, getETATime(stopwatch, longTotalBytesRead, longFileSize))
             Loop While intReadAheadBytesRead <> 0
         End Using
 
-        Return BitConverter.ToString(HashAlgorithm.Hash).ToLower().Replace("-", "")
+        Return BitConverter.ToString(HashAlgorithm.Hash).ToLower().Replace("-", "") ' Return the hash string.
     End Function
 End Class
