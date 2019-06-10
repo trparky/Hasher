@@ -857,17 +857,18 @@ Public Class Form1
                                                      Me.Text = "Hasher"
 
                                                      Me.Invoke(Sub()
-                                                                   Dim strMessageBoxText As String
+                                                                   Dim sbMessageBoxText As New Text.StringBuilder
 
                                                                    If intFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
-                                                                       strMessageBoxText = "Processing of hash file complete. All files have passed verification."
+                                                                       sbMessageBoxText.AppendLine("Processing of hash file complete. All files have passed verification.")
                                                                    Else
-                                                                       strMessageBoxText = String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", intFilesThatPassedVerification.ToString("N0"), verifyHashesListFiles.Items.Count.ToString("N0"), (verifyHashesListFiles.Items.Count - intFilesThatPassedVerification).ToString("N0"))
+                                                                       sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", intFilesThatPassedVerification.ToString("N0"), verifyHashesListFiles.Items.Count.ToString("N0"), (verifyHashesListFiles.Items.Count - intFilesThatPassedVerification).ToString("N0")))
                                                                    End If
 
-                                                                   strMessageBoxText &= vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & "."
+                                                                   sbMessageBoxText.AppendLine()
+                                                                   sbMessageBoxText.AppendLine("Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".")
 
-                                                                   showNotificationOrMessageBox(strMessageBoxText, msgBoxOrNotificationType.Information, strWindowTitle, True)
+                                                                   showNotificationOrMessageBox(sbMessageBoxText.ToString.Trim, msgBoxOrNotificationType.Information, strWindowTitle, True)
                                                                End Sub)
 
                                                      boolBackgroundThreadWorking = False
