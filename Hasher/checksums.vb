@@ -47,35 +47,33 @@ Public Class checksums
 
     Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType) As String
         Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType)
-        Dim readAheadBuffer As Byte(), buffer As Byte()
-        Dim readAheadBytesRead As Integer, bytesRead As Integer
-        Dim size As Long, totalBytesRead As Long = 0
+        Dim byteReadAheadDataBuffer As Byte(), byteDataBuffer As Byte()
+        Dim intReadAheadBytesRead As Integer, intBytesRead As Integer
+        Dim longFileSize As Long, longTotalBytesRead As Long = 0
         Dim stopwatch As Stopwatch = Stopwatch.StartNew
 
-        Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
-            size = stream.Length
-            readAheadBuffer = New Byte(intBufferSize - 1) {}
-            readAheadBytesRead = stream.Read(readAheadBuffer, 0, readAheadBuffer.Length)
-
-            totalBytesRead += readAheadBytesRead
+        Using fileStream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
+            longFileSize = fileStream.Length
+            byteReadAheadDataBuffer = New Byte(intBufferSize - 1) {}
+            intReadAheadBytesRead = fileStream.Read(byteReadAheadDataBuffer, 0, byteReadAheadDataBuffer.Length)
+            longTotalBytesRead += intReadAheadBytesRead
 
             Do
-                bytesRead = readAheadBytesRead
-                buffer = readAheadBuffer
+                intBytesRead = intReadAheadBytesRead
+                byteDataBuffer = byteReadAheadDataBuffer
 
-                readAheadBuffer = New Byte(intBufferSize - 1) {}
-                readAheadBytesRead = stream.Read(readAheadBuffer, 0, readAheadBuffer.Length)
+                byteReadAheadDataBuffer = New Byte(intBufferSize - 1) {}
+                intReadAheadBytesRead = fileStream.Read(byteReadAheadDataBuffer, 0, byteReadAheadDataBuffer.Length)
+                longTotalBytesRead += intReadAheadBytesRead
 
-                totalBytesRead += readAheadBytesRead
-
-                If readAheadBytesRead = 0 Then
-                    HashAlgorithm.TransformFinalBlock(buffer, 0, bytesRead)
+                If intReadAheadBytesRead = 0 Then
+                    HashAlgorithm.TransformFinalBlock(byteDataBuffer, 0, intBytesRead)
                 Else
-                    HashAlgorithm.TransformBlock(buffer, 0, bytesRead, buffer, 0)
+                    HashAlgorithm.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
                 End If
 
-                checksumStatusUpdater.DynamicInvoke(size, totalBytesRead, getETATime(stopwatch, totalBytesRead, size))
-            Loop While readAheadBytesRead <> 0
+                checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, getETATime(stopwatch, longTotalBytesRead, longFileSize))
+            Loop While intReadAheadBytesRead <> 0
         End Using
 
         Return BitConverter.ToString(HashAlgorithm.Hash).ToLower().Replace("-", "")
