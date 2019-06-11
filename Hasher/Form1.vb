@@ -18,6 +18,7 @@ Public Class Form1
     Private pipeServer As NamedPipeServerStream = Nothing
     Private ReadOnly strNamedPipeServerName As String = "hasher_" & getHashOfString(Environment.UserName, checksums.checksumType.sha256).Substring(0, 10)
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
+    Private boolShowEstimatedTime As Boolean
 
     Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
@@ -46,7 +47,7 @@ Public Class Form1
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New checksums(subRoutine)
-                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
+                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType, boolShowEstimatedTime)
                 Return True
             Else
                 Return False
@@ -62,7 +63,7 @@ Public Class Form1
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New checksums(checksumSubRoutine)
-                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
+                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType, boolShowEstimatedTime)
                 finishedChecksumSubRoutine.DynamicInvoke()
                 Return True
             Else
@@ -221,7 +222,7 @@ Public Class Form1
                                                                                                           IndividualFilesProgressBar.Value = percentage
                                                                                                           If Not My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(IndividualFilesProgressBar.Value))
                                                                                                           lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                          If eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                                                          If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -579,7 +580,8 @@ Public Class Form1
         chkSaveChecksumFilesWithRelativePaths.Checked = My.Settings.boolSaveChecksumFilesWithRelativePaths
         chkUseMilliseconds.Checked = My.Settings.boolUseMilliseconds
         chkDisplayHashesInUpperCase.Checked = My.Settings.boolDisplayHashesInUpperCase
-        chkShowEstimatedTimeRemaining.Checked = My.Settings.boolShowEstimatedTime
+        boolShowEstimatedTime = My.Settings.boolShowEstimatedTime
+        chkShowEstimatedTimeRemaining.Checked = boolShowEstimatedTime
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
         lblValidColor.BackColor = My.Settings.validColor
@@ -946,7 +948,7 @@ Public Class Form1
                                                                  VerifyHashProgressBar.Value = percentage
                                                                  If Not My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value))
                                                                  lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                 If eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                 If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                              End Sub)
                                                Catch ex As Exception
                                                End Try
@@ -1291,7 +1293,7 @@ Public Class Form1
                                                                                                           compareFilesProgressBar.Value = percentage
                                                                                                           Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareFilesProgressBar.Value))
                                                                                                           lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                          If eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                                                          If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -1485,7 +1487,7 @@ Public Class Form1
                                                                                                           compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                           Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value))
                                                                                                           lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                          If eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                                                          If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -1760,6 +1762,7 @@ Public Class Form1
     End Sub
 
     Private Sub chkShowEstimatedTimeRemaining_Click(sender As Object, e As EventArgs) Handles chkShowEstimatedTimeRemaining.Click
+        boolShowEstimatedTime = chkShowEstimatedTimeRemaining.Checked
         My.Settings.boolShowEstimatedTime = chkShowEstimatedTimeRemaining.Checked
     End Sub
 

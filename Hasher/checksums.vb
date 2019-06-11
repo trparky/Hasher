@@ -38,14 +38,13 @@ Public Class checksums
     End Function
 
     Private Function getETATime(ByVal sw As Stopwatch, ByVal counter As Long, ByVal counterGoal As Long) As TimeSpan
-        If Not My.Settings.boolShowEstimatedTime Then Return TimeSpan.Zero
         If counter = 0 Then Return TimeSpan.Zero
         Dim elapsedMin As Single = CSng(sw.ElapsedMilliseconds) / 1000 / 60
         Dim minLeft As Single = (elapsedMin / counter) * (counterGoal - counter)
         Return TimeSpan.FromMinutes(minLeft)
     End Function
 
-    Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType) As String
+    Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType, boolShowEstimatedTime As Boolean) As String
         Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType) ' Get our hashing engine.
 
         ' Declare some variables.
@@ -71,8 +70,15 @@ Public Class checksums
                 intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the data buffer that was created above.
                 longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
-                ' Update the status on the GUI.
-                checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, getETATime(stopwatch, longTotalBytesRead, longFileSize))
+                ' We do a check to see if the user wants the estimated time to be shown, if not we don't call the getETATime()
+                ' function at all and pass a TimeSpan.Zero as part of the plugged in function call below.
+                If boolShowEstimatedTime Then
+                    ' Update the status on the GUI.
+                    checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, getETATime(stopwatch, longTotalBytesRead, longFileSize))
+                Else
+                    ' Update the status on the GUI.
+                    checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, TimeSpan.Zero)
+                End If
             Loop
 
             ' We're done reading the file, we now need to finalize the data in the hasher function.
