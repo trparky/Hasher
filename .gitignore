@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /hasher_update.xml.lnk
+/Hasher/My Project/AssemblyInfo.vb
