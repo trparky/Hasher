@@ -36,6 +36,8 @@ Public Class Form1
             result = Math.Round(size / (2 ^ 40), shortRoundNumber) & " TBs"
         ElseIf size > (2 ^ 50) And size <= (2 ^ 60) Then
             result = Math.Round(size / (2 ^ 50), shortRoundNumber) & " PBs"
+        ElseIf size > (2 ^ 60) And size <= (2 ^ 70) Then
+            result = Math.Round(size / (2 ^ 50), shortRoundNumber) & " EBs"
         Else
             result = "(None)"
         End If
