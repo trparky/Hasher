@@ -1332,11 +1332,20 @@ Public Class Form1
                                                      Me.Text = "Hasher"
 
                                                      If boolSuccessful Then
+                                                         Dim stringBuilder As New Text.StringBuilder
+                                                         Dim msgBoxOrNotificationType As msgBoxOrNotificationType
+
                                                          If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
-                                                             showNotificationOrMessageBox("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", msgBoxOrNotificationType.Information, strWindowTitle)
+                                                             stringBuilder.AppendLine("Both files are the same.")
+                                                             msgBoxOrNotificationType = msgBoxOrNotificationType.Information
                                                          Else
-                                                             showNotificationOrMessageBox("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", msgBoxOrNotificationType.Critical, strWindowTitle)
+                                                             stringBuilder.AppendLine("The two files don't match.")
+                                                             msgBoxOrNotificationType = msgBoxOrNotificationType.Critical
                                                          End If
+
+                                                         stringBuilder.AppendLine()
+                                                         stringBuilder.AppendLine("Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".")
+                                                         showNotificationOrMessageBox(stringBuilder.ToString.Trim, msgBoxOrNotificationType, strWindowTitle)
                                                      Else
                                                          showNotificationOrMessageBox("There was an error while calculating the checksum.", msgBoxOrNotificationType.Critical, strWindowTitle)
                                                      End If
@@ -1509,15 +1518,24 @@ Public Class Form1
                                                      Me.Text = "Hasher"
 
                                                      If boolSuccessful Then
+                                                         Dim stringBuilder As New Text.StringBuilder
+                                                         Dim msgBoxOrNotificationType As msgBoxOrNotificationType
+
                                                          If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
                                                              pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.good_check
+                                                             stringBuilder.AppendLine("The checksums match!")
+                                                             msgBoxOrNotificationType = msgBoxOrNotificationType.Information
                                                              ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum Verified!")
-                                                             showNotificationOrMessageBox("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", msgBoxOrNotificationType.Information, strWindowTitle)
                                                          Else
                                                              pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
+                                                             stringBuilder.AppendLine("The checksums DON'T match!")
+                                                             msgBoxOrNotificationType = msgBoxOrNotificationType.Critical
                                                              ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum verification failed, checksum didn't match!")
-                                                             showNotificationOrMessageBox("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", msgBoxOrNotificationType.Critical, strWindowTitle)
                                                          End If
+
+                                                         stringBuilder.AppendLine()
+                                                         stringBuilder.AppendLine("Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".")
+                                                         showNotificationOrMessageBox(stringBuilder.ToString.Trim, msgBoxOrNotificationType, strWindowTitle)
                                                      Else
                                                          pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
                                                          showNotificationOrMessageBox("There was an error while calculating the checksum.", msgBoxOrNotificationType.Critical, strWindowTitle)
