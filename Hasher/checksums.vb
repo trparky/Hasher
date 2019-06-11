@@ -61,6 +61,9 @@ Public Class checksums
             intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the above data buffer.
             longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
+            ' This sub-routine call is to help de-duplicate code.
+            callChecksumStatusUpdatedPluginCode(boolShowEstimatedTime, longFileSize, longTotalBytesRead, stopwatch)
+
             ' We're going to loop until all the data for the file we're processing has been read from disk.
             Do While longTotalBytesRead < longFileSize
                 ' Add the data that we've read from disk into the hasher function.
@@ -70,15 +73,8 @@ Public Class checksums
                 intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the data buffer that was created above.
                 longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
-                ' We do a check to see if the user wants the estimated time to be shown, if not we don't call the getETATime()
-                ' function at all and pass a TimeSpan.Zero as part of the plugged in function call below.
-                If boolShowEstimatedTime Then
-                    ' Update the status on the GUI.
-                    checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, getETATime(stopwatch, longTotalBytesRead, longFileSize))
-                Else
-                    ' Update the status on the GUI.
-                    checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, TimeSpan.Zero)
-                End If
+                ' This sub-routine call is to help de-duplicate code.
+                callChecksumStatusUpdatedPluginCode(boolShowEstimatedTime, longFileSize, longTotalBytesRead, stopwatch)
             Loop
 
             ' We're done reading the file, we now need to finalize the data in the hasher function.
@@ -87,4 +83,17 @@ Public Class checksums
 
         Return BitConverter.ToString(HashAlgorithm.Hash).ToLower().Replace("-", "") ' Return the hash string.
     End Function
+
+    ' This sub-routine call is to help de-duplicate code. And yes, we use ByRef variables here to reduce data copying performance issues.
+    Private Sub callChecksumStatusUpdatedPluginCode(ByRef boolShowEstimatedTime As Boolean, ByRef longFileSize As Long, ByRef longTotalBytesRead As Long, ByRef stopwatch As Stopwatch)
+        ' We do a check to see if the user wants the estimated time to be shown, if not we don't call the getETATime()
+        ' function at all and pass a TimeSpan.Zero as part of the plugged in function call below.
+        If boolShowEstimatedTime Then
+            ' Update the status on the GUI.
+            checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, getETATime(stopwatch, longTotalBytesRead, longFileSize))
+        Else
+            ' Update the status on the GUI.
+            checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, TimeSpan.Zero)
+        End If
+    End Sub
 End Class
