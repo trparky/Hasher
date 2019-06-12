@@ -329,6 +329,18 @@ Namespace My
                 Me("shortNotificationsForHowLong") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
+        Public Property shortBufferSize() As Short
+            Get
+                Return CType(Me("shortBufferSize"),Short)
+            End Get
+            Set
+                Me("shortBufferSize") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

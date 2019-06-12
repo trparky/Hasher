@@ -123,6 +123,15 @@
   <metadata name="ToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>613, 17</value>
   </metadata>
+  <data name="Label9.ToolTip" xml:space="preserve">
+    <value>This setting controls the size of the data buffer that's used to read data from disk.
+
+If processing large files, a large buffer may be beneficial. However if you're
+processing a lot of small files, a small data buffer may be better.
+
+Depending upon your specific hardware, this setting may vary. The default
+setting is 2 MBs.</value>
+  </data>
   <metadata name="OpenFileDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>182, 17</value>
   </metadata>

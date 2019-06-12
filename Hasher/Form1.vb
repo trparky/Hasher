@@ -3,9 +3,9 @@
 Public Class Form1
     Private Const strToBeComputed As String = "To Be Computed"
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
-    Private Const intBufferSize As Integer = 16 * 1024 * 1024
     Private Const strWindowTitle As String = "Hasher"
 
+    Private intBufferSize As Integer = My.Settings.shortBufferSize * 1024 * 1024
     Private strLastDirectoryWorkedOn As String
     Private filesInListFiles As New Specialized.StringCollection
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
@@ -592,6 +592,7 @@ Public Class Form1
         chkUseTaskBarProgressBarForOverallStatus.Checked = My.Settings.boolUseTaskBarProgressBarForOverallStatus
         chkShowProgramMessagesAsNotifications.Checked = My.Settings.boolShowProgramMessagesAsNotifications
         txtShowNotificationsForHowLong.Text = My.Settings.shortNotificationsForHowLong.ToString
+        bufferSize.Value = My.Settings.shortBufferSize
 
         If chkShowProgramMessagesAsNotifications.Checked Then
             lblHowLongLabel.Visible = True
@@ -1848,6 +1849,18 @@ Public Class Form1
             Else
                 MsgBox(strMessageText, messageBoxType, strTitle)
             End If
+        End If
+    End Sub
+
+    Private Sub btnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
+        Dim shortBufferSize As Short
+
+        If Short.TryParse(bufferSize.Value.ToString, shortBufferSize) Then
+            intBufferSize = shortBufferSize * 1024 * 1024
+            My.Settings.shortBufferSize = shortBufferSize
+            showNotificationOrMessageBox("Data buffer size set successfully to " & shortBufferSize & If(shortBufferSize = 1, " MB.", " MBs."), msgBoxOrNotificationType.Information, strWindowTitle)
+        Else
+            showNotificationOrMessageBox("Invalid user input, the input must be a numerical input.", msgBoxOrNotificationType.Error, strWindowTitle)
         End If
     End Sub
 

@@ -23,6 +23,7 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabWelcome = New System.Windows.Forms.TabPage()
         Me.btnDonate = New System.Windows.Forms.Button()
@@ -115,6 +116,10 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.btnSetBufferSize = New System.Windows.Forms.Button()
+        Me.bufferSize = New System.Windows.Forms.NumericUpDown()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.btnSetHowLong = New System.Windows.Forms.Button()
         Me.txtShowNotificationsForHowLong = New System.Windows.Forms.TextBox()
         Me.lblHowLongLabel = New System.Windows.Forms.Label()
         Me.chkShowProgramMessagesAsNotifications = New System.Windows.Forms.CheckBox()
@@ -141,7 +146,6 @@ Partial Class Form1
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.NotifyIcon = New System.Windows.Forms.NotifyIcon(Me.components)
-        Me.btnSetHowLong = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -152,6 +156,7 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.SuspendLayout()
         CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabSettings.SuspendLayout()
+        CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -179,10 +184,10 @@ Partial Class Form1
         Me.tabWelcome.Controls.Add(Me.lblDownloadNotification)
         Me.tabWelcome.Controls.Add(Me.btnCheckForUpdates)
         Me.tabWelcome.Controls.Add(Me.lblWelcomeText)
-        Me.tabWelcome.Location = New System.Drawing.Point(4, 24)
+        Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
         Me.tabWelcome.Name = "tabWelcome"
         Me.tabWelcome.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabWelcome.Size = New System.Drawing.Size(1040, 361)
+        Me.tabWelcome.Size = New System.Drawing.Size(1040, 363)
         Me.tabWelcome.TabIndex = 0
         Me.tabWelcome.Text = "Welcome"
         '
@@ -246,10 +251,10 @@ Partial Class Form1
         Me.tabHashText.Controls.Add(Me.lblHashTextStep1)
         Me.tabHashText.Controls.Add(Me.txtTextToHash)
         Me.tabHashText.Controls.Add(Me.lblTextToHash)
-        Me.tabHashText.Location = New System.Drawing.Point(4, 24)
+        Me.tabHashText.Location = New System.Drawing.Point(4, 22)
         Me.tabHashText.Name = "tabHashText"
         Me.tabHashText.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabHashText.Size = New System.Drawing.Size(1040, 361)
+        Me.tabHashText.Size = New System.Drawing.Size(1040, 363)
         Me.tabHashText.TabIndex = 1
         Me.tabHashText.Text = "Hash Text"
         '
@@ -441,9 +446,9 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Controls.Add(Me.btnRemoveAllFiles)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddFilesInFolder)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddIndividualFiles)
-        Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 24)
+        Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabHashIndividualFiles.Name = "tabHashIndividualFiles"
-        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 361)
+        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 363)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
         '
@@ -711,9 +716,9 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyHashStatus)
         Me.tabVerifySavedHashes.Controls.Add(Me.verifyHashesListFiles)
         Me.tabVerifySavedHashes.Controls.Add(Me.btnOpenExistingHashFile)
-        Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 24)
+        Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
-        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 361)
+        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 363)
         Me.tabVerifySavedHashes.TabIndex = 3
         Me.tabVerifySavedHashes.Text = "Verify Saved Hashes"
         '
@@ -830,9 +835,9 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.txtFile2)
         Me.tabCompareFiles.Controls.Add(Me.txtFile1)
         Me.tabCompareFiles.Controls.Add(Me.Label4)
-        Me.tabCompareFiles.Location = New System.Drawing.Point(4, 24)
+        Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareFiles.Name = "tabCompareFiles"
-        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 361)
+        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 363)
         Me.tabCompareFiles.TabIndex = 5
         Me.tabCompareFiles.Text = "Compare Files"
         '
@@ -1016,9 +1021,9 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.btnBrowseFileForCompareKnownHash)
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.txtFileForKnownHash)
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.Label7)
-        Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 24)
+        Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareAgainstKnownHash.Name = "tabCompareAgainstKnownHash"
-        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 361)
+        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 363)
         Me.tabCompareAgainstKnownHash.TabIndex = 6
         Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
         '
@@ -1118,6 +1123,9 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.btnSetBufferSize)
+        Me.tabSettings.Controls.Add(Me.bufferSize)
+        Me.tabSettings.Controls.Add(Me.Label9)
         Me.tabSettings.Controls.Add(Me.btnSetHowLong)
         Me.tabSettings.Controls.Add(Me.txtShowNotificationsForHowLong)
         Me.tabSettings.Controls.Add(Me.lblHowLongLabel)
@@ -1140,11 +1148,50 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.lblFileNotFoundColor)
         Me.tabSettings.Controls.Add(Me.lblNotValidColor)
         Me.tabSettings.Controls.Add(Me.lblValidColor)
-        Me.tabSettings.Location = New System.Drawing.Point(4, 24)
+        Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
-        Me.tabSettings.Size = New System.Drawing.Size(1040, 361)
+        Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
+        '
+        'btnSetBufferSize
+        '
+        Me.btnSetBufferSize.Location = New System.Drawing.Point(751, 129)
+        Me.btnSetBufferSize.Name = "btnSetBufferSize"
+        Me.btnSetBufferSize.Size = New System.Drawing.Size(31, 23)
+        Me.btnSetBufferSize.TabIndex = 27
+        Me.btnSetBufferSize.Text = "Set"
+        Me.btnSetBufferSize.UseVisualStyleBackColor = True
+        '
+        'bufferSize
+        '
+        Me.bufferSize.Location = New System.Drawing.Point(695, 132)
+        Me.bufferSize.Maximum = New Decimal(New Integer() {16, 0, 0, 0})
+        Me.bufferSize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
+        Me.bufferSize.Name = "bufferSize"
+        Me.bufferSize.Size = New System.Drawing.Size(50, 20)
+        Me.bufferSize.TabIndex = 26
+        Me.bufferSize.Value = New Decimal(New Integer() {16, 0, 0, 0})
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(501, 134)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(188, 13)
+        Me.Label9.TabIndex = 23
+        Me.Label9.Text = "Data Buffer Size (In MBs, Default is 2):"
+        Me.ToolTip.SetToolTip(Me.Label9, resources.GetString("Label9.ToolTip"))
+        '
+        'btnSetHowLong
+        '
+        Me.btnSetHowLong.Location = New System.Drawing.Point(681, 217)
+        Me.btnSetHowLong.Name = "btnSetHowLong"
+        Me.btnSetHowLong.Size = New System.Drawing.Size(34, 23)
+        Me.btnSetHowLong.TabIndex = 22
+        Me.btnSetHowLong.Text = "Set"
+        Me.btnSetHowLong.UseVisualStyleBackColor = True
+        Me.btnSetHowLong.Visible = False
         '
         'txtShowNotificationsForHowLong
         '
@@ -1358,16 +1405,6 @@ Partial Class Form1
         Me.NotifyIcon.Text = "Hasher"
         Me.NotifyIcon.Visible = True
         '
-        'btnSetHowLong
-        '
-        Me.btnSetHowLong.Location = New System.Drawing.Point(681, 217)
-        Me.btnSetHowLong.Name = "btnSetHowLong"
-        Me.btnSetHowLong.Size = New System.Drawing.Size(34, 23)
-        Me.btnSetHowLong.TabIndex = 22
-        Me.btnSetHowLong.Text = "Set"
-        Me.btnSetHowLong.UseVisualStyleBackColor = True
-        Me.btnSetHowLong.Visible = False
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1395,6 +1432,7 @@ Partial Class Form1
         CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabSettings.ResumeLayout(False)
         Me.tabSettings.PerformLayout()
+        CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1518,4 +1556,7 @@ Partial Class Form1
     Friend WithEvents lblHowLongLabel As Label
     Friend WithEvents chkShowProgramMessagesAsNotifications As CheckBox
     Friend WithEvents btnSetHowLong As Button
+    Friend WithEvents Label9 As Label
+    Friend WithEvents bufferSize As NumericUpDown
+    Friend WithEvents btnSetBufferSize As Button
 End Class

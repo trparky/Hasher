@@ -71,5 +71,8 @@
     <Setting Name="shortNotificationsForHowLong" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="shortBufferSize" Type="System.Int16" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
