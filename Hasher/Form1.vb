@@ -20,31 +20,6 @@ Public Class Form1
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolShowEstimatedTime As Boolean
 
-    Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
-        Dim result As String
-        Dim shortRoundNumber As Short = If(roundToNearestWholeNumber, 0, 2)
-
-        If size <= (2 ^ 10) Then
-            result = size & " Bytes"
-        ElseIf size > (2 ^ 10) And size <= (2 ^ 20) Then
-            result = Math.Round(size / (2 ^ 10), shortRoundNumber) & " KBs"
-        ElseIf size > (2 ^ 20) And size <= (2 ^ 30) Then
-            result = Math.Round(size / (2 ^ 20), shortRoundNumber) & " MBs"
-        ElseIf size > (2 ^ 30) And size <= (2 ^ 40) Then
-            result = Math.Round(size / (2 ^ 30), shortRoundNumber) & " GBs"
-        ElseIf size > (2 ^ 40) And size <= (2 ^ 50) Then
-            result = Math.Round(size / (2 ^ 40), shortRoundNumber) & " TBs"
-        ElseIf size > (2 ^ 50) And size <= (2 ^ 60) Then
-            result = Math.Round(size / (2 ^ 50), shortRoundNumber) & " PBs"
-        ElseIf size > (2 ^ 60) And size <= (2 ^ 70) Then
-            result = Math.Round(size / (2 ^ 50), shortRoundNumber) & " EBs"
-        Else
-            result = "(None)"
-        End If
-
-        Return result
-    End Function
-
     Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksums.checksumType, ByRef strChecksum As String, subRoutine As [Delegate]) As Boolean
         Try
             If IO.File.Exists(strFile) Then
@@ -161,36 +136,6 @@ Public Class Form1
         End If
         updateFilesListCountHeader()
     End Sub
-
-    Private Function timespanToHMS(timeSpan As TimeSpan) As String
-        If timeSpan.TotalMilliseconds < 1000 Or timeSpan.Seconds = 0 Then
-            If My.Settings.boolUseMilliseconds Then
-                Return Math.Round(timeSpan.TotalMilliseconds, 2) & "ms (less than one second)"
-            Else
-                Return Math.Round(timeSpan.TotalMilliseconds / 1000, 2) & " seconds"
-            End If
-        End If
-
-        Dim strReturnedString As String = Nothing
-
-        If timeSpan.Hours <> 0 Then strReturnedString = timeSpan.Hours & If(timeSpan.Hours = 1, " Hour", " Hours")
-        If timeSpan.Minutes <> 0 Then
-            If String.IsNullOrWhiteSpace(strReturnedString) Then
-                strReturnedString = timeSpan.Minutes & If(timeSpan.Minutes = 1, " Minute", " Minutes")
-            Else
-                strReturnedString &= ", " & timeSpan.Minutes & If(timeSpan.Minutes = 1, " Minute", " Minutes")
-            End If
-        End If
-        If timeSpan.Seconds <> 0 Then
-            If String.IsNullOrWhiteSpace(strReturnedString) Then
-                strReturnedString = timeSpan.Seconds & If(timeSpan.Seconds = 1, " Second", " Seconds")
-            Else
-                strReturnedString &= " and " & timeSpan.Seconds & If(timeSpan.Seconds = 1, " Second", " Seconds")
-            End If
-        End If
-
-        Return strReturnedString
-    End Function
 
     Private Sub btnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
         If btnComputeHash.Text = "Abort Processing" Then
