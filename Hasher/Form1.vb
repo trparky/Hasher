@@ -1719,4 +1719,9 @@ Public Class Form1
     Private Sub BufferSize_ValueChanged(sender As Object, e As EventArgs) Handles bufferSize.ValueChanged
         btnSetBufferSize.Enabled = True
     End Sub
+
+    Private Sub BtnPerformBenchmark_Click(sender As Object, e As EventArgs) Handles btnPerformBenchmark.Click
+        Dim benchmarkWindowInstance As New Benchmark With {.StartPosition = FormStartPosition.CenterScreen}
+        benchmarkWindowInstance.Show()
+    End Sub
 End Class

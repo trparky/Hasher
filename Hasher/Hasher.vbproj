@@ -83,6 +83,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Benchmark.Designer.vb">
+      <DependentUpon>Benchmark.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Benchmark.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Check for Update Stuff.vb" />
     <Compile Include="checksums.vb" />
     <Compile Include="FileAssociation.vb" />
@@ -123,8 +129,12 @@
     <Compile Include="StringExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Benchmark.resx">
+      <DependentUpon>Benchmark.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

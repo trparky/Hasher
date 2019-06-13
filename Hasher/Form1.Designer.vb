@@ -141,6 +141,7 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnPerformBenchmark = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1139,6 +1140,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.lblFileNotFoundColor)
         Me.tabSettings.Controls.Add(Me.lblNotValidColor)
         Me.tabSettings.Controls.Add(Me.lblValidColor)
+        Me.tabSettings.Controls.Add(Me.btnPerformBenchmark)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
@@ -1352,6 +1354,15 @@ Partial Class Form1
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
         '
+        'btnPerformBenchmark
+        '
+        Me.btnPerformBenchmark.Location = New System.Drawing.Point(504, 158)
+        Me.btnPerformBenchmark.Name = "btnPerformBenchmark"
+        Me.btnPerformBenchmark.Size = New System.Drawing.Size(278, 23)
+        Me.btnPerformBenchmark.TabIndex = 28
+        Me.btnPerformBenchmark.Text = "Perform Benchmark to Determine Optimal Buffer Size"
+        Me.btnPerformBenchmark.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1501,4 +1512,5 @@ Partial Class Form1
     Friend WithEvents Label9 As Label
     Friend WithEvents bufferSize As NumericUpDown
     Friend WithEvents btnSetBufferSize As Button
+    Friend WithEvents btnPerformBenchmark As Button
 End Class
