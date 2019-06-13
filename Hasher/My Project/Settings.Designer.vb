@@ -308,30 +308,6 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property boolShowProgramMessagesAsNotifications() As Boolean
-            Get
-                Return CType(Me("boolShowProgramMessagesAsNotifications"),Boolean)
-            End Get
-            Set
-                Me("boolShowProgramMessagesAsNotifications") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("10")>  _
-        Public Property shortNotificationsForHowLong() As Short
-            Get
-                Return CType(Me("shortNotificationsForHowLong"),Short)
-            End Get
-            Set
-                Me("shortNotificationsForHowLong") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
         Public Property shortBufferSize() As Short
             Get
