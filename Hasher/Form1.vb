@@ -1794,12 +1794,12 @@ Public Class Form1
 
     Private Sub BtnSetHowLong_Click(sender As Object, e As EventArgs) Handles btnSetHowLong.Click
         Dim shortHowLong As Short = Nothing
-        If Short.TryParse(txtShowNotificationsForHowLong.Text.Trim, shortHowLong) Then
+        If Short.TryParse(txtShowNotificationsForHowLong.Value.ToString, shortHowLong) Then
             My.Settings.shortNotificationsForHowLong = shortHowLong
             showNotification("Setting saved.")
         Else
             My.Settings.shortNotificationsForHowLong = 10
-            txtShowNotificationsForHowLong.Text = "10"
+            txtShowNotificationsForHowLong.Value = 10
             showNotification("You inputted an invalid input, this setting has been set back to a default of 10 seconds.", ToolTipIcon.Error)
         End If
     End Sub

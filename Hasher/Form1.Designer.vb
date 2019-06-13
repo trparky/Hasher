@@ -120,7 +120,7 @@ Partial Class Form1
         Me.bufferSize = New System.Windows.Forms.NumericUpDown()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.btnSetHowLong = New System.Windows.Forms.Button()
-        Me.txtShowNotificationsForHowLong = New System.Windows.Forms.TextBox()
+        Me.txtShowNotificationsForHowLong = New System.Windows.Forms.NumericUpDown()
         Me.lblHowLongLabel = New System.Windows.Forms.Label()
         Me.chkShowProgramMessagesAsNotifications = New System.Windows.Forms.CheckBox()
         Me.chkUseTaskBarProgressBarForOverallStatus = New System.Windows.Forms.CheckBox()
@@ -157,6 +157,7 @@ Partial Class Form1
         CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabSettings.SuspendLayout()
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.txtShowNotificationsForHowLong, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -1187,7 +1188,7 @@ Partial Class Form1
         '
         Me.btnSetHowLong.Location = New System.Drawing.Point(681, 217)
         Me.btnSetHowLong.Name = "btnSetHowLong"
-        Me.btnSetHowLong.Size = New System.Drawing.Size(34, 23)
+        Me.btnSetHowLong.Size = New System.Drawing.Size(31, 23)
         Me.btnSetHowLong.TabIndex = 22
         Me.btnSetHowLong.Text = "Set"
         Me.btnSetHowLong.UseVisualStyleBackColor = True
@@ -1197,10 +1198,12 @@ Partial Class Form1
         '
         Me.txtShowNotificationsForHowLong.Location = New System.Drawing.Point(639, 219)
         Me.txtShowNotificationsForHowLong.Name = "txtShowNotificationsForHowLong"
-        Me.txtShowNotificationsForHowLong.Size = New System.Drawing.Size(36, 20)
+        Me.txtShowNotificationsForHowLong.Size = New System.Drawing.Size(40, 20)
         Me.txtShowNotificationsForHowLong.TabIndex = 21
-        Me.txtShowNotificationsForHowLong.Text = "10"
+        Me.txtShowNotificationsForHowLong.Value = New Decimal(New Integer() {10, 0, 0, 0})
         Me.txtShowNotificationsForHowLong.Visible = False
+        Me.txtShowNotificationsForHowLong.Maximum = 20
+        Me.txtShowNotificationsForHowLong.Minimum = 1
         '
         'lblHowLongLabel
         '
@@ -1433,6 +1436,7 @@ Partial Class Form1
         Me.tabSettings.ResumeLayout(False)
         Me.tabSettings.PerformLayout()
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.txtShowNotificationsForHowLong, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1552,7 +1556,7 @@ Partial Class Form1
     Friend WithEvents chkShowEstimatedTimeRemaining As CheckBox
     Friend WithEvents chkUseTaskBarProgressBarForOverallStatus As CheckBox
     Friend WithEvents NotifyIcon As NotifyIcon
-    Friend WithEvents txtShowNotificationsForHowLong As TextBox
+    Friend WithEvents txtShowNotificationsForHowLong As NumericUpDown
     Friend WithEvents lblHowLongLabel As Label
     Friend WithEvents chkShowProgramMessagesAsNotifications As CheckBox
     Friend WithEvents btnSetHowLong As Button
