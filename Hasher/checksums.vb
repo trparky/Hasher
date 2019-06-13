@@ -13,14 +13,6 @@ Public Class checksums
         checksumStatusUpdater = inputDelegate
     End Sub
 
-    Public Enum checksumType As Short
-        md5
-        sha160
-        sha256
-        sha384
-        sha512
-    End Enum
-
     Public Shared Function getHashEngine(hashType As checksumType) As Security.Cryptography.HashAlgorithm
         If hashType = checksumType.md5 Then
             Return New Security.Cryptography.MD5CryptoServiceProvider
@@ -97,3 +89,11 @@ Public Class checksums
         End If
     End Sub
 End Class
+
+Public Enum checksumType As Short
+    md5
+    sha160
+    sha256
+    sha384
+    sha512
+End Enum

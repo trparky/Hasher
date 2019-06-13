@@ -16,11 +16,11 @@ Public Class Form1
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
     Private boolDoneLoading As Boolean = False
     Private pipeServer As NamedPipeServerStream = Nothing
-    Private ReadOnly strNamedPipeServerName As String = "hasher_" & getHashOfString(Environment.UserName, checksums.checksumType.sha256).Substring(0, 10)
+    Private ReadOnly strNamedPipeServerName As String = "hasher_" & getHashOfString(Environment.UserName, checksumType.sha256).Substring(0, 10)
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolShowEstimatedTime As Boolean
 
-    Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksums.checksumType, ByRef strChecksum As String, subRoutine As [Delegate]) As Boolean
+    Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate]) As Boolean
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New checksums(subRoutine)
@@ -36,7 +36,7 @@ Public Class Form1
         End Try
     End Function
 
-    Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksums.checksumType, ByRef strChecksum As String, checksumSubRoutine As [Delegate], finishedChecksumSubRoutine As [Delegate]) As Boolean
+    Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, checksumSubRoutine As [Delegate], finishedChecksumSubRoutine As [Delegate]) As Boolean
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New checksums(checksumSubRoutine)
@@ -160,7 +160,7 @@ Public Class Form1
                                                      boolBackgroundThreadWorking = True
                                                      Dim percentage As Double
                                                      Dim strChecksum As String = Nothing
-                                                     Dim checksumType As checksums.checksumType
+                                                     Dim checksumType As checksumType
                                                      Dim index As Integer = 1
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
@@ -182,15 +182,15 @@ Public Class Form1
                                                      radioSHA512.Enabled = False
 
                                                      If radioMD5.Checked Then
-                                                         checksumType = checksums.checksumType.md5
+                                                         checksumType = checksumType.md5
                                                      ElseIf radioSHA1.Checked Then
-                                                         checksumType = checksums.checksumType.sha160
+                                                         checksumType = checksumType.sha160
                                                      ElseIf radioSHA256.Checked Then
-                                                         checksumType = checksums.checksumType.sha256
+                                                         checksumType = checksumType.sha256
                                                      ElseIf radioSHA384.Checked Then
-                                                         checksumType = checksums.checksumType.sha384
+                                                         checksumType = checksumType.sha384
                                                      ElseIf radioSHA512.Checked Then
-                                                         checksumType = checksums.checksumType.sha512
+                                                         checksumType = checksumType.sha512
                                                      End If
 
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
@@ -700,7 +700,7 @@ Public Class Form1
     Private Sub processExistingHashFile(strPathToChecksumFile As String)
         lblVerifyFileNameLabel.Text = "File Name: " & strPathToChecksumFile
 
-        Dim checksumType As checksums.checksumType
+        Dim checksumType As checksumType
         Dim checksumFileInfo As New IO.FileInfo(strPathToChecksumFile)
         Dim strChecksumFileExtension, strDirectoryThatContainsTheChecksumFile As String
 
@@ -709,15 +709,15 @@ Public Class Form1
         checksumFileInfo = Nothing
 
         If strChecksumFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = checksums.checksumType.md5
+            checksumType = checksumType.md5
         ElseIf strChecksumFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = checksums.checksumType.sha160
+            checksumType = checksumType.sha160
         ElseIf strChecksumFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = checksums.checksumType.sha256
+            checksumType = checksumType.sha256
         ElseIf strChecksumFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = checksums.checksumType.sha384
+            checksumType = checksumType.sha384
         ElseIf strChecksumFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = checksums.checksumType.sha512
+            checksumType = checksumType.sha512
         Else
             MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strWindowTitle)
             Exit Sub
@@ -866,7 +866,7 @@ Public Class Form1
         OpenFileDialog.Multiselect = oldMultiValue
     End Sub
 
-    Private Sub processFileInVerifyFileList(ByRef item As myListViewItem, hashFileType As checksums.checksumType, ByRef longFilesThatPassedVerification As Long)
+    Private Sub processFileInVerifyFileList(ByRef item As myListViewItem, hashFileType As checksumType, ByRef longFilesThatPassedVerification As Long)
         Dim strChecksum As String = item.hash
         Dim strFileName As String = item.fileName
 
@@ -947,15 +947,15 @@ Public Class Form1
         Dim strHash As String = Nothing
 
         If textRadioMD5.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.md5)
+            strHash = getHashOfString(txtTextToHash.Text, checksumType.md5)
         ElseIf textRadioSHA1.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha160)
+            strHash = getHashOfString(txtTextToHash.Text, checksumType.sha160)
         ElseIf textRadioSHA256.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha256)
+            strHash = getHashOfString(txtTextToHash.Text, checksumType.sha256)
         ElseIf textRadioSHA384.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha384)
+            strHash = getHashOfString(txtTextToHash.Text, checksumType.sha384)
         ElseIf textRadioSHA512.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksums.checksumType.sha512)
+            strHash = getHashOfString(txtTextToHash.Text, checksumType.sha512)
         End If
 
         txtHashResults.Text = If(My.Settings.boolDisplayHashesInUpperCase, strHash.ToUpper, strHash.ToLower)
@@ -1195,7 +1195,7 @@ Public Class Form1
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
-                                                     Dim checksumType As checksums.checksumType
+                                                     Dim checksumType As checksumType
 
                                                      compareRadioMD5.Enabled = False
                                                      compareRadioSHA1.Enabled = False
@@ -1204,15 +1204,15 @@ Public Class Form1
                                                      compareRadioSHA512.Enabled = False
 
                                                      If compareRadioMD5.Checked Then
-                                                         checksumType = checksums.checksumType.md5
+                                                         checksumType = checksumType.md5
                                                      ElseIf compareRadioSHA1.Checked Then
-                                                         checksumType = checksums.checksumType.sha160
+                                                         checksumType = checksumType.sha160
                                                      ElseIf compareRadioSHA256.Checked Then
-                                                         checksumType = checksums.checksumType.sha256
+                                                         checksumType = checksumType.sha256
                                                      ElseIf compareRadioSHA384.Checked Then
-                                                         checksumType = checksums.checksumType.sha384
+                                                         checksumType = checksumType.sha384
                                                      ElseIf compareRadioSHA512.Checked Then
-                                                         checksumType = checksums.checksumType.sha512
+                                                         checksumType = checksumType.sha512
                                                      End If
 
                                                      Dim strChecksum1 As String = Nothing
@@ -1397,18 +1397,18 @@ Public Class Form1
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
-                                                     Dim checksumType As checksums.checksumType
+                                                     Dim checksumType As checksumType
 
                                                      If txtKnownHash.Text.Length = 32 Then
-                                                         checksumType = checksums.checksumType.md5
+                                                         checksumType = checksumType.md5
                                                      ElseIf txtKnownHash.Text.Length = 40 Then
-                                                         checksumType = checksums.checksumType.sha160
+                                                         checksumType = checksumType.sha160
                                                      ElseIf txtKnownHash.Text.Length = 64 Then
-                                                         checksumType = checksums.checksumType.sha256
+                                                         checksumType = checksumType.sha256
                                                      ElseIf txtKnownHash.Text.Length = 96 Then
-                                                         checksumType = checksums.checksumType.sha384
+                                                         checksumType = checksumType.sha384
                                                      ElseIf txtKnownHash.Text.Length = 128 Then
-                                                         checksumType = checksums.checksumType.sha512
+                                                         checksumType = checksumType.sha512
                                                      End If
 
                                                      Dim strChecksum As String = Nothing
@@ -1484,7 +1484,7 @@ Public Class Form1
         My.Settings.windowSize = Me.Size
     End Sub
 
-    Private Function getHashOfString(inputString As String, hashType As checksums.checksumType) As String
+    Private Function getHashOfString(inputString As String, hashType As checksumType) As String
         Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(hashType)
         Dim Output As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
         Return BitConverter.ToString(Output).ToLower().Replace("-", "")
