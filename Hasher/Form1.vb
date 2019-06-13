@@ -593,6 +593,7 @@ Public Class Form1
         chkShowProgramMessagesAsNotifications.Checked = My.Settings.boolShowProgramMessagesAsNotifications
         txtShowNotificationsForHowLong.Text = My.Settings.shortNotificationsForHowLong.ToString
         bufferSize.Value = My.Settings.shortBufferSize
+        btnSetBufferSize.Enabled = False
 
         If chkShowProgramMessagesAsNotifications.Checked Then
             lblHowLongLabel.Visible = True
@@ -1858,10 +1859,15 @@ Public Class Form1
         If Short.TryParse(bufferSize.Value.ToString, shortBufferSize) Then
             intBufferSize = shortBufferSize * 1024 * 1024
             My.Settings.shortBufferSize = shortBufferSize
+            btnSetBufferSize.Enabled = False
             showNotificationOrMessageBox("Data buffer size set successfully to " & shortBufferSize & If(shortBufferSize = 1, " MB.", " MBs."), msgBoxOrNotificationType.Information, strWindowTitle)
         Else
             showNotificationOrMessageBox("Invalid user input, the input must be a numerical input.", msgBoxOrNotificationType.Error, strWindowTitle)
         End If
+    End Sub
+
+    Private Sub BufferSize_ValueChanged(sender As Object, e As EventArgs) Handles bufferSize.ValueChanged
+        btnSetBufferSize.Enabled = True
     End Sub
 
     Private Sub showNotification(txtMessage As String, Optional icon As ToolTipIcon = ToolTipIcon.Info)
