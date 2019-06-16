@@ -38,7 +38,7 @@ Partial Class Benchmark
         Me.listResults.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colBufferSize, Me.colComputeTime})
         Me.listResults.FullRowSelect = True
         Me.listResults.HideSelection = False
-        Me.listResults.Location = New System.Drawing.Point(13, 187)
+        Me.listResults.Location = New System.Drawing.Point(13, 200)
         Me.listResults.Name = "listResults"
         Me.listResults.Size = New System.Drawing.Size(437, 303)
         Me.listResults.TabIndex = 0
@@ -82,9 +82,9 @@ Partial Class Benchmark
         Me.lblStatus.AutoSize = True
         Me.lblStatus.Location = New System.Drawing.Point(12, 171)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(172, 13)
+        Me.lblStatus.Size = New System.Drawing.Size(172, 26)
         Me.lblStatus.TabIndex = 16
-        Me.lblStatus.Text = "(No Background Process Running)"
+        Me.lblStatus.Text = vbCrLf & "(No Background Process Running)"
         '
         'lblHeader
         '
@@ -99,7 +99,7 @@ Partial Class Benchmark
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(462, 502)
+        Me.ClientSize = New System.Drawing.Size(462, 515)
         Me.Controls.Add(Me.lblHeader)
         Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.ProgressBar)
