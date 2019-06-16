@@ -504,7 +504,7 @@ Public Class Form1
         Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
 
         If areWeAnAdministrator() Then
-            Me.Text &= " (WARNING!!! Running as Administrator.)"
+            Me.Text &= " (WARNING!!! Running as Administrator)"
         Else
             btnAssociate.ImageAlign = ContentAlignment.MiddleLeft
             btnAssociate.Image = My.Resources.UAC
