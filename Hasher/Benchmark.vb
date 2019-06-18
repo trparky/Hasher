@@ -25,6 +25,7 @@
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
+                                                     Dim strFileNameLine As String = "Benchmarking with file " & New IO.FileInfo(OpenFileDialog.FileName).Name & vbCrLf
                                                      Dim intBufferSize As Integer
                                                      Dim percentage As Double
                                                      Dim strChecksum As String = Nothing
@@ -34,7 +35,7 @@
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           ProgressBar.Value = percentage
-                                                                                                          lblStatus.Text = "Benchmarking with file " & New IO.FileInfo(OpenFileDialog.FileName).Name & vbCrLf
+                                                                                                          lblStatus.Text = strFileNameLine
                                                                                                           lblStatus.Text &= fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed with a " & intBufferSize.ToString & " MB buffer size."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
