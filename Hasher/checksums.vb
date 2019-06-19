@@ -61,7 +61,7 @@ Public Class checksums
                 ' Add the data that we've read from disk into the hasher function.
                 HashAlgorithm.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
 
-                byteDataBuffer = New Byte(intBufferSize - 1) {} ' Create a new data buffer in system memory to store some data.
+                Array.Clear(byteDataBuffer, 0, byteDataBuffer.Length) ' Clear the Byte Array.
                 intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the data buffer that was created above.
                 longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
