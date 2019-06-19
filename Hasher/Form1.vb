@@ -1721,7 +1721,12 @@ Public Class Form1
     End Sub
 
     Private Sub BtnPerformBenchmark_Click(sender As Object, e As EventArgs) Handles btnPerformBenchmark.Click
-        Dim benchmarkWindowInstance As New Benchmark With {.StartPosition = FormStartPosition.CenterScreen}
-        benchmarkWindowInstance.Show()
+        If benchmarkWindowInstance Is Nothing Then
+            benchmarkWindowInstance = New Benchmark With {.StartPosition = FormStartPosition.CenterScreen}
+            benchmarkWindowInstance.Show()
+        Else
+            benchmarkWindowInstance.WindowState = FormWindowState.Normal
+            benchmarkWindowInstance.BringToFront()
+        End If
     End Sub
 End Class

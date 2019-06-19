@@ -87,6 +87,7 @@
                 boolClosingWindow = True
                 workingThread.Abort()
             End If
+            benchmarkWindowInstance = Nothing
         End If
     End Sub
 
