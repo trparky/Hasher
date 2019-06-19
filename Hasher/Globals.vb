@@ -73,7 +73,7 @@ Public Module Globals
         Dim processObject As Process = Nothing
 
         ' First we are going to check if the Process ID exists.
-        If doesProcessIDExist(processID, processObject) = True Then
+        If doesProcessIDExist(processID, processObject) Then
             Try
                 processObject.Kill() ' Yes, it does so let's kill it.
             Catch ex As Exception
@@ -85,7 +85,7 @@ Public Module Globals
         Threading.Thread.Sleep(250) ' We're going to sleep to give the system some time to kill the process.
 
         '' Now we are going to check again if the Process ID exists and if it does, we're going to attempt to kill it again.
-        If doesProcessIDExist(processID, processObject) = True Then
+        If doesProcessIDExist(processID, processObject) Then
             Try
                 processObject.Kill()
             Catch ex As Exception
@@ -98,7 +98,7 @@ Public Module Globals
     End Sub
 
     Private Function getProcessExecutablePath(processID As Integer) As String
-        Dim memoryBuffer = New Text.StringBuilder(1024)
+        Dim memoryBuffer As New Text.StringBuilder(1024)
         Dim processHandle As IntPtr = NativeMethod.NativeMethods.OpenProcess(NativeMethod.ProcessAccessFlags.PROCESS_QUERY_LIMITED_INFORMATION, False, processID)
 
         If processHandle <> IntPtr.Zero Then
