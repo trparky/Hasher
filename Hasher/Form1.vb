@@ -577,7 +577,10 @@ Public Class Form1
     Private Sub deleteTemporaryNewEXEFile()
         Try
             Dim newExecutableName As String = New IO.FileInfo(Application.ExecutablePath).Name & ".new.exe"
-            If IO.File.Exists(newExecutableName) Then IO.File.Delete(newExecutableName)
+            If IO.File.Exists(newExecutableName) Then
+                searchForProcessAndKillIt(newExecutableName, False)
+                IO.File.Delete(newExecutableName)
+            End If
         Catch ex As Exception
         End Try
     End Sub
