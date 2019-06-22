@@ -1704,16 +1704,11 @@ Public Class Form1
     End Sub
 
     Private Sub btnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
-        Dim shortBufferSize As Short
-
-        If Short.TryParse(bufferSize.Value.ToString, shortBufferSize) Then
-            intBufferSize = shortBufferSize * 1024 * 1024
-            My.Settings.shortBufferSize = shortBufferSize
-            btnSetBufferSize.Enabled = False
-            MsgBox("Data buffer size set successfully to " & shortBufferSize & If(shortBufferSize = 1, " MB.", " MBs."), MsgBoxStyle.Information, strWindowTitle)
-        Else
-            MsgBox("Invalid user input, the input must be a numerical input.", MsgBoxStyle.Critical, strWindowTitle)
-        End If
+        Dim shortBufferSize As Short = Decimal.ToInt16(bufferSize.Value)
+        intBufferSize = shortBufferSize * 1024 * 1024
+        My.Settings.shortBufferSize = shortBufferSize
+        btnSetBufferSize.Enabled = False
+        MsgBox("Data buffer size set successfully to " & shortBufferSize & If(shortBufferSize = 1, " MB.", " MBs."), MsgBoxStyle.Information, strWindowTitle)
     End Sub
 
     Private Sub BufferSize_ValueChanged(sender As Object, e As EventArgs) Handles bufferSize.ValueChanged
