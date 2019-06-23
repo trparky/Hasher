@@ -129,7 +129,7 @@ Partial Class ProgressForm
 
                 If (osVersion.Major = 6 AndAlso osVersion.Minor > 0) OrElse (osVersion.Major > 6) Then
                     _winVersion = 1
-                    WM_TaskbarButtonCreated = RegisterWindowMessage("TaskbarButtonCreated")
+                    WM_TaskbarButtonCreated = NativeMethods.RegisterWindowMessage("TaskbarButtonCreated")
                 Else
                     _winVersion = 0
                 End If
@@ -155,10 +155,6 @@ Partial Class ProgressForm
             Return _taskbarList
         End Get
     End Property
-
-    <DllImport("user32.dll")>
-    Friend Shared Function RegisterWindowMessage(ByVal message As String) As Integer
-    End Function
 
     <ComImportAttribute()>
     <GuidAttribute("ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf")>
@@ -186,6 +182,15 @@ Partial Class ProgressForm
     <ComImportAttribute()>
     Friend Class CTaskbarList
     End Class
+End Class
+
+Friend NotInheritable Class NativeMethods
+    Private Sub New()
+    End Sub
+
+    <DllImport("user32.dll", CharSet:=CharSet.Unicode)>
+    Friend Shared Function RegisterWindowMessage(ByVal message As String) As Integer
+    End Function
 End Class
 
 Public Enum ThumbnailProgressState
