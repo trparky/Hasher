@@ -20,7 +20,7 @@ Class Check_for_Update_Stuff
         windowObject = inputWindowObject
     End Sub
 
-    Private Sub extractFileFromZIPFile(ByRef memoryStream As MemoryStream, fileToExtract As String, fileToWriteExtractedFileTo As String)
+    Private Shared Sub extractFileFromZIPFile(ByRef memoryStream As MemoryStream, fileToExtract As String, fileToWriteExtractedFileTo As String)
         Using zipFileObject As New Compression.ZipArchive(memoryStream, Compression.ZipArchiveMode.Read)
             Using fileStream As New FileStream(fileToWriteExtractedFileTo, FileMode.Create)
                 zipFileObject.GetEntry(fileToExtract).Open().CopyTo(fileStream)
@@ -63,11 +63,11 @@ Class Check_for_Update_Stuff
         End Try
     End Function
 
-    Private Function canIWriteToTheCurrentDirectory() As Boolean
+    Private Shared Function canIWriteToTheCurrentDirectory() As Boolean
         Return canIWriteThere(New FileInfo(Application.ExecutablePath).DirectoryName)
     End Function
 
-    Private Function randomString(length As Integer) As String
+    Private Shared Function randomString(length As Integer) As String
         Dim random As Random = New Random()
         Dim builder As New Text.StringBuilder()
         Dim ch As Char
@@ -81,7 +81,7 @@ Class Check_for_Update_Stuff
         Return builder.ToString()
     End Function
 
-    Private Function canIWriteThere(folderPath As String) As Boolean
+    Private Shared Function canIWriteThere(folderPath As String) As Boolean
         ' We make sure we get valid folder path by taking off the leading slash.
         If folderPath.EndsWith("\") Then folderPath = folderPath.Substring(0, folderPath.Length - 1)
 
@@ -101,7 +101,7 @@ Class Check_for_Update_Stuff
         End If
     End Function
 
-    Private Function checkByFolderACLs(folderPath As String) As Boolean
+    Private Shared Function checkByFolderACLs(folderPath As String) As Boolean
         Try
             Dim directoryACLs As DirectorySecurity = Directory.GetAccessControl(folderPath)
             Dim directoryUsers As String = WindowsIdentity.GetCurrent.User.Value
@@ -128,7 +128,7 @@ Class Check_for_Update_Stuff
         End Try
     End Function
 
-    Private Function createNewHTTPHelperObject() As httpHelper
+    Private Shared Function createNewHTTPHelperObject() As httpHelper
         Dim httpHelper As New httpHelper With {
             .setUserAgent = createHTTPUserAgentHeaderString(),
             .useHTTPCompression = True,
@@ -153,12 +153,12 @@ Class Check_for_Update_Stuff
         Return httpHelper
     End Function
 
-    Private Function SHA256ChecksumStream(ByRef stream As Stream) As String
+    Private Shared Function SHA256ChecksumStream(ByRef stream As Stream) As String
         Dim SHA256Engine As New Security.Cryptography.SHA256CryptoServiceProvider
         Return BitConverter.ToString(SHA256Engine.ComputeHash(stream)).ToLower().Replace("-", "").Trim
     End Function
 
-    Private Function verifyChecksum(urlOfChecksumFile As String, ByRef memStream As MemoryStream, ByRef httpHelper As httpHelper, boolGiveUserAnErrorMessage As Boolean) As Boolean
+    Private Shared Function verifyChecksum(urlOfChecksumFile As String, ByRef memStream As MemoryStream, ByRef httpHelper As httpHelper, boolGiveUserAnErrorMessage As Boolean) As Boolean
         Dim checksumFromWeb As String = Nothing
         memStream.Position = 0
 
@@ -251,13 +251,13 @@ Class Check_for_Update_Stuff
 
     ''' <summary>Creates a User Agent String for this program to be used in HTTP requests.</summary>
     ''' <returns>String type.</returns>
-    Private Function createHTTPUserAgentHeaderString() As String
+    Private Shared Function createHTTPUserAgentHeaderString() As String
         Dim versionInfo As String() = Application.ProductVersion.Split(".")
         Dim versionString As String = String.Format("{0}.{1} Build {2}", versionInfo(0), versionInfo(1), versionInfo(2))
         Return String.Format("Hasher version {0} on {1}", versionString, getFullOSVersionString())
     End Function
 
-    Private Function getFullOSVersionString() As String
+    Private Shared Function getFullOSVersionString() As String
         Try
             Dim intOSMajorVersion As Integer = Environment.OSVersion.Version.Major
             Dim intOSMinorVersion As Integer = Environment.OSVersion.Version.Minor
@@ -331,7 +331,7 @@ Class Check_for_Update_Stuff
         End If
     End Sub
 
-    Private Function checkForInternetConnection() As Boolean
+    Private Shared Function checkForInternetConnection() As Boolean
         Return My.Computer.Network.IsAvailable
     End Function
 End Class

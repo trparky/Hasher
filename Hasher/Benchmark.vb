@@ -91,7 +91,7 @@
         End If
     End Sub
 
-    Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate], intBufferSize As Integer) As Boolean
+    Private Shared Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate], intBufferSize As Integer) As Boolean
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New checksums(subRoutine)
