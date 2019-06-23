@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports System.Security.Cryptography
+Imports System.Runtime.Serialization
 
 Public Class FormFile
 
@@ -16,8 +17,10 @@ Public Class FormFile
     Public Property remoteFileName() As String
 End Class
 
+<Serializable>
 Public Class noMimeTypeFoundException
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -29,10 +32,16 @@ Public Class noMimeTypeFoundException
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
     End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class localFileAlreadyExistsException
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -44,10 +53,16 @@ Public Class localFileAlreadyExistsException
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
     End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class dataMissingException
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -59,10 +74,16 @@ Public Class dataMissingException
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
     End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class dataAlreadyExistsException
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -74,10 +95,16 @@ Public Class dataAlreadyExistsException
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
     End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class proxyConfigurationErrorException
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -89,10 +116,16 @@ Public Class proxyConfigurationErrorException
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
     End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class dnsLookupError
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -104,10 +137,16 @@ Public Class dnsLookupError
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
     End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class noHTTPServerResponseHeadersFoundException
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -119,10 +158,16 @@ Public Class noHTTPServerResponseHeadersFoundException
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
     End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class sslErrorException
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -134,10 +179,16 @@ Public Class sslErrorException
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
     End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class credentialsAlreadySet
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -149,10 +200,16 @@ Public Class credentialsAlreadySet
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
     End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class httpProtocolException
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -166,10 +223,16 @@ Public Class httpProtocolException
     End Sub
 
     Public Property httpStatusCode As Net.HttpStatusCode = Net.HttpStatusCode.NoContent
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
+    End Sub
 End Class
 
+<Serializable>
 Public Class noSSLCertificateFoundException
     Inherits Exception
+    Implements ISerializable
 
     Public Sub New()
     End Sub
@@ -180,6 +243,10 @@ Public Class noSSLCertificateFoundException
 
     Public Sub New(message As String, inner As Exception)
         MyBase.New(message, inner)
+    End Sub
+
+    Protected Sub New(serializationInfo As SerializationInfo, streamingContext As StreamingContext)
+        Throw New NotImplementedException()
     End Sub
 End Class
 
@@ -202,7 +269,7 @@ End Class
 ''' <summary>Allows you to easily POST and upload files to a remote HTTP server without you, the programmer, knowing anything about how it all works. This class does it all for you. It handles adding a User Agent String, additional HTTP Request Headers, string data to your HTTP POST data, and files to be uploaded in the HTTP POST data.</summary>
 <CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")>
 Public Class httpHelper
-    Private Const classVersion As String = "1.308"
+    Private Const classVersion As String = "1.312"
 
     Private strUserAgentString As String = Nothing
     Private boolUseProxy As Boolean = False
@@ -219,12 +286,13 @@ Public Class httpHelper
     Private downloadStatusUpdaterThread As Threading.Thread = Nothing
     Private _intDownloadThreadSleepTime As Integer = 1000
     Private intDownloadBufferSize As Integer = 8191 ' The default is 8192 bytes or 8 KBs.
-    Private strLastHTTPServerResponse As String
 
+#Disable Warning IDE0044 ' Add readonly modifier
     Private additionalHTTPHeaders As New Dictionary(Of String, String)
     Private httpCookies As New Dictionary(Of String, cookieDetails)
     Private postData As New Dictionary(Of String, Object)
     Private getData As New Dictionary(Of String, String)
+#Enable Warning IDE0044 ' Add readonly modifier
     Private downloadStatusDetails As downloadStatusDetails
     Private credentials As credentials
 
@@ -383,7 +451,6 @@ Public Class httpHelper
         customErrorHandler = Nothing
         downloadStatusUpdater = Nothing
         httpResponseHeaders = Nothing
-        strLastHTTPServerResponse = Nothing
     End Sub
 
     ''' <summary>Returns the last accessed URL by this Class instance.</summary>
@@ -805,7 +872,9 @@ beginAgain:
                 downloadStatusUpdaterThread.Abort()
                 downloadStatusUpdaterThread = Nothing
             End If
+#Disable Warning CA1031 ' Do not catch general exception types
         Catch ex As Exception
+#Enable Warning CA1031 ' Do not catch general exception types
             ' Does nothing
         End Try
     End Sub
@@ -873,24 +942,13 @@ beginAgain:
             Return True
         Catch ex As Threading.ThreadAbortException
             abortDownloadStatusUpdaterThread()
-
             If httpWebRequest IsNot Nothing Then httpWebRequest.Abort()
-
-            If memStream IsNot Nothing Then
-                memStream.Close() ' Closes the file stream.
-                memStream.Dispose() ' Disposes the file stream.
-            End If
-
             If memStream IsNot Nothing Then memStream.Dispose() ' Disposes the file stream.
             Return False
         Catch ex As Exception
             abortDownloadStatusUpdaterThread()
 
             lastException = ex
-            If memStream IsNot Nothing Then
-                memStream.Close() ' Closes the file stream.
-                memStream.Dispose() ' Disposes the file stream.
-            End If
             If memStream IsNot Nothing Then memStream.Dispose() ' Disposes the file stream.
 
             If Not throwExceptionIfError Then Return False
@@ -992,7 +1050,6 @@ beginAgain:
                 lngBytesReadFromInternet = CType(responseStream.Read(dataBuffer, 0, dataBuffer.Length), ULong) ' Reads more data into our data buffer.
             End While
 
-            fileWriteStream.Close() ' Closes the file stream.
             fileWriteStream.Dispose() ' Disposes the file stream.
 
             If downloadStatusUpdaterThread IsNot Nothing And boolRunDownloadStatusUpdatePluginInSeparateThread Then
@@ -1005,24 +1062,13 @@ beginAgain:
             Return True
         Catch ex As Threading.ThreadAbortException
             abortDownloadStatusUpdaterThread()
-
             If httpWebRequest IsNot Nothing Then httpWebRequest.Abort()
-
-            If fileWriteStream IsNot Nothing Then
-                fileWriteStream.Close() ' Closes the file stream.
-                fileWriteStream.Dispose() ' Disposes the file stream.
-            End If
-
             If fileWriteStream IsNot Nothing Then fileWriteStream.Dispose() ' Disposes the file stream.
             Return False
         Catch ex As Exception
             abortDownloadStatusUpdaterThread()
 
             lastException = ex
-            If fileWriteStream IsNot Nothing Then
-                fileWriteStream.Close() ' Closes the file stream.
-                fileWriteStream.Dispose() ' Disposes the file stream.
-            End If
             If fileWriteStream IsNot Nothing Then fileWriteStream.Dispose() ' Disposes the file stream.
 
             If Not throwExceptionIfError Then Return False
@@ -1095,16 +1141,10 @@ beginAgain:
             Dim httpTextOutput As String = httpInStream.ReadToEnd.Trim()
             httpResponseHeaders = httpWebResponse.Headers
 
-            httpInStream.Close()
             httpInStream.Dispose()
-
-            httpWebResponse.Close()
             httpWebResponse.Dispose()
-            httpWebResponse = Nothing
-            httpWebRequest = Nothing
 
             httpResponseText = convertLineFeeds(httpTextOutput).Trim()
-            strLastHTTPServerResponse = httpResponseText
 
             Return True
         Catch ex As Exception
@@ -1183,16 +1223,10 @@ beginAgain:
             Dim httpTextOutput As String = httpInStream.ReadToEnd.Trim()
             httpResponseHeaders = httpWebResponse.Headers
 
-            httpInStream.Close()
             httpInStream.Dispose()
-
-            httpWebResponse.Close()
             httpWebResponse.Dispose()
-            httpWebResponse = Nothing
-            httpWebRequest = Nothing
 
             httpResponseText = convertLineFeeds(httpTextOutput).Trim()
-            strLastHTTPServerResponse = httpResponseText
 
             Return True
         Catch ex As Exception
@@ -1306,9 +1340,7 @@ beginAgain:
                             httpRequestWriter.Write(buffer, 0, buffer.Length)
                         End While
 
-                        fileStream.Close()
                         fileStream.Dispose()
-                        fileStream = Nothing
                     Else
                         data = String.Format("Content-Disposition: form-data; name={0}{1}{0}{2}{2}{3}", Chr(34), entry.Key, vbCrLf, entry.Value)
                         bytes = Text.Encoding.UTF8.GetBytes(data)
@@ -1318,7 +1350,6 @@ beginAgain:
 
                 Dim trailer As Byte() = Text.Encoding.ASCII.GetBytes(vbCrLf & "--" & boundary & "--" & vbCrLf)
                 httpRequestWriter.Write(trailer, 0, trailer.Length)
-                httpRequestWriter.Close()
                 httpRequestWriter.Dispose()
             End If
 
@@ -1329,16 +1360,10 @@ beginAgain:
             Dim httpTextOutput As String = httpInStream.ReadToEnd.Trim()
             httpResponseHeaders = httpWebResponse.Headers
 
-            httpInStream.Close()
             httpInStream.Dispose()
-
-            httpWebResponse.Close()
             httpWebResponse.Dispose()
-            httpWebResponse = Nothing
-            httpWebRequest = Nothing
 
             httpResponseText = convertLineFeeds(httpTextOutput).Trim()
-            strLastHTTPServerResponse = httpResponseText
 
             Return True
         Catch ex As Exception
@@ -1398,7 +1423,6 @@ beginAgain:
 
             Dim httpRequestWriter = New StreamWriter(httpWebRequest.GetRequestStream())
             httpRequestWriter.Write(postDataString)
-            httpRequestWriter.Close()
             httpRequestWriter.Dispose()
         End If
     End Sub
@@ -1448,7 +1472,7 @@ beginAgain:
         End If
     End Sub
 
-    Private Function convertLineFeeds(input As String) As String
+    Private Shared Function convertLineFeeds(input As String) As String
         ' Checks to see if the file is in Windows linefeed format or UNIX linefeed format.
         If input.Contains(vbCrLf) Then
             Return input ' It's in Windows linefeed format so we return the output as is.
@@ -1505,7 +1529,7 @@ beginAgain:
         Return CType(lastException, httpProtocolException)
     End Function
 
-    Public Function fileSizeToHumanReadableFormat(ByVal size As ULong, Optional roundToNearestWholeNumber As Boolean = False) As String
+    Public Shared Function fileSizeToHumanReadableFormat(ByVal size As ULong, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
         Dim shortRoundNumber As Short = If(roundToNearestWholeNumber, 0, 2)
 
