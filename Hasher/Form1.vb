@@ -1,6 +1,11 @@
 ﻿Imports System.IO.Pipes
 
 Public Class Form1
+#If DEBUG Then
+    Private Const boolDebugMode As Boolean = True
+#Else
+    Private Const boolDebugMode As Boolean = False
+#End If
     Private Const strToBeComputed As String = "To Be Computed"
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
     Private Const strWindowTitle As String = "Hasher"
@@ -537,6 +542,11 @@ Public Class Form1
         chkUseTaskBarProgressBarForOverallStatus.Checked = My.Settings.boolUseTaskBarProgressBarForOverallStatus
         bufferSize.Value = My.Settings.shortBufferSize
         btnSetBufferSize.Enabled = False
+
+        If boolDebugMode Then
+            btnAddHasherToAllFiles.Visible = False
+            btnAssociate.Visible = False
+        End If
 
         deleteTemporaryNewEXEFile()
 
