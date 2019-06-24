@@ -20,7 +20,7 @@ Public Class Form1
     Private boolClosingWindow As Boolean = False
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
     Private boolDoneLoading As Boolean = False
-    Private pipeServer As NamedPipeServerStream = Nothing
+    Private Property pipeServer As NamedPipeServerStream = Nothing
     Private ReadOnly strNamedPipeServerName As String = "hasher_" & getHashOfString(Environment.UserName, checksumType.sha256).Substring(0, 10)
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolShowEstimatedTime As Boolean
