@@ -7,3 +7,4 @@
 <Assembly: CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles")>
 <Assembly: CodeAnalysis.SuppressMessage("Style", "IDE0044:Add readonly modifier")>
 <Assembly: CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types")>
+<Assembly: CodeAnalysis.SuppressMessage("Usage", "CA2237:Mark ISerializable types with serializable")>
