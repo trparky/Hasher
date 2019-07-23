@@ -12,3 +12,12 @@ Public Class myListViewItem
         Me.Text = strInput
     End Sub
 End Class
+
+Public Class benchmarkListViewItem
+    Inherits ListViewItem
+    Public Property bufferSize As Short
+
+    Public Sub New(strInput As String)
+        Me.Text = strInput
+    End Sub
+End Class

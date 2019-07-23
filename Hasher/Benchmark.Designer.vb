@@ -22,6 +22,7 @@ Partial Class Benchmark
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Benchmark))
         Me.listResults = New System.Windows.Forms.ListView()
         Me.colBufferSize = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -31,14 +32,19 @@ Partial Class Benchmark
         Me.ProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.lblHeader = New System.Windows.Forms.Label()
+        Me.ContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.btnSetBufferSize = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ContextMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'listResults
         '
         Me.listResults.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colBufferSize, Me.colComputeTime})
+        Me.listResults.ContextMenuStrip = Me.ContextMenuStrip
         Me.listResults.FullRowSelect = True
         Me.listResults.HideSelection = False
         Me.listResults.Location = New System.Drawing.Point(13, 200)
+        Me.listResults.MultiSelect = False
         Me.listResults.Name = "listResults"
         Me.listResults.Size = New System.Drawing.Size(437, 303)
         Me.listResults.TabIndex = 0
@@ -95,6 +101,18 @@ Partial Class Benchmark
         Me.lblHeader.TabIndex = 17
         Me.lblHeader.Text = resources.GetString("lblHeader.Text")
         '
+        'ContextMenuStrip
+        '
+        Me.ContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSetBufferSize})
+        Me.ContextMenuStrip.Name = "ContextMenuStrip"
+        Me.ContextMenuStrip.Size = New System.Drawing.Size(181, 48)
+        '
+        'btnSetBufferSize
+        '
+        Me.btnSetBufferSize.Name = "btnSetBufferSize"
+        Me.btnSetBufferSize.Size = New System.Drawing.Size(180, 22)
+        Me.btnSetBufferSize.Text = "Set Buffer Size"
+        '
         'Benchmark
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -109,6 +127,7 @@ Partial Class Benchmark
         Me.MaximizeBox = False
         Me.Name = "Benchmark"
         Me.Text = "Hasher Benchmark"
+        Me.ContextMenuStrip.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -122,4 +141,6 @@ Partial Class Benchmark
     Friend WithEvents ProgressBar As ProgressBar
     Friend WithEvents lblStatus As Label
     Friend WithEvents lblHeader As Label
+    Friend WithEvents ContextMenuStrip As ContextMenuStrip
+    Friend WithEvents btnSetBufferSize As ToolStripMenuItem
 End Class

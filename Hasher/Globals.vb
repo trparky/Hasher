@@ -2,6 +2,8 @@
 
 Public Module Globals
     Public benchmarkWindowInstance As Benchmark = Nothing
+    Public shortBufferSize As Short
+    Public boolSetBufferSize As Boolean = False
 
     Public Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String

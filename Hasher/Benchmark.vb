@@ -44,14 +44,14 @@
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim computeStopwatch As Stopwatch
                                                      Dim intRealBufferSize As Integer
-                                                     Dim itemToBeAdded As ListViewItem
+                                                     Dim itemToBeAdded As benchmarkListViewItem
 
                                                      For intBufferSize = 1 To 16
                                                          intRealBufferSize = intBufferSize * 1024 * 1024
                                                          computeStopwatch = Stopwatch.StartNew
 
                                                          If doChecksumWithAttachedSubRoutine(OpenFileDialog.FileName, checksumType.sha256, strChecksum, subRoutine, intRealBufferSize) Then
-                                                             itemToBeAdded = New ListViewItem(intBufferSize & If(intBufferSize = 1, " MB", " MBs"))
+                                                             itemToBeAdded = New benchmarkListViewItem(intBufferSize & If(intBufferSize = 1, " MB", " MBs")) With {.bufferSize = intBufferSize}
                                                              itemToBeAdded.SubItems.Add(timespanToHMS(computeStopwatch.Elapsed))
                                                              listResults.Items.Add(itemToBeAdded)
                                                          End If
@@ -106,4 +106,19 @@
             Return False
         End Try
     End Function
+
+    Private Sub ContextMenuStrip_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip.Opening
+        If listResults.SelectedItems.Count = 0 Then
+            e.Cancel = True
+        Else
+            Dim selectedItem As benchmarkListViewItem = listResults.SelectedItems(0)
+            shortBufferSize = selectedItem.bufferSize
+            btnSetBufferSize.Text = "Set Buffer Size to " & If(selectedItem.bufferSize = 1, "1 MB", selectedItem.bufferSize & " MBs")
+        End If
+    End Sub
+
+    Private Sub BtnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
+        boolSetBufferSize = True
+        Me.Close()
+    End Sub
 End Class
