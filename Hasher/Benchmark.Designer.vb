@@ -43,7 +43,7 @@ Partial Class Benchmark
         Me.listResults.ContextMenuStrip = Me.ContextMenuStrip
         Me.listResults.FullRowSelect = True
         Me.listResults.HideSelection = False
-        Me.listResults.Location = New System.Drawing.Point(13, 200)
+        Me.listResults.Location = New System.Drawing.Point(13, 239)
         Me.listResults.MultiSelect = False
         Me.listResults.Name = "listResults"
         Me.listResults.Size = New System.Drawing.Size(437, 303)
@@ -69,7 +69,7 @@ Partial Class Benchmark
         '
         'btnOpenFile
         '
-        Me.btnOpenFile.Location = New System.Drawing.Point(12, 116)
+        Me.btnOpenFile.Location = New System.Drawing.Point(12, 155)
         Me.btnOpenFile.Name = "btnOpenFile"
         Me.btnOpenFile.Size = New System.Drawing.Size(438, 23)
         Me.btnOpenFile.TabIndex = 1
@@ -78,7 +78,7 @@ Partial Class Benchmark
         '
         'ProgressBar
         '
-        Me.ProgressBar.Location = New System.Drawing.Point(12, 145)
+        Me.ProgressBar.Location = New System.Drawing.Point(12, 184)
         Me.ProgressBar.Name = "ProgressBar"
         Me.ProgressBar.Size = New System.Drawing.Size(437, 23)
         Me.ProgressBar.TabIndex = 15
@@ -86,7 +86,7 @@ Partial Class Benchmark
         'lblStatus
         '
         Me.lblStatus.AutoSize = True
-        Me.lblStatus.Location = New System.Drawing.Point(12, 171)
+        Me.lblStatus.Location = New System.Drawing.Point(10, 210)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(172, 26)
         Me.lblStatus.TabIndex = 16
@@ -97,7 +97,7 @@ Partial Class Benchmark
         Me.lblHeader.AutoSize = True
         Me.lblHeader.Location = New System.Drawing.Point(9, 9)
         Me.lblHeader.Name = "lblHeader"
-        Me.lblHeader.Size = New System.Drawing.Size(441, 104)
+        Me.lblHeader.Size = New System.Drawing.Size(441, 143)
         Me.lblHeader.TabIndex = 17
         Me.lblHeader.Text = resources.GetString("lblHeader.Text")
         '
@@ -117,7 +117,7 @@ Partial Class Benchmark
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(462, 515)
+        Me.ClientSize = New System.Drawing.Size(462, 553)
         Me.Controls.Add(Me.lblHeader)
         Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.ProgressBar)

@@ -131,6 +131,9 @@ series of tests with a 1 MB buffer all the way up to a large 16 MB buffer.
 
 As for choosing an appropriate buffer, once the test is complete choose the buffer size that
 resulted in as small a compute time as possible. Some buffer sizes will result in compute times
-that are very similar, this is normal.</value>
+that are very similar, this is normal.
+
+Once the benchmark is complete, you can select a result in the list below and then right-click
+on the list and choose to set the buffer size to that value.</value>
   </data>
 </root>
