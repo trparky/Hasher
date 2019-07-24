@@ -1729,21 +1729,16 @@ Public Class Form1
     End Sub
 
     Private Sub BtnPerformBenchmark_Click(sender As Object, e As EventArgs) Handles btnPerformBenchmark.Click
-        If benchmarkWindowInstance Is Nothing Then
-            boolSetBufferSize = False
-            benchmarkWindowInstance = New Benchmark With {.StartPosition = FormStartPosition.CenterScreen}
-            benchmarkWindowInstance.ShowDialog(Me)
+        Using benchmark As New Benchmark With {.StartPosition = FormStartPosition.CenterScreen}
+            benchmark.ShowDialog(Me)
 
-            If boolSetBufferSize Then
-                bufferSize.Value = Decimal.Parse(shortBufferSize)
-                intBufferSize = shortBufferSize * 1024 * 1024
-                My.Settings.shortBufferSize = shortBufferSize
+            If benchmark.boolSetBufferSize Then
+                bufferSize.Value = Convert.ToDecimal(benchmark.shortBufferSize)
+                intBufferSize = benchmark.shortBufferSize * 1024 * 1024
+                My.Settings.shortBufferSize = benchmark.shortBufferSize
                 btnSetBufferSize.Enabled = False
-                MsgBox("Data buffer size set successfully to " & shortBufferSize & If(shortBufferSize = 1, " MB.", " MBs."), MsgBoxStyle.Information, strWindowTitle)
+                MsgBox("Data buffer size set successfully to " & benchmark.shortBufferSize & If(benchmark.shortBufferSize = 1, " MB.", " MBs."), MsgBoxStyle.Information, strWindowTitle)
             End If
-        Else
-            benchmarkWindowInstance.WindowState = FormWindowState.Normal
-            benchmarkWindowInstance.BringToFront()
-        End If
+        End Using
     End Sub
 End Class

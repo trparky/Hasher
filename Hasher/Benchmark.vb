@@ -2,6 +2,8 @@
     Private workingThread As Threading.Thread
     Private boolBackgroundThreadWorking As Boolean = False
     Private boolClosingWindow As Boolean
+    Public shortBufferSize As Short
+    Public boolSetBufferSize As Boolean = False
 
     Private Sub Benchmark_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
@@ -87,7 +89,6 @@
                 boolClosingWindow = True
                 workingThread.Abort()
             End If
-            benchmarkWindowInstance = Nothing
         End If
     End Sub
 
