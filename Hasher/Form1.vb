@@ -71,8 +71,11 @@ Public Class Form1
             btnIndividualFilesSaveResultsToDisk.Enabled = False
         Else
             btnComputeHash.Enabled = True
-            btnIndividualFilesCopyToClipboard.Enabled = True
-            btnIndividualFilesSaveResultsToDisk.Enabled = True
+
+            If listFiles.Items.OfType(Of myListViewItem).Where(Function(item As myListViewItem) String.IsNullOrWhiteSpace(item.hash)).Count <> listFiles.Items.Count Then
+                btnIndividualFilesCopyToClipboard.Enabled = True
+                btnIndividualFilesSaveResultsToDisk.Enabled = True
+            End If
         End If
 
         If My.Settings.boolSortFileListingAfterAddingFilesToHash Then applyFileSizeSortingToHashList()
