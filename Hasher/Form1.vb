@@ -289,9 +289,11 @@ Public Class Form1
         addHashFileHeader(stringBuilder)
 
         For Each item As myListViewItem In listFiles.Items
-            strFile = item.fileName
-            If My.Settings.boolSaveChecksumFilesWithRelativePaths Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile, "")
-            stringBuilder.AppendLine(item.hash & " *" & strFile)
+            If Not String.IsNullOrWhiteSpace(item.hash) Then
+                strFile = item.fileName
+                If My.Settings.boolSaveChecksumFilesWithRelativePaths Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile, "")
+                stringBuilder.AppendLine(item.hash & " *" & strFile)
+            End If
         Next
 
         Return stringBuilder.ToString()
@@ -303,7 +305,9 @@ Public Class Form1
         addHashFileHeader(stringBuilder)
 
         For Each item As myListViewItem In listFiles.Items
-            stringBuilder.AppendLine(item.hash & " *" & item.fileName)
+            If Not String.IsNullOrWhiteSpace(item.hash) Then
+                stringBuilder.AppendLine(item.hash & " *" & item.fileName)
+            End If
         Next
 
         Return stringBuilder.ToString()
