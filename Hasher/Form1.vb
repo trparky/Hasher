@@ -109,9 +109,11 @@ Public Class Form1
             .fileSize = New IO.FileInfo(strFileName).Length,
             .fileName = strFileName
         }
-        itemToBeAdded.SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-        itemToBeAdded.SubItems.Add(strToBeComputed)
-        itemToBeAdded.SubItems.Add("")
+        With itemToBeAdded
+            .SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
+            .SubItems.Add(strToBeComputed)
+            .SubItems.Add("")
+        End With
 
         Return itemToBeAdded
     End Function
