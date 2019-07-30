@@ -94,7 +94,7 @@ Public Class Form1
 
         listFiles.BeginUpdate()
         For Each item As myListViewItem In listFiles.SelectedItems
-            filesInListFiles.Remove(item.Text)
+            filesInListFiles.Remove(item.Text.Trim.ToLower)
             listFiles.Items.Remove(item)
         Next
         listFiles.EndUpdate()
@@ -103,7 +103,7 @@ Public Class Form1
     End Sub
 
     Private Function createListFilesObject(strFileName As String) As myListViewItem
-        filesInListFiles.Add(strFileName)
+        filesInListFiles.Add(strFileName.Trim.ToLower)
 
         Dim itemToBeAdded As New myListViewItem(strFileName) With {
             .fileSize = New IO.FileInfo(strFileName).Length,
@@ -129,7 +129,7 @@ Public Class Form1
             ElseIf OpenFileDialog.FileNames.Count() = 1 Then
                 strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
 
-                If Not filesInListFiles.Contains(OpenFileDialog.FileName) Then
+                If Not filesInListFiles.Contains(OpenFileDialog.FileName.Trim.ToLower) Then
                     listFiles.Items.Add(createListFilesObject(OpenFileDialog.FileName))
                 End If
             Else
@@ -137,7 +137,7 @@ Public Class Form1
 
                 listFiles.BeginUpdate()
                 For Each strFileName As String In OpenFileDialog.FileNames
-                    If Not filesInListFiles.Contains(strFileName) Then
+                    If Not filesInListFiles.Contains(strFileName.Trim.ToLower) Then
                         listFiles.Items.Add(createListFilesObject(strFileName))
                     End If
                 Next
@@ -477,7 +477,7 @@ Public Class Form1
 
                     addFilesFromDirectory(strReceivedFileName)
                 Else
-                    If Not filesInListFiles.Contains(strReceivedFileName) Then
+                    If Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
                         TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
                         Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
 
@@ -623,7 +623,7 @@ Public Class Form1
     Sub addFileToList(strFileName As String, ByRef collectionOfListViewItems As List(Of ListViewItem))
         Dim fileInfo As New IO.FileInfo(strFileName)
 
-        If Not filesInListFiles.Contains(strFileName) Then
+        If Not filesInListFiles.Contains(strFileName.Trim.ToLower) Then
             collectionOfListViewItems.Add(createListFilesObject(strFileName))
         End If
     End Sub
@@ -938,7 +938,7 @@ Public Class Form1
             If IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) Then
                 addFilesFromDirectory(strItem)
             Else
-                If Not filesInListFiles.Contains(strItem) Then
+                If Not filesInListFiles.Contains(strItem.Trim.ToLower) Then
                     listFiles.Items.Add(createListFilesObject(strItem))
                 End If
             End If
