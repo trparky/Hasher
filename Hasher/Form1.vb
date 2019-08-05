@@ -24,6 +24,7 @@ Public Class Form1
     Private ReadOnly strNamedPipeServerName As String = "hasher_" & getHashOfString(Environment.UserName, checksumType.sha256).Substring(0, 10)
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolShowEstimatedTime As Boolean
+    Private boolDidWePerformAPreviousHash As Boolean = False
 
     Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate]) As Boolean
         Try
@@ -1354,6 +1355,8 @@ Public Class Form1
     End Sub
 
     Private Sub btnBrowseFileForCompareKnownHash_Click(sender As Object, e As EventArgs) Handles btnBrowseFileForCompareKnownHash.Click
+        If boolDidWePerformAPreviousHash Then txtKnownHash.Text = Nothing
+        boolDidWePerformAPreviousHash = False
         OpenFileDialog.Title = "Select file for known hash comparison..."
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Show All Files|*.*"
@@ -1423,6 +1426,7 @@ Public Class Form1
         btnBrowseFileForCompareKnownHash.Enabled = False
         txtKnownHash.Enabled = False
         btnCompareAgainstKnownHash.Text = "Abort Processing"
+        boolDidWePerformAPreviousHash = True
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
