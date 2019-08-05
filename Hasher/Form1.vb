@@ -1396,6 +1396,12 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub txtKnownHash_KeyUp(sender As Object, e As KeyEventArgs) Handles txtKnownHash.KeyUp
+        If e.KeyCode = Keys.Enter And (txtKnownHash.Text.Length = 128 Or txtKnownHash.Text.Length = 96 Or txtKnownHash.Text.Length = 64 Or txtKnownHash.Text.Length = 40 Or txtKnownHash.Text.Length = 32) Then
+            btnCompareAgainstKnownHash.PerformClick()
+        End If
+    End Sub
+
     Private Sub btnCompareAgainstKnownHash_Click(sender As Object, e As EventArgs) Handles btnCompareAgainstKnownHash.Click
         If btnCompareAgainstKnownHash.Text = "Abort Processing" Then
             If workingThread IsNot Nothing Then
