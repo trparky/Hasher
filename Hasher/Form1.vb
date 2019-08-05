@@ -1361,6 +1361,7 @@ Public Class Form1
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             txtFileForKnownHash.Text = OpenFileDialog.FileName
             If Not String.IsNullOrWhiteSpace(txtKnownHash.Text) Then btnCompareAgainstKnownHash.Enabled = True
+            txtKnownHash.Select()
         End If
     End Sub
 
