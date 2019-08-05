@@ -577,6 +577,7 @@ Public Class Form1
                 commandLineArgument = commandLineArgument.Replace(Chr(34), "")
                 TabControl1.SelectTab(5)
                 txtFileForKnownHash.Text = commandLineArgument
+                txtKnownHash.Select()
             End If
         End If
 
