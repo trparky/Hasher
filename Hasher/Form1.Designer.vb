@@ -1194,9 +1194,9 @@ Partial Class Form1
         Me.chkShowEstimatedTimeRemaining.AutoSize = True
         Me.chkShowEstimatedTimeRemaining.Location = New System.Drawing.Point(15, 175)
         Me.chkShowEstimatedTimeRemaining.Name = "chkShowEstimatedTimeRemaining"
-        Me.chkShowEstimatedTimeRemaining.Size = New System.Drawing.Size(149, 17)
+        Me.chkShowEstimatedTimeRemaining.Size = New System.Drawing.Size(140, 17)
         Me.chkShowEstimatedTimeRemaining.TabIndex = 17
-        Me.chkShowEstimatedTimeRemaining.Text = "Show Estimated Time Left"
+        Me.chkShowEstimatedTimeRemaining.Text = "Show estimated time left"
         Me.ToolTip.SetToolTip(Me.chkShowEstimatedTimeRemaining, "Enabling this option may affect performance.")
         Me.chkShowEstimatedTimeRemaining.UseVisualStyleBackColor = True
         '
@@ -1215,9 +1215,9 @@ Partial Class Form1
         Me.chkSortFileListingAfterAddingFilesToHash.AutoSize = True
         Me.chkSortFileListingAfterAddingFilesToHash.Location = New System.Drawing.Point(15, 82)
         Me.chkSortFileListingAfterAddingFilesToHash.Name = "chkSortFileListingAfterAddingFilesToHash"
-        Me.chkSortFileListingAfterAddingFilesToHash.Size = New System.Drawing.Size(210, 17)
+        Me.chkSortFileListingAfterAddingFilesToHash.Size = New System.Drawing.Size(262, 17)
         Me.chkSortFileListingAfterAddingFilesToHash.TabIndex = 6
-        Me.chkSortFileListingAfterAddingFilesToHash.Text = "Sort file listing after adding files to Hash"
+        Me.chkSortFileListingAfterAddingFilesToHash.Text = "Sort file listing after adding files to hash/checksum"
         Me.chkSortFileListingAfterAddingFilesToHash.UseVisualStyleBackColor = True
         '
         'chkSaveChecksumFilesWithRelativePaths
@@ -1225,9 +1225,9 @@ Partial Class Form1
         Me.chkSaveChecksumFilesWithRelativePaths.AutoSize = True
         Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 105)
         Me.chkSaveChecksumFilesWithRelativePaths.Name = "chkSaveChecksumFilesWithRelativePaths"
-        Me.chkSaveChecksumFilesWithRelativePaths.Size = New System.Drawing.Size(222, 17)
+        Me.chkSaveChecksumFilesWithRelativePaths.Size = New System.Drawing.Size(212, 17)
         Me.chkSaveChecksumFilesWithRelativePaths.TabIndex = 5
-        Me.chkSaveChecksumFilesWithRelativePaths.Text = "Save Checksum Files with Relative Paths"
+        Me.chkSaveChecksumFilesWithRelativePaths.Text = "Save checksum files with relative paths"
         Me.chkSaveChecksumFilesWithRelativePaths.UseVisualStyleBackColor = True
         '
         'chkSortByFileSizeAfterLoadingHashFile
@@ -1284,9 +1284,9 @@ Partial Class Form1
         Me.chkDisplayHashesInUpperCase.AutoSize = True
         Me.chkDisplayHashesInUpperCase.Location = New System.Drawing.Point(15, 152)
         Me.chkDisplayHashesInUpperCase.Name = "chkDisplayHashesInUpperCase"
-        Me.chkDisplayHashesInUpperCase.Size = New System.Drawing.Size(200, 17)
+        Me.chkDisplayHashesInUpperCase.Size = New System.Drawing.Size(207, 17)
         Me.chkDisplayHashesInUpperCase.TabIndex = 8
-        Me.chkDisplayHashesInUpperCase.Text = "Display Hashes in Uppercase Letters"
+        Me.chkDisplayHashesInUpperCase.Text = "Display hashes in UPPERCASE letters"
         Me.chkDisplayHashesInUpperCase.UseVisualStyleBackColor = True
         '
         'btnFileNotFoundColor
