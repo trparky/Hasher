@@ -697,7 +697,7 @@ Public Class Form1
         If FolderBrowserDialog.ShowDialog = DialogResult.OK Then addFilesFromDirectory(FolderBrowserDialog.SelectedPath)
     End Sub
 
-    Private Shared Function createListViewItemForHashFileEntry(strFileName As String, strChecksum As String) As myListViewItem
+    Private Shared Function createListViewItemForHashFileEntry(strFileName As String, strChecksum As String, ByRef intFilesNotFound As Integer) As myListViewItem
         Dim listViewItem As New myListViewItem(strFileName) With {.hash = strChecksum, .fileName = strFileName}
 
         With listViewItem
@@ -715,6 +715,7 @@ Public Class Form1
                 .SubItems.Add("")
                 .boolFileExists = False
                 .BackColor = Color.LightGray
+                intFilesNotFound += 1
             End If
         End With
 
@@ -753,6 +754,7 @@ Public Class Form1
                                                      Dim strChecksum, strFileName As String
                                                      Dim index As Integer = 1
                                                      Dim intFilesThatPassedVerification As Integer = 0
+                                                     Dim intFilesNotFound As Integer = 0
                                                      Dim regExMatchObject As Text.RegularExpressions.Match
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim intLineCounter As Integer = 0
@@ -779,7 +781,7 @@ Public Class Form1
                                                                      strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
                                                                  End If
 
-                                                                 verifyHashesListFiles.Items.Add(createListViewItemForHashFileEntry(strFileName, strChecksum))
+                                                                 verifyHashesListFiles.Items.Add(createListViewItemForHashFileEntry(strFileName, strChecksum, intFilesNotFound))
                                                              End If
 
                                                              regExMatchObject = Nothing
@@ -818,10 +820,43 @@ Public Class Form1
                                                      Me.Invoke(Sub()
                                                                    Dim sbMessageBoxText As New Text.StringBuilder
 
-                                                                   If intFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
-                                                                       sbMessageBoxText.AppendLine("Processing of hash file complete. All files have passed verification.")
+                                                                   If intFilesNotFound = 0 Then
+                                                                       If intFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
+                                                                           sbMessageBoxText.AppendLine("Processing of hash file complete. All files have passed verification.")
+                                                                       Else
+                                                                           Dim intFilesThatDidNotPassVerification As Integer = verifyHashesListFiles.Items.Count - intFilesThatPassedVerification
+                                                                           sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
+                                                                                                                     intFilesThatPassedVerification.ToString("N0"),
+                                                                                                                     verifyHashesListFiles.Items.Count.ToString("N0"),
+                                                                                                                     intFilesThatDidNotPassVerification.ToString("N0"),
+                                                                                                                     If(intFilesThatDidNotPassVerification = 1, "file", "files")
+                                                                                                      )
+                                                                           )
+                                                                       End If
                                                                    Else
-                                                                       sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} files didn't pass verification.", intFilesThatPassedVerification.ToString("N0"), verifyHashesListFiles.Items.Count.ToString("N0"), (verifyHashesListFiles.Items.Count - intFilesThatPassedVerification).ToString("N0")))
+                                                                       sbMessageBoxText.AppendLine("Processing of hash file complete.")
+                                                                       sbMessageBoxText.AppendLine()
+
+                                                                       Dim intTotalFiles As Integer = verifyHashesListFiles.Items.Count - intFilesNotFound
+                                                                       If intFilesThatPassedVerification = intTotalFiles Then
+                                                                           sbMessageBoxText.AppendLine(String.Format("All files have passed verification. Unfortunately, {0} {1} were not found.",
+                                                                                                                     intFilesNotFound.ToString("N0"),
+                                                                                                                     If(intFilesNotFound = 1, "file", "files")
+                                                                                                      )
+                                                                           )
+                                                                       Else
+                                                                           Dim intFilesThatDidNotPassVerification As Integer = intTotalFiles - intFilesThatPassedVerification
+                                                                           sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification, Unfortunately, {3} {4} didn't pass verification and {5} {6} were not found.",
+                                                                                                                     intFilesThatPassedVerification.ToString("N0"),
+                                                                                                                     intTotalFiles.ToString("N0"),
+                                                                                                                     If(intTotalFiles = 1, "file", "files"),
+                                                                                                                     intFilesThatDidNotPassVerification.ToString("N0"),
+                                                                                                                     If(intFilesThatDidNotPassVerification = 1, "file", "files"),
+                                                                                                                     intFilesNotFound.ToString("N0"),
+                                                                                                                     If(intFilesNotFound = 1, "file", "files")
+                                                                                                      )
+                                                                           )
+                                                                       End If
                                                                    End If
 
                                                                    sbMessageBoxText.AppendLine()
