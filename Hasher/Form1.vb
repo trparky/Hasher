@@ -26,6 +26,14 @@ Public Class Form1
     Private boolShowEstimatedTime As Boolean
     Private boolDidWePerformAPreviousHash As Boolean = False
 
+    Private Function myToString(input As Integer) As String
+        Return If(My.Settings.boolUseCommasInNumbers, input.ToString("N0"), input.ToString)
+    End Function
+
+    Private Function myToString(input As Long) As String
+        Return If(My.Settings.boolUseCommasInNumbers, input.ToString("N0"), input.ToString)
+    End Function
+
     Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate]) As Boolean
         Try
             If IO.File.Exists(strFile) Then
@@ -61,9 +69,9 @@ Public Class Form1
 
     Private Sub updateFilesListCountHeader(Optional boolIncludeSelectedItemCount As Boolean = False)
         If boolIncludeSelectedItemCount Then
-            lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files ({1} {2} are selected)", listFiles.Items.Count().ToString("N0"), listFiles.SelectedItems.Count().ToString("N0"), If(listFiles.SelectedItems.Count() = 1, "item", "items"))
+            lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files ({1} {2} are selected)", myToString(listFiles.Items.Count), myToString(listFiles.SelectedItems.Count), If(listFiles.SelectedItems.Count = 1, "item", "items"))
         Else
-            lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files", listFiles.Items.Count().ToString("N0"))
+            lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files", myToString(listFiles.Items.Count))
         End If
 
         If listFiles.Items.Count = 0 Then
@@ -89,7 +97,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnRemoveSelectedFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveSelectedFiles.Click
-        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox(String.Format("It would be recommended to use the ""Remove All Files"" button instead, removing this many items ({0} items) from the list is a slow process and will make the program appear locked up." & vbCrLf & vbCrLf & "Are you sure you want to remove the items this way?", listFiles.SelectedItems.Count.ToString("N0")), MsgBoxStyle.Question + MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
+        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox(String.Format("It would be recommended to use the ""Remove All Files"" button instead, removing this many items ({0} items) from the list is a slow process and will make the program appear locked up." & vbCrLf & vbCrLf & "Are you sure you want to remove the items this way?", myToString(listFiles.SelectedItems.Count)), MsgBoxStyle.Question + MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
             Exit Sub
         End If
 
@@ -125,9 +133,9 @@ Public Class Form1
         OpenFileDialog.Filter = "Show All Files|*.*"
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
-            If OpenFileDialog.FileNames.Count() = 0 Then
+            If OpenFileDialog.FileNames.Count = 0 Then
                 MsgBox("You must select some files.", MsgBoxStyle.Critical, strWindowTitle)
-            ElseIf OpenFileDialog.FileNames.Count() = 1 Then
+            ElseIf OpenFileDialog.FileNames.Count = 1 Then
                 strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
 
                 If Not filesInListFiles.Contains(OpenFileDialog.FileName.Trim.ToLower) Then
@@ -210,7 +218,7 @@ Public Class Form1
                                                      For Each item As myListViewItem In listFiles.Items
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
                                                              lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
-                                                             lblIndividualFilesStatusProcessingFile.Text = "Processing " & index.ToString("N0") & " of " & listFiles.Items.Count().ToString("N0") & If(listFiles.Items.Count = 1, " file", " files") & "."
+                                                             lblIndividualFilesStatusProcessingFile.Text = "Processing " & myToString(index) & " of " & myToString(listFiles.Items.Count) & If(listFiles.Items.Count = 1, " file", " files") & "."
                                                              computeStopwatch = Stopwatch.StartNew
 
                                                              If doChecksumWithAttachedSubRoutine(item.fileName, checksumType, strChecksum, subRoutine) Then
@@ -542,6 +550,7 @@ Public Class Form1
         chkSaveChecksumFilesWithRelativePaths.Checked = My.Settings.boolSaveChecksumFilesWithRelativePaths
         chkUseMilliseconds.Checked = My.Settings.boolUseMilliseconds
         chkDisplayHashesInUpperCase.Checked = My.Settings.boolDisplayHashesInUpperCase
+        chkUseCommasInNumbers.Checked = My.Settings.boolUseCommasInNumbers
         boolShowEstimatedTime = My.Settings.boolShowEstimatedTime
         chkShowEstimatedTimeRemaining.Checked = boolShowEstimatedTime
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
@@ -768,7 +777,7 @@ Public Class Form1
                                                          intLineCounter += 1
                                                          VerifyHashProgressBar.Value = intLineCounter / dataInFileArray.LongLength * 100
                                                          Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value))
-                                                         lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & intLineCounter.ToString("N0") & " of " & dataInFileArray.LongLength.ToString("N0") & " (" & VerifyHashProgressBar.Value & "%)."
+                                                         lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & myToString(intLineCounter) & " of " & myToString(dataInFileArray.LongLength) & " (" & VerifyHashProgressBar.Value & "%)."
 
                                                          If Not String.IsNullOrEmpty(strLineInFile) Then
                                                              regExMatchObject = hashLineParser.Match(strLineInFile)
@@ -800,7 +809,7 @@ Public Class Form1
                                                      dataInFileArray = Nothing
 
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
-                                                         lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}", index.ToString("N0"), verifyHashesListFiles.Items.Count().ToString("N0"), If(verifyHashesListFiles.Items.Count = 1, "file", "files"))
+                                                         lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}", myToString(index), myToString(verifyHashesListFiles.Items.Count), If(verifyHashesListFiles.Items.Count = 1, "file", "files"))
                                                          If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, intFilesThatPassedVerification)
                                                          If My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / verifyHashesListFiles.Items.Count * 100))
                                                          index += 1
@@ -826,9 +835,9 @@ Public Class Form1
                                                                        Else
                                                                            Dim intFilesThatDidNotPassVerification As Integer = verifyHashesListFiles.Items.Count - intFilesThatPassedVerification
                                                                            sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
-                                                                                                                     intFilesThatPassedVerification.ToString("N0"),
-                                                                                                                     verifyHashesListFiles.Items.Count.ToString("N0"),
-                                                                                                                     intFilesThatDidNotPassVerification.ToString("N0"),
+                                                                                                                     myToString(intFilesThatPassedVerification),
+                                                                                                                     myToString(verifyHashesListFiles.Items.Count),
+                                                                                                                     myToString(intFilesThatDidNotPassVerification),
                                                                                                                      If(intFilesThatDidNotPassVerification = 1, "file", "files")
                                                                                                       )
                                                                            )
@@ -840,19 +849,19 @@ Public Class Form1
                                                                        Dim intTotalFiles As Integer = verifyHashesListFiles.Items.Count - intFilesNotFound
                                                                        If intFilesThatPassedVerification = intTotalFiles Then
                                                                            sbMessageBoxText.AppendLine(String.Format("All files have passed verification. Unfortunately, {0} {1} were not found.",
-                                                                                                                     intFilesNotFound.ToString("N0"),
+                                                                                                                     myToString(intFilesNotFound),
                                                                                                                      If(intFilesNotFound = 1, "file", "files")
                                                                                                       )
                                                                            )
                                                                        Else
                                                                            Dim intFilesThatDidNotPassVerification As Integer = intTotalFiles - intFilesThatPassedVerification
                                                                            sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification, Unfortunately, {3} {4} didn't pass verification and {5} {6} were not found.",
-                                                                                                                     intFilesThatPassedVerification.ToString("N0"),
-                                                                                                                     intTotalFiles.ToString("N0"),
+                                                                                                                     myToString(intFilesThatPassedVerification),
+                                                                                                                     myToString(intTotalFiles),
                                                                                                                      If(intTotalFiles = 1, "file", "files"),
-                                                                                                                     intFilesThatDidNotPassVerification.ToString("N0"),
+                                                                                                                     myToString(intFilesThatDidNotPassVerification),
                                                                                                                      If(intFilesThatDidNotPassVerification = 1, "file", "files"),
-                                                                                                                     intFilesNotFound.ToString("N0"),
+                                                                                                                     myToString(intFilesNotFound),
                                                                                                                      If(intFilesNotFound = 1, "file", "files")
                                                                                                       )
                                                                            )
@@ -992,7 +1001,7 @@ Public Class Form1
     End Sub
 
     Private Sub txtTextToHash_TextChanged(sender As Object, e As EventArgs) Handles txtTextToHash.TextChanged
-        lblHashTextStep1.Text = String.Format("Step 1: Input some text: {0} Characters", txtTextToHash.Text.Length.ToString("N0"))
+        lblHashTextStep1.Text = String.Format("Step 1: Input some text: {0} Characters", myToString(txtTextToHash.Text.Length))
         btnComputeTextHash.Enabled = If(txtTextToHash.Text.Length = 0, False, True)
         clearTextHashResults()
     End Sub
@@ -1796,5 +1805,9 @@ Public Class Form1
                 MsgBox("Data buffer size set successfully to " & benchmark.shortBufferSize & If(benchmark.shortBufferSize = 1, " MB.", " MBs."), MsgBoxStyle.Information, strWindowTitle)
             End If
         End Using
+    End Sub
+
+    Private Sub chkUseCommasInNumbers_Click(sender As Object, e As EventArgs) Handles chkUseCommasInNumbers.Click
+        My.Settings.boolUseCommasInNumbers = chkUseCommasInNumbers.Checked
     End Sub
 End Class

@@ -68,5 +68,8 @@
     <Setting Name="shortBufferSize" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="boolUseCommasInNumbers" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

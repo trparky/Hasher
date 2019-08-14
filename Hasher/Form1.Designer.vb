@@ -142,6 +142,7 @@ Partial Class Form1
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnPerformBenchmark = New System.Windows.Forms.Button()
+        Me.chkUseCommasInNumbers = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1141,6 +1142,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.lblNotValidColor)
         Me.tabSettings.Controls.Add(Me.lblValidColor)
         Me.tabSettings.Controls.Add(Me.btnPerformBenchmark)
+        Me.tabSettings.Controls.Add(Me.chkUseCommasInNumbers)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
@@ -1242,7 +1244,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 221)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 244)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1251,7 +1253,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 221)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 244)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1362,6 +1364,16 @@ Partial Class Form1
         Me.btnPerformBenchmark.TabIndex = 28
         Me.btnPerformBenchmark.Text = "Perform Benchmark to Determine Optimal Buffer Size"
         Me.btnPerformBenchmark.UseVisualStyleBackColor = True
+        '
+        'chkUseCommasInNumbers
+        '
+        Me.chkUseCommasInNumbers.AutoSize = True
+        Me.chkUseCommasInNumbers.Location = New System.Drawing.Point(15, 221)
+        Me.chkUseCommasInNumbers.Name = "chkUseCommasInNumbers"
+        Me.chkUseCommasInNumbers.Size = New System.Drawing.Size(194, 17)
+        Me.chkUseCommasInNumbers.TabIndex = 29
+        Me.chkUseCommasInNumbers.Text = "Use commas in numbers (ex. 2,000)"
+        Me.chkUseCommasInNumbers.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1513,4 +1525,5 @@ Partial Class Form1
     Friend WithEvents bufferSize As NumericUpDown
     Friend WithEvents btnSetBufferSize As Button
     Friend WithEvents btnPerformBenchmark As Button
+    Friend WithEvents chkUseCommasInNumbers As CheckBox
 End Class
