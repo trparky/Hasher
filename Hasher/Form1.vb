@@ -27,11 +27,11 @@ Public Class Form1
     Private boolDidWePerformAPreviousHash As Boolean = False
 
     Private Function myToString(input As Integer) As String
-        Return If(My.Settings.boolUseCommasInNumbers, input.ToString("N0"), input.ToString)
+        Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
     End Function
 
     Private Function myToString(input As Long) As String
-        Return If(My.Settings.boolUseCommasInNumbers, input.ToString("N0"), input.ToString)
+        Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
     End Function
 
     Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate]) As Boolean
