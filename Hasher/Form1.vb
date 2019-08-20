@@ -25,6 +25,7 @@ Public Class Form1
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolShowEstimatedTime As Boolean
     Private boolDidWePerformAPreviousHash As Boolean = False
+    Private validColor, notValidColor, fileNotFoundColor As Color
 
     Private Function myToString(input As Integer) As String
         Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
@@ -87,7 +88,7 @@ Public Class Form1
             End If
         End If
 
-        If My.Settings.boolSortFileListingAfterAddingFilesToHash Then applyFileSizeSortingToHashList()
+        If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
     End Sub
 
     Private Sub btnRemoveAllFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveAllFiles.Click
@@ -186,7 +187,7 @@ Public Class Form1
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           IndividualFilesProgressBar.Value = percentage
-                                                                                                          If Not My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(IndividualFilesProgressBar.Value))
+                                                                                                          If Not chkUseTaskBarProgressBarForOverallStatus.Checked Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(IndividualFilesProgressBar.Value))
                                                                                                           lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                           If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
@@ -222,7 +223,7 @@ Public Class Form1
                                                              computeStopwatch = Stopwatch.StartNew
 
                                                              If doChecksumWithAttachedSubRoutine(item.fileName, checksumType, strChecksum, subRoutine) Then
-                                                                 item.SubItems(2).Text = If(My.Settings.boolDisplayHashesInUpperCase, strChecksum.ToUpper, strChecksum.ToLower)
+                                                                 item.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
                                                                  item.computeTime = computeStopwatch.Elapsed
                                                                  item.SubItems(3).Text = timespanToHMS(item.computeTime)
                                                                  item.hash = strChecksum
@@ -233,7 +234,7 @@ Public Class Form1
                                                              End If
                                                          End If
 
-                                                         If My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / listFiles.Items.Count * 100))
+                                                         If chkUseTaskBarProgressBarForOverallStatus.Checked Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / listFiles.Items.Count * 100))
                                                          index += 1
                                                      Next
 
@@ -302,7 +303,7 @@ Public Class Form1
         For Each item As myListViewItem In listFiles.Items
             If Not String.IsNullOrWhiteSpace(item.hash) Then
                 strFile = item.fileName
-                If My.Settings.boolSaveChecksumFilesWithRelativePaths Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile, "")
+                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile, "")
                 stringBuilder.AppendLine(item.hash & " *" & strFile)
             End If
         Next
@@ -418,7 +419,7 @@ Public Class Form1
     End Function
 
     Private Sub launchURLInWebBrowser(url As String, Optional errorMessage As String = "An error occurred when trying the URL In your Default browser. The URL has been copied to your Windows Clipboard for you to paste into the address bar in the web browser of your choice.")
-        If Not url.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then url = If(My.Settings.boolSSL, "https://" & url, "http://" & url)
+        If Not url.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then url = If(chkSSL.Checked, "https://" & url, "http://" & url)
 
         Try
             Dim associatedApplication As String = Nothing
@@ -555,9 +556,12 @@ Public Class Form1
         chkShowEstimatedTimeRemaining.Checked = boolShowEstimatedTime
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, Check_for_Update_Stuff.versionString, If(Environment.Is64BitProcess, "64", "32"), If(Environment.Is64BitOperatingSystem, "64", "32"))
         Me.Size = My.Settings.windowSize
-        lblValidColor.BackColor = My.Settings.validColor
-        lblNotValidColor.BackColor = My.Settings.notValidColor
-        lblFileNotFoundColor.BackColor = My.Settings.fileNotFoundColor
+        validColor = My.Settings.validColor
+        lblValidColor.BackColor = validColor
+        notValidColor = My.Settings.notValidColor
+        lblNotValidColor.BackColor = notValidColor
+        fileNotFoundColor = My.Settings.fileNotFoundColor
+        lblFileNotFoundColor.BackColor = fileNotFoundColor
         chkUseTaskBarProgressBarForOverallStatus.Checked = My.Settings.boolUseTaskBarProgressBarForOverallStatus
         bufferSize.Value = My.Settings.shortBufferSize
         btnSetBufferSize.Enabled = False
@@ -663,7 +667,7 @@ Public Class Form1
                                                                  btnAddFilesInFolder.Enabled = False
                                                              End Sub)
 
-                                                   If My.Settings.boolRecurrsiveDirectorySearch Then
+                                                   If chkRecurrsiveDirectorySearch.Checked Then
                                                        recursiveDirectorySearch(directoryPath, collectionOfListViewItems)
                                                    Else
                                                        For Each strFileName As String In IO.Directory.EnumerateFiles(directoryPath)
@@ -800,7 +804,7 @@ Public Class Form1
                                                      verifyHashesListFiles.EndUpdate()
                                                      Me.Text = "Hasher"
 
-                                                     If My.Settings.boolSortByFileSizeAfterLoadingHashFile Then applyFileSizeSortingToVerifyList()
+                                                     If chkSortByFileSizeAfterLoadingHashFile.Checked Then applyFileSizeSortingToVerifyList()
 
                                                      lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                      VerifyHashProgressBar.Value = 0
@@ -811,7 +815,7 @@ Public Class Form1
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
                                                          lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}", myToString(index), myToString(verifyHashesListFiles.Items.Count), If(verifyHashesListFiles.Items.Count = 1, "file", "files"))
                                                          If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, intFilesThatPassedVerification)
-                                                         If My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / verifyHashesListFiles.Items.Count * 100))
+                                                         If chkUseTaskBarProgressBarForOverallStatus.Checked Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / verifyHashesListFiles.Items.Count * 100))
                                                          index += 1
                                                      Next
 
@@ -947,7 +951,7 @@ Public Class Form1
                                                    Me.Invoke(Sub()
                                                                  percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                  VerifyHashProgressBar.Value = percentage
-                                                                 If Not My.Settings.boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value))
+                                                                 If Not chkUseTaskBarProgressBarForOverallStatus.Checked Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value))
                                                                  lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                  If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                              End Sub)
@@ -960,17 +964,17 @@ Public Class Form1
 
             If doChecksumWithAttachedSubRoutine(strFileName, hashFileType, strChecksumInFile, subRoutine) Then
                 If strChecksum.Equals(item.hash, StringComparison.OrdinalIgnoreCase) Then
-                    item.color = My.Settings.validColor
+                    item.color = validColor
                     item.SubItems(2).Text = "Valid"
                     item.computeTime = computeStopwatch.Elapsed
                     item.SubItems(3).Text = timespanToHMS(item.computeTime)
                     longFilesThatPassedVerification += 1
                 Else
-                    item.color = My.Settings.notValidColor
+                    item.color = notValidColor
                     item.SubItems(2).Text = "NOT Valid"
                 End If
             Else
-                item.color = My.Settings.fileNotFoundColor
+                item.color = fileNotFoundColor
                 item.SubItems(2).Text = "(Error while calculating checksum)"
             End If
 
@@ -1026,7 +1030,7 @@ Public Class Form1
             strHash = getHashOfString(txtTextToHash.Text, checksumType.sha512)
         End If
 
-        txtHashResults.Text = If(My.Settings.boolDisplayHashesInUpperCase, strHash.ToUpper, strHash.ToLower)
+        txtHashResults.Text = If(chkDisplayHashesInUpperCase.Checked, strHash.ToUpper, strHash.ToLower)
         btnCopyTextHashResultsToClipboard.Enabled = True
     End Sub
 
@@ -1156,13 +1160,13 @@ Public Class Form1
     Private Sub CopyHashToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyHashToClipboardToolStripMenuItem.Click
         If listFiles.SelectedItems.Count = 1 Then
             Dim selectedItem As myListViewItem = listFiles.SelectedItems(0)
-            If copyTextToWindowsClipboard(If(My.Settings.boolDisplayHashesInUpperCase, selectedItem.hash.ToUpper, selectedItem.hash.ToLower)) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
+            If copyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, selectedItem.hash.ToUpper, selectedItem.hash.ToLower)) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
         Else
             Dim stringBuilder As New Text.StringBuilder
             addHashFileHeader(stringBuilder)
 
             For Each item As myListViewItem In listFiles.SelectedItems
-                stringBuilder.AppendLine(If(My.Settings.boolDisplayHashesInUpperCase, item.hash.ToUpper, item.hash.ToLower) & " *" & item.fileName)
+                stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, item.hash.ToUpper, item.hash.ToLower) & " *" & item.fileName)
             Next
 
             If copyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strWindowTitle)
@@ -1303,11 +1307,11 @@ Public Class Form1
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      Dim checksum1FinishCode As [Delegate] = Sub()
-                                                                                                 lblFile1Hash.Text = "Hash/Checksum: " & If(My.Settings.boolDisplayHashesInUpperCase, strChecksum1.ToUpper, strChecksum1.ToLower)
+                                                                                                 lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
                                                                                                  ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
                                                                                              End Sub
                                                      Dim checksum2FinishCode As [Delegate] = Sub()
-                                                                                                 lblFile2Hash.Text = "Hash/Checksum: " & If(My.Settings.boolDisplayHashesInUpperCase, strChecksum2.ToUpper, strChecksum2.ToLower)
+                                                                                                 lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
                                                                                                  ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
                                                                                              End Sub
 
@@ -1735,6 +1739,7 @@ Public Class Form1
         If colorDialog.ShowDialog() = DialogResult.OK Then
             My.Settings.validColor = colorDialog.Color
             lblValidColor.BackColor = colorDialog.Color
+            validColor = colorDialog.Color
             MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
         End If
     End Sub
@@ -1745,6 +1750,7 @@ Public Class Form1
         If colorDialog.ShowDialog() = DialogResult.OK Then
             My.Settings.notValidColor = colorDialog.Color
             lblNotValidColor.BackColor = colorDialog.Color
+            notValidColor = colorDialog.Color
             MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
         End If
     End Sub
@@ -1755,6 +1761,7 @@ Public Class Form1
         If colorDialog.ShowDialog() = DialogResult.OK Then
             My.Settings.fileNotFoundColor = colorDialog.Color
             lblFileNotFoundColor.BackColor = colorDialog.Color
+            fileNotFoundColor = colorDialog.Color
             MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
         End If
     End Sub
@@ -1762,12 +1769,15 @@ Public Class Form1
     Private Sub BtnSetColorsBackToDefaults_Click(sender As Object, e As EventArgs) Handles btnSetColorsBackToDefaults.Click
         My.Settings.validColor = Color.LightGreen
         lblValidColor.BackColor = Color.LightGreen
+        validColor = Color.LightGreen
 
         My.Settings.notValidColor = Color.Pink
         lblNotValidColor.BackColor = Color.Pink
+        notValidColor = Color.Pink
 
         My.Settings.fileNotFoundColor = Color.LightGray
         lblFileNotFoundColor.BackColor = Color.LightGray
+        fileNotFoundColor = Color.LightGray
 
         MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
     End Sub
