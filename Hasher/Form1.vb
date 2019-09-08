@@ -174,6 +174,7 @@ Public Class Form1
         btnRemoveSelectedFiles.Enabled = False
         btnIndividualFilesCopyToClipboard.Enabled = False
         btnIndividualFilesSaveResultsToDisk.Enabled = False
+        hashIndividualFilesAllFilesProgressBar.Visible = True
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -183,15 +184,12 @@ Public Class Form1
                                                      Dim checksumType As checksumType
                                                      Dim index As Integer = 1
 
-                                                     Dim boolUseTaskBarProgressBarForOverallStatus As Boolean = chkUseTaskBarProgressBarForOverallStatus.Checked
-                                                     If listFiles.Items.Count = 1 Then boolUseTaskBarProgressBarForOverallStatus = False
-
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           IndividualFilesProgressBar.Value = percentage
-                                                                                                          If Not boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(IndividualFilesProgressBar.Value))
+                                                                                                          Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(ulongAllReadBytes / ulongAllBytes * 100))
                                                                                                           lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                           If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
@@ -220,10 +218,18 @@ Public Class Form1
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim computeStopwatch As Stopwatch
 
+                                                     ulongAllBytes = 0
+                                                     ulongAllReadBytes = 0
+
+                                                     For Each item As myListViewItem In listFiles.Items
+                                                         ulongAllBytes += item.fileSize
+                                                     Next
+
                                                      For Each item As myListViewItem In listFiles.Items
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
                                                              lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
-                                                             lblIndividualFilesStatusProcessingFile.Text = "Processing " & myToString(index) & " of " & myToString(listFiles.Items.Count) & If(listFiles.Items.Count = 1, " file", " files") & "."
+                                                             lblIndividualFilesStatusProcessingFile.Text = "Processing " & myToString(index) & " of " & myToString(listFiles.Items.Count) & If(listFiles.Items.Count = 1, " file", " files") & " (" & Math.Round(index / listFiles.Items.Count * 100, 2) & "%)."
+                                                             hashIndividualFilesAllFilesProgressBar.Value = index / listFiles.Items.Count * 100
                                                              computeStopwatch = Stopwatch.StartNew
 
                                                              If doChecksumWithAttachedSubRoutine(item.fileName, checksumType, strChecksum, subRoutine) Then
@@ -238,7 +244,6 @@ Public Class Form1
                                                              End If
                                                          End If
 
-                                                         If boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / listFiles.Items.Count * 100))
                                                          index += 1
                                                      Next
 
@@ -274,6 +279,9 @@ Public Class Form1
                                                          btnComputeHash.Text = "Compute Hash"
                                                          Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
                                                      End If
+
+                                                     hashIndividualFilesAllFilesProgressBar.Value = 0
+                                                     hashIndividualFilesAllFilesProgressBar.Visible = False
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -566,7 +574,6 @@ Public Class Form1
         lblNotValidColor.BackColor = notValidColor
         fileNotFoundColor = My.Settings.fileNotFoundColor
         lblFileNotFoundColor.BackColor = fileNotFoundColor
-        chkUseTaskBarProgressBarForOverallStatus.Checked = My.Settings.boolUseTaskBarProgressBarForOverallStatus
         bufferSize.Value = My.Settings.shortBufferSize
         btnSetBufferSize.Enabled = False
 
@@ -777,7 +784,6 @@ Public Class Form1
                                                      Dim intLineCounter As Integer = 0
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim strReadingHashFileMessage As String = "Reading hash file into memory and creating ListView item objects... Please Wait."
-                                                     Dim boolUseTaskBarProgressBarForOverallStatus As Boolean = chkUseTaskBarProgressBarForOverallStatus.Checked
 
                                                      lblVerifyHashStatus.Text = strReadingHashFileMessage
                                                      verifyHashesListFiles.BeginUpdate()
@@ -817,12 +823,18 @@ Public Class Form1
 
                                                      dataInFileArray = Nothing
 
-                                                     If verifyHashesListFiles.Items.Count = 1 Then boolUseTaskBarProgressBarForOverallStatus = False
+                                                     ulongAllBytes = 0
+                                                     ulongAllReadBytes = 0
+                                                     verifyIndividualFilesAllFilesProgressBar.Visible = True
 
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
-                                                         lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}", myToString(index), myToString(verifyHashesListFiles.Items.Count), If(verifyHashesListFiles.Items.Count = 1, "file", "files"))
-                                                         If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, intFilesThatPassedVerification, boolUseTaskBarProgressBarForOverallStatus)
-                                                         If boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / verifyHashesListFiles.Items.Count * 100))
+                                                         If item.boolFileExists Then ulongAllBytes += New IO.FileInfo(item.fileName).Length
+                                                     Next
+
+                                                     For Each item As myListViewItem In verifyHashesListFiles.Items
+                                                         lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2} ({3}%).", myToString(index), myToString(verifyHashesListFiles.Items.Count), If(verifyHashesListFiles.Items.Count = 1, "file", "files"), Math.Round(index / verifyHashesListFiles.Items.Count * 100, 2))
+                                                         verifyIndividualFilesAllFilesProgressBar.Value = index / verifyHashesListFiles.Items.Count * 100
+                                                         If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, intFilesThatPassedVerification)
                                                          index += 1
                                                      Next
 
@@ -908,6 +920,9 @@ Public Class Form1
                                                          btnOpenExistingHashFile.Text = "Open Hash File"
                                                          Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
                                                      End If
+
+                                                     verifyIndividualFilesAllFilesProgressBar.Value = 0
+                                                     verifyIndividualFilesAllFilesProgressBar.Visible = False
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -945,7 +960,7 @@ Public Class Form1
         OpenFileDialog.Multiselect = oldMultiValue
     End Sub
 
-    Private Sub processFileInVerifyFileList(ByRef item As myListViewItem, hashFileType As checksumType, ByRef longFilesThatPassedVerification As Long, ByVal boolUseTaskBarProgressBarForOverallStatus As Boolean)
+    Private Sub processFileInVerifyFileList(ByRef item As myListViewItem, hashFileType As checksumType, ByRef longFilesThatPassedVerification As Long)
         Dim strChecksum As String = item.hash
         Dim strFileName As String = item.fileName
 
@@ -958,7 +973,7 @@ Public Class Form1
                                                    Me.Invoke(Sub()
                                                                  percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                  VerifyHashProgressBar.Value = percentage
-                                                                 If Not boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value))
+                                                                 Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(ulongAllReadBytes / ulongAllBytes * 100))
                                                                  lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                  If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                              End Sub)
@@ -1792,10 +1807,6 @@ Public Class Form1
     Private Sub chkShowEstimatedTimeRemaining_Click(sender As Object, e As EventArgs) Handles chkShowEstimatedTimeRemaining.Click
         boolShowEstimatedTime = chkShowEstimatedTimeRemaining.Checked
         My.Settings.boolShowEstimatedTime = chkShowEstimatedTimeRemaining.Checked
-    End Sub
-
-    Private Sub chkUseTaskBarProgressBarForOverallStatus_Click(sender As Object, e As EventArgs) Handles chkUseTaskBarProgressBarForOverallStatus.Click
-        My.Settings.boolUseTaskBarProgressBarForOverallStatus = chkUseTaskBarProgressBarForOverallStatus.Checked
     End Sub
 
     Private Sub btnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click

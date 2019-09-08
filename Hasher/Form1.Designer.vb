@@ -119,7 +119,6 @@ Partial Class Form1
         Me.btnSetBufferSize = New System.Windows.Forms.Button()
         Me.bufferSize = New System.Windows.Forms.NumericUpDown()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.chkUseTaskBarProgressBarForOverallStatus = New System.Windows.Forms.CheckBox()
         Me.chkShowEstimatedTimeRemaining = New System.Windows.Forms.CheckBox()
         Me.chkUseMilliseconds = New System.Windows.Forms.CheckBox()
         Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
@@ -143,6 +142,8 @@ Partial Class Form1
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnPerformBenchmark = New System.Windows.Forms.Button()
         Me.chkUseCommasInNumbers = New System.Windows.Forms.CheckBox()
+        Me.hashIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.verifyIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -443,6 +444,7 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Controls.Add(Me.btnRemoveAllFiles)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddFilesInFolder)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddIndividualFiles)
+        Me.tabHashIndividualFiles.Controls.Add(Me.hashIndividualFilesAllFilesProgressBar)
         Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabHashIndividualFiles.Name = "tabHashIndividualFiles"
         Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 363)
@@ -493,7 +495,7 @@ Partial Class Form1
         '
         Me.lblIndividualFilesStatusProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblIndividualFilesStatusProcessingFile.AutoSize = True
-        Me.lblIndividualFilesStatusProcessingFile.Location = New System.Drawing.Point(687, 260)
+        Me.lblIndividualFilesStatusProcessingFile.Location = New System.Drawing.Point(647, 260)
         Me.lblIndividualFilesStatusProcessingFile.Name = "lblIndividualFilesStatusProcessingFile"
         Me.lblIndividualFilesStatusProcessingFile.Size = New System.Drawing.Size(37, 13)
         Me.lblIndividualFilesStatusProcessingFile.TabIndex = 17
@@ -713,6 +715,7 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyHashStatus)
         Me.tabVerifySavedHashes.Controls.Add(Me.verifyHashesListFiles)
         Me.tabVerifySavedHashes.Controls.Add(Me.btnOpenExistingHashFile)
+        Me.tabVerifySavedHashes.Controls.Add(Me.verifyIndividualFilesAllFilesProgressBar)
         Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
         Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 363)
@@ -742,7 +745,7 @@ Partial Class Form1
         '
         Me.lblVerifyHashStatusProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblVerifyHashStatusProcessingFile.AutoSize = True
-        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(677, 303)
+        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(639, 303)
         Me.lblVerifyHashStatusProcessingFile.Name = "lblVerifyHashStatusProcessingFile"
         Me.lblVerifyHashStatusProcessingFile.Size = New System.Drawing.Size(37, 13)
         Me.lblVerifyHashStatusProcessingFile.TabIndex = 18
@@ -1123,7 +1126,6 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.btnSetBufferSize)
         Me.tabSettings.Controls.Add(Me.bufferSize)
         Me.tabSettings.Controls.Add(Me.Label9)
-        Me.tabSettings.Controls.Add(Me.chkUseTaskBarProgressBarForOverallStatus)
         Me.tabSettings.Controls.Add(Me.chkShowEstimatedTimeRemaining)
         Me.tabSettings.Controls.Add(Me.chkUseMilliseconds)
         Me.tabSettings.Controls.Add(Me.chkSortFileListingAfterAddingFilesToHash)
@@ -1178,19 +1180,6 @@ Partial Class Form1
         Me.Label9.Text = "Data Buffer Size (In MBs, Default is 2):"
         Me.ToolTip.SetToolTip(Me.Label9, resources.GetString("Label9.ToolTip"))
         '
-        'chkUseTaskBarProgressBarForOverallStatus
-        '
-        Me.chkUseTaskBarProgressBarForOverallStatus.AutoSize = True
-        Me.chkUseTaskBarProgressBarForOverallStatus.Location = New System.Drawing.Point(15, 198)
-        Me.chkUseTaskBarProgressBarForOverallStatus.Name = "chkUseTaskBarProgressBarForOverallStatus"
-        Me.chkUseTaskBarProgressBarForOverallStatus.Size = New System.Drawing.Size(445, 17)
-        Me.chkUseTaskBarProgressBarForOverallStatus.TabIndex = 18
-        Me.chkUseTaskBarProgressBarForOverallStatus.Text = "Use taskbar progress bar to indicate overall processing status, not for individua" &
-    "l file status"
-        Me.ToolTip.SetToolTip(Me.chkUseTaskBarProgressBarForOverallStatus, "Enabling this option makes the program advance the taskbar progress bar when it's" &
-        " done processing a file.")
-        Me.chkUseTaskBarProgressBarForOverallStatus.UseVisualStyleBackColor = True
-        '
         'chkShowEstimatedTimeRemaining
         '
         Me.chkShowEstimatedTimeRemaining.AutoSize = True
@@ -1244,7 +1233,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 244)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 221)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1253,7 +1242,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 244)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 221)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1368,12 +1357,30 @@ Partial Class Form1
         'chkUseCommasInNumbers
         '
         Me.chkUseCommasInNumbers.AutoSize = True
-        Me.chkUseCommasInNumbers.Location = New System.Drawing.Point(15, 221)
+        Me.chkUseCommasInNumbers.Location = New System.Drawing.Point(15, 198)
         Me.chkUseCommasInNumbers.Name = "chkUseCommasInNumbers"
         Me.chkUseCommasInNumbers.Size = New System.Drawing.Size(194, 17)
         Me.chkUseCommasInNumbers.TabIndex = 29
         Me.chkUseCommasInNumbers.Text = "Use commas in numbers (ex. 2,000)"
         Me.chkUseCommasInNumbers.UseVisualStyleBackColor = True
+        '
+        'hashIndividualFilesAllFilesProgressBar
+        '
+        Me.hashIndividualFilesAllFilesProgressBar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.hashIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(894, 260)
+        Me.hashIndividualFilesAllFilesProgressBar.Name = "hashIndividualFilesAllFilesProgressBar"
+        Me.hashIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(143, 10)
+        Me.hashIndividualFilesAllFilesProgressBar.TabIndex = 23
+        Me.hashIndividualFilesAllFilesProgressBar.Visible = False
+        '
+        'verifyIndividualFilesAllFilesProgressBar
+        '
+        Me.verifyIndividualFilesAllFilesProgressBar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.verifyIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(894, 303)
+        Me.verifyIndividualFilesAllFilesProgressBar.Name = "verifyIndividualFilesAllFilesProgressBar"
+        Me.verifyIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(143, 10)
+        Me.verifyIndividualFilesAllFilesProgressBar.TabIndex = 24
+        Me.verifyIndividualFilesAllFilesProgressBar.Visible = False
         '
         'Form1
         '
@@ -1520,10 +1527,11 @@ Partial Class Form1
     Friend WithEvents btnSetNotValidColor As Button
     Friend WithEvents btnSetColorsBackToDefaults As Button
     Friend WithEvents chkShowEstimatedTimeRemaining As CheckBox
-    Friend WithEvents chkUseTaskBarProgressBarForOverallStatus As CheckBox
     Friend WithEvents Label9 As Label
     Friend WithEvents bufferSize As NumericUpDown
     Friend WithEvents btnSetBufferSize As Button
     Friend WithEvents btnPerformBenchmark As Button
     Friend WithEvents chkUseCommasInNumbers As CheckBox
+    Friend WithEvents hashIndividualFilesAllFilesProgressBar As ProgressBar
+    Friend WithEvents verifyIndividualFilesAllFilesProgressBar As ProgressBar
 End Class
