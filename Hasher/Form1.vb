@@ -175,6 +175,8 @@ Public Class Form1
         btnIndividualFilesCopyToClipboard.Enabled = False
         btnIndividualFilesSaveResultsToDisk.Enabled = False
         hashIndividualFilesAllFilesProgressBar.Visible = True
+        hashIndividualFilesAllFilesProgressBar.Value = 1
+        hashIndividualFilesAllFilesProgressBar.Value = 0
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -826,6 +828,8 @@ Public Class Form1
                                                      ulongAllBytes = 0
                                                      ulongAllReadBytes = 0
                                                      verifyIndividualFilesAllFilesProgressBar.Visible = True
+                                                     verifyIndividualFilesAllFilesProgressBar.Value = 1
+                                                     verifyIndividualFilesAllFilesProgressBar.Value = 0
 
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
                                                          If item.boolFileExists Then ulongAllBytes += New IO.FileInfo(item.fileName).Length
