@@ -497,14 +497,18 @@ Public Class Form1
                 Dim isDirectory As Boolean = (IO.File.GetAttributes(strReceivedFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
 
                 If isDirectory Then
-                    TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
-                    Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
+                    Invoke(Sub()
+                               TabControl1.SelectTab(2)
+                               NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
+                           End Sub)
 
                     addFilesFromDirectory(strReceivedFileName)
                 Else
                     If Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
-                        TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
-                        Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
+                        Invoke(Sub()
+                                   TabControl1.SelectTab(2)
+                                   NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
+                               End Sub)
 
                         strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
                         listFiles.Items.Add(createListFilesObject(strReceivedFileName))
