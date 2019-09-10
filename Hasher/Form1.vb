@@ -188,15 +188,13 @@ Public Class Form1
 
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
-                                                                                            Invoke(Sub()
-                                                                                                       percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                       IndividualFilesProgressBar.Value = percentage
-                                                                                                       totalBytesReadPercentage = ulongAllReadBytes / ulongAllBytes * 100
-                                                                                                       ProgressForm.setTaskbarProgressBarValue(totalBytesReadPercentage)
-                                                                                                       hashIndividualFilesAllFilesProgressBar.Value = totalBytesReadPercentage
-                                                                                                       lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                       If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
-                                                                                                   End Sub)
+                                                                                            percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                            IndividualFilesProgressBar.Value = percentage
+                                                                                            totalBytesReadPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                            Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(totalBytesReadPercentage))
+                                                                                            hashIndividualFilesAllFilesProgressBar.Value = totalBytesReadPercentage
+                                                                                            lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                            If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     End Sub
@@ -976,15 +974,13 @@ Public Class Form1
             Dim percentage, totalBytesReadPercentage As Double
             Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                Try
-                                                   Invoke(Sub()
-                                                              percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                              VerifyHashProgressBar.Value = percentage
-                                                              totalBytesReadPercentage = ulongAllReadBytes / ulongAllBytes * 100
-                                                              ProgressForm.setTaskbarProgressBarValue(totalBytesReadPercentage)
-                                                              verifyIndividualFilesAllFilesProgressBar.Value = totalBytesReadPercentage
-                                                              lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                              If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
-                                                          End Sub)
+                                                   percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                   VerifyHashProgressBar.Value = percentage
+                                                   totalBytesReadPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                   Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(totalBytesReadPercentage))
+                                                   verifyIndividualFilesAllFilesProgressBar.Value = totalBytesReadPercentage
+                                                   lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                   If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                Catch ex As Exception
                                                End Try
                                            End Sub
@@ -1323,13 +1319,11 @@ Public Class Form1
                                                      Dim percentage As Double
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
-                                                                                            Invoke(Sub()
-                                                                                                       percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                       compareFilesProgressBar.Value = percentage
-                                                                                                       ProgressForm.setTaskbarProgressBarValue(compareFilesProgressBar.Value)
-                                                                                                       lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                       If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
-                                                                                                   End Sub)
+                                                                                            percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                            compareFilesProgressBar.Value = percentage
+                                                                                            Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareFilesProgressBar.Value))
+                                                                                            lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                            If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     End Sub
@@ -1527,13 +1521,11 @@ Public Class Form1
                                                      Dim percentage As Double
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
-                                                                                            Invoke(Sub()
-                                                                                                       percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                       compareAgainstKnownHashProgressBar.Value = percentage
-                                                                                                       ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
-                                                                                                       lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                       If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
-                                                                                                   End Sub)
+                                                                                            percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                            compareAgainstKnownHashProgressBar.Value = percentage
+                                                                                            Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value))
+                                                                                            lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                            If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     End Sub
