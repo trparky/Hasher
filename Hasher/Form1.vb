@@ -1517,11 +1517,13 @@ Public Class Form1
                                                      Dim percentage As Double
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
-                                                                                            percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                            compareAgainstKnownHashProgressBar.Value = percentage
-                                                                                            Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value))
-                                                                                            lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                            If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                                            Invoke(Sub()
+                                                                                                       percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                       compareAgainstKnownHashProgressBar.Value = percentage
+                                                                                                       Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value))
+                                                                                                       lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                                       If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                                                   End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     End Sub
