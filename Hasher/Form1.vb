@@ -283,8 +283,6 @@ Public Class Form1
 
                                                      hashIndividualFilesAllFilesProgressBar.Value = 0
                                                      hashIndividualFilesAllFilesProgressBar.Visible = False
-                                                     ulongAllBytes = 0
-                                                     ulongAllReadBytes = 0
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -921,8 +919,6 @@ Public Class Form1
 
                                                      verifyIndividualFilesAllFilesProgressBar.Value = 0
                                                      verifyIndividualFilesAllFilesProgressBar.Visible = False
-                                                     ulongAllBytes = 0
-                                                     ulongAllReadBytes = 0
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
