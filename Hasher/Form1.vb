@@ -181,7 +181,7 @@ Public Class Form1
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
-                                                     Dim percentage, totalBytesReadPercentage As Double
+                                                     Dim percentage As Double
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksumType
                                                      Dim index As Integer = 1
@@ -190,9 +190,7 @@ Public Class Form1
                                                                                         Try
                                                                                             percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                             IndividualFilesProgressBar.Value = percentage
-                                                                                            totalBytesReadPercentage = ulongAllReadBytes / ulongAllBytes * 100
-                                                                                            Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(totalBytesReadPercentage))
-                                                                                            hashIndividualFilesAllFilesProgressBar.Value = totalBytesReadPercentage
+                                                                                            Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(ulongAllReadBytes / ulongAllBytes * 100))
                                                                                             lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                             If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                         Catch ex As Exception
@@ -231,6 +229,7 @@ Public Class Form1
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
                                                              lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
                                                              lblIndividualFilesStatusProcessingFile.Text = "Processing " & myToString(index) & " of " & myToString(listFiles.Items.Count) & If(listFiles.Items.Count = 1, " file", " files") & " (" & Math.Round(index / listFiles.Items.Count * 100, 2) & "%)."
+                                                             hashIndividualFilesAllFilesProgressBar.Value = index / listFiles.Items.Count * 100
                                                              computeStopwatch = Stopwatch.StartNew
 
                                                              If doChecksumWithAttachedSubRoutine(item.fileName, checksumType, strChecksum, subRoutine) Then
@@ -832,6 +831,7 @@ Public Class Form1
 
                                                      For Each item As myListViewItem In verifyHashesListFiles.Items
                                                          lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2} ({3}%).", myToString(index), myToString(verifyHashesListFiles.Items.Count), If(verifyHashesListFiles.Items.Count = 1, "file", "files"), Math.Round(index / verifyHashesListFiles.Items.Count * 100, 2))
+                                                         verifyIndividualFilesAllFilesProgressBar.Value = index / verifyHashesListFiles.Items.Count * 100
                                                          If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, intFilesThatPassedVerification)
                                                          index += 1
                                                      Next
@@ -963,14 +963,12 @@ Public Class Form1
         If IO.File.Exists(strFileName) Then
             Dim fileInfo As New IO.FileInfo(strFileName)
             Dim strChecksumInFile As String = Nothing
-            Dim percentage, totalBytesReadPercentage As Double
+            Dim percentage As Double
             Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                Try
                                                    percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                    VerifyHashProgressBar.Value = percentage
-                                                   totalBytesReadPercentage = ulongAllReadBytes / ulongAllBytes * 100
-                                                   Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(totalBytesReadPercentage))
-                                                   verifyIndividualFilesAllFilesProgressBar.Value = totalBytesReadPercentage
+                                                   Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(ulongAllReadBytes / ulongAllBytes * 100))
                                                    lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                    If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                Catch ex As Exception
