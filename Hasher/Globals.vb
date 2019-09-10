@@ -1,8 +1,6 @@
 ﻿Imports System.Security.Principal
 
 Public Module Globals
-    Public ulongAllReadBytes, ulongAllBytes As ULong
-
     Public Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
         Dim shortRoundNumber As Short = If(roundToNearestWholeNumber, 0, 2)
