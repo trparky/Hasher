@@ -191,7 +191,7 @@ Public Class Form1
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           IndividualFilesProgressBar.Value = percentage
-                                                                                                          If Not boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(IndividualFilesProgressBar.Value))
+                                                                                                          If Not boolUseTaskBarProgressBarForOverallStatus Then ProgressForm.setTaskbarProgressBarValue(IndividualFilesProgressBar.Value)
                                                                                                           lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                           If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
@@ -486,14 +486,18 @@ Public Class Form1
                 Dim isDirectory As Boolean = (IO.File.GetAttributes(strReceivedFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
 
                 If isDirectory Then
-                    TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
-                    Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
+                    Me.Invoke(Sub()
+                                  TabControl1.SelectTab(2)
+                                  NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
+                              End Sub)
 
                     addFilesFromDirectory(strReceivedFileName)
                 Else
                     If Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
-                        TabControl1.Invoke(Sub() TabControl1.SelectTab(2))
-                        Me.Invoke(Sub() NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32()))
+                        Me.Invoke(Sub()
+                                      TabControl1.SelectTab(2)
+                                      NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
+                                  End Sub)
 
                         strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
                         listFiles.Items.Add(createListFilesObject(strReceivedFileName))
@@ -689,7 +693,7 @@ Public Class Form1
                                                                  lblIndividualFilesStatusProcessingFile.Text = Nothing
                                                                  lblIndividualFilesStatus.Text = strNoBackgroundProcesses
                                                                  IndividualFilesProgressBar.Value = 0
-                                                                 Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
+                                                                 ProgressForm.setTaskbarProgressBarValue(0)
                                                                  btnAddFilesInFolder.Enabled = True
 
                                                                  updateFilesListCountHeader()
@@ -958,7 +962,7 @@ Public Class Form1
                                                    Me.Invoke(Sub()
                                                                  percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                  VerifyHashProgressBar.Value = percentage
-                                                                 If Not boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value))
+                                                                 If Not boolUseTaskBarProgressBarForOverallStatus Then ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value)
                                                                  lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                  If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                              End Sub)
@@ -1303,7 +1307,7 @@ Public Class Form1
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareFilesProgressBar.Value = percentage
-                                                                                                          Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareFilesProgressBar.Value))
+                                                                                                          ProgressForm.setTaskbarProgressBarValue(compareFilesProgressBar.Value)
                                                                                                           lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                           If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
@@ -1507,7 +1511,7 @@ Public Class Form1
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           compareAgainstKnownHashProgressBar.Value = percentage
-                                                                                                          Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value))
+                                                                                                          ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
                                                                                                           lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                           If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                       End Sub)
