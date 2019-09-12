@@ -55,22 +55,26 @@
                                                          If doChecksumWithAttachedSubRoutine(OpenFileDialog.FileName, checksumType.sha256, strChecksum, subRoutine, intRealBufferSize) Then
                                                              itemToBeAdded = New benchmarkListViewItem(intBufferSize & If(intBufferSize = 1, " MB", " MBs")) With {.bufferSize = intBufferSize}
                                                              itemToBeAdded.SubItems.Add(timespanToHMS(computeStopwatch.Elapsed))
-                                                             listResults.Items.Add(itemToBeAdded)
+                                                             Invoke(Sub() listResults.Items.Add(itemToBeAdded))
                                                          End If
                                                      Next
 
-                                                     Me.Text = "Hasher"
-                                                     Me.Invoke(Sub() MsgBox("Benchmark completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, "Hasher Benchmark"))
+                                                     Me.Invoke(Sub()
+                                                                   Me.Text = "Hasher"
+                                                                   MsgBox("Benchmark completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, "Hasher Benchmark")
+                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                  Finally
-                                                     If Not boolClosingWindow Then
-                                                         lblStatus.Text = "(No Background Process Running)"
-                                                         btnOpenFile.Text = "Open File for Benchmarking"
-                                                         ProgressBar.Value = 0
-                                                     End If
+                                                     Me.Invoke(Sub()
+                                                                   If Not boolClosingWindow Then
+                                                                       lblStatus.Text = "(No Background Process Running)"
+                                                                       btnOpenFile.Text = "Open File for Benchmarking"
+                                                                       ProgressBar.Value = 0
+                                                                   End If
 
-                                                     boolBackgroundThreadWorking = False
-                                                     workingThread = Nothing
+                                                                   boolBackgroundThreadWorking = False
+                                                                   workingThread = Nothing
+                                                               End Sub)
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
