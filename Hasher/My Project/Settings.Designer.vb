@@ -296,18 +296,6 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
-        Public Property boolUseTaskBarProgressBarForOverallStatus() As Boolean
-            Get
-                Return CType(Me("boolUseTaskBarProgressBarForOverallStatus"),Boolean)
-            End Get
-            Set
-                Me("boolUseTaskBarProgressBarForOverallStatus") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
         Public Property shortBufferSize() As Short
             Get

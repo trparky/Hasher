@@ -27,6 +27,23 @@ Public Class Form1
     Private boolDidWePerformAPreviousHash As Boolean = False
     Private validColor, notValidColor, fileNotFoundColor As Color
 
+    ''' <summary>
+    ''' This function works very similar to the Invoke function that's already built into .NET. The only difference
+    ''' is that this function checks to see if an invoke is required and only invokes the passed routine on the
+    ''' main thread if it's required. If not, the passed routine is executed on the thread that the call
+    ''' originated from. Also, if the program is closing the function aborts itself so as to prevent
+    ''' System.InvalidOperationException upon program close.
+    ''' </summary>
+    ''' <param name="input"></param>
+    Private Sub myInvoke(input As [Delegate])
+        If boolClosingWindow Then Exit Sub
+        If InvokeRequired() Then
+            Invoke(input)
+        Else
+            input.DynamicInvoke()
+        End If
+    End Sub
+
     Private Delegate Function GetItems(ByVal lstview As ListView) As ListView.ListViewItemCollection
     Private Function getListViewItems(ByVal lstview As ListView) As ListView.ListViewItemCollection
         Dim temp As ListView.ListViewItemCollection = New ListView.ListViewItemCollection(New ListView())
@@ -39,7 +56,7 @@ Public Class Form1
 
             Return temp
         Else
-            Return CType(Me.Invoke(New GetItems(AddressOf getListViewItems), New Object() {lstview}), ListView.ListViewItemCollection)
+            Return CType(Invoke(New GetItems(AddressOf getListViewItems), New Object() {lstview}), ListView.ListViewItemCollection)
         End If
     End Function
 
@@ -139,6 +156,7 @@ Public Class Form1
             .SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
             .SubItems.Add(strToBeComputed)
             .SubItems.Add("")
+            ulongAllBytes += .fileSize
         End With
 
         Return itemToBeAdded
@@ -194,46 +212,46 @@ Public Class Form1
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
-                                                     Dim percentage As Double
+                                                     Dim percentage, allBytesPercentage As Double
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksumType
                                                      Dim index As Integer = 1
-
-                                                     Dim boolUseTaskBarProgressBarForOverallStatus As Boolean = chkUseTaskBarProgressBarForOverallStatus.Checked
-                                                     If listFiles.Items.Count = 1 Then boolUseTaskBarProgressBarForOverallStatus = False
+                                                     ulongAllReadBytes = 0
 
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
-                                                                                            Me.Invoke(Sub()
-                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                          IndividualFilesProgressBar.Value = percentage
-                                                                                                          If Not boolUseTaskBarProgressBarForOverallStatus Then ProgressForm.setTaskbarProgressBarValue(IndividualFilesProgressBar.Value)
-                                                                                                          lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                          If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
-                                                                                                      End Sub)
+                                                                                            myInvoke(Sub()
+                                                                                                         percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                         IndividualFilesProgressBar.Value = percentage
+                                                                                                         allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                                         ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
+                                                                                                         IndividualFilesProgressBar.Value = allBytesPercentage
+                                                                                                         lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                                         If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                                                     End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     End Sub
 
-                                                     Me.Invoke(Sub()
-                                                                   radioMD5.Enabled = False
-                                                                   radioSHA1.Enabled = False
-                                                                   radioSHA256.Enabled = False
-                                                                   radioSHA384.Enabled = False
-                                                                   radioSHA512.Enabled = False
+                                                     myInvoke(Sub()
+                                                                  radioMD5.Enabled = False
+                                                                  radioSHA1.Enabled = False
+                                                                  radioSHA256.Enabled = False
+                                                                  radioSHA384.Enabled = False
+                                                                  radioSHA512.Enabled = False
 
-                                                                   If radioMD5.Checked Then
-                                                                       checksumType = checksumType.md5
-                                                                   ElseIf radioSHA1.Checked Then
-                                                                       checksumType = checksumType.sha160
-                                                                   ElseIf radioSHA256.Checked Then
-                                                                       checksumType = checksumType.sha256
-                                                                   ElseIf radioSHA384.Checked Then
-                                                                       checksumType = checksumType.sha384
-                                                                   ElseIf radioSHA512.Checked Then
-                                                                       checksumType = checksumType.sha512
-                                                                   End If
-                                                               End Sub)
+                                                                  If radioMD5.Checked Then
+                                                                      checksumType = checksumType.md5
+                                                                  ElseIf radioSHA1.Checked Then
+                                                                      checksumType = checksumType.sha160
+                                                                  ElseIf radioSHA256.Checked Then
+                                                                      checksumType = checksumType.sha256
+                                                                  ElseIf radioSHA384.Checked Then
+                                                                      checksumType = checksumType.sha384
+                                                                  ElseIf radioSHA512.Checked Then
+                                                                      checksumType = checksumType.sha512
+                                                                  End If
+                                                              End Sub)
 
 
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
@@ -243,10 +261,10 @@ Public Class Form1
 
                                                      For Each item As myListViewItem In items
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
-                                                             Me.Invoke(Sub()
-                                                                           lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
-                                                                           lblIndividualFilesStatusProcessingFile.Text = "Processing " & myToString(index) & " of " & myToString(listFiles.Items.Count) & If(listFiles.Items.Count = 1, " file", " files") & "."
-                                                                       End Sub)
+                                                             myInvoke(Sub()
+                                                                          lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
+                                                                          lblIndividualFilesStatusProcessingFile.Text = "Processing " & myToString(index) & " of " & myToString(listFiles.Items.Count) & If(listFiles.Items.Count = 1, " file", " files") & "."
+                                                                      End Sub)
 
                                                              computeStopwatch = Stopwatch.StartNew
 
@@ -263,66 +281,68 @@ Public Class Form1
 
                                                              Dim byRefSafeItem As myListViewItem = item
 
-                                                             Me.Invoke(Sub()
-                                                                           For Each itemOnGUI As myListViewItem In listFiles.Items
-                                                                               If itemOnGUI.fileName.Equals(byRefSafeItem.fileName) Then
-                                                                                   For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
-                                                                                       itemOnGUI.SubItems(i) = byRefSafeItem.SubItems(i)
-                                                                                   Next
+                                                             myInvoke(Sub()
+                                                                          For Each itemOnGUI As myListViewItem In listFiles.Items
+                                                                              If itemOnGUI.fileName.Equals(byRefSafeItem.fileName) Then
+                                                                                  For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
+                                                                                      itemOnGUI.SubItems(i) = byRefSafeItem.SubItems(i)
+                                                                                  Next
 
-                                                                                   itemOnGUI.fileSize = byRefSafeItem.fileSize
-                                                                                   itemOnGUI.hash = byRefSafeItem.hash
-                                                                                   itemOnGUI.fileName = byRefSafeItem.fileName
-                                                                                   itemOnGUI.color = byRefSafeItem.color
-                                                                                   itemOnGUI.boolFileExists = byRefSafeItem.boolFileExists
-                                                                                   itemOnGUI.computeTime = byRefSafeItem.computeTime
-                                                                               End If
-                                                                           Next
-                                                                       End Sub)
+                                                                                  itemOnGUI.fileSize = byRefSafeItem.fileSize
+                                                                                  itemOnGUI.hash = byRefSafeItem.hash
+                                                                                  itemOnGUI.fileName = byRefSafeItem.fileName
+                                                                                  itemOnGUI.color = byRefSafeItem.color
+                                                                                  itemOnGUI.boolFileExists = byRefSafeItem.boolFileExists
+                                                                                  itemOnGUI.computeTime = byRefSafeItem.computeTime
+                                                                              End If
+                                                                          Next
+                                                                      End Sub)
                                                          End If
 
-                                                         If boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / listFiles.Items.Count * 100))
                                                          index += 1
                                                      Next
 
-                                                     Me.Invoke(Sub()
-                                                                   btnIndividualFilesCopyToClipboard.Enabled = True
-                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = True
-                                                                   radioMD5.Enabled = True
-                                                                   radioSHA1.Enabled = True
-                                                                   radioSHA256.Enabled = True
-                                                                   radioSHA384.Enabled = True
-                                                                   radioSHA512.Enabled = True
+                                                     myInvoke(Sub()
+                                                                  btnIndividualFilesCopyToClipboard.Enabled = True
+                                                                  btnIndividualFilesSaveResultsToDisk.Enabled = True
+                                                                  radioMD5.Enabled = True
+                                                                  radioSHA1.Enabled = True
+                                                                  radioSHA256.Enabled = True
+                                                                  radioSHA384.Enabled = True
+                                                                  radioSHA512.Enabled = True
 
-                                                                   Me.Text = "Hasher"
-                                                                   MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
-                                                                   resetHashIndividualFilesProgress()
-                                                                   boolBackgroundThreadWorking = False
-                                                                   workingThread = Nothing
-                                                               End Sub)
+                                                                  Me.Text = "Hasher"
+                                                                  MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
+                                                                  resetHashIndividualFilesProgress()
+                                                                  boolBackgroundThreadWorking = False
+                                                                  workingThread = Nothing
+                                                              End Sub)
                                                  Catch ex As Threading.ThreadAbortException
-                                                     Me.Invoke(Sub()
-                                                                   If Not boolClosingWindow Then
-                                                                       lblProcessingFile.Text = Nothing
-                                                                       lblIndividualFilesStatus.Text = strNoBackgroundProcesses
-                                                                       lblIndividualFilesStatusProcessingFile.Text = ""
-                                                                       IndividualFilesProgressBar.Value = 0
-                                                                       ProgressForm.setTaskbarProgressBarValue(0)
-                                                                       resetHashIndividualFilesProgress()
-                                                                       Me.Text = "Hasher"
-                                                                   End If
+                                                     myInvoke(Sub()
+                                                                  If Not boolClosingWindow Then
+                                                                      lblProcessingFile.Text = Nothing
+                                                                      lblIndividualFilesStatus.Text = strNoBackgroundProcesses
+                                                                      lblIndividualFilesStatusProcessingFile.Text = ""
+                                                                      IndividualFilesProgressBar.Value = 0
+                                                                      ProgressForm.setTaskbarProgressBarValue(0)
+                                                                      resetHashIndividualFilesProgress()
+                                                                      Me.Text = "Hasher"
+                                                                  End If
 
-                                                                   boolBackgroundThreadWorking = False
-                                                                   workingThread = Nothing
-                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
-                                                               End Sub)
+                                                                  boolBackgroundThreadWorking = False
+                                                                  workingThread = Nothing
+                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
+                                                              End Sub)
                                                  Finally
-                                                     Me.Invoke(Sub()
-                                                                   If Not boolClosingWindow Then
-                                                                       btnComputeHash.Text = "Compute Hash"
-                                                                       ProgressForm.setTaskbarProgressBarValue(0)
-                                                                   End If
-                                                               End Sub)
+                                                     ulongAllReadBytes = 0
+
+                                                     myInvoke(Sub()
+                                                                  If Not boolClosingWindow Then
+                                                                      btnComputeHash.Text = "Compute Hash"
+                                                                      ProgressForm.setTaskbarProgressBarValue(0)
+                                                                      IndividualFilesProgressBar.Value = 0
+                                                                  End If
+                                                              End Sub)
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -342,7 +362,7 @@ Public Class Form1
         lblIndividualFilesStatusProcessingFile.Text = ""
         lblProcessingFile.Text = ""
         IndividualFilesProgressBar.Value = 0
-        Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
+        myInvoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
     End Sub
 
     Private Function strGetIndividualHashesInStringFormat(strPathOfChecksumFile As String) As String
@@ -535,18 +555,18 @@ Public Class Form1
                 Dim isDirectory As Boolean = (IO.File.GetAttributes(strReceivedFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
 
                 If isDirectory Then
-                    Me.Invoke(Sub()
-                                  TabControl1.SelectTab(2)
-                                  NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
-                              End Sub)
+                    myInvoke(Sub()
+                                 TabControl1.SelectTab(2)
+                                 NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
+                             End Sub)
 
                     addFilesFromDirectory(strReceivedFileName)
                 Else
                     If Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
-                        Me.Invoke(Sub()
-                                      TabControl1.SelectTab(2)
-                                      NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
-                                  End Sub)
+                        myInvoke(Sub()
+                                     TabControl1.SelectTab(2)
+                                     NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
+                                 End Sub)
 
                         strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
                         listFiles.Items.Add(createListFilesObject(strReceivedFileName))
@@ -618,7 +638,6 @@ Public Class Form1
         lblNotValidColor.BackColor = notValidColor
         fileNotFoundColor = My.Settings.fileNotFoundColor
         lblFileNotFoundColor.BackColor = fileNotFoundColor
-        chkUseTaskBarProgressBarForOverallStatus.Checked = My.Settings.boolUseTaskBarProgressBarForOverallStatus
         bufferSize.Value = My.Settings.shortBufferSize
         btnSetBufferSize.Enabled = False
 
@@ -705,23 +724,23 @@ Public Class Form1
                                                    Dim collectionOfListViewItems As New List(Of ListViewItem)
                                                    Dim index As Integer = 0
 
-                                                   Me.Invoke(Sub()
-                                                                 btnAddIndividualFiles.Enabled = False
-                                                                 btnAddFilesInFolder.Enabled = False
-                                                                 btnRemoveSelectedFiles.Enabled = False
-                                                                 btnRemoveAllFiles.Enabled = False
-                                                                 radioSHA256.Enabled = False
-                                                                 radioSHA384.Enabled = False
-                                                                 radioSHA512.Enabled = False
-                                                                 radioSHA1.Enabled = False
-                                                                 radioMD5.Enabled = False
-                                                                 btnComputeHash.Enabled = False
-                                                                 btnIndividualFilesCopyToClipboard.Enabled = False
-                                                                 btnIndividualFilesSaveResultsToDisk.Enabled = False
+                                                   myInvoke(Sub()
+                                                                btnAddIndividualFiles.Enabled = False
+                                                                btnAddFilesInFolder.Enabled = False
+                                                                btnRemoveSelectedFiles.Enabled = False
+                                                                btnRemoveAllFiles.Enabled = False
+                                                                radioSHA256.Enabled = False
+                                                                radioSHA384.Enabled = False
+                                                                radioSHA512.Enabled = False
+                                                                radioSHA1.Enabled = False
+                                                                radioMD5.Enabled = False
+                                                                btnComputeHash.Enabled = False
+                                                                btnIndividualFilesCopyToClipboard.Enabled = False
+                                                                btnIndividualFilesSaveResultsToDisk.Enabled = False
 
-                                                                 lblIndividualFilesStatus.Text = "Enumerating files in directory... Please Wait."
-                                                                 btnAddFilesInFolder.Enabled = False
-                                                             End Sub)
+                                                                lblIndividualFilesStatus.Text = "Enumerating files in directory... Please Wait."
+                                                                btnAddFilesInFolder.Enabled = False
+                                                            End Sub)
 
                                                    If chkRecurrsiveDirectorySearch.Checked Then
                                                        recursiveDirectorySearch(directoryPath, collectionOfListViewItems)
@@ -731,34 +750,34 @@ Public Class Form1
                                                        Next
                                                    End If
 
-                                                   Me.Invoke(Sub()
-                                                                 lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please Wait."
+                                                   myInvoke(Sub()
+                                                                lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please Wait."
 
-                                                                 listFiles.BeginUpdate()
-                                                                 listFiles.Items.AddRange(collectionOfListViewItems.ToArray())
-                                                                 listFiles.EndUpdate()
+                                                                listFiles.BeginUpdate()
+                                                                listFiles.Items.AddRange(collectionOfListViewItems.ToArray())
+                                                                listFiles.EndUpdate()
 
-                                                                 lblIndividualFilesStatusProcessingFile.Text = Nothing
-                                                                 lblIndividualFilesStatus.Text = strNoBackgroundProcesses
-                                                                 IndividualFilesProgressBar.Value = 0
-                                                                 ProgressForm.setTaskbarProgressBarValue(0)
-                                                                 btnAddFilesInFolder.Enabled = True
+                                                                lblIndividualFilesStatusProcessingFile.Text = Nothing
+                                                                lblIndividualFilesStatus.Text = strNoBackgroundProcesses
+                                                                IndividualFilesProgressBar.Value = 0
+                                                                ProgressForm.setTaskbarProgressBarValue(0)
+                                                                btnAddFilesInFolder.Enabled = True
 
-                                                                 updateFilesListCountHeader()
+                                                                updateFilesListCountHeader()
 
-                                                                 btnAddIndividualFiles.Enabled = True
-                                                                 btnAddFilesInFolder.Enabled = True
-                                                                 btnRemoveSelectedFiles.Enabled = True
-                                                                 btnRemoveAllFiles.Enabled = True
-                                                                 radioSHA256.Enabled = True
-                                                                 radioSHA384.Enabled = True
-                                                                 radioSHA512.Enabled = True
-                                                                 radioSHA1.Enabled = True
-                                                                 radioMD5.Enabled = True
-                                                                 btnComputeHash.Enabled = True
-                                                                 btnIndividualFilesCopyToClipboard.Enabled = True
-                                                                 btnIndividualFilesSaveResultsToDisk.Enabled = True
-                                                             End Sub)
+                                                                btnAddIndividualFiles.Enabled = True
+                                                                btnAddFilesInFolder.Enabled = True
+                                                                btnRemoveSelectedFiles.Enabled = True
+                                                                btnRemoveAllFiles.Enabled = True
+                                                                radioSHA256.Enabled = True
+                                                                radioSHA384.Enabled = True
+                                                                radioSHA512.Enabled = True
+                                                                radioSHA1.Enabled = True
+                                                                radioMD5.Enabled = True
+                                                                btnComputeHash.Enabled = True
+                                                                btnIndividualFilesCopyToClipboard.Enabled = True
+                                                                btnIndividualFilesSaveResultsToDisk.Enabled = True
+                                                            End Sub)
                                                End Sub)
     End Sub
 
@@ -772,6 +791,7 @@ Public Class Form1
         With listViewItem
             If IO.File.Exists(strFileName) Then
                 .fileSize = New IO.FileInfo(strFileName).Length
+                ulongAllBytes += .fileSize
                 .SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                 .SubItems.Add("To Be Tested")
                 .SubItems.Add("To Be Tested")
@@ -829,20 +849,21 @@ Public Class Form1
                                                      Dim intLineCounter As Integer = 0
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim strReadingHashFileMessage As String = "Reading hash file into memory and creating ListView item objects... Please Wait."
-                                                     Dim boolUseTaskBarProgressBarForOverallStatus As Boolean = chkUseTaskBarProgressBarForOverallStatus.Checked
 
-                                                     Me.Invoke(Sub()
-                                                                   lblVerifyHashStatus.Text = strReadingHashFileMessage
-                                                                   verifyHashesListFiles.BeginUpdate()
-                                                               End Sub)
+                                                     myInvoke(Sub()
+                                                                  lblVerifyHashStatus.Text = strReadingHashFileMessage
+                                                                  verifyHashesListFiles.BeginUpdate()
+                                                              End Sub)
+
+                                                     ulongAllReadBytes = 0
 
                                                      For Each strLineInFile As String In dataInFileArray
                                                          intLineCounter += 1
-                                                         Me.Invoke(Sub()
-                                                                       VerifyHashProgressBar.Value = intLineCounter / dataInFileArray.LongLength * 100
-                                                                       ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value)
-                                                                       lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & myToString(intLineCounter) & " of " & myToString(dataInFileArray.LongLength) & " (" & VerifyHashProgressBar.Value & "%)."
-                                                                   End Sub)
+                                                         myInvoke(Sub()
+                                                                      VerifyHashProgressBar.Value = intLineCounter / dataInFileArray.LongLength * 100
+                                                                      ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value)
+                                                                      lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & myToString(intLineCounter) & " of " & myToString(dataInFileArray.LongLength) & " (" & VerifyHashProgressBar.Value & "%)."
+                                                                  End Sub)
 
                                                          If Not String.IsNullOrEmpty(strLineInFile) Then
                                                              regExMatchObject = hashLineParser.Match(strLineInFile)
@@ -855,76 +876,73 @@ Public Class Form1
                                                                      strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
                                                                  End If
 
-                                                                 Me.Invoke(Sub() verifyHashesListFiles.Items.Add(createListViewItemForHashFileEntry(strFileName, strChecksum, intFilesNotFound)))
+                                                                 myInvoke(Sub() verifyHashesListFiles.Items.Add(createListViewItemForHashFileEntry(strFileName, strChecksum, intFilesNotFound)))
                                                              End If
 
                                                              regExMatchObject = Nothing
                                                          End If
                                                      Next
 
-                                                     Me.Invoke(Sub()
-                                                                   verifyHashesListFiles.EndUpdate()
-                                                                   Me.Text = "Hasher"
-                                                                   If chkSortByFileSizeAfterLoadingHashFile.Checked Then applyFileSizeSortingToVerifyList()
-                                                                   lblVerifyHashStatus.Text = strNoBackgroundProcesses
-                                                                   VerifyHashProgressBar.Value = 0
-                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                               End Sub)
+                                                     myInvoke(Sub()
+                                                                  verifyHashesListFiles.EndUpdate()
+                                                                  Me.Text = "Hasher"
+                                                                  If chkSortByFileSizeAfterLoadingHashFile.Checked Then applyFileSizeSortingToVerifyList()
+                                                                  lblVerifyHashStatus.Text = strNoBackgroundProcesses
+                                                                  VerifyHashProgressBar.Value = 0
+                                                                  ProgressForm.setTaskbarProgressBarValue(0)
+                                                              End Sub)
 
                                                      dataInFileArray = Nothing
-
-                                                     If verifyHashesListFiles.Items.Count = 1 Then boolUseTaskBarProgressBarForOverallStatus = False
 
                                                      Dim items As ListView.ListViewItemCollection = getListViewItems(verifyHashesListFiles)
 
                                                      For Each item As myListViewItem In items
-                                                         Me.Invoke(Sub() lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}", myToString(index), myToString(verifyHashesListFiles.Items.Count), If(verifyHashesListFiles.Items.Count = 1, "file", "files")))
-                                                         If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, intFilesThatPassedVerification, boolUseTaskBarProgressBarForOverallStatus)
-                                                         If boolUseTaskBarProgressBarForOverallStatus Then Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(index / verifyHashesListFiles.Items.Count * 100))
+                                                         myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}", myToString(index), myToString(verifyHashesListFiles.Items.Count), If(verifyHashesListFiles.Items.Count = 1, "file", "files")))
+                                                         If item.boolFileExists Then processFileInVerifyFileList(item, checksumType, intFilesThatPassedVerification)
                                                          index += 1
                                                      Next
 
-                                                     Me.Invoke(Sub()
-                                                                   For Each item As myListViewItem In verifyHashesListFiles.Items
-                                                                       If item.boolFileExists Then item.BackColor = item.color
-                                                                   Next
+                                                     myInvoke(Sub()
+                                                                  For Each item As myListViewItem In verifyHashesListFiles.Items
+                                                                      If item.boolFileExists Then item.BackColor = item.color
+                                                                  Next
 
-                                                                   lblVerifyHashStatusProcessingFile.Text = ""
-                                                                   lblVerifyHashStatus.Text = strNoBackgroundProcesses
-                                                                   lblProcessingFileVerify.Text = ""
-                                                                   VerifyHashProgressBar.Value = 0
-                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                                   Me.Text = "Hasher"
+                                                                  lblVerifyHashStatusProcessingFile.Text = ""
+                                                                  lblVerifyHashStatus.Text = strNoBackgroundProcesses
+                                                                  lblProcessingFileVerify.Text = ""
+                                                                  VerifyHashProgressBar.Value = 0
+                                                                  ProgressForm.setTaskbarProgressBarValue(0)
+                                                                  Me.Text = "Hasher"
 
-                                                                   Dim sbMessageBoxText As New Text.StringBuilder
+                                                                  Dim sbMessageBoxText As New Text.StringBuilder
 
-                                                                   If intFilesNotFound = 0 Then
-                                                                       If intFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
-                                                                           sbMessageBoxText.AppendLine("Processing of hash file complete. All files have passed verification.")
-                                                                       Else
-                                                                           Dim intFilesThatDidNotPassVerification As Integer = verifyHashesListFiles.Items.Count - intFilesThatPassedVerification
-                                                                           sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
+                                                                  If intFilesNotFound = 0 Then
+                                                                      If intFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
+                                                                          sbMessageBoxText.AppendLine("Processing of hash file complete. All files have passed verification.")
+                                                                      Else
+                                                                          Dim intFilesThatDidNotPassVerification As Integer = verifyHashesListFiles.Items.Count - intFilesThatPassedVerification
+                                                                          sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
                                                                                                                      myToString(intFilesThatPassedVerification),
                                                                                                                      myToString(verifyHashesListFiles.Items.Count),
                                                                                                                      myToString(intFilesThatDidNotPassVerification),
                                                                                                                      If(intFilesThatDidNotPassVerification = 1, "file", "files")
                                                                                                       )
                                                                            )
-                                                                       End If
-                                                                   Else
-                                                                       sbMessageBoxText.AppendLine("Processing of hash file complete.")
-                                                                       sbMessageBoxText.AppendLine()
+                                                                      End If
+                                                                  Else
+                                                                      sbMessageBoxText.AppendLine("Processing of hash file complete.")
+                                                                      sbMessageBoxText.AppendLine()
 
-                                                                       Dim intTotalFiles As Integer = verifyHashesListFiles.Items.Count - intFilesNotFound
-                                                                       If intFilesThatPassedVerification = intTotalFiles Then
-                                                                           sbMessageBoxText.AppendLine(String.Format("All files have passed verification. Unfortunately, {0} {1} were not found.",
+                                                                      Dim intTotalFiles As Integer = verifyHashesListFiles.Items.Count - intFilesNotFound
+                                                                      If intFilesThatPassedVerification = intTotalFiles Then
+                                                                          sbMessageBoxText.AppendLine(String.Format("All files have passed verification. Unfortunately, {0} {1} were not found.",
                                                                                                                      myToString(intFilesNotFound),
                                                                                                                      If(intFilesNotFound = 1, "file", "files")
                                                                                                       )
                                                                            )
-                                                                       Else
-                                                                           Dim intFilesThatDidNotPassVerification As Integer = intTotalFiles - intFilesThatPassedVerification
-                                                                           sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification, Unfortunately, {3} {4} didn't pass verification and {5} {6} were not found.",
+                                                                      Else
+                                                                          Dim intFilesThatDidNotPassVerification As Integer = intTotalFiles - intFilesThatPassedVerification
+                                                                          sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification, Unfortunately, {3} {4} didn't pass verification and {5} {6} were not found.",
                                                                                                                      myToString(intFilesThatPassedVerification),
                                                                                                                      myToString(intTotalFiles),
                                                                                                                      If(intTotalFiles = 1, "file", "files"),
@@ -934,42 +952,45 @@ Public Class Form1
                                                                                                                      If(intFilesNotFound = 1, "file", "files")
                                                                                                       )
                                                                            )
-                                                                       End If
-                                                                   End If
+                                                                      End If
+                                                                  End If
 
-                                                                   sbMessageBoxText.AppendLine()
-                                                                   sbMessageBoxText.AppendLine("Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".")
+                                                                  sbMessageBoxText.AppendLine()
+                                                                  sbMessageBoxText.AppendLine("Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".")
 
-                                                                   MsgBox(sbMessageBoxText.ToString.Trim, MsgBoxStyle.Information, strWindowTitle)
-                                                               End Sub)
+                                                                  MsgBox(sbMessageBoxText.ToString.Trim, MsgBoxStyle.Information, strWindowTitle)
+                                                              End Sub)
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
                                                  Catch ex As Threading.ThreadAbortException
-                                                     Me.Invoke(Sub()
-                                                                   If Not boolClosingWindow Then
-                                                                       verifyHashesListFiles.EndUpdate()
-                                                                       lblVerifyHashStatusProcessingFile.Text = ""
-                                                                       lblVerifyHashStatus.Text = strNoBackgroundProcesses
-                                                                       lblProcessingFileVerify.Text = ""
-                                                                       VerifyHashProgressBar.Value = 0
-                                                                       ProgressForm.setTaskbarProgressBarValue(0)
-                                                                       verifyHashesListFiles.Items.Clear()
-                                                                       Me.Text = "Hasher"
-                                                                       lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
-                                                                   End If
+                                                     myInvoke(Sub()
+                                                                  If Not boolClosingWindow Then
+                                                                      verifyHashesListFiles.EndUpdate()
+                                                                      lblVerifyHashStatusProcessingFile.Text = ""
+                                                                      lblVerifyHashStatus.Text = strNoBackgroundProcesses
+                                                                      lblProcessingFileVerify.Text = ""
+                                                                      VerifyHashProgressBar.Value = 0
+                                                                      ProgressForm.setTaskbarProgressBarValue(0)
+                                                                      verifyHashesListFiles.Items.Clear()
+                                                                      Me.Text = "Hasher"
+                                                                      lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
+                                                                  End If
 
-                                                                   boolBackgroundThreadWorking = False
-                                                                   workingThread = Nothing
-                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
-                                                               End Sub)
+                                                                  boolBackgroundThreadWorking = False
+                                                                  workingThread = Nothing
+                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
+                                                              End Sub)
                                                  Finally
-                                                     Me.Invoke(Sub()
-                                                                   If Not boolClosingWindow Then
-                                                                       btnOpenExistingHashFile.Text = "Open Hash File"
-                                                                       ProgressForm.setTaskbarProgressBarValue(0)
-                                                                   End If
-                                                               End Sub)
+                                                     ulongAllReadBytes = 0
+
+                                                     myInvoke(Sub()
+                                                                  If Not boolClosingWindow Then
+                                                                      btnOpenExistingHashFile.Text = "Open Hash File"
+                                                                      ProgressForm.setTaskbarProgressBarValue(0)
+                                                                      verifyIndividualFilesAllFilesProgressBar.Value = 0
+                                                                  End If
+                                                              End Sub)
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -1007,28 +1028,30 @@ Public Class Form1
         OpenFileDialog.Multiselect = oldMultiValue
     End Sub
 
-    Private Sub processFileInVerifyFileList(ByRef item As myListViewItem, hashFileType As checksumType, ByRef longFilesThatPassedVerification As Long, ByVal boolUseTaskBarProgressBarForOverallStatus As Boolean)
+    Private Sub processFileInVerifyFileList(ByRef item As myListViewItem, hashFileType As checksumType, ByRef longFilesThatPassedVerification As Long)
         Dim strChecksum As String = item.hash
         Dim strFileName As String = item.fileName
 
         If IO.File.Exists(strFileName) Then
             Dim fileInfo As New IO.FileInfo(strFileName)
             Dim strChecksumInFile As String = Nothing
-            Dim percentage As Double
+            Dim percentage, allBytesPercentage As Double
             Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                Try
-                                                   Me.Invoke(Sub()
-                                                                 percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                 VerifyHashProgressBar.Value = percentage
-                                                                 If Not boolUseTaskBarProgressBarForOverallStatus Then ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value)
-                                                                 lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                 If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
-                                                             End Sub)
+                                                   myInvoke(Sub()
+                                                                percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                VerifyHashProgressBar.Value = percentage
+                                                                allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
+                                                                verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
+                                                                lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                            End Sub)
                                                Catch ex As Exception
                                                End Try
                                            End Sub
 
-            Me.Invoke(Sub() lblProcessingFileVerify.Text = "Now processing file " & fileInfo.Name & ".")
+            myInvoke(Sub() lblProcessingFileVerify.Text = "Now processing file " & fileInfo.Name & ".")
             Dim computeStopwatch As Stopwatch = Stopwatch.StartNew
 
             If doChecksumWithAttachedSubRoutine(strFileName, hashFileType, strChecksumInFile, subRoutine) Then
@@ -1049,22 +1072,22 @@ Public Class Form1
 
             Dim byRefSafeItem As myListViewItem = item
 
-            Me.Invoke(Sub()
-                          For Each itemOnGUI As myListViewItem In verifyHashesListFiles.Items
-                              If itemOnGUI.fileName.Equals(byRefSafeItem.fileName) Then
-                                  For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
-                                      itemOnGUI.SubItems(i) = byRefSafeItem.SubItems(i)
-                                  Next
+            myInvoke(Sub()
+                         For Each itemOnGUI As myListViewItem In verifyHashesListFiles.Items
+                             If itemOnGUI.fileName.Equals(byRefSafeItem.fileName) Then
+                                 For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
+                                     itemOnGUI.SubItems(i) = byRefSafeItem.SubItems(i)
+                                 Next
 
-                                  itemOnGUI.fileSize = byRefSafeItem.fileSize
-                                  itemOnGUI.hash = byRefSafeItem.hash
-                                  itemOnGUI.fileName = byRefSafeItem.fileName
-                                  itemOnGUI.color = byRefSafeItem.color
-                                  itemOnGUI.boolFileExists = byRefSafeItem.boolFileExists
-                                  itemOnGUI.computeTime = byRefSafeItem.computeTime
-                              End If
-                          Next
-                      End Sub)
+                                 itemOnGUI.fileSize = byRefSafeItem.fileSize
+                                 itemOnGUI.hash = byRefSafeItem.hash
+                                 itemOnGUI.fileName = byRefSafeItem.fileName
+                                 itemOnGUI.color = byRefSafeItem.color
+                                 itemOnGUI.boolFileExists = byRefSafeItem.boolFileExists
+                                 itemOnGUI.computeTime = byRefSafeItem.computeTime
+                             End If
+                         Next
+                     End Sub)
 
             fileInfo = Nothing
             Me.Text = "Hasher"
@@ -1357,25 +1380,25 @@ Public Class Form1
                                                      boolBackgroundThreadWorking = True
                                                      Dim checksumType As checksumType
 
-                                                     Me.Invoke(Sub()
-                                                                   compareRadioMD5.Enabled = False
-                                                                   compareRadioSHA1.Enabled = False
-                                                                   compareRadioSHA256.Enabled = False
-                                                                   compareRadioSHA384.Enabled = False
-                                                                   compareRadioSHA512.Enabled = False
+                                                     myInvoke(Sub()
+                                                                  compareRadioMD5.Enabled = False
+                                                                  compareRadioSHA1.Enabled = False
+                                                                  compareRadioSHA256.Enabled = False
+                                                                  compareRadioSHA384.Enabled = False
+                                                                  compareRadioSHA512.Enabled = False
 
-                                                                   If compareRadioMD5.Checked Then
-                                                                       checksumType = checksumType.md5
-                                                                   ElseIf compareRadioSHA1.Checked Then
-                                                                       checksumType = checksumType.sha160
-                                                                   ElseIf compareRadioSHA256.Checked Then
-                                                                       checksumType = checksumType.sha256
-                                                                   ElseIf compareRadioSHA384.Checked Then
-                                                                       checksumType = checksumType.sha384
-                                                                   ElseIf compareRadioSHA512.Checked Then
-                                                                       checksumType = checksumType.sha512
-                                                                   End If
-                                                               End Sub)
+                                                                  If compareRadioMD5.Checked Then
+                                                                      checksumType = checksumType.md5
+                                                                  ElseIf compareRadioSHA1.Checked Then
+                                                                      checksumType = checksumType.sha160
+                                                                  ElseIf compareRadioSHA256.Checked Then
+                                                                      checksumType = checksumType.sha256
+                                                                  ElseIf compareRadioSHA384.Checked Then
+                                                                      checksumType = checksumType.sha384
+                                                                  ElseIf compareRadioSHA512.Checked Then
+                                                                      checksumType = checksumType.sha512
+                                                                  End If
+                                                              End Sub)
 
                                                      Dim strChecksum1 As String = Nothing
                                                      Dim strChecksum2 As String = Nothing
@@ -1383,13 +1406,13 @@ Public Class Form1
                                                      Dim percentage As Double
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
-                                                                                            Me.Invoke(Sub()
-                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                          compareFilesProgressBar.Value = percentage
-                                                                                                          ProgressForm.setTaskbarProgressBarValue(compareFilesProgressBar.Value)
-                                                                                                          lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                          If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
-                                                                                                      End Sub)
+                                                                                            myInvoke(Sub()
+                                                                                                         percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                         compareFilesProgressBar.Value = percentage
+                                                                                                         ProgressForm.setTaskbarProgressBarValue(compareFilesProgressBar.Value)
+                                                                                                         lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                                         If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                                                     End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     End Sub
@@ -1397,17 +1420,17 @@ Public Class Form1
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      Dim checksum1FinishCode As [Delegate] = Sub()
-                                                                                                 Me.Invoke(Sub()
-                                                                                                               lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
-                                                                                                               ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
-                                                                                                           End Sub)
+                                                                                                 myInvoke(Sub()
+                                                                                                              lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
+                                                                                                              ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
+                                                                                                          End Sub)
 
                                                                                              End Sub
                                                      Dim checksum2FinishCode As [Delegate] = Sub()
-                                                                                                 Me.Invoke(Sub()
-                                                                                                               lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
-                                                                                                               ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
-                                                                                                           End Sub)
+                                                                                                 myInvoke(Sub()
+                                                                                                              lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
+                                                                                                              ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+                                                                                                          End Sub)
 
                                                                                              End Sub
 
@@ -1416,58 +1439,58 @@ Public Class Form1
                                                      End If
 
 
-                                                     Me.Invoke(Sub()
-                                                                   btnCompareFilesBrowseFile1.Enabled = True
-                                                                   btnCompareFilesBrowseFile2.Enabled = True
-                                                                   txtFile1.Enabled = True
-                                                                   txtFile2.Enabled = True
-                                                                   btnCompareFiles.Text = "Compare Files"
-                                                                   compareRadioMD5.Enabled = True
-                                                                   compareRadioSHA1.Enabled = True
-                                                                   compareRadioSHA256.Enabled = True
-                                                                   compareRadioSHA384.Enabled = True
-                                                                   compareRadioSHA512.Enabled = True
-                                                                   lblCompareFilesStatus.Text = strNoBackgroundProcesses
-                                                                   compareFilesProgressBar.Value = 0
-                                                                   Me.Invoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
-                                                                   Me.Text = "Hasher"
+                                                     myInvoke(Sub()
+                                                                  btnCompareFilesBrowseFile1.Enabled = True
+                                                                  btnCompareFilesBrowseFile2.Enabled = True
+                                                                  txtFile1.Enabled = True
+                                                                  txtFile2.Enabled = True
+                                                                  btnCompareFiles.Text = "Compare Files"
+                                                                  compareRadioMD5.Enabled = True
+                                                                  compareRadioSHA1.Enabled = True
+                                                                  compareRadioSHA256.Enabled = True
+                                                                  compareRadioSHA384.Enabled = True
+                                                                  compareRadioSHA512.Enabled = True
+                                                                  lblCompareFilesStatus.Text = strNoBackgroundProcesses
+                                                                  compareFilesProgressBar.Value = 0
+                                                                  myInvoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
+                                                                  Me.Text = "Hasher"
 
-                                                                   If boolSuccessful Then
-                                                                       If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
-                                                                           MsgBox("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
-                                                                       Else
-                                                                           MsgBox("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
-                                                                       End If
-                                                                   Else
-                                                                       MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
-                                                                   End If
+                                                                  If boolSuccessful Then
+                                                                      If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
+                                                                          MsgBox("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
+                                                                      Else
+                                                                          MsgBox("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
+                                                                      End If
+                                                                  Else
+                                                                      MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
+                                                                  End If
 
-                                                                   boolBackgroundThreadWorking = False
-                                                                   workingThread = Nothing
-                                                               End Sub)
+                                                                  boolBackgroundThreadWorking = False
+                                                                  workingThread = Nothing
+                                                              End Sub)
                                                  Catch ex As Threading.ThreadAbortException
-                                                     Me.Invoke(Sub()
-                                                                   If Not boolClosingWindow Then
-                                                                       btnCompareFilesBrowseFile1.Enabled = True
-                                                                       btnCompareFilesBrowseFile1.Enabled = True
-                                                                       txtFile1.Enabled = True
-                                                                       txtFile2.Enabled = True
-                                                                       compareFilesProgressBar.Value = 0
-                                                                       ProgressForm.setTaskbarProgressBarValue(0)
-                                                                       btnCompareFiles.Text = "Compare Files"
-                                                                       compareRadioMD5.Enabled = True
-                                                                       compareRadioSHA1.Enabled = True
-                                                                       compareRadioSHA256.Enabled = True
-                                                                       compareRadioSHA384.Enabled = True
-                                                                       compareRadioSHA512.Enabled = True
-                                                                       lblCompareFilesStatus.Text = strNoBackgroundProcesses
-                                                                       Me.Text = "Hasher"
-                                                                   End If
+                                                     myInvoke(Sub()
+                                                                  If Not boolClosingWindow Then
+                                                                      btnCompareFilesBrowseFile1.Enabled = True
+                                                                      btnCompareFilesBrowseFile1.Enabled = True
+                                                                      txtFile1.Enabled = True
+                                                                      txtFile2.Enabled = True
+                                                                      compareFilesProgressBar.Value = 0
+                                                                      ProgressForm.setTaskbarProgressBarValue(0)
+                                                                      btnCompareFiles.Text = "Compare Files"
+                                                                      compareRadioMD5.Enabled = True
+                                                                      compareRadioSHA1.Enabled = True
+                                                                      compareRadioSHA256.Enabled = True
+                                                                      compareRadioSHA384.Enabled = True
+                                                                      compareRadioSHA512.Enabled = True
+                                                                      lblCompareFilesStatus.Text = strNoBackgroundProcesses
+                                                                      Me.Text = "Hasher"
+                                                                  End If
 
-                                                                   boolBackgroundThreadWorking = False
-                                                                   workingThread = Nothing
-                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
-                                                               End Sub)
+                                                                  boolBackgroundThreadWorking = False
+                                                                  workingThread = Nothing
+                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
+                                                              End Sub)
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -1598,13 +1621,13 @@ Public Class Form1
                                                      Dim percentage As Double
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
-                                                                                            Me.Invoke(Sub()
-                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                          compareAgainstKnownHashProgressBar.Value = percentage
-                                                                                                          ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
-                                                                                                          lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                          If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
-                                                                                                      End Sub)
+                                                                                            myInvoke(Sub()
+                                                                                                         percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                         compareAgainstKnownHashProgressBar.Value = percentage
+                                                                                                         ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
+                                                                                                         lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                                         If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareAgainstKnownHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                                                     End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     End Sub
@@ -1612,52 +1635,52 @@ Public Class Form1
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim boolSuccessful As Boolean = doChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, checksumType, strChecksum, subRoutine)
 
-                                                     Me.Invoke(Sub()
-                                                                   txtFileForKnownHash.Enabled = True
-                                                                   btnBrowseFileForCompareKnownHash.Enabled = True
-                                                                   txtKnownHash.Enabled = True
-                                                                   btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
-                                                                   btnCompareAgainstKnownHash.Enabled = False
-                                                                   lblCompareAgainstKnownHashStatus.Text = strNoBackgroundProcesses
-                                                                   compareAgainstKnownHashProgressBar.Value = 0
-                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                                   Me.Text = "Hasher"
+                                                     myInvoke(Sub()
+                                                                  txtFileForKnownHash.Enabled = True
+                                                                  btnBrowseFileForCompareKnownHash.Enabled = True
+                                                                  txtKnownHash.Enabled = True
+                                                                  btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
+                                                                  btnCompareAgainstKnownHash.Enabled = False
+                                                                  lblCompareAgainstKnownHashStatus.Text = strNoBackgroundProcesses
+                                                                  compareAgainstKnownHashProgressBar.Value = 0
+                                                                  ProgressForm.setTaskbarProgressBarValue(0)
+                                                                  Me.Text = "Hasher"
 
-                                                                   If boolSuccessful Then
-                                                                       If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
-                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.good_check
-                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum Verified!")
-                                                                           MsgBox("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
-                                                                       Else
-                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
-                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum verification failed, checksum didn't match!")
-                                                                           MsgBox("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
-                                                                       End If
-                                                                   Else
-                                                                       pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
-                                                                       MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
-                                                                   End If
+                                                                  If boolSuccessful Then
+                                                                      If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
+                                                                          pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.good_check
+                                                                          ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum Verified!")
+                                                                          MsgBox("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
+                                                                      Else
+                                                                          pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
+                                                                          ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum verification failed, checksum didn't match!")
+                                                                          MsgBox("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
+                                                                      End If
+                                                                  Else
+                                                                      pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
+                                                                      MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strWindowTitle)
+                                                                  End If
 
-                                                                   boolBackgroundThreadWorking = False
-                                                                   workingThread = Nothing
-                                                               End Sub)
+                                                                  boolBackgroundThreadWorking = False
+                                                                  workingThread = Nothing
+                                                              End Sub)
                                                  Catch ex As Threading.ThreadAbortException
-                                                     Me.Invoke(Sub()
-                                                                   If Not boolClosingWindow Then
-                                                                       txtFileForKnownHash.Enabled = True
-                                                                       btnBrowseFileForCompareKnownHash.Enabled = True
-                                                                       txtKnownHash.Enabled = True
-                                                                       btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
-                                                                       compareAgainstKnownHashProgressBar.Value = 0
-                                                                       ProgressForm.setTaskbarProgressBarValue(0)
-                                                                       lblCompareFilesStatus.Text = strNoBackgroundProcesses
-                                                                       Me.Text = "Hasher"
-                                                                   End If
+                                                     myInvoke(Sub()
+                                                                  If Not boolClosingWindow Then
+                                                                      txtFileForKnownHash.Enabled = True
+                                                                      btnBrowseFileForCompareKnownHash.Enabled = True
+                                                                      txtKnownHash.Enabled = True
+                                                                      btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
+                                                                      compareAgainstKnownHashProgressBar.Value = 0
+                                                                      ProgressForm.setTaskbarProgressBarValue(0)
+                                                                      lblCompareFilesStatus.Text = strNoBackgroundProcesses
+                                                                      Me.Text = "Hasher"
+                                                                  End If
 
-                                                                   boolBackgroundThreadWorking = False
-                                                                   workingThread = Nothing
-                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
-                                                               End Sub)
+                                                                  boolBackgroundThreadWorking = False
+                                                                  workingThread = Nothing
+                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
+                                                              End Sub)
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -1890,10 +1913,6 @@ Public Class Form1
     Private Sub chkShowEstimatedTimeRemaining_Click(sender As Object, e As EventArgs) Handles chkShowEstimatedTimeRemaining.Click
         boolShowEstimatedTime = chkShowEstimatedTimeRemaining.Checked
         My.Settings.boolShowEstimatedTime = chkShowEstimatedTimeRemaining.Checked
-    End Sub
-
-    Private Sub chkUseTaskBarProgressBarForOverallStatus_Click(sender As Object, e As EventArgs) Handles chkUseTaskBarProgressBarForOverallStatus.Click
-        My.Settings.boolUseTaskBarProgressBarForOverallStatus = chkUseTaskBarProgressBarForOverallStatus.Checked
     End Sub
 
     Private Sub btnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
