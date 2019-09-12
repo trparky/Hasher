@@ -17,7 +17,6 @@ Public Class myListViewItem
     End Sub
 
     Public Overrides Function Clone() As Object Implements ICloneable.Clone
-        Dim listViewSubItem(Me.SubItems.Count - 1) As ListViewItem.ListViewSubItem
         Dim newListViewItem As New myListViewItem(Me.Text)
 
         For i As Short = 1 To Me.SubItems.Count - 1
