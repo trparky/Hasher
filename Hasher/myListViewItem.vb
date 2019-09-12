@@ -19,17 +19,19 @@ Public Class myListViewItem
     Public Overrides Function Clone() As Object Implements ICloneable.Clone
         Dim newListViewItem As New myListViewItem(Me.Text)
 
-        For i As Short = 1 To Me.SubItems.Count - 1
-            newListViewItem.SubItems.Add(Me.SubItems(i))
+        For index As Short = 1 To Me.SubItems.Count - 1
+            newListViewItem.SubItems.Add(Me.SubItems(index))
         Next
 
-        newListViewItem.fileSize = Me.fileSize
-        newListViewItem.hash = Me.hash
-        newListViewItem.fileName = Me.fileName
-        newListViewItem.color = Me.color
-        newListViewItem.boolFileExists = Me.boolFileExists
-        newListViewItem.computeTime = Me.computeTime
-        newListViewItem.BackColor = Me.BackColor
+        With newListViewItem
+            .fileSize = Me.fileSize
+            .hash = Me.hash
+            .fileName = Me.fileName
+            .color = Me.color
+            .boolFileExists = Me.boolFileExists
+            .computeTime = Me.computeTime
+            .BackColor = Me.BackColor
+        End With
 
         Return newListViewItem
     End Function
