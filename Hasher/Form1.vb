@@ -224,7 +224,7 @@ Public Class Form1
                                                                                                          IndividualFilesProgressBar.Value = percentage
                                                                                                          allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
-                                                                                                         IndividualFilesProgressBar.Value = allBytesPercentage
+                                                                                                         hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                          lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                          If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblIndividualFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                      End Sub)
