@@ -114,7 +114,7 @@ Public Class Form1
         Else
             btnComputeHash.Enabled = True
 
-            If listFiles.Items.OfType(Of myListViewItem).Where(Function(item As myListViewItem) String.IsNullOrWhiteSpace(item.hash)).Count <> listFiles.Items.Count Then
+            If listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) String.IsNullOrWhiteSpace(item.hash)).Count <> listFiles.Items.Count Then
                 btnIndividualFilesCopyToClipboard.Enabled = True
                 btnIndividualFilesSaveResultsToDisk.Enabled = True
             End If
