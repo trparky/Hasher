@@ -155,7 +155,6 @@ Public Class Form1
             .SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
             .SubItems.Add(strToBeComputed)
             .SubItems.Add("")
-            ulongAllBytes += .fileSize
         End With
 
         Return itemToBeAdded
@@ -216,6 +215,7 @@ Public Class Form1
                                                      Dim checksumType As checksumType
                                                      Dim index As Integer = 1
                                                      ulongAllReadBytes = 0
+                                                     ulongAllBytes = 0
 
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
@@ -257,6 +257,10 @@ Public Class Form1
                                                      Dim computeStopwatch As Stopwatch
 
                                                      Dim items As ListView.ListViewItemCollection = getListViewItems(listFiles)
+
+                                                     For Each item As myListViewItem In items
+                                                         If String.IsNullOrWhiteSpace(item.hash) Then ulongAllBytes += item.fileSize
+                                                     Next
 
                                                      For Each item As myListViewItem In items
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
