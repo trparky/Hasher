@@ -1455,7 +1455,7 @@ Public Class Form1
                                                                   compareRadioSHA512.Enabled = True
                                                                   lblCompareFilesStatus.Text = strNoBackgroundProcesses
                                                                   compareFilesProgressBar.Value = 0
-                                                                  myInvoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
+                                                                  ProgressForm.setTaskbarProgressBarValue(0)
                                                                   Me.Text = "Hasher"
 
                                                                   If boolSuccessful Then
