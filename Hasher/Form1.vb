@@ -335,12 +335,13 @@ Public Class Form1
                                                               End Sub)
                                                  Finally
                                                      ulongAllReadBytes = 0
+                                                     ulongAllBytes = 0
 
                                                      myInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       btnComputeHash.Text = "Compute Hash"
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
-                                                                      IndividualFilesProgressBar.Value = 0
+                                                                      hashIndividualFilesAllFilesProgressBar.Value = 0
                                                                   End If
                                                               End Sub)
                                                  End Try
@@ -856,6 +857,7 @@ Public Class Form1
                                                               End Sub)
 
                                                      ulongAllReadBytes = 0
+                                                     ulongAllBytes = 0
 
                                                      For Each strLineInFile As String In dataInFileArray
                                                          intLineCounter += 1
@@ -983,6 +985,7 @@ Public Class Form1
                                                               End Sub)
                                                  Finally
                                                      ulongAllReadBytes = 0
+                                                     ulongAllBytes = 0
 
                                                      myInvoke(Sub()
                                                                   If Not boolClosingWindow Then
