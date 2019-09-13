@@ -59,6 +59,21 @@ Public Class Form1
         End If
     End Function
 
+    Private Sub updateListViewItem(ByRef itemOnGUI As myListViewItem, ByRef item As myListViewItem)
+        With itemOnGUI
+            For i As Short = 1 To item.SubItems.Count - 1
+                .SubItems(i) = item.SubItems(i)
+            Next
+
+            .fileSize = item.fileSize
+            .hash = item.hash
+            .fileName = item.fileName
+            .color = item.color
+            .boolFileExists = item.boolFileExists
+            .computeTime = item.computeTime
+        End With
+    End Sub
+
     Private Function myToString(input As Integer) As String
         Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
     End Function
@@ -284,18 +299,7 @@ Public Class Form1
 
                                                              myInvoke(Sub()
                                                                           Dim itemOnGUI As myListViewItem = listFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(item.fileName))
-                                                                          With itemOnGUI
-                                                                              For i As Short = 1 To item.SubItems.Count - 1
-                                                                                  .SubItems(i) = item.SubItems(i)
-                                                                              Next
-
-                                                                              .fileSize = item.fileSize
-                                                                              .hash = item.hash
-                                                                              .fileName = item.fileName
-                                                                              .color = item.color
-                                                                              .boolFileExists = item.boolFileExists
-                                                                              .computeTime = item.computeTime
-                                                                          End With
+                                                                          If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
                                                                       End Sub)
                                                          End If
 
@@ -942,22 +946,9 @@ Public Class Form1
                                                                      item.SubItems(2).Text = "(Error while calculating checksum)"
                                                                  End If
 
-                                                                 Dim byRefSafeItem As myListViewItem = item
-
                                                                  myInvoke(Sub()
                                                                               Dim itemOnGUI As myListViewItem = verifyHashesListFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(item.fileName))
-                                                                              With itemOnGUI
-                                                                                  For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
-                                                                                      .SubItems(i) = byRefSafeItem.SubItems(i)
-                                                                                  Next
-
-                                                                                  .fileSize = byRefSafeItem.fileSize
-                                                                                  .hash = byRefSafeItem.hash
-                                                                                  .fileName = byRefSafeItem.fileName
-                                                                                  .color = byRefSafeItem.color
-                                                                                  .boolFileExists = byRefSafeItem.boolFileExists
-                                                                                  .computeTime = byRefSafeItem.computeTime
-                                                                              End With
+                                                                              If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
                                                                           End Sub)
                                                              End If
                                                          End If
