@@ -278,25 +278,20 @@ Public Class Form1
                                                                  item.computeTime = Nothing
                                                              End If
 
-                                                             Dim byRefSafeItem As myListViewItem = item
-
                                                              myInvoke(Sub()
-                                                                          For Each itemOnGUI As myListViewItem In listFiles.Items
-                                                                              If itemOnGUI.fileName.Equals(byRefSafeItem.fileName) Then
-                                                                                  With itemOnGUI
-                                                                                      For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
-                                                                                          .SubItems(i) = byRefSafeItem.SubItems(i)
-                                                                                      Next
+                                                                          Dim itemOnGUI As myListViewItem = listFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(item.fileName))
+                                                                          With itemOnGUI
+                                                                              For i As Short = 1 To item.SubItems.Count - 1
+                                                                                  .SubItems(i) = item.SubItems(i)
+                                                                              Next
 
-                                                                                      .fileSize = byRefSafeItem.fileSize
-                                                                                      .hash = byRefSafeItem.hash
-                                                                                      .fileName = byRefSafeItem.fileName
-                                                                                      .color = byRefSafeItem.color
-                                                                                      .boolFileExists = byRefSafeItem.boolFileExists
-                                                                                      .computeTime = byRefSafeItem.computeTime
-                                                                                  End With
-                                                                              End If
-                                                                          Next
+                                                                              .fileSize = item.fileSize
+                                                                              .hash = item.hash
+                                                                              .fileName = item.fileName
+                                                                              .color = item.color
+                                                                              .boolFileExists = item.boolFileExists
+                                                                              .computeTime = item.computeTime
+                                                                          End With
                                                                       End Sub)
                                                          End If
 
@@ -1074,22 +1069,19 @@ Public Class Form1
             Dim byRefSafeItem As myListViewItem = item
 
             myInvoke(Sub()
-                         For Each itemOnGUI As myListViewItem In verifyHashesListFiles.Items
-                             If itemOnGUI.fileName.Equals(byRefSafeItem.fileName) Then
-                                 With itemOnGUI
-                                     For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
-                                         .SubItems(i) = byRefSafeItem.SubItems(i)
-                                     Next
+                         Dim itemOnGUI As myListViewItem = verifyHashesListFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(byRefSafeItem.fileName))
+                         With itemOnGUI
+                             For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
+                                 .SubItems(i) = byRefSafeItem.SubItems(i)
+                             Next
 
-                                     .fileSize = byRefSafeItem.fileSize
-                                     .hash = byRefSafeItem.hash
-                                     .fileName = byRefSafeItem.fileName
-                                     .color = byRefSafeItem.color
-                                     .boolFileExists = byRefSafeItem.boolFileExists
-                                     .computeTime = byRefSafeItem.computeTime
-                                 End With
-                             End If
-                         Next
+                             .fileSize = byRefSafeItem.fileSize
+                             .hash = byRefSafeItem.hash
+                             .fileName = byRefSafeItem.fileName
+                             .color = byRefSafeItem.color
+                             .boolFileExists = byRefSafeItem.boolFileExists
+                             .computeTime = byRefSafeItem.computeTime
+                         End With
                      End Sub)
 
             fileInfo = Nothing
