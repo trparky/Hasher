@@ -46,15 +46,14 @@ Public Class Form1
 
     Private Delegate Function GetItems(ByVal lstview As ListView) As ListView.ListViewItemCollection
     Private Function getListViewItems(ByVal lstview As ListView) As ListView.ListViewItemCollection
-        Dim temp As ListView.ListViewItemCollection = New ListView.ListViewItemCollection(New ListView())
+        Dim tempListViewItemCollection As ListView.ListViewItemCollection = New ListView.ListViewItemCollection(New ListView())
 
-        If Not lstview.InvokeRequired Then
-
+        If Not lstview.InvokeRequired() Then
             For Each item As myListViewItem In lstview.Items
-                temp.Add(CType(item.Clone(), myListViewItem))
+                tempListViewItemCollection.Add(CType(item.Clone(), myListViewItem))
             Next
 
-            Return temp
+            Return tempListViewItemCollection
         Else
             Return CType(Invoke(New GetItems(AddressOf getListViewItems), New Object() {lstview}), ListView.ListViewItemCollection)
         End If
@@ -284,16 +283,18 @@ Public Class Form1
                                                              myInvoke(Sub()
                                                                           For Each itemOnGUI As myListViewItem In listFiles.Items
                                                                               If itemOnGUI.fileName.Equals(byRefSafeItem.fileName) Then
-                                                                                  For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
-                                                                                      itemOnGUI.SubItems(i) = byRefSafeItem.SubItems(i)
-                                                                                  Next
+                                                                                  With itemOnGUI
+                                                                                      For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
+                                                                                          .SubItems(i) = byRefSafeItem.SubItems(i)
+                                                                                      Next
 
-                                                                                  itemOnGUI.fileSize = byRefSafeItem.fileSize
-                                                                                  itemOnGUI.hash = byRefSafeItem.hash
-                                                                                  itemOnGUI.fileName = byRefSafeItem.fileName
-                                                                                  itemOnGUI.color = byRefSafeItem.color
-                                                                                  itemOnGUI.boolFileExists = byRefSafeItem.boolFileExists
-                                                                                  itemOnGUI.computeTime = byRefSafeItem.computeTime
+                                                                                      .fileSize = byRefSafeItem.fileSize
+                                                                                      .hash = byRefSafeItem.hash
+                                                                                      .fileName = byRefSafeItem.fileName
+                                                                                      .color = byRefSafeItem.color
+                                                                                      .boolFileExists = byRefSafeItem.boolFileExists
+                                                                                      .computeTime = byRefSafeItem.computeTime
+                                                                                  End With
                                                                               End If
                                                                           Next
                                                                       End Sub)
@@ -1075,16 +1076,18 @@ Public Class Form1
             myInvoke(Sub()
                          For Each itemOnGUI As myListViewItem In verifyHashesListFiles.Items
                              If itemOnGUI.fileName.Equals(byRefSafeItem.fileName) Then
-                                 For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
-                                     itemOnGUI.SubItems(i) = byRefSafeItem.SubItems(i)
-                                 Next
+                                 With itemOnGUI
+                                     For i As Short = 1 To byRefSafeItem.SubItems.Count - 1
+                                         .SubItems(i) = byRefSafeItem.SubItems(i)
+                                     Next
 
-                                 itemOnGUI.fileSize = byRefSafeItem.fileSize
-                                 itemOnGUI.hash = byRefSafeItem.hash
-                                 itemOnGUI.fileName = byRefSafeItem.fileName
-                                 itemOnGUI.color = byRefSafeItem.color
-                                 itemOnGUI.boolFileExists = byRefSafeItem.boolFileExists
-                                 itemOnGUI.computeTime = byRefSafeItem.computeTime
+                                     .fileSize = byRefSafeItem.fileSize
+                                     .hash = byRefSafeItem.hash
+                                     .fileName = byRefSafeItem.fileName
+                                     .color = byRefSafeItem.color
+                                     .boolFileExists = byRefSafeItem.boolFileExists
+                                     .computeTime = byRefSafeItem.computeTime
+                                 End With
                              End If
                          Next
                      End Sub)
