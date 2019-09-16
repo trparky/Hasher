@@ -2,6 +2,8 @@
 
 Public Module Globals
     Public ulongAllReadBytes, ulongAllBytes As ULong
+    ''' <summary>Protects ulongAllReadBytes and ulongAllBytes from being accessed by two threads at the same time. Use this with a SyncLock code block.</summary>
+    Public ReadOnly threadLockingObject As New Object()
 
     Public Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String

@@ -235,15 +235,20 @@ Public Class Form1
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksumType
                                                      Dim index As Integer = 1
-                                                     ulongAllReadBytes = 0
-                                                     ulongAllBytes = 0
+
+                                                     SyncLock threadLockingObject
+                                                         ulongAllReadBytes = 0
+                                                         ulongAllBytes = 0
+                                                     End SyncLock
 
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
                                                                                             myInvoke(Sub()
                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                          IndividualFilesProgressBar.Value = percentage
-                                                                                                         allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                                         SyncLock threadLockingObject
+                                                                                                             allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                                         End SyncLock
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                          lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
@@ -279,9 +284,11 @@ Public Class Form1
 
                                                      Dim items As ListView.ListViewItemCollection = getListViewItems(listFiles)
 
-                                                     For Each item As myListViewItem In items
-                                                         If String.IsNullOrWhiteSpace(item.hash) Then ulongAllBytes += item.fileSize
-                                                     Next
+                                                     SyncLock threadLockingObject
+                                                         For Each item As myListViewItem In items
+                                                             If String.IsNullOrWhiteSpace(item.hash) Then ulongAllBytes += item.fileSize
+                                                         Next
+                                                     End SyncLock
 
                                                      For Each item As myListViewItem In items
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
@@ -344,8 +351,10 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
                                                               End Sub)
                                                  Finally
-                                                     ulongAllReadBytes = 0
-                                                     ulongAllBytes = 0
+                                                     SyncLock threadLockingObject
+                                                         ulongAllReadBytes = 0
+                                                         ulongAllBytes = 0
+                                                     End SyncLock
 
                                                      myInvoke(Sub()
                                                                   If Not boolClosingWindow Then
@@ -806,7 +815,9 @@ Public Class Form1
         With listViewItem
             If IO.File.Exists(strFileName) Then
                 .fileSize = New IO.FileInfo(strFileName).Length
-                ulongAllBytes += .fileSize
+                SyncLock threadLockingObject
+                    ulongAllBytes += .fileSize
+                End SyncLock
                 .SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                 .SubItems.Add("To Be Tested")
                 .SubItems.Add("To Be Tested")
@@ -870,8 +881,10 @@ Public Class Form1
                                                                   verifyHashesListFiles.BeginUpdate()
                                                               End Sub)
 
-                                                     ulongAllReadBytes = 0
-                                                     ulongAllBytes = 0
+                                                     SyncLock threadLockingObject
+                                                         ulongAllReadBytes = 0
+                                                         ulongAllBytes = 0
+                                                     End SyncLock
 
                                                      For Each strLineInFile As String In dataInFileArray
                                                          intLineCounter += 1
@@ -931,7 +944,9 @@ Public Class Form1
                                                                                                         myInvoke(Sub()
                                                                                                                      percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                                      VerifyHashProgressBar.Value = percentage
-                                                                                                                     allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                                                     SyncLock threadLockingObject
+                                                                                                                         allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                                                     End SyncLock
                                                                                                                      ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                                      verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                                      lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
@@ -1050,8 +1065,10 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
                                                               End Sub)
                                                  Finally
-                                                     ulongAllReadBytes = 0
-                                                     ulongAllBytes = 0
+                                                     SyncLock threadLockingObject
+                                                         ulongAllReadBytes = 0
+                                                         ulongAllBytes = 0
+                                                     End SyncLock
 
                                                      myInvoke(Sub()
                                                                   If Not boolClosingWindow Then
