@@ -1540,7 +1540,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnCompareFilesBrowseFile1_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile1.Click
-        lblFile1Hash.Text = ""
+        lblFile1Hash.Text = Nothing
         ToolTip.SetToolTip(lblFile1Hash, "")
 
         OpenFileDialog.Title = "Select file #1 to be compared..."
@@ -1551,7 +1551,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnCompareFilesBrowseFile2_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile2.Click
-        lblFile2Hash.Text = ""
+        lblFile2Hash.Text = Nothing
         ToolTip.SetToolTip(lblFile2Hash, "")
 
         OpenFileDialog.Title = "Select file #2 to be compared..."
@@ -1761,7 +1761,10 @@ Public Class Form1
 
     Private Sub txtFile1_DragDrop(sender As Object, e As DragEventArgs) Handles txtFile1.DragDrop
         Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
-        If receivedData.Count = 1 Then txtFile1.Text = receivedData(0)
+        If receivedData.Count = 1 Then
+            txtFile1.Text = receivedData(0)
+            lblFile1Hash.Text = Nothing
+        End If
     End Sub
 
     Private Sub txtFile2_DragEnter(sender As Object, e As DragEventArgs) Handles txtFile2.DragEnter
@@ -1770,7 +1773,10 @@ Public Class Form1
 
     Private Sub txtFile2_DragDrop(sender As Object, e As DragEventArgs) Handles txtFile2.DragDrop
         Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
-        If receivedData.Count = 1 Then txtFile2.Text = receivedData(0)
+        If receivedData.Count = 1 Then
+            txtFile2.Text = receivedData(0)
+            lblFile2Hash.Text = Nothing
+        End If
     End Sub
 
     Private Sub txtFileForKnownHash_DragEnter(sender As Object, e As DragEventArgs) Handles txtFileForKnownHash.DragEnter
