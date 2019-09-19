@@ -140,6 +140,7 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.CompareFilesAllFilesProgress = New System.Windows.Forms.ProgressBar()
         Me.hashIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
         Me.verifyIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
         Me.btnPerformBenchmark = New System.Windows.Forms.Button()
@@ -835,6 +836,7 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.txtFile2)
         Me.tabCompareFiles.Controls.Add(Me.txtFile1)
         Me.tabCompareFiles.Controls.Add(Me.Label4)
+        Me.tabCompareFiles.Controls.Add(Me.CompareFilesAllFilesProgress)
         Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareFiles.Name = "tabCompareFiles"
         Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 363)
@@ -1380,6 +1382,14 @@ Partial Class Form1
         Me.verifyIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(133, 10)
         Me.verifyIndividualFilesAllFilesProgressBar.TabIndex = 24
         '
+        'CompareFilesAllFilesProgress
+        '
+        Me.CompareFilesAllFilesProgress.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CompareFilesAllFilesProgress.Location = New System.Drawing.Point(894, 99)
+        Me.CompareFilesAllFilesProgress.Name = "CompareFilesAllFilesProgress"
+        Me.CompareFilesAllFilesProgress.Size = New System.Drawing.Size(133, 10)
+        Me.CompareFilesAllFilesProgress.TabIndex = 34
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1532,4 +1542,5 @@ Partial Class Form1
     Friend WithEvents chkUseCommasInNumbers As CheckBox
     Friend WithEvents hashIndividualFilesAllFilesProgressBar As ProgressBar
     Friend WithEvents verifyIndividualFilesAllFilesProgressBar As ProgressBar
+    Friend WithEvents CompareFilesAllFilesProgress As ProgressBar
 End Class

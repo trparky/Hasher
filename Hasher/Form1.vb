@@ -1389,6 +1389,14 @@ Public Class Form1
             Exit Sub
         End If
 
+        SyncLock threadLockingObject
+            ulongAllBytes = 0
+            ulongAllReadBytes = 0
+
+            ulongAllBytes += New IO.FileInfo(txtFile1.Text).Length
+            ulongAllBytes += New IO.FileInfo(txtFile2.Text).Length
+        End SyncLock
+
         btnCompareFilesBrowseFile1.Enabled = False
         btnCompareFilesBrowseFile2.Enabled = False
         txtFile1.Enabled = False
@@ -1423,13 +1431,17 @@ Public Class Form1
                                                      Dim strChecksum1 As String = Nothing
                                                      Dim strChecksum2 As String = Nothing
                                                      Dim boolSuccessful As Boolean = False
-                                                     Dim percentage As Double
+                                                     Dim percentage, allBytesPercentage As Double
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
                                                                                         Try
                                                                                             myInvoke(Sub()
                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                          compareFilesProgressBar.Value = percentage
-                                                                                                         ProgressForm.setTaskbarProgressBarValue(compareFilesProgressBar.Value)
+                                                                                                         SyncLock threadLockingObject
+                                                                                                             allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                                         End SyncLock
+                                                                                                         ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
+                                                                                                         CompareFilesAllFilesProgress.Value = allBytesPercentage
                                                                                                          lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                          If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblCompareFilesStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                      End Sub)
@@ -1472,6 +1484,7 @@ Public Class Form1
                                                                   compareRadioSHA512.Enabled = True
                                                                   lblCompareFilesStatus.Text = strNoBackgroundProcesses
                                                                   compareFilesProgressBar.Value = 0
+                                                                  CompareFilesAllFilesProgress.Value = 0
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
                                                                   Me.Text = "Hasher"
 
@@ -1496,6 +1509,7 @@ Public Class Form1
                                                                       txtFile1.Enabled = True
                                                                       txtFile2.Enabled = True
                                                                       compareFilesProgressBar.Value = 0
+                                                                      CompareFilesAllFilesProgress.Value = 0
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       btnCompareFiles.Text = "Compare Files"
                                                                       compareRadioMD5.Enabled = True
@@ -1511,6 +1525,11 @@ Public Class Form1
                                                                   workingThread = Nothing
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
                                                               End Sub)
+                                                 Finally
+                                                     SyncLock threadLockingObject
+                                                         ulongAllReadBytes = 0
+                                                         ulongAllBytes = 0
+                                                     End SyncLock
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
