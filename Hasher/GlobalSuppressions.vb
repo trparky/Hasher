@@ -9,3 +9,4 @@
 <Assembly: CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types")>
 <Assembly: CodeAnalysis.SuppressMessage("Usage", "CA2237:Mark ISerializable types with serializable")>
 <Assembly: CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static")>
+<Assembly: CodeAnalysis.SuppressMessage("Warning", "BC40004")>
