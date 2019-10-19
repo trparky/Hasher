@@ -245,21 +245,22 @@ Class Check_for_Update_Stuff
                                                         Return Nothing
                                                     End Function
 
-        Dim memoryStream As New MemoryStream()
-        If Not httpHelper.downloadFile(programZipFileURL, memoryStream, False) Then
-            MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, "Scheduled Task Scanner")
-            Exit Sub
-        End If
+        Using memoryStream As New MemoryStream()
+            If Not httpHelper.downloadFile(programZipFileURL, memoryStream, False) Then
+                MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, "Scheduled Task Scanner")
+                Exit Sub
+            End If
 
-        If Not verifyChecksum(programZipFileSHA256URL, memoryStream, httpHelper, True) Then
-            MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, "Scheduled Task Scanner")
-            Exit Sub
-        End If
+            If Not verifyChecksum(programZipFileSHA256URL, memoryStream, httpHelper, True) Then
+                MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, "Scheduled Task Scanner")
+                Exit Sub
+            End If
 
-        fileInfo = Nothing
-        memoryStream.Position = 0
+            fileInfo = Nothing
+            memoryStream.Position = 0
 
-        extractFileFromZIPFile(memoryStream, programFileNameInZIP, newExecutableName)
+            extractFileFromZIPFile(memoryStream, programFileNameInZIP, newExecutableName)
+        End Using
 
         Dim startInfo As New ProcessStartInfo With {
             .FileName = newExecutableName,
