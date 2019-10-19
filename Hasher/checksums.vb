@@ -37,35 +37,19 @@ Public Class checksums
     End Function
 
     Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType, boolShowEstimatedTime As Boolean) As String
-        Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType) ' Get our hashing engine.
+        Using HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType) ' Get our hashing engine.
+            ' Declare some variables.
+            Dim byteDataBuffer As Byte()
+            Dim intBytesRead As Integer
+            Dim longFileSize As Long, longTotalBytesRead As Long = 0
 
-        ' Declare some variables.
-        Dim byteDataBuffer As Byte()
-        Dim intBytesRead As Integer
-        Dim longFileSize As Long, longTotalBytesRead As Long = 0
+            Dim stopwatch As Stopwatch = Stopwatch.StartNew ' Create a stopwatch for compute timing.
 
-        Dim stopwatch As Stopwatch = Stopwatch.StartNew ' Create a stopwatch for compute timing.
-
-        ' Open the file for reading.
-        Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
-            longFileSize = stream.Length ' Get the size of the file.
-            byteDataBuffer = New Byte(intBufferSize - 1) {} ' Create a data buffer in system memory to store some data.
-            intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the above data buffer.
-            SyncLock threadLockingObject
-                ulongAllReadBytes += intBytesRead
-            End SyncLock
-            longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
-
-            ' This sub-routine call is to help de-duplicate code.
-            callChecksumStatusUpdatedPluginCode(boolShowEstimatedTime, longFileSize, longTotalBytesRead, stopwatch)
-
-            ' We're going to loop until all the data for the file we're processing has been read from disk.
-            Do While longTotalBytesRead < longFileSize
-                ' Add the data that we've read from disk into the hasher function.
-                HashAlgorithm.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
-
-                Array.Clear(byteDataBuffer, 0, byteDataBuffer.Length) ' Clear the Byte Array.
-                intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the data buffer that was created above.
+            ' Open the file for reading.
+            Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
+                longFileSize = stream.Length ' Get the size of the file.
+                byteDataBuffer = New Byte(intBufferSize - 1) {} ' Create a data buffer in system memory to store some data.
+                intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the above data buffer.
                 SyncLock threadLockingObject
                     ulongAllReadBytes += intBytesRead
                 End SyncLock
@@ -73,13 +57,29 @@ Public Class checksums
 
                 ' This sub-routine call is to help de-duplicate code.
                 callChecksumStatusUpdatedPluginCode(boolShowEstimatedTime, longFileSize, longTotalBytesRead, stopwatch)
-            Loop
 
-            ' We're done reading the file, we now need to finalize the data in the hasher function.
-            HashAlgorithm.TransformFinalBlock(byteDataBuffer, 0, intBytesRead)
+                ' We're going to loop until all the data for the file we're processing has been read from disk.
+                Do While longTotalBytesRead < longFileSize
+                    ' Add the data that we've read from disk into the hasher function.
+                    HashAlgorithm.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
+
+                    Array.Clear(byteDataBuffer, 0, byteDataBuffer.Length) ' Clear the Byte Array.
+                    intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the data buffer that was created above.
+                    SyncLock threadLockingObject
+                        ulongAllReadBytes += intBytesRead
+                    End SyncLock
+                    longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
+
+                    ' This sub-routine call is to help de-duplicate code.
+                    callChecksumStatusUpdatedPluginCode(boolShowEstimatedTime, longFileSize, longTotalBytesRead, stopwatch)
+                Loop
+
+                ' We're done reading the file, we now need to finalize the data in the hasher function.
+                HashAlgorithm.TransformFinalBlock(byteDataBuffer, 0, intBytesRead)
+            End Using
+
+            Return BitConverter.ToString(HashAlgorithm.Hash).ToLower().Replace("-", "") ' Return the hash string.
         End Using
-
-        Return BitConverter.ToString(HashAlgorithm.Hash).ToLower().Replace("-", "") ' Return the hash string.
     End Function
 
     ' This sub-routine call is to help de-duplicate code. And yes, we use ByRef variables here to reduce data copying performance issues.
