@@ -1734,9 +1734,10 @@ Public Class Form1
     End Sub
 
     Private Function getHashOfString(inputString As String, hashType As checksumType) As String
-        Dim HashAlgorithm As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(hashType)
-        Dim Output As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
-        Return BitConverter.ToString(Output).ToLower().Replace("-", "")
+        Using HashAlgorithm As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(hashType)
+            Dim Output As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+            Return BitConverter.ToString(Output).ToLower().Replace("-", "")
+        End Using
     End Function
 
     Private Sub listFiles_ColumnWidthChanged(sender As Object, e As ColumnWidthChangedEventArgs) Handles listFiles.ColumnWidthChanged
