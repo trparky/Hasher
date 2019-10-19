@@ -176,8 +176,9 @@ Class Check_for_Update_Stuff
     End Function
 
     Private Shared Function SHA256ChecksumStream(ByRef stream As Stream) As String
-        Dim SHA256Engine As New Security.Cryptography.SHA256CryptoServiceProvider
-        Return BitConverter.ToString(SHA256Engine.ComputeHash(stream)).ToLower().Replace("-", "").Trim
+        Using SHA256Engine As New Security.Cryptography.SHA256CryptoServiceProvider
+            Return BitConverter.ToString(SHA256Engine.ComputeHash(stream)).ToLower().Replace("-", "").Trim
+        End Using
     End Function
 
     Private Shared Function verifyChecksum(urlOfChecksumFile As String, ByRef memStream As MemoryStream, ByRef httpHelper As httpHelper, boolGiveUserAnErrorMessage As Boolean) As Boolean
