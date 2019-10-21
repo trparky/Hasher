@@ -145,6 +145,8 @@ Partial Class Form1
         Me.verifyIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
         Me.btnPerformBenchmark = New System.Windows.Forms.Button()
         Me.chkUseCommasInNumbers = New System.Windows.Forms.CheckBox()
+        Me.lblTaskPriorityLabel = New System.Windows.Forms.Label()
+        Me.taskPriority = New System.Windows.Forms.ComboBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1147,6 +1149,8 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.lblValidColor)
         Me.tabSettings.Controls.Add(Me.btnPerformBenchmark)
         Me.tabSettings.Controls.Add(Me.chkUseCommasInNumbers)
+        Me.tabSettings.Controls.Add(Me.taskPriority)
+        Me.tabSettings.Controls.Add(Me.lblTaskPriorityLabel)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
@@ -1390,6 +1394,27 @@ Partial Class Form1
         Me.CompareFilesAllFilesProgress.Size = New System.Drawing.Size(133, 10)
         Me.CompareFilesAllFilesProgress.TabIndex = 34
         '
+        'lblTaskPriorityLabel
+        '
+        Me.lblTaskPriorityLabel.AutoSize = True
+        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(501, 190)
+        Me.lblTaskPriorityLabel.Name = "lblTaskPriorityLabel"
+        Me.lblTaskPriorityLabel.Size = New System.Drawing.Size(150, 13)
+        Me.lblTaskPriorityLabel.TabIndex = 30
+        Me.lblTaskPriorityLabel.Text = "Task Priority (Default: Highest)"
+        Me.ToolTip.SetToolTip(Me.lblTaskPriorityLabel, "This sets the priority of the task relative to everything else that's running on your computer.")
+        '
+        'taskPriority
+        '
+        Me.taskPriority.FormattingEnabled = True
+        Me.taskPriority.Items.AddRange(New Object() {"Lowest", "Below Normal", "Normal", "Above Normal", "Highest"})
+        Me.taskPriority.Location = New System.Drawing.Point(657, 187)
+        Me.taskPriority.Name = "taskPriority"
+        Me.taskPriority.Size = New System.Drawing.Size(125, 21)
+        Me.taskPriority.TabIndex = 31
+        Me.taskPriority.Text = "Highest"
+        Me.ToolTip.SetToolTip(Me.taskPriority, "This sets the priority of the task relative to everything else that's running on your computer.")
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1543,4 +1568,6 @@ Partial Class Form1
     Friend WithEvents hashIndividualFilesAllFilesProgressBar As ProgressBar
     Friend WithEvents verifyIndividualFilesAllFilesProgressBar As ProgressBar
     Friend WithEvents CompareFilesAllFilesProgress As ProgressBar
+    Friend WithEvents taskPriority As ComboBox
+    Friend WithEvents lblTaskPriorityLabel As Label
 End Class

@@ -365,7 +365,7 @@ Public Class Form1
                                                               End Sub)
                                                  End Try
                                              End Sub) With {
-            .Priority = Threading.ThreadPriority.Highest,
+            .Priority = getThreadPritority(),
             .Name = "Hash Generation Thread",
             .IsBackground = True
         }
@@ -703,6 +703,7 @@ Public Class Form1
         colFileSize2.Width = My.Settings.verifyHashFileSizeColumnSize
         colResults.Width = My.Settings.verifyHashFileResults
         colComputeTime2.Width = My.Settings.verifyHashComputeTimeColumnSize
+        taskPriority.SelectedIndex = My.Settings.taskPriority
 
         boolDoneLoading = True
     End Sub
@@ -1079,7 +1080,7 @@ Public Class Form1
                                                               End Sub)
                                                  End Try
                                              End Sub) With {
-            .Priority = Threading.ThreadPriority.Highest,
+            .Priority = getThreadPritority(),
             .Name = "Verify Hash File Working Thread",
             .IsBackground = True
         }
@@ -1532,7 +1533,7 @@ Public Class Form1
                                                      End SyncLock
                                                  End Try
                                              End Sub) With {
-            .Priority = Threading.ThreadPriority.Highest,
+            .Priority = getThreadPritority(),
             .Name = "Hash Generation Thread",
             .IsBackground = True
         }
@@ -1722,7 +1723,7 @@ Public Class Form1
                                                               End Sub)
                                                  End Try
                                              End Sub) With {
-            .Priority = Threading.ThreadPriority.Highest,
+            .Priority = getThreadPritority(),
             .Name = "Hash Generation Thread",
             .IsBackground = True
         }
@@ -1989,5 +1990,25 @@ Public Class Form1
 
     Private Sub chkUseCommasInNumbers_Click(sender As Object, e As EventArgs) Handles chkUseCommasInNumbers.Click
         My.Settings.boolUseCommasInNumbers = chkUseCommasInNumbers.Checked
+    End Sub
+
+    Private Function getThreadPritority() As Threading.ThreadPriority
+        If My.Settings.taskPriority = 0 Then
+            Return Threading.ThreadPriority.Lowest
+        ElseIf My.Settings.taskPriority = 1 Then
+            Return Threading.ThreadPriority.BelowNormal
+        ElseIf My.Settings.taskPriority = 2 Then
+            Return Threading.ThreadPriority.Normal
+        ElseIf My.Settings.taskPriority = 3 Then
+            Return Threading.ThreadPriority.AboveNormal
+        ElseIf My.Settings.taskPriority = 4 Then
+            Return Threading.ThreadPriority.Highest
+        Else
+            Return Threading.ThreadPriority.Highest
+        End If
+    End Function
+
+    Private Sub taskPriority_SelectedIndexChanged(sender As Object, e As EventArgs) Handles taskPriority.SelectedIndexChanged
+        If boolDoneLoading Then My.Settings.taskPriority = taskPriority.SelectedIndex
     End Sub
 End Class

@@ -317,6 +317,18 @@ Namespace My
                 Me("boolUseCommasInNumbers") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("4")>  _
+        Public Property taskPriority() As Byte
+            Get
+                Return CType(Me("taskPriority"),Byte)
+            End Get
+            Set
+                Me("taskPriority") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
