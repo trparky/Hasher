@@ -703,6 +703,7 @@ Public Class Form1
         colFileSize2.Width = My.Settings.verifyHashFileSizeColumnSize
         colResults.Width = My.Settings.verifyHashFileResults
         colComputeTime2.Width = My.Settings.verifyHashComputeTimeColumnSize
+        If My.Settings.taskPriority > 4 Then My.Settings.taskPriority = Byte.Parse(4)
         taskPriority.SelectedIndex = My.Settings.taskPriority
 
         boolDoneLoading = True
@@ -736,8 +737,6 @@ Public Class Form1
     End Sub
 
     Sub addFileToList(strFileName As String, ByRef collectionOfListViewItems As List(Of ListViewItem))
-        Dim fileInfo As New IO.FileInfo(strFileName)
-
         If Not filesInListFiles.Contains(strFileName.Trim.ToLower) Then
             collectionOfListViewItems.Add(createListFilesObject(strFileName))
         End If
