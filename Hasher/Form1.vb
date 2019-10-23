@@ -1992,19 +1992,20 @@ Public Class Form1
     End Sub
 
     Private Function getThreadPriority() As Threading.ThreadPriority
-        If My.Settings.taskPriority = 0 Then
-            Return Threading.ThreadPriority.Lowest
-        ElseIf My.Settings.taskPriority = 1 Then
-            Return Threading.ThreadPriority.BelowNormal
-        ElseIf My.Settings.taskPriority = 2 Then
-            Return Threading.ThreadPriority.Normal
-        ElseIf My.Settings.taskPriority = 3 Then
-            Return Threading.ThreadPriority.AboveNormal
-        ElseIf My.Settings.taskPriority = 4 Then
-            Return Threading.ThreadPriority.Highest
-        Else
-            Return Threading.ThreadPriority.Highest
-        End If
+        Select Case My.Settings.taskPriority
+            Case 0
+                Return Threading.ThreadPriority.Lowest
+            Case 1
+                Return Threading.ThreadPriority.BelowNormal
+            Case 2
+                Return Threading.ThreadPriority.Normal
+            Case 3
+                Return Threading.ThreadPriority.AboveNormal
+            Case 4
+                Return Threading.ThreadPriority.Highest
+            Case Else
+                Return Threading.ThreadPriority.Highest
+        End Select
     End Function
 
     Private Sub taskPriority_SelectedIndexChanged(sender As Object, e As EventArgs) Handles taskPriority.SelectedIndexChanged
