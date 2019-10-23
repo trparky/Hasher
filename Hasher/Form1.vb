@@ -365,7 +365,7 @@ Public Class Form1
                                                               End Sub)
                                                  End Try
                                              End Sub) With {
-            .Priority = getThreadPritority(),
+            .Priority = getThreadPriority(),
             .Name = "Hash Generation Thread",
             .IsBackground = True
         }
@@ -1079,7 +1079,7 @@ Public Class Form1
                                                               End Sub)
                                                  End Try
                                              End Sub) With {
-            .Priority = getThreadPritority(),
+            .Priority = getThreadPriority(),
             .Name = "Verify Hash File Working Thread",
             .IsBackground = True
         }
@@ -1532,7 +1532,7 @@ Public Class Form1
                                                      End SyncLock
                                                  End Try
                                              End Sub) With {
-            .Priority = getThreadPritority(),
+            .Priority = getThreadPriority(),
             .Name = "Hash Generation Thread",
             .IsBackground = True
         }
@@ -1722,7 +1722,7 @@ Public Class Form1
                                                               End Sub)
                                                  End Try
                                              End Sub) With {
-            .Priority = getThreadPritority(),
+            .Priority = getThreadPriority(),
             .Name = "Hash Generation Thread",
             .IsBackground = True
         }
@@ -1991,7 +1991,7 @@ Public Class Form1
         My.Settings.boolUseCommasInNumbers = chkUseCommasInNumbers.Checked
     End Sub
 
-    Private Function getThreadPritority() As Threading.ThreadPriority
+    Private Function getThreadPriority() As Threading.ThreadPriority
         If My.Settings.taskPriority = 0 Then
             Return Threading.ThreadPriority.Lowest
         ElseIf My.Settings.taskPriority = 1 Then
