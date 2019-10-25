@@ -1908,36 +1908,36 @@ Public Class Form1
     End Sub
 
     Private Sub BtnSetValidColor_Click(sender As Object, e As EventArgs) Handles btnSetValidColor.Click
-        Dim colorDialog As New ColorDialog() With {.Color = My.Settings.validColor}
-
-        If colorDialog.ShowDialog() = DialogResult.OK Then
-            My.Settings.validColor = colorDialog.Color
-            lblValidColor.BackColor = colorDialog.Color
-            validColor = colorDialog.Color
-            MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
-        End If
+        Using colorDialog As New ColorDialog() With {.Color = My.Settings.validColor}
+            If colorDialog.ShowDialog() = DialogResult.OK Then
+                My.Settings.validColor = colorDialog.Color
+                lblValidColor.BackColor = colorDialog.Color
+                validColor = colorDialog.Color
+                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+            End If
+        End Using
     End Sub
 
     Private Sub BtnSetNotValidColor_Click(sender As Object, e As EventArgs) Handles btnSetNotValidColor.Click
-        Dim colorDialog As New ColorDialog() With {.Color = My.Settings.notValidColor}
-
-        If colorDialog.ShowDialog() = DialogResult.OK Then
-            My.Settings.notValidColor = colorDialog.Color
-            lblNotValidColor.BackColor = colorDialog.Color
-            notValidColor = colorDialog.Color
-            MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
-        End If
+        Using colorDialog As New ColorDialog() With {.Color = My.Settings.notValidColor}
+            If colorDialog.ShowDialog() = DialogResult.OK Then
+                My.Settings.notValidColor = colorDialog.Color
+                lblNotValidColor.BackColor = colorDialog.Color
+                notValidColor = colorDialog.Color
+                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+            End If
+        End Using
     End Sub
 
     Private Sub BtnFileNotFoundColor_Click(sender As Object, e As EventArgs) Handles btnFileNotFoundColor.Click
-        Dim colorDialog As New ColorDialog() With {.Color = My.Settings.fileNotFoundColor}
-
-        If colorDialog.ShowDialog() = DialogResult.OK Then
-            My.Settings.fileNotFoundColor = colorDialog.Color
-            lblFileNotFoundColor.BackColor = colorDialog.Color
-            fileNotFoundColor = colorDialog.Color
-            MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
-        End If
+        Using colorDialog As New ColorDialog() With {.Color = My.Settings.fileNotFoundColor}
+            If colorDialog.ShowDialog() = DialogResult.OK Then
+                My.Settings.fileNotFoundColor = colorDialog.Color
+                lblFileNotFoundColor.BackColor = colorDialog.Color
+                fileNotFoundColor = colorDialog.Color
+                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+            End If
+        End Using
     End Sub
 
     Private Sub BtnSetColorsBackToDefaults_Click(sender As Object, e As EventArgs) Handles btnSetColorsBackToDefaults.Click
