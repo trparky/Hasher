@@ -572,9 +572,7 @@ Public Class Form1
     Private Sub addFileOrDirectoryToHashFileList(strReceivedFileName As String)
         Try
             If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
-                Dim isDirectory As Boolean = (IO.File.GetAttributes(strReceivedFileName) And IO.FileAttributes.Directory) = IO.FileAttributes.Directory
-
-                If isDirectory Then
+                If IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) Then
                     myInvoke(Sub()
                                  TabControl1.SelectTab(2)
                                  NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
