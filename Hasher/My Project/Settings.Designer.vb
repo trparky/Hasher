@@ -329,6 +329,18 @@ Namespace My
                 Me("taskPriority") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property boolCheckForUpdates() As Boolean
+            Get
+                Return CType(Me("boolCheckForUpdates"),Boolean)
+            End Get
+            Set
+                Me("boolCheckForUpdates") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

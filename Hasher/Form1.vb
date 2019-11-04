@@ -650,6 +650,7 @@ Public Class Form1
         chkUseCommasInNumbers.Checked = My.Settings.boolUseCommasInNumbers
         boolShowEstimatedTime = My.Settings.boolShowEstimatedTime
         chkShowEstimatedTimeRemaining.Checked = boolShowEstimatedTime
+        chkCheckForUpdates.Checked = My.Settings.boolCheckForUpdates
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             Check_for_Update_Stuff.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -705,6 +706,13 @@ Public Class Form1
         colComputeTime2.Width = My.Settings.verifyHashComputeTimeColumnSize
         If My.Settings.taskPriority > 4 Then My.Settings.taskPriority = Byte.Parse(4)
         taskPriority.SelectedIndex = My.Settings.taskPriority
+
+        If My.Settings.boolCheckForUpdates Then
+            Threading.ThreadPool.QueueUserWorkItem(Sub()
+                                                       Dim checkForUpdatesClassObject As New Check_for_Update_Stuff(Me)
+                                                       checkForUpdatesClassObject.checkForUpdates(False)
+                                                   End Sub)
+        End If
 
         boolDoneLoading = True
     End Sub
@@ -2010,5 +2018,9 @@ Public Class Form1
 
     Private Sub taskPriority_SelectedIndexChanged(sender As Object, e As EventArgs) Handles taskPriority.SelectedIndexChanged
         If boolDoneLoading Then My.Settings.taskPriority = taskPriority.SelectedIndex
+    End Sub
+
+    Private Sub chkCheckForUpdates_Click(sender As Object, e As EventArgs) Handles chkCheckForUpdates.Click
+        My.Settings.boolCheckForUpdates = chkCheckForUpdates.Checked
     End Sub
 End Class

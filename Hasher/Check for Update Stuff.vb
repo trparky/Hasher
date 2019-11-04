@@ -316,7 +316,7 @@ Class Check_for_Update_Stuff
         End Try
     End Function
 
-    Public Sub checkForUpdates()
+    Public Sub checkForUpdates(Optional boolShowMessageBox As Boolean = True)
         windowObject.Invoke(Sub()
                                 windowObject.btnCheckForUpdates.Enabled = False
                             End Sub)
@@ -340,7 +340,7 @@ Class Check_for_Update_Stuff
                             MsgBox("The update will not be downloaded.", MsgBoxStyle.Information, windowObject.Text)
                         End If
                     ElseIf response = processUpdateXMLResponse.noUpdateNeeded Then
-                        MsgBox("You already have the latest version, there is no need to update this program.", MsgBoxStyle.Information, windowObject.Text)
+                        If boolShowMessageBox Then MsgBox("You already have the latest version, there is no need to update this program.", MsgBoxStyle.Information, windowObject.Text)
                     ElseIf response = processUpdateXMLResponse.parseError Or response = processUpdateXMLResponse.exceptionError Then
                         MsgBox("There was an error when trying to parse response from server.", MsgBoxStyle.Critical, windowObject.Text)
                     ElseIf response = processUpdateXMLResponse.newerVersionThanWebSite Then
