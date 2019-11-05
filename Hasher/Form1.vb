@@ -1122,11 +1122,13 @@ Public Class Form1
 
     Private Sub listFiles_DragDrop(sender As Object, e As DragEventArgs) Handles listFiles.DragDrop
         For Each strItem As String In e.Data.GetData(DataFormats.FileDrop)
-            If IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) Then
-                addFilesFromDirectory(strItem)
-            Else
-                If Not filesInListFiles.Contains(strItem.Trim.ToLower) Then
-                    listFiles.Items.Add(createListFilesObject(strItem))
+            If IO.File.Exists(strItem) Or IO.Directory.Exists(strItem) Then
+                If IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) Then
+                    addFilesFromDirectory(strItem)
+                Else
+                    If Not filesInListFiles.Contains(strItem.Trim.ToLower) Then
+                        listFiles.Items.Add(createListFilesObject(strItem))
+                    End If
                 End If
             End If
         Next
