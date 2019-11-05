@@ -1368,8 +1368,10 @@ Public Class Form1
     End Sub
 
     Private Sub btnCheckForUpdates_Click_1(sender As Object, e As EventArgs) Handles btnCheckForUpdates.Click
-        Dim checkForUpdatesClassObject As New Check_for_Update_Stuff(Me)
-        checkForUpdatesClassObject.checkForUpdates()
+        Threading.ThreadPool.QueueUserWorkItem(Sub()
+                                                   Dim checkForUpdatesClassObject As New Check_for_Update_Stuff(Me)
+                                                   checkForUpdatesClassObject.checkForUpdates()
+                                               End Sub)
     End Sub
 
     Private Sub btnCompareFiles_Click(sender As Object, e As EventArgs) Handles btnCompareFiles.Click
