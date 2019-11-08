@@ -1801,6 +1801,15 @@ Public Class Form1
 
     Private Sub btnOpenExistingHashFile_DragEnter(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragEnter
         e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.All, DragDropEffects.None)
+        Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
+
+        If receivedData.Count = 1 Then
+            Dim fileInfo As New IO.FileInfo(receivedData(0))
+
+            If Not fileInfo.Extension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not fileInfo.Extension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not fileInfo.Extension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not fileInfo.Extension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not fileInfo.Extension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                e.Effect = DragDropEffects.None
+            End If
+        End If
     End Sub
 
     Private Sub btnAssociate_Click(sender As Object, e As EventArgs) Handles btnAssociate.Click
