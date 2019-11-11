@@ -9,6 +9,8 @@ Class Check_for_Update_Stuff
     Private Const programZipFileSHA256URL = "www.toms-world.org/download/Hasher.zip.sha2"
     Private Const programFileNameInZIP As String = "Hasher.exe"
     Private Const programUpdateCheckerXMLFile As String = "www.toms-world.org/updates/hasher_update.xml"
+    Private Const strMessageBoxTitleText As String = "Hasher"
+    Private Const strProgramName As String = "Hasher"
 
     Public windowObject As Form1
     Public Shared versionInfo As String() = Application.ProductVersion.Split(".")
@@ -156,7 +158,7 @@ Class Check_for_Update_Stuff
             .useHTTPCompression = True,
             .setProxyMode = True
         }
-        httpHelper.addHTTPHeader("PROGRAM_NAME", "Hasher")
+        httpHelper.addHTTPHeader("PROGRAM_NAME", strProgramName)
         httpHelper.addHTTPHeader("PROGRAM_VERSION", versionString)
         httpHelper.addHTTPHeader("OPERATING_SYSTEM", getFullOSVersionString())
 
@@ -201,28 +203,28 @@ Class Check_for_Update_Stuff
                     Else
                         ' The checksums don't match. Oops.
                         If boolGiveUserAnErrorMessage Then
-                            MsgBox("There was an error in the download, checksums don't match. Update process aborted.", MsgBoxStyle.Critical, "Restore Point Creator")
+                            MsgBox("There was an error in the download, checksums don't match. Update process aborted.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                         End If
 
                         Return False
                     End If
                 Else
                     If boolGiveUserAnErrorMessage Then
-                        MsgBox("Invalid SHA2 file detected. Update process aborted.", MsgBoxStyle.Critical, "Restore Point Creator")
+                        MsgBox("Invalid SHA2 file detected. Update process aborted.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                     End If
 
                     Return False
                 End If
             Else
                 If boolGiveUserAnErrorMessage Then
-                    MsgBox("There was an error downloading the checksum verification file. Update process aborted.", MsgBoxStyle.Critical, "Restore Point Creator")
+                    MsgBox("There was an error downloading the checksum verification file. Update process aborted.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                 End If
 
                 Return False
             End If
         Catch ex As Exception
             If boolGiveUserAnErrorMessage Then
-                MsgBox("There was an error downloading the checksum verification file. Update process aborted.", MsgBoxStyle.Critical, "Restore Point Creator")
+                MsgBox("There was an error downloading the checksum verification file. Update process aborted.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             End If
 
             Return False
@@ -248,12 +250,12 @@ Class Check_for_Update_Stuff
 
         Using memoryStream As New MemoryStream()
             If Not httpHelper.downloadFile(programZipFileURL, memoryStream, False) Then
-                MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, "Scheduled Task Scanner")
+                MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                 Exit Sub
             End If
 
             If Not verifyChecksum(programZipFileSHA256URL, memoryStream, httpHelper, True) Then
-                MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, "Scheduled Task Scanner")
+                MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                 Exit Sub
             End If
 
@@ -322,7 +324,7 @@ Class Check_for_Update_Stuff
                             End Sub)
 
         If Not checkForInternetConnection() Then
-            MsgBox("No Internet connection detected.", MsgBoxStyle.Information, windowObject.Text)
+            MsgBox("No Internet connection detected.", MsgBoxStyle.Information, strMessageBoxTitleText)
         Else
             Try
                 Dim xmlData As String = Nothing
@@ -334,20 +336,20 @@ Class Check_for_Update_Stuff
                     Dim response As processUpdateXMLResponse = processUpdateXMLData(xmlData, remoteVersion, remoteBuild)
 
                     If response = processUpdateXMLResponse.newVersion Then
-                        If MsgBox(String.Format("An update to Hasher (version {0} Build {1}) is available to be downloaded, do you want to download and update to this new version?", remoteVersion, remoteBuild), MsgBoxStyle.Question + MsgBoxStyle.YesNo, windowObject.Text) = MsgBoxResult.Yes Then
+                        If MsgBox(String.Format("An update to Hasher (version {0} Build {1}) is available to be downloaded, do you want to download and update to this new version?", remoteVersion, remoteBuild), MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                             downloadAndPerformUpdate()
                         Else
-                            MsgBox("The update will not be downloaded.", MsgBoxStyle.Information, windowObject.Text)
+                            MsgBox("The update will not be downloaded.", MsgBoxStyle.Information, strMessageBoxTitleText)
                         End If
                     ElseIf response = processUpdateXMLResponse.noUpdateNeeded Then
-                        If boolShowMessageBox Then MsgBox("You already have the latest version, there is no need to update this program.", MsgBoxStyle.Information, windowObject.Text)
+                        If boolShowMessageBox Then MsgBox("You already have the latest version, there is no need to update this program.", MsgBoxStyle.Information, strMessageBoxTitleText)
                     ElseIf response = processUpdateXMLResponse.parseError Or response = processUpdateXMLResponse.exceptionError Then
-                        If boolShowMessageBox Then MsgBox("There was an error when trying to parse the response from the server.", MsgBoxStyle.Critical, windowObject.Text)
+                        If boolShowMessageBox Then MsgBox("There was an error when trying to parse the response from the server.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                     ElseIf response = processUpdateXMLResponse.newerVersionThanWebSite Then
-                        If boolShowMessageBox Then MsgBox("This is weird, you have a version that's newer than what's listed on the web site.", MsgBoxStyle.Information, windowObject.Text)
+                        If boolShowMessageBox Then MsgBox("This is weird, you have a version that's newer than what's listed on the web site.", MsgBoxStyle.Information, strMessageBoxTitleText)
                     End If
                 Else
-                    If boolShowMessageBox Then MsgBox("There was an error checking for updates.", MsgBoxStyle.Information, windowObject.Text)
+                    If boolShowMessageBox Then MsgBox("There was an error checking for updates.", MsgBoxStyle.Information, strMessageBoxTitleText)
                 End If
             Catch ex As Exception
                 ' Ok, we crashed but who cares.
