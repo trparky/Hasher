@@ -13,24 +13,7 @@ Namespace My
                 Dim commandLineArgument As String = My.Application.CommandLineArgs(0).ToLower.Trim
 
                 If commandLineArgument.Equals("-update", StringComparison.OrdinalIgnoreCase) Then
-                    If IO.File.Exists("Hasher.zip") Then IO.File.Delete("Hasher.zip")
-
-                    Dim currentProcessFileName As String = New IO.FileInfo(Windows.Forms.Application.ExecutablePath).Name
-
-                    If currentProcessFileName.caseInsensitiveContains(".new.exe", True) Then
-                        Dim mainEXEName As String = currentProcessFileName.caseInsensitiveReplace(".new.exe", "")
-
-                        searchForProcessAndKillIt(mainEXEName, False)
-
-                        IO.File.Delete(mainEXEName)
-                        IO.File.Copy(currentProcessFileName, mainEXEName)
-
-                        Process.Start(New ProcessStartInfo With {.FileName = mainEXEName})
-                        Process.GetCurrentProcess.Kill()
-                    Else
-                        MsgBox("The environment is not ready for an update. This process will now terminate.", MsgBoxStyle.Critical, "Add Adobe Flash to Microsoft EMET")
-                        Process.GetCurrentProcess.Kill()
-                    End If
+                    doUpdateAtStartup()
                 ElseIf commandLineArgument.Equals("-associatefiletype", StringComparison.OrdinalIgnoreCase) Then
                     FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
                     FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")

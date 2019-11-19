@@ -4,13 +4,37 @@ Imports System.Xml
 Imports System.Security.AccessControl
 Imports System.Security.Principal
 
+Module Check_for_Update_Stuff_Module
+    Public Const strMessageBoxTitleText As String = "Hasher"
+    Public Const strProgramName As String = "Hasher"
+    Private Const strZipFileName As String = "Hasher.zip"
+
+    Public Sub doUpdateAtStartup()
+        If File.Exists(strZipFileName) Then File.Delete(strZipFileName)
+        Dim currentProcessFileName As String = New FileInfo(Application.ExecutablePath).Name
+
+        If currentProcessFileName.caseInsensitiveContains(".new.exe", True) Then
+            Dim mainEXEName As String = currentProcessFileName.caseInsensitiveReplace(".new.exe", "")
+
+            searchForProcessAndKillIt(mainEXEName, False)
+
+            File.Delete(mainEXEName)
+            File.Copy(currentProcessFileName, mainEXEName)
+
+            Process.Start(New ProcessStartInfo With {.FileName = mainEXEName})
+            Process.GetCurrentProcess.Kill()
+        Else
+            MsgBox("The environment is not ready for an update. This process will now terminate.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+            Process.GetCurrentProcess.Kill()
+        End If
+    End Sub
+End Module
+
 Class Check_for_Update_Stuff
     Private Const programZipFileURL = "www.toms-world.org/download/Hasher.zip"
     Private Const programZipFileSHA256URL = "www.toms-world.org/download/Hasher.zip.sha2"
     Private Const programFileNameInZIP As String = "Hasher.exe"
     Private Const programUpdateCheckerXMLFile As String = "www.toms-world.org/updates/hasher_update.xml"
-    Private Const strMessageBoxTitleText As String = "Hasher"
-    Private Const strProgramName As String = "Hasher"
 
     Public windowObject As Form1
     Public Shared versionInfo As String() = Application.ProductVersion.Split(".")
