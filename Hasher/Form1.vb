@@ -44,7 +44,6 @@ Public Class Form1
         End If
     End Sub
 
-    Private Delegate Function GetItems(ByVal lstview As ListView) As ListView.ListViewItemCollection
     Private Function getListViewItems(ByVal lstview As ListView) As ListView.ListViewItemCollection
         Dim tempListViewItemCollection As ListView.ListViewItemCollection = New ListView.ListViewItemCollection(New ListView())
 
@@ -55,7 +54,7 @@ Public Class Form1
 
             Return tempListViewItemCollection
         Else
-            Return CType(Invoke(New GetItems(AddressOf getListViewItems), New Object() {lstview}), ListView.ListViewItemCollection)
+            Return CType(Invoke(New Func(Of ListView.ListViewItemCollection)(Function() getListViewItems(lstview))), ListView.ListViewItemCollection)
         End If
     End Function
 
