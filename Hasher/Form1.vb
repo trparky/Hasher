@@ -280,7 +280,7 @@ Public Class Form1
 
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim computeStopwatch As Stopwatch
-
+                                                     Dim itemOnGUI As myListViewItem
                                                      Dim items As ListView.ListViewItemCollection = getListViewItems(listFiles)
 
                                                      SyncLock threadLockingObject
@@ -310,8 +310,9 @@ Public Class Form1
                                                              End If
 
                                                              myInvoke(Sub()
-                                                                          Dim itemOnGUI As myListViewItem = listFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(item.fileName))
+                                                                          itemOnGUI = listFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(item.fileName))
                                                                           If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
+                                                                          itemOnGUI = Nothing
                                                                       End Sub)
                                                          End If
 
@@ -929,6 +930,11 @@ Public Class Form1
                                                      dataInFileArray = Nothing
 
                                                      Dim items As ListView.ListViewItemCollection = getListViewItems(verifyHashesListFiles)
+                                                     Dim strChecksumInFile As String = Nothing
+                                                     Dim percentage, allBytesPercentage As Double
+                                                     Dim subRoutine As [Delegate]
+                                                     Dim computeStopwatch As Stopwatch
+                                                     Dim itemOnGUI As myListViewItem
 
                                                      For Each item As myListViewItem In items
                                                          myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}",
@@ -942,27 +948,25 @@ Public Class Form1
                                                              strFileName = item.fileName
 
                                                              If IO.File.Exists(strFileName) Then
-                                                                 Dim strChecksumInFile As String = Nothing
-                                                                 Dim percentage, allBytesPercentage As Double
-                                                                 Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
-                                                                                                    Try
-                                                                                                        myInvoke(Sub()
-                                                                                                                     percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                                     VerifyHashProgressBar.Value = percentage
-                                                                                                                     SyncLock threadLockingObject
-                                                                                                                         allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
-                                                                                                                     End SyncLock
-                                                                                                                     ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
-                                                                                                                     verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
-                                                                                                                     lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
-                                                                                                                     If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
-                                                                                                                 End Sub)
-                                                                                                    Catch ex As Exception
-                                                                                                    End Try
-                                                                                                End Sub
+                                                                 subRoutine = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
+                                                                                  Try
+                                                                                      myInvoke(Sub()
+                                                                                                   percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                   VerifyHashProgressBar.Value = percentage
+                                                                                                   SyncLock threadLockingObject
+                                                                                                       allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                                   End SyncLock
+                                                                                                   ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
+                                                                                                   verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
+                                                                                                   lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
+                                                                                                   If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
+                                                                                               End Sub)
+                                                                                  Catch ex As Exception
+                                                                                  End Try
+                                                                              End Sub
 
                                                                  myInvoke(Sub() lblProcessingFileVerify.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & ".")
-                                                                 Dim computeStopwatch As Stopwatch = Stopwatch.StartNew
+                                                                 computeStopwatch = Stopwatch.StartNew
 
                                                                  If doChecksumWithAttachedSubRoutine(strFileName, checksumType, strChecksumInFile, subRoutine) Then
                                                                      If strChecksum.Equals(item.hash, StringComparison.OrdinalIgnoreCase) Then
@@ -980,9 +984,12 @@ Public Class Form1
                                                                      item.SubItems(2).Text = "(Error while calculating checksum)"
                                                                  End If
 
+                                                                 subRoutine = Nothing
+
                                                                  myInvoke(Sub()
-                                                                              Dim itemOnGUI As myListViewItem = verifyHashesListFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(item.fileName))
+                                                                              itemOnGUI = verifyHashesListFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(item.fileName))
                                                                               If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
+                                                                              itemOnGUI = Nothing
                                                                           End Sub)
                                                              End If
                                                          End If
