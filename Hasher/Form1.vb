@@ -139,8 +139,6 @@ Public Class Form1
                 btnIndividualFilesSaveResultsToDisk.Enabled = True
             End If
         End If
-
-        If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
     End Sub
 
     Private Sub btnRemoveAllFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveAllFiles.Click
@@ -206,7 +204,9 @@ Public Class Form1
                 listFiles.EndUpdate()
             End If
         End If
+
         updateFilesListCountHeader()
+        If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
     End Sub
 
     Private Sub btnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
@@ -588,9 +588,11 @@ Public Class Form1
 
                         strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
                         listFiles.Items.Add(createListFilesObject(strReceivedFileName))
-                        updateFilesListCountHeader()
                     End If
                 End If
+
+                updateFilesListCountHeader()
+                If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
             End If
         Catch ex As Exception
         End Try
@@ -785,6 +787,7 @@ Public Class Form1
 
                                                                 listFiles.BeginUpdate()
                                                                 listFiles.Items.AddRange(collectionOfListViewItems.ToArray())
+                                                                If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
                                                                 listFiles.EndUpdate()
 
                                                                 lblIndividualFilesStatusProcessingFile.Text = Nothing
@@ -1138,7 +1141,9 @@ Public Class Form1
                 End If
             End If
         Next
+
         updateFilesListCountHeader()
+        If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
     End Sub
 
     Private Sub listFiles_DragEnter(sender As Object, e As DragEventArgs) Handles listFiles.DragEnter
