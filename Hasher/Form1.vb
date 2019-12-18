@@ -1324,6 +1324,11 @@ Public Class Form1
     End Sub
 
     Private Sub applyFileSizeSortingToHashList()
+        colFileName.Text = "File Name"
+        colFileSize.Text = "File Size"
+        colChecksum.Text = "Hash/Checksum"
+        colComputeTime.Text = "Compute Time"
+
         Dim new_sorting_column As ColumnHeader = listFiles.Columns(1)
         Dim sort_order As SortOrder = SortOrder.Ascending
 
