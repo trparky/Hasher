@@ -1340,6 +1340,11 @@ Public Class Form1
     End Sub
 
     Private Sub applyFileSizeSortingToVerifyList()
+        colFile.Text = "File Name"
+        colFileSize2.Text = "File Size"
+        colResults.Text = "Results"
+        colComputeTime2.Text = "Compute Time"
+
         Dim new_sorting_column As ColumnHeader = verifyHashesListFiles.Columns(1)
         Dim sort_order As SortOrder = SortOrder.Ascending
 
