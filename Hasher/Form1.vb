@@ -310,7 +310,7 @@ Public Class Form1
                                                              End If
 
                                                              myInvoke(Sub()
-                                                                          itemOnGUI = listFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(item.fileName))
+                                                                          itemOnGUI = listFiles.Items(item.Index)
                                                                           If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
                                                                           itemOnGUI = Nothing
                                                                       End Sub)
@@ -990,7 +990,7 @@ Public Class Form1
                                                                  subRoutine = Nothing
 
                                                                  myInvoke(Sub()
-                                                                              itemOnGUI = verifyHashesListFiles.Items.Cast(Of myListViewItem).ToList.FirstOrDefault(Function(internalItem As myListViewItem) internalItem.fileName.Equals(item.fileName))
+                                                                              itemOnGUI = verifyHashesListFiles.Items(item.Index)
                                                                               If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
                                                                               itemOnGUI = Nothing
                                                                           End Sub)
@@ -1251,6 +1251,8 @@ Public Class Form1
     End Sub
 
     Private Sub listFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles listFiles.ColumnClick
+        If boolBackgroundThreadWorking Then Exit Sub ' Disable resorting the list while the program is working in the background.
+
         ' Get the new sorting column.
         Dim new_sorting_column As ColumnHeader = listFiles.Columns(e.Column)
 
@@ -1356,6 +1358,8 @@ Public Class Form1
     End Sub
 
     Private Sub verifyHashesListFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles verifyHashesListFiles.ColumnClick
+        If boolBackgroundThreadWorking Then Exit Sub ' Disable resorting the list while the program is working in the background.
+
         ' Get the new sorting column.
         Dim new_sorting_column As ColumnHeader = verifyHashesListFiles.Columns(e.Column)
 
