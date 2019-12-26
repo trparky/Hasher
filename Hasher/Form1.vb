@@ -447,8 +447,32 @@ Public Class Form1
 
         SaveFileDialog.InitialDirectory = strLastDirectoryWorkedOn
         SaveFileDialog.Title = "Save Hash Results to Disk"
+        If My.Settings.boolAutoAddExtension Then SaveFileDialog.OverwritePrompt = False ' We handle this in our own code below.
 
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
+            If My.Settings.boolAutoAddExtension Then
+                Dim strFileExtension As String = New IO.FileInfo(SaveFileDialog.FileName).Extension
+
+                If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                    If Me.radioMD5.Checked Then
+                        SaveFileDialog.FileName &= ".md5"
+                    ElseIf radioSHA1.Checked Then
+                        SaveFileDialog.FileName &= ".sha1"
+                    ElseIf radioSHA256.Checked Then
+                        SaveFileDialog.FileName &= ".sha256"
+                    ElseIf radioSHA384.Checked Then
+                        SaveFileDialog.FileName &= ".sha384"
+                    ElseIf radioSHA512.Checked Then
+                        SaveFileDialog.FileName &= ".sha512"
+                    End If
+                End If
+
+                If IO.File.Exists(SaveFileDialog.FileName) AndAlso MsgBox("The file named """ & New IO.FileInfo(SaveFileDialog.FileName).Name & """ already exists." & vbCrLf & vbCrLf & "Are you absolutely sure you want to replace it?", MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, "Overwrite?") = MsgBoxResult.No Then
+                    MsgBox("Save Results to Disk Aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                    Exit Sub
+                End If
+            End If
+
             Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
                 streamWriter.Write(strGetIndividualHashesInStringFormat(SaveFileDialog.FileName))
             End Using
@@ -651,6 +675,7 @@ Public Class Form1
         boolShowEstimatedTime = My.Settings.boolShowEstimatedTime
         chkShowEstimatedTimeRemaining.Checked = boolShowEstimatedTime
         chkCheckForUpdates.Checked = My.Settings.boolCheckForUpdates
+        chkAutoAddExtension.Checked = My.Settings.boolAutoAddExtension
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             Check_for_Update_Stuff.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -2058,5 +2083,12 @@ Public Class Form1
 
     Private Sub chkCheckForUpdates_Click(sender As Object, e As EventArgs) Handles chkCheckForUpdates.Click
         My.Settings.boolCheckForUpdates = chkCheckForUpdates.Checked
+    End Sub
+
+    Private Sub chkAutoAddExtension_Click(sender As Object, e As EventArgs) Handles chkAutoAddExtension.Click
+        If Not chkAutoAddExtension.Checked AndAlso MsgBox("You are disabling a highly recommended option, it is HIGHLY recommended that you re-enable this option to prevent accidental data loss." & vbCrLf & vbCrLf & "Are you sure you want to do this?", MsgBoxStyle.Critical + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.No Then
+            chkAutoAddExtension.Checked = True
+        End If
+        My.Settings.boolAutoAddExtension = chkAutoAddExtension.Checked
     End Sub
 End Class

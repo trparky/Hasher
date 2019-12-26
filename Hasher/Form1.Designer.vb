@@ -148,6 +148,7 @@ Partial Class Form1
         Me.lblTaskPriorityLabel = New System.Windows.Forms.Label()
         Me.taskPriority = New System.Windows.Forms.ComboBox()
         Me.chkCheckForUpdates = New System.Windows.Forms.CheckBox()
+        Me.chkAutoAddExtension = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1153,6 +1154,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.taskPriority)
         Me.tabSettings.Controls.Add(Me.lblTaskPriorityLabel)
         Me.tabSettings.Controls.Add(Me.chkCheckForUpdates)
+        Me.tabSettings.Controls.Add(Me.chkAutoAddExtension)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
@@ -1241,7 +1243,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 244)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 267)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1250,7 +1252,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 244)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 267)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1427,6 +1429,16 @@ Partial Class Form1
         Me.chkCheckForUpdates.Text = "Automatically Check for Updates (Recommended)"
         Me.chkCheckForUpdates.UseVisualStyleBackColor = True
         '
+        'chkAutoAddExtension
+        '
+        Me.chkAutoAddExtension.AutoSize = True
+        Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 244)
+        Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
+        Me.chkAutoAddExtension.Size = New System.Drawing.Size(398, 17)
+        Me.chkAutoAddExtension.TabIndex = 33
+        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk (Highly Recommended!!!)"
+        Me.chkAutoAddExtension.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1583,4 +1595,5 @@ Partial Class Form1
     Friend WithEvents taskPriority As ComboBox
     Friend WithEvents lblTaskPriorityLabel As Label
     Friend WithEvents chkCheckForUpdates As CheckBox
+    Friend WithEvents chkAutoAddExtension As CheckBox
 End Class
