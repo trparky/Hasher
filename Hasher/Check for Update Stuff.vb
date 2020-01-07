@@ -68,7 +68,7 @@ Class Check_for_Update_Stuff
     Public Function processUpdateXMLData(ByVal xmlData As String, ByRef remoteVersion As String, ByRef remoteBuild As String) As processUpdateXMLResponse
         Try
             Dim xmlDocument As New XmlDocument() ' First we create an XML Document Object.
-            xmlDocument.Load(New IO.StringReader(xmlData)) ' Now we try and parse the XML data.
+            xmlDocument.Load(New StringReader(xmlData)) ' Now we try and parse the XML data.
 
             Dim xmlNode As XmlNode = xmlDocument.SelectSingleNode("/xmlroot")
 
@@ -256,8 +256,7 @@ Class Check_for_Update_Stuff
     End Function
 
     Private Sub downloadAndPerformUpdate()
-        Dim fileInfo As New FileInfo(Application.ExecutablePath)
-        Dim newExecutableName As String = fileInfo.Name & ".new.exe"
+        Dim newExecutableName As String = (New FileInfo(Application.ExecutablePath)).Name & ".new.exe"
 
         ' We have to do this stuff on the thread that the form belongs to or we will get an error.
         windowObject.Invoke(Sub()
@@ -283,7 +282,6 @@ Class Check_for_Update_Stuff
                 Exit Sub
             End If
 
-            fileInfo = Nothing
             memoryStream.Position = 0
 
             extractFileFromZIPFile(memoryStream, programFileNameInZIP, newExecutableName)
