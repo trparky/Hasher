@@ -256,7 +256,7 @@ Class Check_for_Update_Stuff
     End Function
 
     Private Sub downloadAndPerformUpdate()
-        Dim newExecutableName As String = (New FileInfo(Application.ExecutablePath)).Name & ".new.exe"
+        Dim newExecutableName As String = New FileInfo(Application.ExecutablePath).Name & ".new.exe"
 
         ' We have to do this stuff on the thread that the form belongs to or we will get an error.
         windowObject.Invoke(Sub()
