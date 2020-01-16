@@ -9,12 +9,104 @@ Module Check_for_Update_Stuff_Module
     Public Const strProgramName As String = "Hasher"
     Private Const strZipFileName As String = "Hasher.zip"
 
+    ''' <summary>Checks to see if a Process ID or PID exists on the system.</summary>
+    ''' <param name="PID">The PID of the process you are checking the existance of.</param>
+    ''' <param name="processObject">If the PID does exist, the function writes back to this argument in a ByRef way a Process Object that can be interacted with outside of this function.</param>
+    ''' <returns>Return a Boolean value. If the PID exists, it return a True value. If the PID doesn't exist, it returns a False value.</returns>
+    Private Function doesProcessIDExist(ByVal PID As Integer, ByRef processObject As Process) As Boolean
+        Try
+            processObject = Process.GetProcessById(PID)
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
+
+    Private Sub killProcess(processID As Integer)
+        Dim processObject As Process = Nothing
+
+        ' First we are going to check if the Process ID exists.
+        If doesProcessIDExist(processID, processObject) Then
+            Try
+                processObject.Kill() ' Yes, it does so let's kill it.
+            Catch ex As Exception
+                ' Wow, it seems that even with double-checking if a process exists by it's PID number things can still go wrong.
+                ' So this Try-Catch block is here to trap any possible errors when trying to kill a process by it's PID number.
+            End Try
+        End If
+
+        Threading.Thread.Sleep(250) ' We're going to sleep to give the system some time to kill the process.
+
+        '' Now we are going to check again if the Process ID exists and if it does, we're going to attempt to kill it again.
+        If doesProcessIDExist(processID, processObject) Then
+            Try
+                processObject.Kill()
+            Catch ex As Exception
+                ' Wow, it seems that even with double-checking if a process exists by it's PID number things can still go wrong.
+                ' So this Try-Catch block is here to trap any possible errors when trying to kill a process by it's PID number.
+            End Try
+        End If
+
+        Threading.Thread.Sleep(250) ' We're going to sleep (again) to give the system some time to kill the process.
+    End Sub
+
+    Private Function getProcessExecutablePath(processID As Integer) As String
+        Dim memoryBuffer As New Text.StringBuilder(1024)
+        Dim processHandle As IntPtr = NativeMethod.NativeMethods.OpenProcess(NativeMethod.ProcessAccessFlags.PROCESS_QUERY_LIMITED_INFORMATION, False, processID)
+
+        If processHandle <> IntPtr.Zero Then
+            Try
+                Dim memoryBufferSize As Integer = memoryBuffer.Capacity
+
+                If NativeMethod.NativeMethods.QueryFullProcessImageName(processHandle, 0, memoryBuffer, memoryBufferSize) Then
+                    Return memoryBuffer.ToString()
+                End If
+            Finally
+                NativeMethod.NativeMethods.CloseHandle(processHandle)
+            End Try
+        End If
+
+        NativeMethod.NativeMethods.CloseHandle(processHandle)
+        Return Nothing
+    End Function
+
+    Public Sub searchForProcessAndKillIt(strFileName As String, boolFullFilePathPassed As Boolean)
+        Dim processExecutablePath As String
+        Dim processExecutablePathFileInfo As IO.FileInfo
+
+        For Each process As Process In Process.GetProcesses()
+            processExecutablePath = getProcessExecutablePath(process.Id)
+
+            If processExecutablePath IsNot Nothing Then
+                Try
+                    processExecutablePathFileInfo = New IO.FileInfo(processExecutablePath)
+
+                    If boolFullFilePathPassed Then
+                        If strFileName.Equals(processExecutablePathFileInfo.FullName, StringComparison.OrdinalIgnoreCase) Then
+                            killProcess(process.Id)
+                        End If
+                    Else
+                        If strFileName.Equals(processExecutablePathFileInfo.Name, StringComparison.OrdinalIgnoreCase) Then
+                            killProcess(process.Id)
+                        End If
+                    End If
+                Catch ex As ArgumentException
+                End Try
+            End If
+        Next
+    End Sub
+
+    Private Function caseInsensitiveReplace(source As String, replace As String, replaceWith As String, Optional boolEscape As Boolean = True) As String
+        If boolEscape Then replace = Regex.Escape(replace)
+        Return Regex.Replace(source, replace, replaceWith, RegexOptions.IgnoreCase)
+    End Function
+
     Public Sub doUpdateAtStartup()
         If File.Exists(strZipFileName) Then File.Delete(strZipFileName)
         Dim currentProcessFileName As String = New FileInfo(Application.ExecutablePath).Name
 
         If currentProcessFileName.caseInsensitiveContains(".new.exe") Then
-            Dim mainEXEName As String = currentProcessFileName.caseInsensitiveReplace(".new.exe", "")
+            Dim mainEXEName As String = caseInsensitiveReplace(currentProcessFileName, ".new.exe", "")
 
             searchForProcessAndKillIt(mainEXEName, False)
 
@@ -65,7 +157,7 @@ Class Check_for_Update_Stuff
     ''' <summary>This parses the XML updata data and determines if an update is needed.</summary>
     ''' <param name="xmlData">The XML data from the web site.</param>
     ''' <returns>A Boolean value indicating if the program has been updated or not.</returns>
-    Public Function processUpdateXMLData(ByVal xmlData As String, ByRef remoteVersion As String, ByRef remoteBuild As String) As processUpdateXMLResponse
+    Private Function processUpdateXMLData(ByVal xmlData As String, ByRef remoteVersion As String, ByRef remoteBuild As String) As processUpdateXMLResponse
         Try
             Dim xmlDocument As New XmlDocument() ' First we create an XML Document Object.
             xmlDocument.Load(New StringReader(xmlData)) ' Now we try and parse the XML data.
