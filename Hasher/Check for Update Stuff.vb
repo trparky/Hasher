@@ -250,16 +250,13 @@ Class Check_for_Update_Stuff
             Dim directoryACLs As DirectorySecurity = Directory.GetAccessControl(folderPath)
             Dim directoryUsers As String = WindowsIdentity.GetCurrent.User.Value
             Dim directoryAccessRights As FileSystemAccessRule
-            Dim fileSystemRightsVariable As FileSystemRights
 
             For Each rule As AuthorizationRule In directoryACLs.GetAccessRules(True, True, GetType(SecurityIdentifier))
                 If rule.IdentityReference.Value = directoryUsers Then
                     directoryAccessRights = DirectCast(rule, FileSystemAccessRule)
 
                     If directoryAccessRights.AccessControlType = AccessControlType.Allow Then
-                        fileSystemRightsVariable = directoryAccessRights.FileSystemRights
-
-                        If fileSystemRightsVariable = (FileSystemRights.Read Or FileSystemRights.Modify Or FileSystemRights.Write Or FileSystemRights.FullControl) Then
+                        If directoryAccessRights.FileSystemRights = (FileSystemRights.Read Or FileSystemRights.Modify Or FileSystemRights.Write Or FileSystemRights.FullControl) Then
                             Return True
                         End If
                     End If
