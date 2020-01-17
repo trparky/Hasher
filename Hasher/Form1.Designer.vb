@@ -1438,6 +1438,7 @@ Partial Class Form1
         Me.chkAutoAddExtension.TabIndex = 33
         Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk (Highly Recommended!!!)"
         Me.chkAutoAddExtension.UseVisualStyleBackColor = True
+        Me.ToolTip.SetToolTip(Me.chkAutoAddExtension, "Enabling this option automatically tacks on the appropriate file extension when saving checksum data to disk.")
         '
         'Form1
         '
