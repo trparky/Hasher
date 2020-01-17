@@ -5,9 +5,11 @@ Imports System.Security.AccessControl
 Imports System.Security.Principal
 
 Module Check_for_Update_Stuff_Module
+    ' Change these variables whenever you import this module into a program's code to handle software updates.
     Public Const strMessageBoxTitleText As String = "Hasher"
     Public Const strProgramName As String = "Hasher"
     Private Const strZipFileName As String = "Hasher.zip"
+    ' Change these variables whenever you import this module into a program's code to handle software updates.
 
     ''' <summary>Checks to see if a Process ID or PID exists on the system.</summary>
     ''' <param name="PID">The PID of the process you are checking the existance of.</param>
@@ -123,10 +125,12 @@ Module Check_for_Update_Stuff_Module
 End Module
 
 Class Check_for_Update_Stuff
+    ' Change these variables whenever you import this module into a program's code to handle software updates.
     Private Const programZipFileURL = "www.toms-world.org/download/Hasher.zip"
     Private Const programZipFileSHA256URL = "www.toms-world.org/download/Hasher.zip.sha2"
     Private Const programFileNameInZIP As String = "Hasher.exe"
     Private Const programUpdateCheckerXMLFile As String = "www.toms-world.org/updates/hasher_update.xml"
+    ' Change these variables whenever you import this module into a program's code to handle software updates.
 
     Public windowObject As Form1
     Public Shared versionInfo As String() = Application.ProductVersion.Split(".")
