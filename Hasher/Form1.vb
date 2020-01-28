@@ -626,25 +626,27 @@ Public Class Form1
         Dim boolNamedPipeServerStarted As Boolean = startNamedPipeServer()
         Dim commandLineArgument As String
 
-        If My.Application.CommandLineArgs.Count = 1 Then
-            commandLineArgument = My.Application.CommandLineArgs(0).Trim
+        With My.Application
+            If .CommandLineArgs.Count = 1 Then
+                commandLineArgument = .CommandLineArgs(0).Trim
 
-            If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", "").Replace(Chr(34), "")
+                If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", "").Replace(Chr(34), "")
 
-                If boolNamedPipeServerStarted Then
-                    ' In this case this instance of the program is the first executed instance so it has a named pipe server running
-                    ' in it, but we still need to process the first incoming file passed to it via command line arguments.
-                    addFileOrDirectoryToHashFileList(commandLineArgument)
-                Else
-                    ' OK, there's already a named pipe server running so we send the file that's been passed to this
-                    ' instance via the command line argument to the first instance via the IPC named pipe server
-                    ' and then exit out of this instance in a very quick way by killing this current process.
-                    sendToIPCNamedPipeServer(commandLineArgument)
-                    Process.GetCurrentProcess.Kill()
+                    If boolNamedPipeServerStarted Then
+                        ' In this case this instance of the program is the first executed instance so it has a named pipe server running
+                        ' in it, but we still need to process the first incoming file passed to it via command line arguments.
+                        addFileOrDirectoryToHashFileList(commandLineArgument)
+                    Else
+                        ' OK, there's already a named pipe server running so we send the file that's been passed to this
+                        ' instance via the command line argument to the first instance via the IPC named pipe server
+                        ' and then exit out of this instance in a very quick way by killing this current process.
+                        sendToIPCNamedPipeServer(commandLineArgument)
+                        Process.GetCurrentProcess.Kill()
+                    End If
                 End If
             End If
-        End If
+        End With
 
         Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
 
@@ -698,27 +700,29 @@ Public Class Form1
 
         deleteTemporaryNewEXEFile()
 
-        If My.Application.CommandLineArgs.Count = 1 Then
-            commandLineArgument = My.Application.CommandLineArgs(0).Trim
+        With My.Application
+            If .CommandLineArgs.Count = 1 Then
+                commandLineArgument = .CommandLineArgs(0).Trim
 
-            If commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--hashfile=", "")
-                commandLineArgument = commandLineArgument.Replace(Chr(34), "")
+                If commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
+                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--hashfile=", "")
+                    commandLineArgument = commandLineArgument.Replace(Chr(34), "")
 
-                If IO.File.Exists(commandLineArgument) Then
-                    TabControl1.SelectTab(3)
-                    btnOpenExistingHashFile.Text = "Abort Processing"
-                    verifyHashesListFiles.Items.Clear()
-                    processExistingHashFile(commandLineArgument)
+                    If IO.File.Exists(commandLineArgument) Then
+                        TabControl1.SelectTab(3)
+                        btnOpenExistingHashFile.Text = "Abort Processing"
+                        verifyHashesListFiles.Items.Clear()
+                        processExistingHashFile(commandLineArgument)
+                    End If
+                ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
+                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--knownhashfile=", "")
+                    commandLineArgument = commandLineArgument.Replace(Chr(34), "")
+                    TabControl1.SelectTab(5)
+                    txtFileForKnownHash.Text = commandLineArgument
+                    txtKnownHash.Select()
                 End If
-            ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--knownhashfile=", "")
-                commandLineArgument = commandLineArgument.Replace(Chr(34), "")
-                TabControl1.SelectTab(5)
-                txtFileForKnownHash.Text = commandLineArgument
-                txtKnownHash.Select()
             End If
-        End If
+        End With
 
         colFileName.Width = My.Settings.hashIndividualFilesFileNameColumnSize
         colFileSize.Width = My.Settings.hashIndividualFilesFileSizeColumnSize

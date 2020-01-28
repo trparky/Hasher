@@ -9,23 +9,25 @@ Namespace My
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     Partial Friend Class MyApplication
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
-            If My.Application.CommandLineArgs.Count = 1 Then
-                Dim commandLineArgument As String = My.Application.CommandLineArgs(0).Trim
+            With Application
+                If .CommandLineArgs.Count = 1 Then
+                    Dim commandLineArgument As String = .CommandLineArgs(0).Trim
 
-                If commandLineArgument.Equals("-update", StringComparison.OrdinalIgnoreCase) Then
-                    doUpdateAtStartup()
-                ElseIf commandLineArgument.Equals("-associatefiletype", StringComparison.OrdinalIgnoreCase) Then
-                    FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
-                    FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
-                    FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
-                    FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
-                    FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
-                    Process.GetCurrentProcess.Kill()
-                ElseIf commandLineArgument.Equals("-associateallfiles", StringComparison.OrdinalIgnoreCase) Then
-                    FileAssociation.addAssociationWithAllFiles()
-                    Process.GetCurrentProcess.Kill()
+                    If commandLineArgument.Equals("-update", StringComparison.OrdinalIgnoreCase) Then
+                        doUpdateAtStartup()
+                    ElseIf commandLineArgument.Equals("-associatefiletype", StringComparison.OrdinalIgnoreCase) Then
+                        FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
+                        FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
+                        FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
+                        FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
+                        FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
+                        Process.GetCurrentProcess.Kill()
+                    ElseIf commandLineArgument.Equals("-associateallfiles", StringComparison.OrdinalIgnoreCase) Then
+                        FileAssociation.addAssociationWithAllFiles()
+                        Process.GetCurrentProcess.Kill()
+                    End If
                 End If
-            End If
+            End With
         End Sub
     End Class
 End Namespace
