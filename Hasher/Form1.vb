@@ -666,6 +666,7 @@ Public Class Form1
         lblIndividualFilesStatusProcessingFile.Visible = False
         hashIndividualFilesAllFilesProgressBar.Visible = False
         verifyIndividualFilesAllFilesProgressBar.Visible = False
+        CompareFilesAllFilesProgress.Visible = False
         lblVerifyHashStatusProcessingFile.Visible = False
         lblFile1Hash.Text = Nothing
         lblFile2Hash.Text = Nothing
@@ -1489,6 +1490,7 @@ Public Class Form1
                                                                   compareRadioSHA256.Enabled = False
                                                                   compareRadioSHA384.Enabled = False
                                                                   compareRadioSHA512.Enabled = False
+                                                                  CompareFilesAllFilesProgress.Visible = True
 
                                                                   If compareRadioMD5.Checked Then
                                                                       checksumType = checksumType.md5
@@ -1560,6 +1562,7 @@ Public Class Form1
                                                                   lblCompareFilesStatus.Text = strNoBackgroundProcesses
                                                                   compareFilesProgressBar.Value = 0
                                                                   CompareFilesAllFilesProgress.Value = 0
+                                                                  CompareFilesAllFilesProgress.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
                                                                   Me.Text = "Hasher"
 
@@ -1585,6 +1588,7 @@ Public Class Form1
                                                                       txtFile2.Enabled = True
                                                                       compareFilesProgressBar.Value = 0
                                                                       CompareFilesAllFilesProgress.Value = 0
+                                                                      CompareFilesAllFilesProgress.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       btnCompareFiles.Text = "Compare Files"
                                                                       compareRadioMD5.Enabled = True
