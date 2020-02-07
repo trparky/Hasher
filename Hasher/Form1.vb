@@ -330,10 +330,11 @@ Public Class Form1
                                                                   radioSHA512.Enabled = True
 
                                                                   Me.Text = "Hasher"
-                                                                  MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
                                                                   resetHashIndividualFilesProgress()
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
+
+                                                                  MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                      myInvoke(Sub()
