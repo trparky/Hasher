@@ -226,6 +226,7 @@ Public Class Form1
         btnRemoveSelectedFiles.Enabled = False
         btnIndividualFilesCopyToClipboard.Enabled = False
         btnIndividualFilesSaveResultsToDisk.Enabled = False
+        hashIndividualFilesAllFilesProgressBar.Visible = True
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -340,6 +341,7 @@ Public Class Form1
                                                                       lblProcessingFile.Text = Nothing
                                                                       lblIndividualFilesStatus.Text = strNoBackgroundProcesses
                                                                       lblIndividualFilesStatusProcessingFile.Text = ""
+                                                                      hashIndividualFilesAllFilesProgressBar.Visible = False
                                                                       IndividualFilesProgressBar.Value = 0
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       resetHashIndividualFilesProgress()
@@ -380,6 +382,7 @@ Public Class Form1
 
         lblIndividualFilesStatus.Text = strNoBackgroundProcesses
         lblIndividualFilesStatusProcessingFile.Text = ""
+        hashIndividualFilesAllFilesProgressBar.Visible = False
         lblProcessingFile.Text = ""
         IndividualFilesProgressBar.Value = 0
         myInvoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
@@ -660,6 +663,8 @@ Public Class Form1
         End If
 
         lblIndividualFilesStatusProcessingFile.Text = ""
+        hashIndividualFilesAllFilesProgressBar.Visible = False
+        verifyIndividualFilesAllFilesProgressBar.Visible = False
         lblVerifyHashStatusProcessingFile.Text = ""
         lblFile1Hash.Text = Nothing
         lblFile2Hash.Text = Nothing
@@ -916,6 +921,7 @@ Public Class Form1
 
                                                      myInvoke(Sub()
                                                                   lblVerifyHashStatus.Text = strReadingHashFileMessage
+                                                                  verifyIndividualFilesAllFilesProgressBar.Visible = True
                                                                   verifyHashesListFiles.BeginUpdate()
                                                               End Sub)
 
@@ -1035,6 +1041,7 @@ Public Class Form1
                                                                   Next
 
                                                                   lblVerifyHashStatusProcessingFile.Text = ""
+                                                                  verifyIndividualFilesAllFilesProgressBar.Visible = False
                                                                   lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                                   lblProcessingFileVerify.Text = ""
                                                                   VerifyHashProgressBar.Value = 0
@@ -1095,6 +1102,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then
                                                                       verifyHashesListFiles.EndUpdate()
                                                                       lblVerifyHashStatusProcessingFile.Text = ""
+                                                                      verifyIndividualFilesAllFilesProgressBar.Visible = False
                                                                       lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                                       lblProcessingFileVerify.Text = ""
                                                                       VerifyHashProgressBar.Value = 0
