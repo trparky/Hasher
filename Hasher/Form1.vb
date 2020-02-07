@@ -340,7 +340,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then
                                                                       lblProcessingFile.Text = Nothing
                                                                       lblIndividualFilesStatus.Text = strNoBackgroundProcesses
-                                                                      lblIndividualFilesStatusProcessingFile.Text = ""
+                                                                      lblIndividualFilesStatusProcessingFile.Visible = False
                                                                       hashIndividualFilesAllFilesProgressBar.Visible = False
                                                                       IndividualFilesProgressBar.Value = 0
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
@@ -381,7 +381,7 @@ Public Class Form1
         btnRemoveSelectedFiles.Enabled = True
 
         lblIndividualFilesStatus.Text = strNoBackgroundProcesses
-        lblIndividualFilesStatusProcessingFile.Text = ""
+        lblIndividualFilesStatusProcessingFile.Visible = False
         hashIndividualFilesAllFilesProgressBar.Visible = False
         lblProcessingFile.Text = ""
         IndividualFilesProgressBar.Value = 0
@@ -662,10 +662,10 @@ Public Class Form1
             btnAddHasherToAllFiles.Image = My.Resources.UAC
         End If
 
-        lblIndividualFilesStatusProcessingFile.Text = ""
+        lblIndividualFilesStatusProcessingFile.Visible = False
         hashIndividualFilesAllFilesProgressBar.Visible = False
         verifyIndividualFilesAllFilesProgressBar.Visible = False
-        lblVerifyHashStatusProcessingFile.Text = ""
+        lblVerifyHashStatusProcessingFile.Visible = False
         lblFile1Hash.Text = Nothing
         lblFile2Hash.Text = Nothing
         lblProcessingFile.Text = ""
@@ -817,6 +817,7 @@ Public Class Form1
                                                    End If
 
                                                    myInvoke(Sub()
+                                                                lblIndividualFilesStatusProcessingFile.Visible = True
                                                                 lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please Wait."
 
                                                                 listFiles.BeginUpdate()
@@ -963,6 +964,7 @@ Public Class Form1
                                                                   lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                                   VerifyHashProgressBar.Value = 0
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
+                                                                  lblVerifyHashStatusProcessingFile.Visible = True
                                                               End Sub)
 
                                                      dataInFileArray = Nothing
@@ -1040,7 +1042,7 @@ Public Class Form1
                                                                       If item.boolFileExists Then item.BackColor = item.color
                                                                   Next
 
-                                                                  lblVerifyHashStatusProcessingFile.Text = ""
+                                                                  lblVerifyHashStatusProcessingFile.Visible = False
                                                                   verifyIndividualFilesAllFilesProgressBar.Visible = False
                                                                   lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                                   lblProcessingFileVerify.Text = ""
@@ -1101,7 +1103,7 @@ Public Class Form1
                                                      myInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       verifyHashesListFiles.EndUpdate()
-                                                                      lblVerifyHashStatusProcessingFile.Text = ""
+                                                                      lblVerifyHashStatusProcessingFile.Visible = False
                                                                       verifyIndividualFilesAllFilesProgressBar.Visible = False
                                                                       lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                                       lblProcessingFileVerify.Text = ""
