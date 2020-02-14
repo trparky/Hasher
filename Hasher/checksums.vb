@@ -32,7 +32,7 @@ Public Class checksums
     Private Shared Function getETATime(ByVal sw As Stopwatch, ByVal counter As Long, ByVal counterGoal As Long) As TimeSpan
         If counter = 0 Then Return TimeSpan.Zero
         Dim elapsedMin As Single = CSng(sw.ElapsedMilliseconds) / 1000 / 60
-        Dim minLeft As Single = (elapsedMin / counter) * (counterGoal - counter)
+        Dim minLeft As Single = elapsedMin / counter * (counterGoal - counter)
         Return TimeSpan.FromMinutes(minLeft)
     End Function
 
