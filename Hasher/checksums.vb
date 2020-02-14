@@ -78,6 +78,7 @@ Public Class checksums
                 HashAlgorithm.TransformFinalBlock(byteDataBuffer, 0, intBytesRead)
             End Using
 
+            Array.Clear(byteDataBuffer, 0, byteDataBuffer.Length) ' Clear the Byte Array.
             Return BitConverter.ToString(HashAlgorithm.Hash).ToLower().Replace("-", "") ' Return the hash string.
         End Using
     End Function
