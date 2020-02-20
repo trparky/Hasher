@@ -167,7 +167,7 @@ Class Check_for_Update_Stuff
     ''' <summary>This parses the XML updata data and determines if an update is needed.</summary>
     ''' <param name="xmlData">The XML data from the web site.</param>
     ''' <returns>A Boolean value indicating if the program has been updated or not.</returns>
-    Private Function processUpdateXMLData(ByVal xmlData As String, ByRef remoteVersion As String, ByRef remoteBuild As String) As processUpdateXMLResponse
+    Public Function processUpdateXMLData(ByVal xmlData As String, ByRef remoteVersion As String, ByRef remoteBuild As String) As processUpdateXMLResponse
         Try
             Dim xmlDocument As New XmlDocument() ' First we create an XML Document Object.
             xmlDocument.Load(New StringReader(xmlData)) ' Now we try and parse the XML data.
@@ -194,6 +194,9 @@ Class Check_for_Update_Stuff
                         If shortRemoteBuild < shortBuild Then
                             ' This is weird, the remote build is less than the current build so we return a newerVersionThanWebSite value.
                             Return processUpdateXMLResponse.newerVersionThanWebSite
+                        ElseIf shortRemoteBuild > shortBuild Then
+                            ' We return a newVersion value indicating that there is a new version to download and install.
+                            Return processUpdateXMLResponse.newVersion
                         ElseIf shortRemoteBuild.Equals(shortBuild) Then
                             ' The build numbers match, therefore therefore we return a sameVersion value.
                             Return processUpdateXMLResponse.noUpdateNeeded
@@ -203,8 +206,8 @@ Class Check_for_Update_Stuff
                         Return processUpdateXMLResponse.parseError
                     End If
 
-                    ' We return a newVersion value indicating that there is a new version to download and install.
-                    Return processUpdateXMLResponse.newVersion
+                    ' We return a noUpdateNeeded flag.
+                    Return processUpdateXMLResponse.noUpdateNeeded
                 End If
             End If
         Catch ex As Exception
