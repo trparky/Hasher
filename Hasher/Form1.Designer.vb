@@ -47,15 +47,17 @@ Partial Class Form1
         Me.txtTextToHash = New System.Windows.Forms.TextBox()
         Me.lblTextToHash = New System.Windows.Forms.Label()
         Me.tabHashIndividualFiles = New System.Windows.Forms.TabPage()
+        Me.hashIndividualFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
+        Me.lblIndividualFilesStatus = New System.Windows.Forms.Label()
         Me.lblProcessingFile = New System.Windows.Forms.Label()
+        Me.lblIndividualFilesStatusProcessingFile = New System.Windows.Forms.Label()
+        Me.IndividualFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.hashIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblLine = New System.Windows.Forms.Label()
         Me.lblHashIndividualFilesStep3 = New System.Windows.Forms.Label()
         Me.lblHashIndividualFilesStep2 = New System.Windows.Forms.Label()
-        Me.lblIndividualFilesStatusProcessingFile = New System.Windows.Forms.Label()
         Me.btnIndividualFilesSaveResultsToDisk = New System.Windows.Forms.Button()
         Me.btnIndividualFilesCopyToClipboard = New System.Windows.Forms.Button()
-        Me.IndividualFilesProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.lblIndividualFilesStatus = New System.Windows.Forms.Label()
         Me.btnComputeHash = New System.Windows.Forms.Button()
         Me.radioMD5 = New System.Windows.Forms.RadioButton()
         Me.radioSHA512 = New System.Windows.Forms.RadioButton()
@@ -75,11 +77,13 @@ Partial Class Form1
         Me.btnAddFilesInFolder = New System.Windows.Forms.Button()
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
-        Me.lblProcessingFileVerify = New System.Windows.Forms.Label()
-        Me.lblVerifyFileNameLabel = New System.Windows.Forms.Label()
-        Me.lblVerifyHashStatusProcessingFile = New System.Windows.Forms.Label()
-        Me.VerifyHashProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.verifySavedHashesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.lblVerifyHashStatus = New System.Windows.Forms.Label()
+        Me.lblProcessingFileVerify = New System.Windows.Forms.Label()
+        Me.VerifyHashProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.lblVerifyHashStatusProcessingFile = New System.Windows.Forms.Label()
+        Me.verifyIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.lblVerifyFileNameLabel = New System.Windows.Forms.Label()
         Me.verifyHashesListFiles = New System.Windows.Forms.ListView()
         Me.colFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -104,6 +108,7 @@ Partial Class Form1
         Me.txtFile2 = New System.Windows.Forms.TextBox()
         Me.txtFile1 = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.CompareFilesAllFilesProgress = New System.Windows.Forms.ProgressBar()
         Me.tabCompareAgainstKnownHash = New System.Windows.Forms.TabPage()
         Me.pictureBoxVerifyAgainstResults = New System.Windows.Forms.PictureBox()
         Me.lblCompareFileAgainstKnownHashType = New System.Windows.Forms.Label()
@@ -136,30 +141,31 @@ Partial Class Form1
         Me.lblFileNotFoundColor = New System.Windows.Forms.Label()
         Me.lblNotValidColor = New System.Windows.Forms.Label()
         Me.lblValidColor = New System.Windows.Forms.Label()
+        Me.btnPerformBenchmark = New System.Windows.Forms.Button()
+        Me.chkUseCommasInNumbers = New System.Windows.Forms.CheckBox()
+        Me.taskPriority = New System.Windows.Forms.ComboBox()
+        Me.lblTaskPriorityLabel = New System.Windows.Forms.Label()
+        Me.chkCheckForUpdates = New System.Windows.Forms.CheckBox()
+        Me.chkAutoAddExtension = New System.Windows.Forms.CheckBox()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.CompareFilesAllFilesProgress = New System.Windows.Forms.ProgressBar()
-        Me.hashIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.verifyIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.btnPerformBenchmark = New System.Windows.Forms.Button()
-        Me.chkUseCommasInNumbers = New System.Windows.Forms.CheckBox()
-        Me.lblTaskPriorityLabel = New System.Windows.Forms.Label()
-        Me.taskPriority = New System.Windows.Forms.ComboBox()
-        Me.chkCheckForUpdates = New System.Windows.Forms.CheckBox()
-        Me.chkAutoAddExtension = New System.Windows.Forms.CheckBox()
+        Me.compareFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
         Me.tabHashIndividualFiles.SuspendLayout()
+        Me.hashIndividualFilesTableLayoutControl.SuspendLayout()
         Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
+        Me.verifySavedHashesTableLayoutControl.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
         Me.tabCompareAgainstKnownHash.SuspendLayout()
         CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabSettings.SuspendLayout()
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.compareFilesTableLayoutControl.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -428,15 +434,12 @@ Partial Class Form1
         'tabHashIndividualFiles
         '
         Me.tabHashIndividualFiles.BackColor = System.Drawing.SystemColors.Control
-        Me.tabHashIndividualFiles.Controls.Add(Me.lblProcessingFile)
+        Me.tabHashIndividualFiles.Controls.Add(Me.hashIndividualFilesTableLayoutControl)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblLine)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep3)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep2)
-        Me.tabHashIndividualFiles.Controls.Add(Me.lblIndividualFilesStatusProcessingFile)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnIndividualFilesSaveResultsToDisk)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnIndividualFilesCopyToClipboard)
-        Me.tabHashIndividualFiles.Controls.Add(Me.IndividualFilesProgressBar)
-        Me.tabHashIndividualFiles.Controls.Add(Me.lblIndividualFilesStatus)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnComputeHash)
         Me.tabHashIndividualFiles.Controls.Add(Me.radioMD5)
         Me.tabHashIndividualFiles.Controls.Add(Me.radioSHA512)
@@ -449,22 +452,80 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Controls.Add(Me.btnRemoveAllFiles)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddFilesInFolder)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddIndividualFiles)
-        Me.tabHashIndividualFiles.Controls.Add(Me.hashIndividualFilesAllFilesProgressBar)
         Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabHashIndividualFiles.Name = "tabHashIndividualFiles"
         Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 363)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
         '
+        'hashIndividualFilesTableLayoutControl
+        '
+        Me.hashIndividualFilesTableLayoutControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.hashIndividualFilesTableLayoutControl.ColumnCount = 2
+        Me.hashIndividualFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.hashIndividualFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblIndividualFilesStatus, 0, 0)
+        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblProcessingFile, 0, 2)
+        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblIndividualFilesStatusProcessingFile, 1, 0)
+        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.IndividualFilesProgressBar, 0, 1)
+        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.hashIndividualFilesAllFilesProgressBar, 1, 1)
+        Me.hashIndividualFilesTableLayoutControl.Location = New System.Drawing.Point(237, 260)
+        Me.hashIndividualFilesTableLayoutControl.Name = "hashIndividualFilesTableLayoutControl"
+        Me.hashIndividualFilesTableLayoutControl.RowCount = 3
+        Me.hashIndividualFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.hashIndividualFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.hashIndividualFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.hashIndividualFilesTableLayoutControl.Size = New System.Drawing.Size(800, 66)
+        Me.hashIndividualFilesTableLayoutControl.TabIndex = 24
+        '
+        'lblIndividualFilesStatus
+        '
+        Me.lblIndividualFilesStatus.AutoSize = True
+        Me.lblIndividualFilesStatus.Location = New System.Drawing.Point(3, 0)
+        Me.lblIndividualFilesStatus.Name = "lblIndividualFilesStatus"
+        Me.lblIndividualFilesStatus.Size = New System.Drawing.Size(140, 13)
+        Me.lblIndividualFilesStatus.TabIndex = 13
+        Me.lblIndividualFilesStatus.Text = "(No Background Processes)"
+        '
         'lblProcessingFile
         '
         Me.lblProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblProcessingFile.AutoSize = True
-        Me.lblProcessingFile.Location = New System.Drawing.Point(237, 302)
+        Me.lblProcessingFile.Location = New System.Drawing.Point(3, 53)
         Me.lblProcessingFile.Name = "lblProcessingFile"
         Me.lblProcessingFile.Size = New System.Drawing.Size(39, 13)
         Me.lblProcessingFile.TabIndex = 22
         Me.lblProcessingFile.Text = "Label9"
+        '
+        'lblIndividualFilesStatusProcessingFile
+        '
+        Me.lblIndividualFilesStatusProcessingFile.AutoSize = True
+        Me.lblIndividualFilesStatusProcessingFile.Location = New System.Drawing.Point(403, 0)
+        Me.lblIndividualFilesStatusProcessingFile.Name = "lblIndividualFilesStatusProcessingFile"
+        Me.lblIndividualFilesStatusProcessingFile.Size = New System.Drawing.Size(37, 13)
+        Me.lblIndividualFilesStatusProcessingFile.TabIndex = 17
+        Me.lblIndividualFilesStatusProcessingFile.Text = "fghfgff"
+        '
+        'IndividualFilesProgressBar
+        '
+        Me.IndividualFilesProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.IndividualFilesProgressBar.Location = New System.Drawing.Point(3, 19)
+        Me.IndividualFilesProgressBar.Name = "IndividualFilesProgressBar"
+        Me.IndividualFilesProgressBar.Size = New System.Drawing.Size(394, 27)
+        Me.IndividualFilesProgressBar.TabIndex = 14
+        '
+        'hashIndividualFilesAllFilesProgressBar
+        '
+        Me.hashIndividualFilesAllFilesProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.hashIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(403, 19)
+        Me.hashIndividualFilesAllFilesProgressBar.Name = "hashIndividualFilesAllFilesProgressBar"
+        Me.hashIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(394, 27)
+        Me.hashIndividualFilesAllFilesProgressBar.TabIndex = 23
         '
         'lblLine
         '
@@ -496,16 +557,6 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep2.TabIndex = 18
         Me.lblHashIndividualFilesStep2.Text = "Step 2: Select your hash type."
         '
-        'lblIndividualFilesStatusProcessingFile
-        '
-        Me.lblIndividualFilesStatusProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblIndividualFilesStatusProcessingFile.AutoSize = True
-        Me.lblIndividualFilesStatusProcessingFile.Location = New System.Drawing.Point(687, 260)
-        Me.lblIndividualFilesStatusProcessingFile.Name = "lblIndividualFilesStatusProcessingFile"
-        Me.lblIndividualFilesStatusProcessingFile.Size = New System.Drawing.Size(37, 13)
-        Me.lblIndividualFilesStatusProcessingFile.TabIndex = 17
-        Me.lblIndividualFilesStatusProcessingFile.Text = "fghfgff"
-        '
         'btnIndividualFilesSaveResultsToDisk
         '
         Me.btnIndividualFilesSaveResultsToDisk.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -527,25 +578,6 @@ Partial Class Form1
         Me.btnIndividualFilesCopyToClipboard.TabIndex = 15
         Me.btnIndividualFilesCopyToClipboard.Text = "Copy Results to Clipboard"
         Me.btnIndividualFilesCopyToClipboard.UseVisualStyleBackColor = True
-        '
-        'IndividualFilesProgressBar
-        '
-        Me.IndividualFilesProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.IndividualFilesProgressBar.Location = New System.Drawing.Point(237, 276)
-        Me.IndividualFilesProgressBar.Name = "IndividualFilesProgressBar"
-        Me.IndividualFilesProgressBar.Size = New System.Drawing.Size(800, 23)
-        Me.IndividualFilesProgressBar.TabIndex = 14
-        '
-        'lblIndividualFilesStatus
-        '
-        Me.lblIndividualFilesStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblIndividualFilesStatus.AutoSize = True
-        Me.lblIndividualFilesStatus.Location = New System.Drawing.Point(237, 260)
-        Me.lblIndividualFilesStatus.Name = "lblIndividualFilesStatus"
-        Me.lblIndividualFilesStatus.Size = New System.Drawing.Size(140, 13)
-        Me.lblIndividualFilesStatus.TabIndex = 13
-        Me.lblIndividualFilesStatus.Text = "(No Background Processes)"
         '
         'btnComputeHash
         '
@@ -713,29 +745,84 @@ Partial Class Form1
         'tabVerifySavedHashes
         '
         Me.tabVerifySavedHashes.BackColor = System.Drawing.SystemColors.Control
-        Me.tabVerifySavedHashes.Controls.Add(Me.lblProcessingFileVerify)
+        Me.tabVerifySavedHashes.Controls.Add(Me.verifySavedHashesTableLayoutControl)
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyFileNameLabel)
-        Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyHashStatusProcessingFile)
-        Me.tabVerifySavedHashes.Controls.Add(Me.VerifyHashProgressBar)
-        Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyHashStatus)
         Me.tabVerifySavedHashes.Controls.Add(Me.verifyHashesListFiles)
         Me.tabVerifySavedHashes.Controls.Add(Me.btnOpenExistingHashFile)
-        Me.tabVerifySavedHashes.Controls.Add(Me.verifyIndividualFilesAllFilesProgressBar)
         Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
         Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 363)
         Me.tabVerifySavedHashes.TabIndex = 3
         Me.tabVerifySavedHashes.Text = "Verify Saved Hashes"
         '
+        'verifySavedHashesTableLayoutControl
+        '
+        Me.verifySavedHashesTableLayoutControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.verifySavedHashesTableLayoutControl.ColumnCount = 2
+        Me.verifySavedHashesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.verifySavedHashesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashStatus, 0, 0)
+        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblProcessingFileVerify, 0, 2)
+        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.VerifyHashProgressBar, 0, 1)
+        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashStatusProcessingFile, 1, 0)
+        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.verifyIndividualFilesAllFilesProgressBar, 1, 1)
+        Me.verifySavedHashesTableLayoutControl.Location = New System.Drawing.Point(160, 294)
+        Me.verifySavedHashesTableLayoutControl.Name = "verifySavedHashesTableLayoutControl"
+        Me.verifySavedHashesTableLayoutControl.RowCount = 3
+        Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.verifySavedHashesTableLayoutControl.Size = New System.Drawing.Size(877, 66)
+        Me.verifySavedHashesTableLayoutControl.TabIndex = 25
+        '
+        'lblVerifyHashStatus
+        '
+        Me.lblVerifyHashStatus.AutoSize = True
+        Me.lblVerifyHashStatus.Location = New System.Drawing.Point(3, 0)
+        Me.lblVerifyHashStatus.Name = "lblVerifyHashStatus"
+        Me.lblVerifyHashStatus.Size = New System.Drawing.Size(140, 13)
+        Me.lblVerifyHashStatus.TabIndex = 15
+        Me.lblVerifyHashStatus.Text = "(No Background Processes)"
+        '
         'lblProcessingFileVerify
         '
         Me.lblProcessingFileVerify.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblProcessingFileVerify.AutoSize = True
-        Me.lblProcessingFileVerify.Location = New System.Drawing.Point(157, 345)
+        Me.lblProcessingFileVerify.Location = New System.Drawing.Point(3, 53)
         Me.lblProcessingFileVerify.Name = "lblProcessingFileVerify"
         Me.lblProcessingFileVerify.Size = New System.Drawing.Size(39, 13)
         Me.lblProcessingFileVerify.TabIndex = 20
         Me.lblProcessingFileVerify.Text = "Label9"
+        '
+        'VerifyHashProgressBar
+        '
+        Me.VerifyHashProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.VerifyHashProgressBar.Location = New System.Drawing.Point(3, 19)
+        Me.VerifyHashProgressBar.Name = "VerifyHashProgressBar"
+        Me.VerifyHashProgressBar.Size = New System.Drawing.Size(432, 27)
+        Me.VerifyHashProgressBar.TabIndex = 16
+        '
+        'lblVerifyHashStatusProcessingFile
+        '
+        Me.lblVerifyHashStatusProcessingFile.AutoSize = True
+        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(441, 0)
+        Me.lblVerifyHashStatusProcessingFile.Name = "lblVerifyHashStatusProcessingFile"
+        Me.lblVerifyHashStatusProcessingFile.Size = New System.Drawing.Size(37, 13)
+        Me.lblVerifyHashStatusProcessingFile.TabIndex = 18
+        Me.lblVerifyHashStatusProcessingFile.Text = "dfgdfd"
+        '
+        'verifyIndividualFilesAllFilesProgressBar
+        '
+        Me.verifyIndividualFilesAllFilesProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.verifyIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(441, 19)
+        Me.verifyIndividualFilesAllFilesProgressBar.Name = "verifyIndividualFilesAllFilesProgressBar"
+        Me.verifyIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(433, 27)
+        Me.verifyIndividualFilesAllFilesProgressBar.TabIndex = 24
         '
         'lblVerifyFileNameLabel
         '
@@ -745,35 +832,6 @@ Partial Class Form1
         Me.lblVerifyFileNameLabel.Size = New System.Drawing.Size(207, 13)
         Me.lblVerifyFileNameLabel.TabIndex = 19
         Me.lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
-        '
-        'lblVerifyHashStatusProcessingFile
-        '
-        Me.lblVerifyHashStatusProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblVerifyHashStatusProcessingFile.AutoSize = True
-        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(677, 303)
-        Me.lblVerifyHashStatusProcessingFile.Name = "lblVerifyHashStatusProcessingFile"
-        Me.lblVerifyHashStatusProcessingFile.Size = New System.Drawing.Size(37, 13)
-        Me.lblVerifyHashStatusProcessingFile.TabIndex = 18
-        Me.lblVerifyHashStatusProcessingFile.Text = "dfgdfd"
-        '
-        'VerifyHashProgressBar
-        '
-        Me.VerifyHashProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.VerifyHashProgressBar.Location = New System.Drawing.Point(157, 319)
-        Me.VerifyHashProgressBar.Name = "VerifyHashProgressBar"
-        Me.VerifyHashProgressBar.Size = New System.Drawing.Size(880, 23)
-        Me.VerifyHashProgressBar.TabIndex = 16
-        '
-        'lblVerifyHashStatus
-        '
-        Me.lblVerifyHashStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblVerifyHashStatus.AutoSize = True
-        Me.lblVerifyHashStatus.Location = New System.Drawing.Point(157, 303)
-        Me.lblVerifyHashStatus.Name = "lblVerifyHashStatus"
-        Me.lblVerifyHashStatus.Size = New System.Drawing.Size(140, 13)
-        Me.lblVerifyHashStatus.TabIndex = 15
-        Me.lblVerifyHashStatus.Text = "(No Background Processes)"
         '
         'verifyHashesListFiles
         '
@@ -785,7 +843,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.HideSelection = False
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
-        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 272)
+        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 260)
         Me.verifyHashesListFiles.TabIndex = 6
         Me.verifyHashesListFiles.UseCompatibleStateImageBehavior = False
         Me.verifyHashesListFiles.View = System.Windows.Forms.View.Details
@@ -823,10 +881,9 @@ Partial Class Form1
         'tabCompareFiles
         '
         Me.tabCompareFiles.BackColor = System.Drawing.SystemColors.Control
+        Me.tabCompareFiles.Controls.Add(Me.compareFilesTableLayoutControl)
         Me.tabCompareFiles.Controls.Add(Me.lblFile2Hash)
         Me.tabCompareFiles.Controls.Add(Me.lblFile1Hash)
-        Me.tabCompareFiles.Controls.Add(Me.compareFilesProgressBar)
-        Me.tabCompareFiles.Controls.Add(Me.lblCompareFilesStatus)
         Me.tabCompareFiles.Controls.Add(Me.btnCompareFiles)
         Me.tabCompareFiles.Controls.Add(Me.Label6)
         Me.tabCompareFiles.Controls.Add(Me.compareRadioMD5)
@@ -840,7 +897,6 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.txtFile2)
         Me.tabCompareFiles.Controls.Add(Me.txtFile1)
         Me.tabCompareFiles.Controls.Add(Me.Label4)
-        Me.tabCompareFiles.Controls.Add(Me.CompareFilesAllFilesProgress)
         Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareFiles.Name = "tabCompareFiles"
         Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 363)
@@ -867,17 +923,18 @@ Partial Class Form1
         '
         'compareFilesProgressBar
         '
-        Me.compareFilesProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.compareFilesProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.compareFilesProgressBar.Location = New System.Drawing.Point(166, 115)
+        Me.compareFilesProgressBar.Location = New System.Drawing.Point(3, 19)
         Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
-        Me.compareFilesProgressBar.Size = New System.Drawing.Size(861, 23)
+        Me.compareFilesProgressBar.Size = New System.Drawing.Size(429, 29)
         Me.compareFilesProgressBar.TabIndex = 31
         '
         'lblCompareFilesStatus
         '
         Me.lblCompareFilesStatus.AutoSize = True
-        Me.lblCompareFilesStatus.Location = New System.Drawing.Point(166, 99)
+        Me.lblCompareFilesStatus.Location = New System.Drawing.Point(3, 0)
         Me.lblCompareFilesStatus.Name = "lblCompareFilesStatus"
         Me.lblCompareFilesStatus.Size = New System.Drawing.Size(140, 13)
         Me.lblCompareFilesStatus.TabIndex = 30
@@ -1013,6 +1070,16 @@ Partial Class Form1
         Me.Label4.Size = New System.Drawing.Size(46, 13)
         Me.Label4.TabIndex = 0
         Me.Label4.Text = "File #1"
+        '
+        'CompareFilesAllFilesProgress
+        '
+        Me.CompareFilesAllFilesProgress.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CompareFilesAllFilesProgress.Location = New System.Drawing.Point(438, 19)
+        Me.CompareFilesAllFilesProgress.Name = "CompareFilesAllFilesProgress"
+        Me.CompareFilesAllFilesProgress.Size = New System.Drawing.Size(430, 29)
+        Me.CompareFilesAllFilesProgress.TabIndex = 34
         '
         'tabCompareAgainstKnownHash
         '
@@ -1350,11 +1417,6 @@ Partial Class Form1
         Me.lblValidColor.Size = New System.Drawing.Size(100, 23)
         Me.lblValidColor.TabIndex = 10
         '
-        'OpenFileDialog
-        '
-        Me.OpenFileDialog.Multiselect = True
-        Me.OpenFileDialog.Title = "Add Files to List..."
-        '
         'btnPerformBenchmark
         '
         Me.btnPerformBenchmark.Location = New System.Drawing.Point(504, 158)
@@ -1374,40 +1436,6 @@ Partial Class Form1
         Me.chkUseCommasInNumbers.Text = "Use commas in numbers (ex. 2,000)"
         Me.chkUseCommasInNumbers.UseVisualStyleBackColor = True
         '
-        'hashIndividualFilesAllFilesProgressBar
-        '
-        Me.hashIndividualFilesAllFilesProgressBar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.hashIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(904, 260)
-        Me.hashIndividualFilesAllFilesProgressBar.Name = "hashIndividualFilesAllFilesProgressBar"
-        Me.hashIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(133, 10)
-        Me.hashIndividualFilesAllFilesProgressBar.TabIndex = 23
-        '
-        'verifyIndividualFilesAllFilesProgressBar
-        '
-        Me.verifyIndividualFilesAllFilesProgressBar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.verifyIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(904, 303)
-        Me.verifyIndividualFilesAllFilesProgressBar.Name = "verifyIndividualFilesAllFilesProgressBar"
-        Me.verifyIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(133, 10)
-        Me.verifyIndividualFilesAllFilesProgressBar.TabIndex = 24
-        '
-        'CompareFilesAllFilesProgress
-        '
-        Me.CompareFilesAllFilesProgress.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CompareFilesAllFilesProgress.Location = New System.Drawing.Point(894, 99)
-        Me.CompareFilesAllFilesProgress.Name = "CompareFilesAllFilesProgress"
-        Me.CompareFilesAllFilesProgress.Size = New System.Drawing.Size(133, 10)
-        Me.CompareFilesAllFilesProgress.TabIndex = 34
-        '
-        'lblTaskPriorityLabel
-        '
-        Me.lblTaskPriorityLabel.AutoSize = True
-        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(501, 190)
-        Me.lblTaskPriorityLabel.Name = "lblTaskPriorityLabel"
-        Me.lblTaskPriorityLabel.Size = New System.Drawing.Size(150, 13)
-        Me.lblTaskPriorityLabel.TabIndex = 30
-        Me.lblTaskPriorityLabel.Text = "Task Priority (Default: Highest)"
-        Me.ToolTip.SetToolTip(Me.lblTaskPriorityLabel, "This sets the priority of the task relative to everything else that's running on your computer.")
-        '
         'taskPriority
         '
         Me.taskPriority.FormattingEnabled = True
@@ -1418,6 +1446,16 @@ Partial Class Form1
         Me.taskPriority.TabIndex = 31
         Me.taskPriority.Text = "Highest"
         Me.ToolTip.SetToolTip(Me.taskPriority, "This sets the priority of the task relative to everything else that's running on your computer.")
+        '
+        'lblTaskPriorityLabel
+        '
+        Me.lblTaskPriorityLabel.AutoSize = True
+        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(501, 190)
+        Me.lblTaskPriorityLabel.Name = "lblTaskPriorityLabel"
+        Me.lblTaskPriorityLabel.Size = New System.Drawing.Size(150, 13)
+        Me.lblTaskPriorityLabel.TabIndex = 30
+        Me.lblTaskPriorityLabel.Text = "Task Priority (Default: Highest)"
+        Me.ToolTip.SetToolTip(Me.lblTaskPriorityLabel, "This sets the priority of the task relative to everything else that's running on your computer.")
         '
         'chkCheckForUpdates
         '
@@ -1434,11 +1472,34 @@ Partial Class Form1
         Me.chkAutoAddExtension.AutoSize = True
         Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 244)
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
-        Me.chkAutoAddExtension.Size = New System.Drawing.Size(398, 17)
+        Me.chkAutoAddExtension.Size = New System.Drawing.Size(520, 17)
         Me.chkAutoAddExtension.TabIndex = 33
         Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk (Highly Recommended!!!)"
         Me.chkAutoAddExtension.UseVisualStyleBackColor = True
         Me.ToolTip.SetToolTip(Me.chkAutoAddExtension, "Enabling this option automatically tacks on the appropriate file extension when saving checksum data to disk.")
+        '
+        'OpenFileDialog
+        '
+        Me.OpenFileDialog.Multiselect = True
+        Me.OpenFileDialog.Title = "Add Files to List..."
+        '
+        'compareFilesTableLayoutControl
+        '
+        Me.compareFilesTableLayoutControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.compareFilesTableLayoutControl.ColumnCount = 2
+        Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.compareFilesTableLayoutControl.Controls.Add(Me.lblCompareFilesStatus, 0, 0)
+        Me.compareFilesTableLayoutControl.Controls.Add(Me.compareFilesProgressBar, 0, 1)
+        Me.compareFilesTableLayoutControl.Controls.Add(Me.CompareFilesAllFilesProgress, 1, 1)
+        Me.compareFilesTableLayoutControl.Location = New System.Drawing.Point(166, 99)
+        Me.compareFilesTableLayoutControl.Name = "compareFilesTableLayoutControl"
+        Me.compareFilesTableLayoutControl.RowCount = 2
+        Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 31.37255!))
+        Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 68.62745!))
+        Me.compareFilesTableLayoutControl.Size = New System.Drawing.Size(871, 51)
+        Me.compareFilesTableLayoutControl.TabIndex = 35
         '
         'Form1
         '
@@ -1457,9 +1518,13 @@ Partial Class Form1
         Me.tabHashText.PerformLayout()
         Me.tabHashIndividualFiles.ResumeLayout(False)
         Me.tabHashIndividualFiles.PerformLayout()
+        Me.hashIndividualFilesTableLayoutControl.ResumeLayout(False)
+        Me.hashIndividualFilesTableLayoutControl.PerformLayout()
         Me.listFilesContextMenu.ResumeLayout(False)
         Me.tabVerifySavedHashes.ResumeLayout(False)
         Me.tabVerifySavedHashes.PerformLayout()
+        Me.verifySavedHashesTableLayoutControl.ResumeLayout(False)
+        Me.verifySavedHashesTableLayoutControl.PerformLayout()
         Me.tabCompareFiles.ResumeLayout(False)
         Me.tabCompareFiles.PerformLayout()
         Me.tabCompareAgainstKnownHash.ResumeLayout(False)
@@ -1468,6 +1533,8 @@ Partial Class Form1
         Me.tabSettings.ResumeLayout(False)
         Me.tabSettings.PerformLayout()
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.compareFilesTableLayoutControl.ResumeLayout(False)
+        Me.compareFilesTableLayoutControl.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1597,4 +1664,7 @@ Partial Class Form1
     Friend WithEvents lblTaskPriorityLabel As Label
     Friend WithEvents chkCheckForUpdates As CheckBox
     Friend WithEvents chkAutoAddExtension As CheckBox
+    Friend WithEvents hashIndividualFilesTableLayoutControl As TableLayoutPanel
+    Friend WithEvents verifySavedHashesTableLayoutControl As TableLayoutPanel
+    Friend WithEvents compareFilesTableLayoutControl As TableLayoutPanel
 End Class
