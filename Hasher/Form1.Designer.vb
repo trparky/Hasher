@@ -516,6 +516,7 @@ Partial Class Form1
         Me.IndividualFilesProgressBar.Name = "IndividualFilesProgressBar"
         Me.IndividualFilesProgressBar.Size = New System.Drawing.Size(394, 27)
         Me.IndividualFilesProgressBar.TabIndex = 14
+        Me.IndividualFilesProgressBar.Visible = False
         '
         'hashIndividualFilesAllFilesProgressBar
         '
@@ -804,6 +805,7 @@ Partial Class Form1
         Me.VerifyHashProgressBar.Name = "VerifyHashProgressBar"
         Me.VerifyHashProgressBar.Size = New System.Drawing.Size(432, 27)
         Me.VerifyHashProgressBar.TabIndex = 16
+        Me.VerifyHashProgressBar.Visible = False
         '
         'lblVerifyHashStatusProcessingFile
         '
@@ -930,6 +932,7 @@ Partial Class Form1
         Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
         Me.compareFilesProgressBar.Size = New System.Drawing.Size(429, 29)
         Me.compareFilesProgressBar.TabIndex = 31
+        Me.compareFilesProgressBar.Visible = False
         '
         'lblCompareFilesStatus
         '

@@ -227,6 +227,7 @@ Public Class Form1
         btnIndividualFilesCopyToClipboard.Enabled = False
         btnIndividualFilesSaveResultsToDisk.Enabled = False
         hashIndividualFilesAllFilesProgressBar.Visible = True
+        IndividualFilesProgressBar.Visible = True
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -344,6 +345,7 @@ Public Class Form1
                                                                       lblIndividualFilesStatusProcessingFile.Visible = False
                                                                       hashIndividualFilesAllFilesProgressBar.Visible = False
                                                                       IndividualFilesProgressBar.Value = 0
+                                                                      IndividualFilesProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       resetHashIndividualFilesProgress()
                                                                       Me.Text = "Hasher"
@@ -386,6 +388,7 @@ Public Class Form1
         hashIndividualFilesAllFilesProgressBar.Visible = False
         lblProcessingFile.Text = ""
         IndividualFilesProgressBar.Value = 0
+        IndividualFilesProgressBar.Visible = False
         myInvoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
     End Sub
 
@@ -830,6 +833,7 @@ Public Class Form1
                                                                 lblIndividualFilesStatusProcessingFile.Text = Nothing
                                                                 lblIndividualFilesStatus.Text = strNoBackgroundProcesses
                                                                 IndividualFilesProgressBar.Value = 0
+                                                                IndividualFilesProgressBar.Visible = False
                                                                 ProgressForm.setTaskbarProgressBarValue(0)
                                                                 btnAddFilesInFolder.Enabled = True
 
@@ -925,6 +929,7 @@ Public Class Form1
                                                      myInvoke(Sub()
                                                                   lblVerifyHashStatus.Text = strReadingHashFileMessage
                                                                   verifyIndividualFilesAllFilesProgressBar.Visible = True
+                                                                  VerifyHashProgressBar.Visible = True
                                                                   verifyHashesListFiles.BeginUpdate()
                                                               End Sub)
 
@@ -1049,6 +1054,7 @@ Public Class Form1
                                                                   lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                                   lblProcessingFileVerify.Text = ""
                                                                   VerifyHashProgressBar.Value = 0
+                                                                  VerifyHashProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
                                                                   Me.Text = "Hasher"
 
@@ -1110,6 +1116,7 @@ Public Class Form1
                                                                       lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                                       lblProcessingFileVerify.Text = ""
                                                                       VerifyHashProgressBar.Value = 0
+                                                                      VerifyHashProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       verifyHashesListFiles.Items.Clear()
                                                                       Me.Text = "Hasher"
@@ -1478,6 +1485,7 @@ Public Class Form1
         txtFile1.Enabled = False
         txtFile2.Enabled = False
         btnCompareFiles.Text = "Abort Processing"
+        compareFilesProgressBar.Visible = True
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -1561,6 +1569,7 @@ Public Class Form1
                                                                   compareRadioSHA512.Enabled = True
                                                                   lblCompareFilesStatus.Text = strNoBackgroundProcesses
                                                                   compareFilesProgressBar.Value = 0
+                                                                  compareFilesProgressBar.Visible = False
                                                                   CompareFilesAllFilesProgress.Value = 0
                                                                   CompareFilesAllFilesProgress.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
@@ -1587,6 +1596,7 @@ Public Class Form1
                                                                       txtFile1.Enabled = True
                                                                       txtFile2.Enabled = True
                                                                       compareFilesProgressBar.Value = 0
+                                                                      compareFilesProgressBar.Visible = False
                                                                       CompareFilesAllFilesProgress.Value = 0
                                                                       CompareFilesAllFilesProgress.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
