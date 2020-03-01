@@ -1497,7 +1497,7 @@ Partial Class Form1
         Me.compareFilesTableLayoutControl.Controls.Add(Me.lblCompareFilesStatus, 0, 0)
         Me.compareFilesTableLayoutControl.Controls.Add(Me.compareFilesProgressBar, 0, 1)
         Me.compareFilesTableLayoutControl.Controls.Add(Me.CompareFilesAllFilesProgress, 1, 1)
-        Me.compareFilesTableLayoutControl.Location = New System.Drawing.Point(166, 99)
+        Me.compareFilesTableLayoutControl.Location = New System.Drawing.Point(166, 105)
         Me.compareFilesTableLayoutControl.Name = "compareFilesTableLayoutControl"
         Me.compareFilesTableLayoutControl.RowCount = 2
         Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 31.37255!))
