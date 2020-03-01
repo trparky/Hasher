@@ -1727,6 +1727,7 @@ Public Class Form1
         txtKnownHash.Enabled = False
         btnCompareAgainstKnownHash.Text = "Abort Processing"
         boolDidWePerformAPreviousHash = True
+        compareAgainstKnownHashProgressBar.Visible = True
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -1771,6 +1772,7 @@ Public Class Form1
                                                                   btnCompareAgainstKnownHash.Enabled = False
                                                                   lblCompareAgainstKnownHashStatus.Text = strNoBackgroundProcesses
                                                                   compareAgainstKnownHashProgressBar.Value = 0
+                                                                  compareAgainstKnownHashProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
                                                                   Me.Text = "Hasher"
 
@@ -1800,6 +1802,7 @@ Public Class Form1
                                                                       txtKnownHash.Enabled = True
                                                                       btnCompareAgainstKnownHash.Text = "Compare File Against Known Hash"
                                                                       compareAgainstKnownHashProgressBar.Value = 0
+                                                                      compareAgainstKnownHashProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       lblCompareFilesStatus.Text = strNoBackgroundProcesses
                                                                       Me.Text = "Hasher"

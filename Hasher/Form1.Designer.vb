@@ -1128,6 +1128,7 @@ Partial Class Form1
         Me.compareAgainstKnownHashProgressBar.Name = "compareAgainstKnownHashProgressBar"
         Me.compareAgainstKnownHashProgressBar.Size = New System.Drawing.Size(861, 23)
         Me.compareAgainstKnownHashProgressBar.TabIndex = 33
+        Me.compareAgainstKnownHashProgressBar.Visible = False
         '
         'lblCompareAgainstKnownHashStatus
         '
