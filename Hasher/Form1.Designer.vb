@@ -91,10 +91,12 @@ Partial Class Form1
         Me.colComputeTime2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.btnOpenExistingHashFile = New System.Windows.Forms.Button()
         Me.tabCompareFiles = New System.Windows.Forms.TabPage()
+        Me.compareFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
+        Me.lblCompareFilesStatus = New System.Windows.Forms.Label()
+        Me.compareFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.CompareFilesAllFilesProgress = New System.Windows.Forms.ProgressBar()
         Me.lblFile2Hash = New System.Windows.Forms.Label()
         Me.lblFile1Hash = New System.Windows.Forms.Label()
-        Me.compareFilesProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.lblCompareFilesStatus = New System.Windows.Forms.Label()
         Me.btnCompareFiles = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.compareRadioMD5 = New System.Windows.Forms.RadioButton()
@@ -108,7 +110,6 @@ Partial Class Form1
         Me.txtFile2 = New System.Windows.Forms.TextBox()
         Me.txtFile1 = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.CompareFilesAllFilesProgress = New System.Windows.Forms.ProgressBar()
         Me.tabCompareAgainstKnownHash = New System.Windows.Forms.TabPage()
         Me.pictureBoxVerifyAgainstResults = New System.Windows.Forms.PictureBox()
         Me.lblCompareFileAgainstKnownHashType = New System.Windows.Forms.Label()
@@ -151,7 +152,6 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.compareFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -161,11 +161,11 @@ Partial Class Form1
         Me.tabVerifySavedHashes.SuspendLayout()
         Me.verifySavedHashesTableLayoutControl.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
+        Me.compareFilesTableLayoutControl.SuspendLayout()
         Me.tabCompareAgainstKnownHash.SuspendLayout()
         CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabSettings.SuspendLayout()
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.compareFilesTableLayoutControl.SuspendLayout()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -905,6 +905,54 @@ Partial Class Form1
         Me.tabCompareFiles.TabIndex = 5
         Me.tabCompareFiles.Text = "Compare Files"
         '
+        'compareFilesTableLayoutControl
+        '
+        Me.compareFilesTableLayoutControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.compareFilesTableLayoutControl.ColumnCount = 2
+        Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.compareFilesTableLayoutControl.Controls.Add(Me.lblCompareFilesStatus, 0, 0)
+        Me.compareFilesTableLayoutControl.Controls.Add(Me.compareFilesProgressBar, 0, 1)
+        Me.compareFilesTableLayoutControl.Controls.Add(Me.CompareFilesAllFilesProgress, 1, 1)
+        Me.compareFilesTableLayoutControl.Location = New System.Drawing.Point(166, 99)
+        Me.compareFilesTableLayoutControl.Name = "compareFilesTableLayoutControl"
+        Me.compareFilesTableLayoutControl.RowCount = 2
+        Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 31.37255!))
+        Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 68.62745!))
+        Me.compareFilesTableLayoutControl.Size = New System.Drawing.Size(871, 51)
+        Me.compareFilesTableLayoutControl.TabIndex = 35
+        '
+        'lblCompareFilesStatus
+        '
+        Me.lblCompareFilesStatus.AutoSize = True
+        Me.lblCompareFilesStatus.Location = New System.Drawing.Point(3, 0)
+        Me.lblCompareFilesStatus.Name = "lblCompareFilesStatus"
+        Me.lblCompareFilesStatus.Size = New System.Drawing.Size(140, 13)
+        Me.lblCompareFilesStatus.TabIndex = 30
+        Me.lblCompareFilesStatus.Text = "(No Background Processes)"
+        '
+        'compareFilesProgressBar
+        '
+        Me.compareFilesProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.compareFilesProgressBar.Location = New System.Drawing.Point(3, 19)
+        Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
+        Me.compareFilesProgressBar.Size = New System.Drawing.Size(429, 29)
+        Me.compareFilesProgressBar.TabIndex = 31
+        Me.compareFilesProgressBar.Visible = False
+        '
+        'CompareFilesAllFilesProgress
+        '
+        Me.CompareFilesAllFilesProgress.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CompareFilesAllFilesProgress.Location = New System.Drawing.Point(438, 19)
+        Me.CompareFilesAllFilesProgress.Name = "CompareFilesAllFilesProgress"
+        Me.CompareFilesAllFilesProgress.Size = New System.Drawing.Size(430, 29)
+        Me.CompareFilesAllFilesProgress.TabIndex = 34
+        '
         'lblFile2Hash
         '
         Me.lblFile2Hash.AutoSize = True
@@ -923,31 +971,11 @@ Partial Class Form1
         Me.lblFile1Hash.TabIndex = 32
         Me.lblFile1Hash.Text = "Label7"
         '
-        'compareFilesProgressBar
-        '
-        Me.compareFilesProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.compareFilesProgressBar.Location = New System.Drawing.Point(3, 19)
-        Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
-        Me.compareFilesProgressBar.Size = New System.Drawing.Size(429, 29)
-        Me.compareFilesProgressBar.TabIndex = 31
-        Me.compareFilesProgressBar.Visible = False
-        '
-        'lblCompareFilesStatus
-        '
-        Me.lblCompareFilesStatus.AutoSize = True
-        Me.lblCompareFilesStatus.Location = New System.Drawing.Point(3, 0)
-        Me.lblCompareFilesStatus.Name = "lblCompareFilesStatus"
-        Me.lblCompareFilesStatus.Size = New System.Drawing.Size(140, 13)
-        Me.lblCompareFilesStatus.TabIndex = 30
-        Me.lblCompareFilesStatus.Text = "(No Background Processes)"
-        '
         'btnCompareFiles
         '
         Me.btnCompareFiles.Location = New System.Drawing.Point(18, 99)
         Me.btnCompareFiles.Name = "btnCompareFiles"
-        Me.btnCompareFiles.Size = New System.Drawing.Size(142, 39)
+        Me.btnCompareFiles.Size = New System.Drawing.Size(142, 48)
         Me.btnCompareFiles.TabIndex = 29
         Me.btnCompareFiles.Text = "Compare Files"
         Me.btnCompareFiles.UseVisualStyleBackColor = True
@@ -1073,16 +1101,6 @@ Partial Class Form1
         Me.Label4.Size = New System.Drawing.Size(46, 13)
         Me.Label4.TabIndex = 0
         Me.Label4.Text = "File #1"
-        '
-        'CompareFilesAllFilesProgress
-        '
-        Me.CompareFilesAllFilesProgress.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CompareFilesAllFilesProgress.Location = New System.Drawing.Point(438, 19)
-        Me.CompareFilesAllFilesProgress.Name = "CompareFilesAllFilesProgress"
-        Me.CompareFilesAllFilesProgress.Size = New System.Drawing.Size(430, 29)
-        Me.CompareFilesAllFilesProgress.TabIndex = 34
         '
         'tabCompareAgainstKnownHash
         '
@@ -1449,7 +1467,8 @@ Partial Class Form1
         Me.taskPriority.Size = New System.Drawing.Size(125, 21)
         Me.taskPriority.TabIndex = 31
         Me.taskPriority.Text = "Highest"
-        Me.ToolTip.SetToolTip(Me.taskPriority, "This sets the priority of the task relative to everything else that's running on your computer.")
+        Me.ToolTip.SetToolTip(Me.taskPriority, "This sets the priority of the task relative to everything else that's running on " &
+        "your computer.")
         '
         'lblTaskPriorityLabel
         '
@@ -1459,7 +1478,8 @@ Partial Class Form1
         Me.lblTaskPriorityLabel.Size = New System.Drawing.Size(150, 13)
         Me.lblTaskPriorityLabel.TabIndex = 30
         Me.lblTaskPriorityLabel.Text = "Task Priority (Default: Highest)"
-        Me.ToolTip.SetToolTip(Me.lblTaskPriorityLabel, "This sets the priority of the task relative to everything else that's running on your computer.")
+        Me.ToolTip.SetToolTip(Me.lblTaskPriorityLabel, "This sets the priority of the task relative to everything else that's running on " &
+        "your computer.")
         '
         'chkCheckForUpdates
         '
@@ -1478,32 +1498,16 @@ Partial Class Form1
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
         Me.chkAutoAddExtension.Size = New System.Drawing.Size(520, 17)
         Me.chkAutoAddExtension.TabIndex = 33
-        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk (Highly Recommended!!!)"
+        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk " &
+    "(Highly Recommended!!!)"
+        Me.ToolTip.SetToolTip(Me.chkAutoAddExtension, "Enabling this option automatically tacks on the appropriate file extension when s" &
+        "aving checksum data to disk.")
         Me.chkAutoAddExtension.UseVisualStyleBackColor = True
-        Me.ToolTip.SetToolTip(Me.chkAutoAddExtension, "Enabling this option automatically tacks on the appropriate file extension when saving checksum data to disk.")
         '
         'OpenFileDialog
         '
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
-        '
-        'compareFilesTableLayoutControl
-        '
-        Me.compareFilesTableLayoutControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.compareFilesTableLayoutControl.ColumnCount = 2
-        Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.compareFilesTableLayoutControl.Controls.Add(Me.lblCompareFilesStatus, 0, 0)
-        Me.compareFilesTableLayoutControl.Controls.Add(Me.compareFilesProgressBar, 0, 1)
-        Me.compareFilesTableLayoutControl.Controls.Add(Me.CompareFilesAllFilesProgress, 1, 1)
-        Me.compareFilesTableLayoutControl.Location = New System.Drawing.Point(166, 105)
-        Me.compareFilesTableLayoutControl.Name = "compareFilesTableLayoutControl"
-        Me.compareFilesTableLayoutControl.RowCount = 2
-        Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 31.37255!))
-        Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 68.62745!))
-        Me.compareFilesTableLayoutControl.Size = New System.Drawing.Size(871, 51)
-        Me.compareFilesTableLayoutControl.TabIndex = 35
         '
         'Form1
         '
@@ -1531,14 +1535,14 @@ Partial Class Form1
         Me.verifySavedHashesTableLayoutControl.PerformLayout()
         Me.tabCompareFiles.ResumeLayout(False)
         Me.tabCompareFiles.PerformLayout()
+        Me.compareFilesTableLayoutControl.ResumeLayout(False)
+        Me.compareFilesTableLayoutControl.PerformLayout()
         Me.tabCompareAgainstKnownHash.ResumeLayout(False)
         Me.tabCompareAgainstKnownHash.PerformLayout()
         CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabSettings.ResumeLayout(False)
         Me.tabSettings.PerformLayout()
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.compareFilesTableLayoutControl.ResumeLayout(False)
-        Me.compareFilesTableLayoutControl.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
