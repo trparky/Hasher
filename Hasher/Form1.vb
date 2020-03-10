@@ -228,6 +228,8 @@ Public Class Form1
         btnIndividualFilesSaveResultsToDisk.Enabled = False
         hashIndividualFilesAllFilesProgressBar.Visible = True
         IndividualFilesProgressBar.Visible = True
+        lblHashIndividualFilesTotalStatus.Visible = True
+        lblIndividualFilesStatus.Visible = True
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -249,6 +251,7 @@ Public Class Form1
                                                                                                          IndividualFilesProgressBar.Value = percentage
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                                             lblHashIndividualFilesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & Math.Round(allBytesPercentage, 2) & "%) has been processed."
                                                                                                          End SyncLock
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
@@ -383,13 +386,14 @@ Public Class Form1
         btnRemoveAllFiles.Enabled = True
         btnRemoveSelectedFiles.Enabled = True
 
-        lblIndividualFilesStatus.Text = strNoBackgroundProcesses
+        lblIndividualFilesStatus.Visible = False
         lblIndividualFilesStatusProcessingFile.Visible = False
         hashIndividualFilesAllFilesProgressBar.Visible = False
         lblProcessingFile.Text = ""
         IndividualFilesProgressBar.Value = 0
         IndividualFilesProgressBar.Visible = False
-        myInvoke(Sub() ProgressForm.setTaskbarProgressBarValue(0))
+        ProgressForm.setTaskbarProgressBarValue(0)
+        lblHashIndividualFilesTotalStatus.Visible = False
     End Sub
 
     Private Function strGetIndividualHashesInStringFormat(strPathOfChecksumFile As String) As String
@@ -924,12 +928,18 @@ Public Class Form1
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim intLineCounter As Integer = 0
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
-                                                     Dim strReadingHashFileMessage As String = "Reading hash file into memory and creating ListView item objects... Please Wait."
+                                                     Dim strReadingHashFileMessage As String = "Reading hash file and creating ListView item objects... Please Wait."
 
                                                      myInvoke(Sub()
+                                                                  lblVerifyHashStatus.Visible = True
                                                                   lblVerifyHashStatus.Text = strReadingHashFileMessage
                                                                   verifyIndividualFilesAllFilesProgressBar.Visible = True
                                                                   VerifyHashProgressBar.Visible = True
+                                                                  lblProcessingFileVerify.Visible = True
+                                                                  lblVerifyHashStatus.Visible = True
+                                                                  lblVerifyHashesTotalStatus.Visible = True
+                                                                  lblVerifyHashesTotalStatus.Text = Nothing
+                                                                  lblVerifyHashStatusProcessingFile.Text = Nothing
                                                                   verifyHashesListFiles.BeginUpdate()
                                                               End Sub)
 
@@ -968,7 +978,6 @@ Public Class Form1
                                                                   verifyHashesListFiles.EndUpdate()
                                                                   Me.Text = "Hasher"
                                                                   If chkSortByFileSizeAfterLoadingHashFile.Checked Then applyFileSizeSortingToVerifyList()
-                                                                  lblVerifyHashStatus.Text = strNoBackgroundProcesses
                                                                   VerifyHashProgressBar.Value = 0
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
                                                                   lblVerifyHashStatusProcessingFile.Visible = True
@@ -1002,17 +1011,18 @@ Public Class Form1
                                                                                                    VerifyHashProgressBar.Value = percentage
                                                                                                    SyncLock threadLockingObject
                                                                                                        allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
+                                                                                                       lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & Math.Round(allBytesPercentage, 2) & "%) have been processed."
                                                                                                    End SyncLock
+                                                                                                   lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                    ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                    verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
-                                                                                                   lblVerifyHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed."
                                                                                                    If boolShowEstimatedTime AndAlso eta <> TimeSpan.Zero Then lblVerifyHashStatus.Text &= " Estimated " & timespanToHMS(eta) & " remaining."
                                                                                                End Sub)
                                                                                   Catch ex As Exception
                                                                                   End Try
                                                                               End Sub
 
-                                                                 myInvoke(Sub() lblProcessingFileVerify.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & ".")
+                                                                 myInvoke(Sub() lblVerifyHashStatus.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & ".")
                                                                  computeStopwatch = Stopwatch.StartNew
 
                                                                  If doChecksumWithAttachedSubRoutine(strFileName, checksumType, strChecksumInFile, subRoutine) Then
@@ -1050,9 +1060,10 @@ Public Class Form1
                                                                   Next
 
                                                                   lblVerifyHashStatusProcessingFile.Visible = False
+                                                                  lblVerifyHashesTotalStatus.Visible = False
                                                                   verifyIndividualFilesAllFilesProgressBar.Visible = False
-                                                                  lblVerifyHashStatus.Text = strNoBackgroundProcesses
-                                                                  lblProcessingFileVerify.Text = ""
+                                                                  lblVerifyHashStatus.Visible = False
+                                                                  lblProcessingFileVerify.Visible = False
                                                                   VerifyHashProgressBar.Value = 0
                                                                   VerifyHashProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
@@ -1113,8 +1124,9 @@ Public Class Form1
                                                                       verifyHashesListFiles.EndUpdate()
                                                                       lblVerifyHashStatusProcessingFile.Visible = False
                                                                       verifyIndividualFilesAllFilesProgressBar.Visible = False
-                                                                      lblVerifyHashStatus.Text = strNoBackgroundProcesses
-                                                                      lblProcessingFileVerify.Text = ""
+                                                                      lblVerifyHashStatus.Visible = False
+                                                                      lblVerifyHashesTotalStatus.Visible = False
+                                                                      lblProcessingFileVerify.Visible = False
                                                                       VerifyHashProgressBar.Value = 0
                                                                       VerifyHashProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)

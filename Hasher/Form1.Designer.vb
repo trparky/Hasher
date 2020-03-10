@@ -152,6 +152,8 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.lblHashIndividualFilesTotalStatus = New System.Windows.Forms.Label()
+        Me.lblVerifyHashesTotalStatus = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -465,11 +467,12 @@ Partial Class Form1
         Me.hashIndividualFilesTableLayoutControl.ColumnCount = 2
         Me.hashIndividualFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.hashIndividualFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblIndividualFilesStatus, 0, 0)
-        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblProcessingFile, 0, 2)
         Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblIndividualFilesStatusProcessingFile, 1, 0)
+        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblProcessingFile, 0, 0)
         Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.IndividualFilesProgressBar, 0, 1)
         Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.hashIndividualFilesAllFilesProgressBar, 1, 1)
+        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblHashIndividualFilesTotalStatus, 1, 2)
+        Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblIndividualFilesStatus, 0, 2)
         Me.hashIndividualFilesTableLayoutControl.Location = New System.Drawing.Point(237, 260)
         Me.hashIndividualFilesTableLayoutControl.Name = "hashIndividualFilesTableLayoutControl"
         Me.hashIndividualFilesTableLayoutControl.RowCount = 3
@@ -481,18 +484,19 @@ Partial Class Form1
         '
         'lblIndividualFilesStatus
         '
+        Me.lblIndividualFilesStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblIndividualFilesStatus.AutoSize = True
-        Me.lblIndividualFilesStatus.Location = New System.Drawing.Point(3, 0)
+        Me.lblIndividualFilesStatus.Location = New System.Drawing.Point(3, 53)
         Me.lblIndividualFilesStatus.Name = "lblIndividualFilesStatus"
         Me.lblIndividualFilesStatus.Size = New System.Drawing.Size(140, 13)
         Me.lblIndividualFilesStatus.TabIndex = 13
         Me.lblIndividualFilesStatus.Text = "(No Background Processes)"
+        Me.lblIndividualFilesStatus.Visible = False
         '
         'lblProcessingFile
         '
-        Me.lblProcessingFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblProcessingFile.AutoSize = True
-        Me.lblProcessingFile.Location = New System.Drawing.Point(3, 53)
+        Me.lblProcessingFile.Location = New System.Drawing.Point(3, 0)
         Me.lblProcessingFile.Name = "lblProcessingFile"
         Me.lblProcessingFile.Size = New System.Drawing.Size(39, 13)
         Me.lblProcessingFile.TabIndex = 22
@@ -763,11 +767,12 @@ Partial Class Form1
         Me.verifySavedHashesTableLayoutControl.ColumnCount = 2
         Me.verifySavedHashesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.verifySavedHashesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashStatus, 0, 0)
-        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblProcessingFileVerify, 0, 2)
         Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.VerifyHashProgressBar, 0, 1)
         Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashStatusProcessingFile, 1, 0)
         Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.verifyIndividualFilesAllFilesProgressBar, 1, 1)
+        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashesTotalStatus, 1, 2)
+        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashStatus, 0, 0)
+        Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblProcessingFileVerify, 0, 2)
         Me.verifySavedHashesTableLayoutControl.Location = New System.Drawing.Point(160, 294)
         Me.verifySavedHashesTableLayoutControl.Name = "verifySavedHashesTableLayoutControl"
         Me.verifySavedHashesTableLayoutControl.RowCount = 3
@@ -785,6 +790,7 @@ Partial Class Form1
         Me.lblVerifyHashStatus.Size = New System.Drawing.Size(140, 13)
         Me.lblVerifyHashStatus.TabIndex = 15
         Me.lblVerifyHashStatus.Text = "(No Background Processes)"
+        Me.lblVerifyHashStatus.Visible = False
         '
         'lblProcessingFileVerify
         '
@@ -1509,6 +1515,28 @@ Partial Class Form1
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
         '
+        'lblHashIndividualFilesTotalStatus
+        '
+        Me.lblHashIndividualFilesTotalStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblHashIndividualFilesTotalStatus.AutoSize = True
+        Me.lblHashIndividualFilesTotalStatus.Location = New System.Drawing.Point(403, 53)
+        Me.lblHashIndividualFilesTotalStatus.Name = "lblHashIndividualFilesTotalStatus"
+        Me.lblHashIndividualFilesTotalStatus.Size = New System.Drawing.Size(45, 13)
+        Me.lblHashIndividualFilesTotalStatus.TabIndex = 24
+        Me.lblHashIndividualFilesTotalStatus.Text = "Label10"
+        Me.lblHashIndividualFilesTotalStatus.Visible = False
+        '
+        'lblVerifyHashesTotalStatus
+        '
+        Me.lblVerifyHashesTotalStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.lblVerifyHashesTotalStatus.AutoSize = True
+        Me.lblVerifyHashesTotalStatus.Location = New System.Drawing.Point(441, 53)
+        Me.lblVerifyHashesTotalStatus.Name = "lblVerifyHashesTotalStatus"
+        Me.lblVerifyHashesTotalStatus.Size = New System.Drawing.Size(45, 13)
+        Me.lblVerifyHashesTotalStatus.TabIndex = 25
+        Me.lblVerifyHashesTotalStatus.Text = "Label10"
+        Me.lblVerifyHashesTotalStatus.Visible = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1675,4 +1703,6 @@ Partial Class Form1
     Friend WithEvents hashIndividualFilesTableLayoutControl As TableLayoutPanel
     Friend WithEvents verifySavedHashesTableLayoutControl As TableLayoutPanel
     Friend WithEvents compareFilesTableLayoutControl As TableLayoutPanel
+    Friend WithEvents lblHashIndividualFilesTotalStatus As Label
+    Friend WithEvents lblVerifyHashesTotalStatus As Label
 End Class
