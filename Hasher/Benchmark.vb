@@ -100,7 +100,7 @@
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New checksums(subRoutine)
-                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType, My.Settings.boolShowEstimatedTime)
+                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
                 Return True
             Else
                 Return False

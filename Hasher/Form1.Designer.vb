@@ -125,7 +125,6 @@ Partial Class Form1
         Me.btnSetBufferSize = New System.Windows.Forms.Button()
         Me.bufferSize = New System.Windows.Forms.NumericUpDown()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.chkShowEstimatedTimeRemaining = New System.Windows.Forms.CheckBox()
         Me.chkUseMilliseconds = New System.Windows.Forms.CheckBox()
         Me.chkSortFileListingAfterAddingFilesToHash = New System.Windows.Forms.CheckBox()
         Me.chkSaveChecksumFilesWithRelativePaths = New System.Windows.Forms.CheckBox()
@@ -1227,7 +1226,6 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.btnSetBufferSize)
         Me.tabSettings.Controls.Add(Me.bufferSize)
         Me.tabSettings.Controls.Add(Me.Label9)
-        Me.tabSettings.Controls.Add(Me.chkShowEstimatedTimeRemaining)
         Me.tabSettings.Controls.Add(Me.chkUseMilliseconds)
         Me.tabSettings.Controls.Add(Me.chkSortFileListingAfterAddingFilesToHash)
         Me.tabSettings.Controls.Add(Me.chkSaveChecksumFilesWithRelativePaths)
@@ -1285,17 +1283,6 @@ Partial Class Form1
         Me.Label9.Text = "Data Buffer Size (In MBs, Default is 2):"
         Me.ToolTip.SetToolTip(Me.Label9, resources.GetString("Label9.ToolTip"))
         '
-        'chkShowEstimatedTimeRemaining
-        '
-        Me.chkShowEstimatedTimeRemaining.AutoSize = True
-        Me.chkShowEstimatedTimeRemaining.Location = New System.Drawing.Point(15, 175)
-        Me.chkShowEstimatedTimeRemaining.Name = "chkShowEstimatedTimeRemaining"
-        Me.chkShowEstimatedTimeRemaining.Size = New System.Drawing.Size(140, 17)
-        Me.chkShowEstimatedTimeRemaining.TabIndex = 17
-        Me.chkShowEstimatedTimeRemaining.Text = "Show estimated time left"
-        Me.ToolTip.SetToolTip(Me.chkShowEstimatedTimeRemaining, "Enabling this option may affect performance.")
-        Me.chkShowEstimatedTimeRemaining.UseVisualStyleBackColor = True
-        '
         'chkUseMilliseconds
         '
         Me.chkUseMilliseconds.AutoSize = True
@@ -1338,7 +1325,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 267)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 244)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1347,7 +1334,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 267)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 244)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1457,7 +1444,7 @@ Partial Class Form1
         'chkUseCommasInNumbers
         '
         Me.chkUseCommasInNumbers.AutoSize = True
-        Me.chkUseCommasInNumbers.Location = New System.Drawing.Point(15, 198)
+        Me.chkUseCommasInNumbers.Location = New System.Drawing.Point(15, 175)
         Me.chkUseCommasInNumbers.Name = "chkUseCommasInNumbers"
         Me.chkUseCommasInNumbers.Size = New System.Drawing.Size(194, 17)
         Me.chkUseCommasInNumbers.TabIndex = 29
@@ -1490,7 +1477,7 @@ Partial Class Form1
         'chkCheckForUpdates
         '
         Me.chkCheckForUpdates.AutoSize = True
-        Me.chkCheckForUpdates.Location = New System.Drawing.Point(15, 221)
+        Me.chkCheckForUpdates.Location = New System.Drawing.Point(15, 198)
         Me.chkCheckForUpdates.Name = "chkCheckForUpdates"
         Me.chkCheckForUpdates.Size = New System.Drawing.Size(261, 17)
         Me.chkCheckForUpdates.TabIndex = 32
@@ -1500,7 +1487,7 @@ Partial Class Form1
         'chkAutoAddExtension
         '
         Me.chkAutoAddExtension.AutoSize = True
-        Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 244)
+        Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 221)
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
         Me.chkAutoAddExtension.Size = New System.Drawing.Size(520, 17)
         Me.chkAutoAddExtension.TabIndex = 33
@@ -1687,7 +1674,6 @@ Partial Class Form1
     Friend WithEvents btnFileNotFoundColor As Button
     Friend WithEvents btnSetNotValidColor As Button
     Friend WithEvents btnSetColorsBackToDefaults As Button
-    Friend WithEvents chkShowEstimatedTimeRemaining As CheckBox
     Friend WithEvents Label9 As Label
     Friend WithEvents bufferSize As NumericUpDown
     Friend WithEvents btnSetBufferSize As Button

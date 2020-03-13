@@ -29,21 +29,12 @@ Public Class checksums
         End If
     End Function
 
-    Private Shared Function getETATime(ByVal sw As Stopwatch, ByVal counter As Long, ByVal counterGoal As Long) As TimeSpan
-        If counter = 0 Then Return TimeSpan.Zero
-        Dim elapsedMin As Single = CSng(sw.ElapsedMilliseconds) / 1000 / 60
-        Dim minLeft As Single = elapsedMin / counter * (counterGoal - counter)
-        Return TimeSpan.FromMinutes(minLeft)
-    End Function
-
-    Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType, boolShowEstimatedTime As Boolean) As String
+    Public Function performFileHash(strFileName As String, intBufferSize As Integer, hashType As checksumType) As String
         Using HashAlgorithm As Security.Cryptography.HashAlgorithm = getHashEngine(hashType) ' Get our hashing engine.
             ' Declare some variables.
             Dim byteDataBuffer As Byte()
             Dim intBytesRead As Integer
             Dim longFileSize As Long, longTotalBytesRead As Long = 0
-
-            Dim stopwatch As Stopwatch = Stopwatch.StartNew ' Create a stopwatch for compute timing.
 
             ' Open the file for reading.
             Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
@@ -55,8 +46,8 @@ Public Class checksums
                 End SyncLock
                 longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
-                ' This sub-routine call is to help de-duplicate code.
-                callChecksumStatusUpdatedPluginCode(boolShowEstimatedTime, longFileSize, longTotalBytesRead, stopwatch)
+                ' Call the status updating delegate.
+                checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead)
 
                 ' We're going to loop until all the data for the file we're processing has been read from disk.
                 Do While longTotalBytesRead < longFileSize
@@ -71,7 +62,8 @@ Public Class checksums
                     longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
                     ' This sub-routine call is to help de-duplicate code.
-                    callChecksumStatusUpdatedPluginCode(boolShowEstimatedTime, longFileSize, longTotalBytesRead, stopwatch)
+                    ' Call the status updating delegate.
+                    checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead)
                 Loop
 
                 ' We're done reading the file, we now need to finalize the data in the hasher function.
@@ -82,19 +74,6 @@ Public Class checksums
             Return BitConverter.ToString(HashAlgorithm.Hash).ToLower().Replace("-", "") ' Return the hash string.
         End Using
     End Function
-
-    ' This sub-routine call is to help de-duplicate code. And yes, we use ByRef variables here to reduce data copying performance issues.
-    Private Sub callChecksumStatusUpdatedPluginCode(ByRef boolShowEstimatedTime As Boolean, ByRef longFileSize As Long, ByRef longTotalBytesRead As Long, ByRef stopwatch As Stopwatch)
-        ' We do a check to see if the user wants the estimated time to be shown, if not we don't call the getETATime()
-        ' function at all and pass a TimeSpan.Zero as part of the plugged in function call below.
-        If boolShowEstimatedTime Then
-            ' Update the status on the GUI.
-            checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, getETATime(stopwatch, longTotalBytesRead, longFileSize))
-        Else
-            ' Update the status on the GUI.
-            checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead, TimeSpan.Zero)
-        End If
-    End Sub
 End Class
 
 Public Enum checksumType As Short
