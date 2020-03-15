@@ -341,6 +341,30 @@ Namespace My
                 Me("boolAutoAddExtension") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
+        Public Property roundFileSizes() As Byte
+            Get
+                Return CType(Me("roundFileSizes"),Byte)
+            End Get
+            Set
+                Me("roundFileSizes") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
+        Public Property roundPercentages() As Byte
+            Get
+                Return CType(Me("roundPercentages"),Byte)
+            End Get
+            Set
+                Me("roundPercentages") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

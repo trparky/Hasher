@@ -37,7 +37,7 @@
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                           ProgressBar.Value = percentage
-                                                                                                          lblStatus.Text = strFileNameLine & fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, 2) & "%) have been processed with a " & intBufferSize.ToString & " MB buffer size."
+                                                                                                          lblStatus.Text = strFileNameLine & fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed with a " & intBufferSize.ToString & " MB buffer size."
                                                                                                       End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try

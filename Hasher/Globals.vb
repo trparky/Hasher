@@ -5,10 +5,12 @@ Public Module Globals
     Public ulongAllReadBytes, ulongAllBytes As ULong
     ''' <summary>Protects ulongAllReadBytes and ulongAllBytes from being accessed by two threads at the same time. Use this with a SyncLock code block.</summary>
     Public ReadOnly threadLockingObject As New Object()
+    ''' <summary>Stores the value of the setting for roundNumbers locally.</summary>
+    Public byteRoundFileSizes, byteRoundPercentages As Byte
 
     Public Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
-        Dim shortRoundNumber As Short = If(roundToNearestWholeNumber, 0, 2)
+        Dim shortRoundNumber As Short = If(roundToNearestWholeNumber, 0, byteRoundFileSizes)
 
         If size <= (2 ^ 10) Then
             result = size & " Bytes"

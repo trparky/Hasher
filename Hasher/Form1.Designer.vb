@@ -153,6 +153,12 @@ Partial Class Form1
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.lblHashIndividualFilesTotalStatus = New System.Windows.Forms.Label()
         Me.lblVerifyHashesTotalStatus = New System.Windows.Forms.Label()
+        Me.roundPercentages = New System.Windows.Forms.NumericUpDown()
+        Me.btnSetRoundPercentages = New System.Windows.Forms.Button()
+        Me.lblRoundPercentagesLabel = New System.Windows.Forms.Label()
+        Me.lblRoundFileSizesLabel = New System.Windows.Forms.Label()
+        Me.btnSetRoundFileSizes = New System.Windows.Forms.Button()
+        Me.roundFileSizes = New System.Windows.Forms.NumericUpDown()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -167,6 +173,8 @@ Partial Class Form1
         CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabSettings.SuspendLayout()
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.roundPercentages, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.roundFileSizes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -1248,6 +1256,12 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.lblTaskPriorityLabel)
         Me.tabSettings.Controls.Add(Me.chkCheckForUpdates)
         Me.tabSettings.Controls.Add(Me.chkAutoAddExtension)
+        Me.tabSettings.Controls.Add(Me.btnSetRoundPercentages)
+        Me.tabSettings.Controls.Add(Me.roundPercentages)
+        Me.tabSettings.Controls.Add(Me.lblRoundPercentagesLabel)
+        Me.tabSettings.Controls.Add(Me.btnSetRoundFileSizes)
+        Me.tabSettings.Controls.Add(Me.roundFileSizes)
+        Me.tabSettings.Controls.Add(Me.lblRoundFileSizesLabel)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
@@ -1523,6 +1537,61 @@ Partial Class Form1
         Me.lblVerifyHashesTotalStatus.Text = "Label10"
         Me.lblVerifyHashesTotalStatus.Visible = False
         '
+        'btrSetRoundPercentages
+        '
+        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(723, 248)
+        Me.btnSetRoundPercentages.Name = "btrSetRoundPercentages"
+        Me.btnSetRoundPercentages.Size = New System.Drawing.Size(31, 23)
+        Me.btnSetRoundPercentages.TabIndex = 36
+        Me.btnSetRoundPercentages.Text = "Set"
+        Me.btnSetRoundPercentages.UseVisualStyleBackColor = True
+        '
+        'lblRoundPercentagesLabel
+        '
+        Me.lblRoundPercentagesLabel.AutoSize = True
+        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(501, 245)
+        Me.lblRoundPercentagesLabel.Name = "lblRoundPercentagesLabel"
+        Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(164, 26)
+        Me.lblRoundPercentagesLabel.TabIndex = 34
+        Me.lblRoundPercentagesLabel.Text = "Round percentages to how many" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "numbers after decimal point"
+        '
+        'btnSetRoundFileSizes
+        '
+        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(714, 214)
+        Me.btnSetRoundFileSizes.Name = "btnSetRoundFileSizes"
+        Me.btnSetRoundFileSizes.Size = New System.Drawing.Size(31, 23)
+        Me.btnSetRoundFileSizes.TabIndex = 36
+        Me.btnSetRoundFileSizes.Text = "Set"
+        Me.btnSetRoundFileSizes.UseVisualStyleBackColor = True
+        '
+        'roundFileSizes
+        '
+        Me.roundFileSizes.Location = New System.Drawing.Point(657, 214)
+        Me.roundFileSizes.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
+        Me.roundFileSizes.Name = "roundFileSizes"
+        Me.roundFileSizes.Size = New System.Drawing.Size(50, 20)
+        Me.roundFileSizes.TabIndex = 35
+        Me.roundFileSizes.Value = New Decimal(New Integer() {2, 0, 0, 0})
+        '
+        'lblRoundFileSizesLabel
+        '
+        Me.lblRoundFileSizesLabel.AutoSize = True
+        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(501, 211)
+        Me.lblRoundFileSizesLabel.Name = "lblRoundFileSizesLabel"
+        Me.lblRoundFileSizesLabel.Size = New System.Drawing.Size(144, 26)
+        Me.lblRoundFileSizesLabel.TabIndex = 34
+        Me.lblRoundFileSizesLabel.Text = "Round file sizes to how many" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "numbers after decimal point"
+        '
+        'roundPercentages
+        '
+        Me.roundPercentages.Location = New System.Drawing.Point(667, 248)
+        Me.roundPercentages.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
+        Me.roundPercentages.Name = "roundPercentages"
+        Me.roundPercentages.Size = New System.Drawing.Size(50, 20)
+        Me.roundPercentages.TabIndex = 35
+        Me.roundPercentages.Value = New Decimal(New Integer() {4, 0, 0, 0})
+        Me.roundPercentages.Value = 2
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1557,6 +1626,8 @@ Partial Class Form1
         Me.tabSettings.ResumeLayout(False)
         Me.tabSettings.PerformLayout()
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.roundPercentages, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.roundFileSizes, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1690,4 +1761,10 @@ Partial Class Form1
     Friend WithEvents compareFilesTableLayoutControl As TableLayoutPanel
     Friend WithEvents lblHashIndividualFilesTotalStatus As Label
     Friend WithEvents lblVerifyHashesTotalStatus As Label
+    Friend WithEvents btnSetRoundPercentages As Button
+    Friend WithEvents roundPercentages As NumericUpDown
+    Friend WithEvents lblRoundPercentagesLabel As Label
+    Friend WithEvents btnSetRoundFileSizes As Button
+    Friend WithEvents roundFileSizes As NumericUpDown
+    Friend WithEvents lblRoundFileSizesLabel As Label
 End Class
