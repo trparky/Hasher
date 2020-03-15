@@ -1325,7 +1325,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 244)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 257)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1334,7 +1334,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 244)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 257)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1489,10 +1489,9 @@ Partial Class Form1
         Me.chkAutoAddExtension.AutoSize = True
         Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 221)
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
-        Me.chkAutoAddExtension.Size = New System.Drawing.Size(520, 17)
+        Me.chkAutoAddExtension.Size = New System.Drawing.Size(398, 30)
         Me.chkAutoAddExtension.TabIndex = 33
-        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk " &
-    "(Highly Recommended!!!)"
+        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Highly Recommended!!!)"
         Me.ToolTip.SetToolTip(Me.chkAutoAddExtension, "Enabling this option automatically tacks on the appropriate file extension when s" &
         "aving checksum data to disk.")
         Me.chkAutoAddExtension.UseVisualStyleBackColor = True
