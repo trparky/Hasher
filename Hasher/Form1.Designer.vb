@@ -1537,10 +1537,10 @@ Partial Class Form1
         Me.lblVerifyHashesTotalStatus.Text = "Label10"
         Me.lblVerifyHashesTotalStatus.Visible = False
         '
-        'btrSetRoundPercentages
+        'btnSetRoundPercentages
         '
-        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(723, 248)
-        Me.btnSetRoundPercentages.Name = "btrSetRoundPercentages"
+        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(750, 254)
+        Me.btnSetRoundPercentages.Name = "btnSetRoundPercentages"
         Me.btnSetRoundPercentages.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundPercentages.TabIndex = 36
         Me.btnSetRoundPercentages.Text = "Set"
@@ -1549,15 +1549,15 @@ Partial Class Form1
         'lblRoundPercentagesLabel
         '
         Me.lblRoundPercentagesLabel.AutoSize = True
-        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(501, 245)
+        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(481, 248)
         Me.lblRoundPercentagesLabel.Name = "lblRoundPercentagesLabel"
-        Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(164, 26)
+        Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(207, 26)
         Me.lblRoundPercentagesLabel.TabIndex = 34
-        Me.lblRoundPercentagesLabel.Text = "Round percentages to how many" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "numbers after decimal point"
+        Me.lblRoundPercentagesLabel.Text = "Round percentages to how many numbers" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "after decimal point (Default: 2)"
         '
         'btnSetRoundFileSizes
         '
-        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(714, 214)
+        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(751, 217)
         Me.btnSetRoundFileSizes.Name = "btnSetRoundFileSizes"
         Me.btnSetRoundFileSizes.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundFileSizes.TabIndex = 36
@@ -1566,7 +1566,7 @@ Partial Class Form1
         '
         'roundFileSizes
         '
-        Me.roundFileSizes.Location = New System.Drawing.Point(657, 214)
+        Me.roundFileSizes.Location = New System.Drawing.Point(694, 217)
         Me.roundFileSizes.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundFileSizes.Name = "roundFileSizes"
         Me.roundFileSizes.Size = New System.Drawing.Size(50, 20)
@@ -1578,19 +1578,18 @@ Partial Class Form1
         Me.lblRoundFileSizesLabel.AutoSize = True
         Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(501, 211)
         Me.lblRoundFileSizesLabel.Name = "lblRoundFileSizesLabel"
-        Me.lblRoundFileSizesLabel.Size = New System.Drawing.Size(144, 26)
+        Me.lblRoundFileSizesLabel.Size = New System.Drawing.Size(187, 26)
         Me.lblRoundFileSizesLabel.TabIndex = 34
-        Me.lblRoundFileSizesLabel.Text = "Round file sizes to how many" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "numbers after decimal point"
+        Me.lblRoundFileSizesLabel.Text = "Round file sizes to how many numbers" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "after decimal point (Default: 2)"
         '
         'roundPercentages
         '
-        Me.roundPercentages.Location = New System.Drawing.Point(667, 248)
+        Me.roundPercentages.Location = New System.Drawing.Point(694, 254)
         Me.roundPercentages.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundPercentages.Name = "roundPercentages"
         Me.roundPercentages.Size = New System.Drawing.Size(50, 20)
         Me.roundPercentages.TabIndex = 35
-        Me.roundPercentages.Value = New Decimal(New Integer() {4, 0, 0, 0})
-        Me.roundPercentages.Value = 2
+        Me.roundPercentages.Value = New Decimal(New Integer() {2, 0, 0, 0})
         '
         'Form1
         '
