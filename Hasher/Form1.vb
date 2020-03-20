@@ -25,6 +25,7 @@ Public Class Form1
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolDidWePerformAPreviousHash As Boolean = False
     Private validColor, notValidColor, fileNotFoundColor As Color
+    Private intCurrentlyActiveTab As Integer = -1
 
     ''' <summary>
     ''' This function works very similar to the Invoke function that's already built into .NET. The only difference
@@ -229,6 +230,7 @@ Public Class Form1
         IndividualFilesProgressBar.Visible = True
         lblHashIndividualFilesTotalStatus.Visible = True
         lblIndividualFilesStatus.Visible = True
+        intCurrentlyActiveTab = 2
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -357,6 +359,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
                                                               End Sub)
                                                  Finally
+                                                     intCurrentlyActiveTab = -1
                                                      SyncLock threadLockingObject
                                                          ulongAllReadBytes = 0
                                                          ulongAllBytes = 0
@@ -902,6 +905,7 @@ Public Class Form1
         strChecksumFileExtension = checksumFileInfo.Extension
         strDirectoryThatContainsTheChecksumFile = checksumFileInfo.DirectoryName
         checksumFileInfo = Nothing
+        intCurrentlyActiveTab = 3
 
         If strChecksumFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
             checksumType = checksumType.md5
@@ -1140,6 +1144,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
                                                               End Sub)
                                                  Finally
+                                                     intCurrentlyActiveTab = -1
                                                      SyncLock threadLockingObject
                                                          ulongAllReadBytes = 0
                                                          ulongAllBytes = 0
@@ -1273,12 +1278,21 @@ Public Class Form1
     End Sub
 
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
+        If e.TabPageIndex = 6 AndAlso intCurrentlyActiveTab <> -1 AndAlso Not TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
+            TabControl1.TabPages(intCurrentlyActiveTab).Text &= " (Currently Active)"
+        ElseIf e.TabPageIndex = intCurrentlyActiveTab AndAlso TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
+            Dim strNewTabText As String = TabControl1.TabPages(intCurrentlyActiveTab).Text.Replace(" (Currently Active)", "")
+            TabControl1.TabPages(intCurrentlyActiveTab).Text = strNewTabText
+        End If
+
         If e.TabPageIndex = 5 Then
             pictureBoxVerifyAgainstResults.Image = Nothing
             ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "")
             txtFileForKnownHash.Text = Nothing
             txtKnownHash.Text = Nothing
             lblCompareFileAgainstKnownHashType.Text = Nothing
+        ElseIf e.TabPageIndex = 6 Or e.TabPageIndex = intCurrentlyActiveTab Then
+            Exit Sub
         End If
 
         If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, do you want to abort?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, strWindowTitle) = MsgBoxResult.No Then
@@ -1498,6 +1512,7 @@ Public Class Form1
         txtFile2.Enabled = False
         btnCompareFiles.Text = "Abort Processing"
         compareFilesProgressBar.Visible = True
+        intCurrentlyActiveTab = 4
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -1626,6 +1641,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
                                                               End Sub)
                                                  Finally
+                                                     intCurrentlyActiveTab = -1
                                                      SyncLock threadLockingObject
                                                          ulongAllReadBytes = 0
                                                          ulongAllBytes = 0
@@ -1739,6 +1755,7 @@ Public Class Form1
         btnCompareAgainstKnownHash.Text = "Abort Processing"
         boolDidWePerformAPreviousHash = True
         compareAgainstKnownHashProgressBar.Visible = True
+        intCurrentlyActiveTab = 5
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -1822,6 +1839,8 @@ Public Class Form1
                                                                   workingThread = Nothing
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strWindowTitle)
                                                               End Sub)
+                                                 Finally
+                                                     intCurrentlyActiveTab = -1
                                                  End Try
                                              End Sub) With {
             .Priority = getThreadPriority(),
