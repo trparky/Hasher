@@ -1291,7 +1291,7 @@ Public Class Form1
             txtFileForKnownHash.Text = Nothing
             txtKnownHash.Text = Nothing
             lblCompareFileAgainstKnownHashType.Text = Nothing
-        ElseIf e.TabPageIndex = 6 Or e.TabPageIndex = intCurrentlyActiveTab Then
+        ElseIf e.TabPageIndex = 0 Or e.TabPageIndex = 6 Or e.TabPageIndex = intCurrentlyActiveTab Then
             Exit Sub
         End If
 
