@@ -81,6 +81,10 @@ Public Class Form1
         Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
     End Function
 
+    Private Function myToString(input As ULong) As String
+        Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
+    End Function
+
     Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate]) As Boolean
         Try
             If IO.File.Exists(strFile) Then
