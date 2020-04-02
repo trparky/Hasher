@@ -249,7 +249,7 @@ Public Class Form1
                                                          ulongAllBytes = 0
                                                      End SyncLock
 
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As ULong)
                                                                                         Try
                                                                                             myInvoke(Sub()
                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
@@ -1013,7 +1013,7 @@ Public Class Form1
                                                              strFileName = item.fileName
 
                                                              If IO.File.Exists(strFileName) Then
-                                                                 subRoutine = Sub(size As Long, totalBytesRead As Long)
+                                                                 subRoutine = Sub(size As Long, totalBytesRead As ULong)
                                                                                   Try
                                                                                       myInvoke(Sub()
                                                                                                    percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
@@ -1548,7 +1548,7 @@ Public Class Form1
                                                      Dim strChecksum2 As String = Nothing
                                                      Dim boolSuccessful As Boolean = False
                                                      Dim percentage, allBytesPercentage As Double
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As ULong)
                                                                                         Try
                                                                                             myInvoke(Sub()
                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
@@ -1780,7 +1780,7 @@ Public Class Form1
 
                                                      Dim strChecksum As String = Nothing
                                                      Dim percentage As Double
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As ULong)
                                                                                         Try
                                                                                             myInvoke(Sub()
                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)

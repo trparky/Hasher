@@ -32,7 +32,7 @@
                                                      Dim percentage As Double
                                                      Dim strChecksum As String = Nothing
                                                      Dim index As Integer = 1
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long, eta As TimeSpan)
+                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As ULong)
                                                                                         Try
                                                                                             Me.Invoke(Sub()
                                                                                                           percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)

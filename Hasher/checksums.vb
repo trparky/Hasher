@@ -34,7 +34,7 @@ Public Class checksums
             ' Declare some variables.
             Dim byteDataBuffer As Byte()
             Dim intBytesRead As Integer
-            Dim longFileSize As Long, longTotalBytesRead As Long = 0
+            Dim longFileSize As Long, longTotalBytesRead As ULong = 0
 
             ' Open the file for reading.
             Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
