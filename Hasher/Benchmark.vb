@@ -100,7 +100,20 @@
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New checksums(subRoutine)
-                strChecksum = checksums.performFileHash(strFile, intBufferSize, checksumType)
+
+                Select Case checksumType
+                    Case checksumType.md5
+                        strChecksum = checksums.performFileHash(strFile, intBufferSize).md5
+                    Case checksumType.sha160
+                        strChecksum = checksums.performFileHash(strFile, intBufferSize).sha160
+                    Case checksumType.sha256
+                        strChecksum = checksums.performFileHash(strFile, intBufferSize).sha256
+                    Case checksumType.sha384
+                        strChecksum = checksums.performFileHash(strFile, intBufferSize).sha384
+                    Case checksumType.sha512
+                        strChecksum = checksums.performFileHash(strFile, intBufferSize).sha512
+                End Select
+
                 Return True
             Else
                 Return False
