@@ -698,7 +698,7 @@ Partial Class Form1
         '
         'colChecksum
         '
-        Me.colChecksum.Text = "Hash/Checksum"
+        Me.colChecksum.Text = "Hash/Checksum (SHA256)"
         Me.colChecksum.Width = 241
         '
         'colComputeTime

@@ -551,22 +551,27 @@ Public Class Form1
 
     Private Sub radioMD5_Click(sender As Object, e As EventArgs) Handles radioMD5.Click
         updateChecksumsInListFiles(checksumType.md5)
+        colChecksum.Text = "Hash/Checksum (MD5)"
     End Sub
 
     Private Sub radioSHA1_Click(sender As Object, e As EventArgs) Handles radioSHA1.Click
         updateChecksumsInListFiles(checksumType.sha160)
+        colChecksum.Text = "Hash/Checksum (SHA1/SHA160)"
     End Sub
 
     Private Sub radioSHA256_Click(sender As Object, e As EventArgs) Handles radioSHA256.Click
         updateChecksumsInListFiles(checksumType.sha256)
+        colChecksum.Text = "Hash/Checksum (SHA256)"
     End Sub
 
     Private Sub radioSHA384_Click(sender As Object, e As EventArgs) Handles radioSHA384.Click
         updateChecksumsInListFiles(checksumType.sha384)
+        colChecksum.Text = "Hash/Checksum (SHA384)"
     End Sub
 
     Private Sub radioSHA512_Click(sender As Object, e As EventArgs) Handles radioSHA512.Click
         updateChecksumsInListFiles(checksumType.sha512)
+        colChecksum.Text = "Hash/Checksum (SHA512)"
     End Sub
 
     Private Shared Function getFileAssociation(ByVal fileExtension As String, ByRef associatedApplication As String) As Boolean
