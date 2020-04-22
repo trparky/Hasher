@@ -753,6 +753,7 @@ Public Class Form1
         bufferSize.Value = My.Settings.shortBufferSize
         btnSetBufferSize.Enabled = False
         roundFileSizes.Value = My.Settings.roundFileSizes
+        roundPercentages.Value = My.Settings.roundPercentages
         byteRoundFileSizes = My.Settings.roundFileSizes
         byteRoundPercentages = My.Settings.roundPercentages
         btnSetRoundFileSizes.Enabled = False
