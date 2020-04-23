@@ -480,7 +480,7 @@ Partial Class Form1
         Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.hashIndividualFilesAllFilesProgressBar, 1, 1)
         Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblHashIndividualFilesTotalStatus, 1, 2)
         Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblIndividualFilesStatus, 0, 2)
-        Me.hashIndividualFilesTableLayoutControl.Location = New System.Drawing.Point(237, 260)
+        Me.hashIndividualFilesTableLayoutControl.Location = New System.Drawing.Point(237, 226)
         Me.hashIndividualFilesTableLayoutControl.Name = "hashIndividualFilesTableLayoutControl"
         Me.hashIndividualFilesTableLayoutControl.RowCount = 3
         Me.hashIndividualFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
@@ -552,28 +552,28 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblHashIndividualFilesStep3.AutoSize = True
         Me.lblHashIndividualFilesStep3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblHashIndividualFilesStep3.Location = New System.Drawing.Point(15, 244)
+        Me.lblHashIndividualFilesStep3.Location = New System.Drawing.Point(15, 205)
         Me.lblHashIndividualFilesStep3.Name = "lblHashIndividualFilesStep3"
-        Me.lblHashIndividualFilesStep3.Size = New System.Drawing.Size(171, 13)
+        Me.lblHashIndividualFilesStep3.Size = New System.Drawing.Size(459, 13)
         Me.lblHashIndividualFilesStep3.TabIndex = 19
-        Me.lblHashIndividualFilesStep3.Text = "Step 3: Compute the hashes."
+        Me.lblHashIndividualFilesStep3.Text = "Step 2: Compute the hashes. (Now computes all five hash types simultaneously)"
         '
         'lblHashIndividualFilesStep2
         '
         Me.lblHashIndividualFilesStep2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblHashIndividualFilesStep2.AutoSize = True
         Me.lblHashIndividualFilesStep2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblHashIndividualFilesStep2.Location = New System.Drawing.Point(15, 208)
+        Me.lblHashIndividualFilesStep2.Location = New System.Drawing.Point(15, 295)
         Me.lblHashIndividualFilesStep2.Name = "lblHashIndividualFilesStep2"
-        Me.lblHashIndividualFilesStep2.Size = New System.Drawing.Size(179, 13)
+        Me.lblHashIndividualFilesStep2.Size = New System.Drawing.Size(345, 13)
         Me.lblHashIndividualFilesStep2.TabIndex = 18
-        Me.lblHashIndividualFilesStep2.Text = "Step 2: Select your hash type."
+        Me.lblHashIndividualFilesStep2.Text = "Step 3: Select your hash type for display and saving to disk"
         '
         'btnIndividualFilesSaveResultsToDisk
         '
         Me.btnIndividualFilesSaveResultsToDisk.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnIndividualFilesSaveResultsToDisk.Enabled = False
-        Me.btnIndividualFilesSaveResultsToDisk.Location = New System.Drawing.Point(237, 337)
+        Me.btnIndividualFilesSaveResultsToDisk.Location = New System.Drawing.Point(237, 334)
         Me.btnIndividualFilesSaveResultsToDisk.Name = "btnIndividualFilesSaveResultsToDisk"
         Me.btnIndividualFilesSaveResultsToDisk.Size = New System.Drawing.Size(216, 23)
         Me.btnIndividualFilesSaveResultsToDisk.TabIndex = 16
@@ -584,7 +584,7 @@ Partial Class Form1
         '
         Me.btnIndividualFilesCopyToClipboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnIndividualFilesCopyToClipboard.Enabled = False
-        Me.btnIndividualFilesCopyToClipboard.Location = New System.Drawing.Point(15, 337)
+        Me.btnIndividualFilesCopyToClipboard.Location = New System.Drawing.Point(15, 334)
         Me.btnIndividualFilesCopyToClipboard.Name = "btnIndividualFilesCopyToClipboard"
         Me.btnIndividualFilesCopyToClipboard.Size = New System.Drawing.Size(216, 23)
         Me.btnIndividualFilesCopyToClipboard.TabIndex = 15
@@ -595,7 +595,7 @@ Partial Class Form1
         '
         Me.btnComputeHash.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnComputeHash.Enabled = False
-        Me.btnComputeHash.Location = New System.Drawing.Point(15, 260)
+        Me.btnComputeHash.Location = New System.Drawing.Point(15, 221)
         Me.btnComputeHash.Name = "btnComputeHash"
         Me.btnComputeHash.Size = New System.Drawing.Size(216, 71)
         Me.btnComputeHash.TabIndex = 12
@@ -606,7 +606,7 @@ Partial Class Form1
         '
         Me.radioMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioMD5.AutoSize = True
-        Me.radioMD5.Location = New System.Drawing.Point(505, 224)
+        Me.radioMD5.Location = New System.Drawing.Point(503, 311)
         Me.radioMD5.Name = "radioMD5"
         Me.radioMD5.Size = New System.Drawing.Size(296, 17)
         Me.radioMD5.TabIndex = 11
@@ -617,7 +617,7 @@ Partial Class Form1
         '
         Me.radioSHA512.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA512.AutoSize = True
-        Me.radioSHA512.Location = New System.Drawing.Point(166, 224)
+        Me.radioSHA512.Location = New System.Drawing.Point(164, 311)
         Me.radioSHA512.Name = "radioSHA512"
         Me.radioSHA512.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA512.TabIndex = 10
@@ -628,7 +628,7 @@ Partial Class Form1
         '
         Me.radioSHA384.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA384.AutoSize = True
-        Me.radioSHA384.Location = New System.Drawing.Point(92, 224)
+        Me.radioSHA384.Location = New System.Drawing.Point(90, 311)
         Me.radioSHA384.Name = "radioSHA384"
         Me.radioSHA384.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA384.TabIndex = 9
@@ -640,7 +640,7 @@ Partial Class Form1
         Me.radioSHA256.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA256.AutoSize = True
         Me.radioSHA256.Checked = True
-        Me.radioSHA256.Location = New System.Drawing.Point(18, 224)
+        Me.radioSHA256.Location = New System.Drawing.Point(16, 311)
         Me.radioSHA256.Name = "radioSHA256"
         Me.radioSHA256.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA256.TabIndex = 8
@@ -652,7 +652,7 @@ Partial Class Form1
         '
         Me.radioSHA1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA1.AutoSize = True
-        Me.radioSHA1.Location = New System.Drawing.Point(240, 224)
+        Me.radioSHA1.Location = New System.Drawing.Point(238, 311)
         Me.radioSHA1.Name = "radioSHA1"
         Me.radioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.radioSHA1.TabIndex = 7
@@ -681,7 +681,7 @@ Partial Class Form1
         Me.listFiles.HideSelection = False
         Me.listFiles.Location = New System.Drawing.Point(160, 20)
         Me.listFiles.Name = "listFiles"
-        Me.listFiles.Size = New System.Drawing.Size(877, 185)
+        Me.listFiles.Size = New System.Drawing.Size(877, 182)
         Me.listFiles.TabIndex = 5
         Me.listFiles.UseCompatibleStateImageBehavior = False
         Me.listFiles.View = System.Windows.Forms.View.Details
