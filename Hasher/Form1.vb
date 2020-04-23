@@ -408,6 +408,7 @@ Public Class Form1
                                                                       btnComputeHash.Text = "Compute Hash"
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       hashIndividualFilesAllFilesProgressBar.Value = 0
+                                                                      btnComputeHash.Enabled = False
                                                                   End If
                                                               End Sub)
                                                  End Try
@@ -1419,9 +1420,9 @@ Public Class Form1
             If String.IsNullOrWhiteSpace(DirectCast(listFiles.SelectedItems(0), myListViewItem).hash) Then e.Cancel = True
 
             If listFiles.SelectedItems.Count = 1 Then
-                CopyHashToClipboardToolStripMenuItem.Text = "Copy Selected Hash to Clipboard"
+                CopyHashToClipboardToolStripMenuItem.Text = " Copy Selected Hash to Clipboard"
             ElseIf listFiles.SelectedItems.Count > 1 Then
-                CopyHashToClipboardToolStripMenuItem.Text = "Copy Selected Hashes to Clipboard"
+                CopyHashToClipboardToolStripMenuItem.Text = " Copy Selected Hashes to Clipboard"
             End If
         End If
     End Sub
