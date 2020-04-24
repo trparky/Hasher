@@ -150,9 +150,11 @@ Public Class Form1
             btnIndividualFilesCopyToClipboard.Enabled = False
             btnIndividualFilesSaveResultsToDisk.Enabled = False
         Else
-            btnComputeHash.Enabled = True
+            Dim intNumberOfItemsWithoutHash As Integer = listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) String.IsNullOrWhiteSpace(item.allTheHashes.sha160)).Count
 
-            If listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) String.IsNullOrWhiteSpace(item.hash)).Count <> listFiles.Items.Count Then
+            btnComputeHash.Enabled = If(intNumberOfItemsWithoutHash > 0, True, False)
+
+            If intNumberOfItemsWithoutHash <> listFiles.Items.Count Then
                 btnIndividualFilesCopyToClipboard.Enabled = True
                 btnIndividualFilesSaveResultsToDisk.Enabled = True
             End If
