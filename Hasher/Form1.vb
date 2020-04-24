@@ -285,7 +285,7 @@ Public Class Form1
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As ULong)
                                                                                         Try
                                                                                             myInvoke(Sub()
-                                                                                                         percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                         percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0) ' This fixes a possible divide by zero exception.
                                                                                                          IndividualFilesProgressBar.Value = percentage
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
@@ -1064,7 +1064,7 @@ Public Class Form1
                                                                  subRoutine = Sub(size As Long, totalBytesRead As ULong)
                                                                                   Try
                                                                                       myInvoke(Sub()
-                                                                                                   percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                   percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0) ' This fixes a possible divide by zero exception.
                                                                                                    VerifyHashProgressBar.Value = percentage
                                                                                                    SyncLock threadLockingObject
                                                                                                        allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
@@ -1602,7 +1602,7 @@ Public Class Form1
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As ULong)
                                                                                         Try
                                                                                             myInvoke(Sub()
-                                                                                                         percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                         percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0) ' This fixes a possible divide by zero exception.
                                                                                                          compareFilesProgressBar.Value = percentage
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
@@ -1836,7 +1836,7 @@ Public Class Form1
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As ULong)
                                                                                         Try
                                                                                             myInvoke(Sub()
-                                                                                                         percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                         percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0) ' This fixes a possible divide by zero exception.
                                                                                                          compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                          ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
                                                                                                          lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed."
