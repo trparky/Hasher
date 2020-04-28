@@ -284,7 +284,7 @@ Partial Class Form1
         Me.btnCopyTextHashResultsToClipboard.Name = "btnCopyTextHashResultsToClipboard"
         Me.btnCopyTextHashResultsToClipboard.Size = New System.Drawing.Size(156, 23)
         Me.btnCopyTextHashResultsToClipboard.TabIndex = 31
-        Me.btnCopyTextHashResultsToClipboard.Text = "Copy Results to Clipboard"
+        Me.btnCopyTextHashResultsToClipboard.Text = "&Copy Results to Clipboard"
         Me.btnCopyTextHashResultsToClipboard.UseVisualStyleBackColor = True
         '
         'txtHashResults
@@ -577,7 +577,7 @@ Partial Class Form1
         Me.btnIndividualFilesSaveResultsToDisk.Name = "btnIndividualFilesSaveResultsToDisk"
         Me.btnIndividualFilesSaveResultsToDisk.Size = New System.Drawing.Size(216, 23)
         Me.btnIndividualFilesSaveResultsToDisk.TabIndex = 16
-        Me.btnIndividualFilesSaveResultsToDisk.Text = "Save Results to Disk ..."
+        Me.btnIndividualFilesSaveResultsToDisk.Text = "&Save Results to Disk ..."
         Me.btnIndividualFilesSaveResultsToDisk.UseVisualStyleBackColor = True
         '
         'btnIndividualFilesCopyToClipboard
@@ -599,7 +599,7 @@ Partial Class Form1
         Me.btnComputeHash.Name = "btnComputeHash"
         Me.btnComputeHash.Size = New System.Drawing.Size(216, 71)
         Me.btnComputeHash.TabIndex = 12
-        Me.btnComputeHash.Text = "Compute Hash"
+        Me.btnComputeHash.Text = "Compute &Hash"
         Me.btnComputeHash.UseVisualStyleBackColor = True
         '
         'radioMD5
@@ -733,7 +733,7 @@ Partial Class Form1
         Me.btnRemoveAllFiles.Name = "btnRemoveAllFiles"
         Me.btnRemoveAllFiles.Size = New System.Drawing.Size(139, 23)
         Me.btnRemoveAllFiles.TabIndex = 3
-        Me.btnRemoveAllFiles.Text = "Remove &All Files"
+        Me.btnRemoveAllFiles.Text = "&Remove All Files"
         Me.btnRemoveAllFiles.UseVisualStyleBackColor = True
         '
         'btnAddFilesInFolder
@@ -742,7 +742,7 @@ Partial Class Form1
         Me.btnAddFilesInFolder.Name = "btnAddFilesInFolder"
         Me.btnAddFilesInFolder.Size = New System.Drawing.Size(139, 23)
         Me.btnAddFilesInFolder.TabIndex = 1
-        Me.btnAddFilesInFolder.Text = "Add File(s) in Folder ..."
+        Me.btnAddFilesInFolder.Text = "&Add File(s) in Folder ..."
         Me.btnAddFilesInFolder.UseVisualStyleBackColor = True
         '
         'btnAddIndividualFiles
