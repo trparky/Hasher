@@ -365,6 +365,18 @@ Namespace My
                 Me("roundPercentages") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0, 0")>  _
+        Public Property windowLocation() As Global.System.Drawing.Point
+            Get
+                Return CType(Me("windowLocation"),Global.System.Drawing.Point)
+            End Get
+            Set
+                Me("windowLocation") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

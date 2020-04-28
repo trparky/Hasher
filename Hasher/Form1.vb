@@ -761,6 +761,7 @@ Public Class Form1
         byteRoundPercentages = My.Settings.roundPercentages
         btnSetRoundFileSizes.Enabled = False
         btnSetRoundPercentages.Enabled = False
+        Me.Location = My.Settings.windowLocation
 
         If boolDebugMode Then
             btnAddHasherToAllFiles.Visible = False
@@ -1375,6 +1376,8 @@ Public Class Form1
 
                 workingThread.Abort()
             End If
+
+            My.Settings.windowLocation = Me.Location
         End If
     End Sub
 
