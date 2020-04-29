@@ -2210,11 +2210,11 @@ Public Class Form1
     End Sub
 
     Private Sub roundFileSizes_ValueChanged(sender As Object, e As EventArgs) Handles roundFileSizes.ValueChanged
-        btnSetRoundFileSizes.Enabled = If(My.Settings.roundFileSizes = roundFileSizes.Value, False, True)
+        btnSetRoundFileSizes.Enabled = If(My.Settings.roundFileSizes = Decimal.ToByte(roundFileSizes.Value), False, True)
     End Sub
 
     Private Sub roundPercentages_ValueChanged(sender As Object, e As EventArgs) Handles roundPercentages.ValueChanged
-        btnSetRoundPercentages.Enabled = If(My.Settings.roundPercentages = roundPercentages.Value, False, True)
+        btnSetRoundPercentages.Enabled = If(My.Settings.roundPercentages = Decimal.ToByte(roundPercentages.Value), False, True)
     End Sub
 
     Private Sub taskPriority_SelectedIndexChanged(sender As Object, e As EventArgs) Handles taskPriority.SelectedIndexChanged
