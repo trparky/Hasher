@@ -41,7 +41,7 @@
     <Setting Name="hashIndividualFilesComputeTimeColumnSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">150</Value>
     </Setting>
-    <Setting Name="verifyHashComputeTimeColumnSize" Type="System.String" Scope="User">
+    <Setting Name="verifyHashComputeTimeColumnSize" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">150</Value>
     </Setting>
     <Setting Name="boolUseMilliseconds" Type="System.Boolean" Scope="User">
