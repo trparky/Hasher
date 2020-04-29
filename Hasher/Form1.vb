@@ -115,23 +115,6 @@ Public Class Form1
         End Try
     End Function
 
-    Function doChecksumWithAttachedSubRoutine(strFile As String, ByRef allTheHashes As allTheHashes, checksumSubRoutine As [Delegate], finishedChecksumSubRoutine As [Delegate]) As Boolean
-        Try
-            If IO.File.Exists(strFile) Then
-                Dim checksums As New checksums(checksumSubRoutine)
-                allTheHashes = checksums.performFileHash(strFile, intBufferSize)
-                finishedChecksumSubRoutine.DynamicInvoke(allTheHashes.sha256)
-                Return True
-            Else
-                Return False
-            End If
-
-            Return False
-        Catch ex As Exception
-            Return False
-        End Try
-    End Function
-
     Private Sub updateFilesListCountHeader(Optional boolIncludeSelectedItemCount As Boolean = False)
         If boolIncludeSelectedItemCount Then
             lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files ({1} {2} are selected)",
@@ -1620,25 +1603,18 @@ Public Class Form1
 
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
 
-                                                     Dim checksum1FinishCode As [Delegate] = Sub(strChecksum As String)
-                                                                                                 myInvoke(Sub()
-                                                                                                              lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
-                                                                                                              ToolTip.SetToolTip(lblFile1Hash, strChecksum)
-                                                                                                          End Sub)
-
-                                                                                             End Sub
-                                                     Dim checksum2FinishCode As [Delegate] = Sub(strChecksum As String)
-                                                                                                 myInvoke(Sub()
-                                                                                                              lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
-                                                                                                              ToolTip.SetToolTip(lblFile2Hash, strChecksum)
-                                                                                                          End Sub)
-
-                                                                                             End Sub
-
-                                                     If doChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine, checksum1FinishCode) AndAlso doChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine, checksum2FinishCode) Then
+                                                     If doChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine) AndAlso doChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine) Then
                                                          boolSuccessful = True
                                                          strChecksum1 = compareFilesAllTheHashes1.sha256
                                                          strChecksum2 = compareFilesAllTheHashes2.sha256
+
+                                                         myInvoke(Sub()
+                                                                      lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
+                                                                      ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
+
+                                                                      lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
+                                                                      ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+                                                                  End Sub)
                                                      End If
 
 
