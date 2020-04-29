@@ -52,7 +52,7 @@
                                                          intRealBufferSize = intBufferSize * 1024 * 1024
                                                          computeStopwatch = Stopwatch.StartNew
 
-                                                         If doChecksumWithAttachedSubRoutine(OpenFileDialog.FileName, checksumType.sha256, strChecksum, subRoutine, intRealBufferSize) Then
+                                                         If doChecksumWithAttachedSubRoutine(OpenFileDialog.FileName, strChecksum, subRoutine, intRealBufferSize) Then
                                                              itemToBeAdded = New benchmarkListViewItem(intBufferSize & If(intBufferSize = 1, " MB", " MBs")) With {.bufferSize = intBufferSize}
                                                              itemToBeAdded.SubItems.Add(timespanToHMS(computeStopwatch.Elapsed))
                                                              Invoke(Sub() listResults.Items.Add(itemToBeAdded))
@@ -96,24 +96,11 @@
         End If
     End Sub
 
-    Private Shared Function doChecksumWithAttachedSubRoutine(strFile As String, checksumType As checksumType, ByRef strChecksum As String, subRoutine As [Delegate], intBufferSize As Integer) As Boolean
+    Private Shared Function doChecksumWithAttachedSubRoutine(strFile As String, ByRef strChecksum As String, subRoutine As [Delegate], intBufferSize As Integer) As Boolean
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New checksums(subRoutine)
-
-                Select Case checksumType
-                    Case checksumType.md5
-                        strChecksum = checksums.performFileHash(strFile, intBufferSize).md5
-                    Case checksumType.sha160
-                        strChecksum = checksums.performFileHash(strFile, intBufferSize).sha160
-                    Case checksumType.sha256
-                        strChecksum = checksums.performFileHash(strFile, intBufferSize).sha256
-                    Case checksumType.sha384
-                        strChecksum = checksums.performFileHash(strFile, intBufferSize).sha384
-                    Case checksumType.sha512
-                        strChecksum = checksums.performFileHash(strFile, intBufferSize).sha512
-                End Select
-
+                strChecksum = checksums.performFileHash(strFile, intBufferSize).sha256
                 Return True
             Else
                 Return False
