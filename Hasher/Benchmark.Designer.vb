@@ -32,15 +32,15 @@ Partial Class Benchmark
         Me.ProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.lblHeader = New System.Windows.Forms.Label()
-        Me.ContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.myContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.btnSetBufferSize = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ContextMenuStrip.SuspendLayout()
+        Me.myContextMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'listResults
         '
         Me.listResults.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colBufferSize, Me.colComputeTime})
-        Me.listResults.ContextMenuStrip = Me.ContextMenuStrip
+        Me.listResults.ContextMenuStrip = Me.myContextMenuStrip
         Me.listResults.FullRowSelect = True
         Me.listResults.HideSelection = False
         Me.listResults.Location = New System.Drawing.Point(13, 239)
@@ -101,11 +101,11 @@ Partial Class Benchmark
         Me.lblHeader.TabIndex = 17
         Me.lblHeader.Text = resources.GetString("lblHeader.Text")
         '
-        'ContextMenuStrip
+        'myContextMenuStrip
         '
-        Me.ContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSetBufferSize})
-        Me.ContextMenuStrip.Name = "ContextMenuStrip"
-        Me.ContextMenuStrip.Size = New System.Drawing.Size(181, 48)
+        Me.myContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSetBufferSize})
+        Me.myContextMenuStrip.Name = "ContextMenuStrip"
+        Me.myContextMenuStrip.Size = New System.Drawing.Size(181, 48)
         '
         'btnSetBufferSize
         '
@@ -127,7 +127,7 @@ Partial Class Benchmark
         Me.MaximizeBox = False
         Me.Name = "Benchmark"
         Me.Text = "Hasher Benchmark"
-        Me.ContextMenuStrip.ResumeLayout(False)
+        Me.myContextMenuStrip.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -141,6 +141,6 @@ Partial Class Benchmark
     Friend WithEvents ProgressBar As ProgressBar
     Friend WithEvents lblStatus As Label
     Friend WithEvents lblHeader As Label
-    Friend WithEvents ContextMenuStrip As ContextMenuStrip
+    Friend WithEvents myContextMenuStrip As ContextMenuStrip
     Friend WithEvents btnSetBufferSize As ToolStripMenuItem
 End Class

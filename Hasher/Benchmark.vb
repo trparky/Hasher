@@ -125,7 +125,7 @@
         End Try
     End Function
 
-    Private Sub ContextMenuStrip_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip.Opening
+    Private Sub myContextMenuStrip_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles myContextMenuStrip.Opening
         If listResults.SelectedItems.Count = 0 Then
             e.Cancel = True
         Else
