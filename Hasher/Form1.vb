@@ -2157,7 +2157,7 @@ Public Class Form1
     End Sub
 
     Private Sub BufferSize_ValueChanged(sender As Object, e As EventArgs) Handles bufferSize.ValueChanged
-        btnSetBufferSize.Enabled = True
+        btnSetBufferSize.Enabled = If(My.Settings.shortBufferSize = Decimal.ToInt16(bufferSize.Value), False, True)
     End Sub
 
     Private Sub BtnPerformBenchmark_Click(sender As Object, e As EventArgs) Handles btnPerformBenchmark.Click
