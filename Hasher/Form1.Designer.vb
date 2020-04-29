@@ -992,6 +992,7 @@ Partial Class Form1
         Me.btnCompareFiles.TabIndex = 29
         Me.btnCompareFiles.Text = "Compare Files"
         Me.btnCompareFiles.UseVisualStyleBackColor = True
+        Me.btnCompareFiles.Enabled = False
         '
         'Label6
         '

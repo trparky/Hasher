@@ -2252,4 +2252,12 @@ Public Class Form1
         ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
         ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
     End Sub
+
+    Private Sub txtFile1_TextChanged(sender As Object, e As EventArgs) Handles txtFile1.TextChanged
+        btnCompareFiles.Enabled = If(String.IsNullOrEmpty(txtFile1.Text) Or String.IsNullOrEmpty(txtFile2.Text), False, True)
+    End Sub
+
+    Private Sub txtFile2_TextChanged(sender As Object, e As EventArgs) Handles txtFile2.TextChanged
+        btnCompareFiles.Enabled = If(String.IsNullOrEmpty(txtFile1.Text) Or String.IsNullOrEmpty(txtFile2.Text), False, True)
+    End Sub
 End Class
