@@ -2254,10 +2254,18 @@ Public Class Form1
     End Sub
 
     Private Sub txtFile1_TextChanged(sender As Object, e As EventArgs) Handles txtFile1.TextChanged
+        If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
+            MsgBox("You have selected the same file. Oops.", MsgBoxStyle.Critical, strWindowTitle)
+            txtFile1.Text = Nothing
+        End If
         btnCompareFiles.Enabled = If(String.IsNullOrEmpty(txtFile1.Text) Or String.IsNullOrEmpty(txtFile2.Text), False, True)
     End Sub
 
     Private Sub txtFile2_TextChanged(sender As Object, e As EventArgs) Handles txtFile2.TextChanged
+        If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
+            MsgBox("You have selected the same file. Oops.", MsgBoxStyle.Critical, strWindowTitle)
+            txtFile2.Text = Nothing
+        End If
         btnCompareFiles.Enabled = If(String.IsNullOrEmpty(txtFile1.Text) Or String.IsNullOrEmpty(txtFile2.Text), False, True)
     End Sub
 End Class
