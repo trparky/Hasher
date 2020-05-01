@@ -2211,10 +2211,13 @@ Public Class Form1
     Private Sub fillInChecksumLabelsOnCompareFilesTab(checksumType As checksumType)
         Dim strChecksum1 As String = getDataFromAllTheHashes(checksumType, compareFilesAllTheHashes1)
         Dim strChecksum2 As String = getDataFromAllTheHashes(checksumType, compareFilesAllTheHashes2)
-        lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
-        lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
-        ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
-        ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+
+        If Not String.IsNullOrWhiteSpace(strChecksum1) AndAlso Not String.IsNullOrWhiteSpace(strChecksum2) Then
+            lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
+            lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
+            ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
+            ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+        End If
     End Sub
 
     Private Sub compareRadioMD5_Click(sender As Object, e As EventArgs) Handles compareRadioMD5.Click
