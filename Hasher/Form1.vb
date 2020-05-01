@@ -1077,6 +1077,8 @@ Public Class Form1
                                                                      Else
                                                                          item.color = notValidColor
                                                                          item.SubItems(2).Text = "NOT Valid"
+                                                                         item.computeTime = computeStopwatch.Elapsed
+                                                                         item.SubItems(3).Text = timespanToHMS(item.computeTime)
                                                                      End If
                                                                  Else
                                                                      item.color = fileNotFoundColor
