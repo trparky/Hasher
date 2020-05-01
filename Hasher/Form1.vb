@@ -2208,49 +2208,33 @@ Public Class Form1
         My.Settings.boolAutoAddExtension = chkAutoAddExtension.Checked
     End Sub
 
-    Private Sub compareRadioMD5_Click(sender As Object, e As EventArgs) Handles compareRadioMD5.Click
-        Dim strChecksum1 As String = getDataFromAllTheHashes(checksumType.md5, compareFilesAllTheHashes1)
-        Dim strChecksum2 As String = getDataFromAllTheHashes(checksumType.md5, compareFilesAllTheHashes2)
+    Private Sub fillInChecksumLabelsOnCompareFilesTab(checksumType As checksumType)
+        Dim strChecksum1 As String = getDataFromAllTheHashes(checksumType, compareFilesAllTheHashes1)
+        Dim strChecksum2 As String = getDataFromAllTheHashes(checksumType, compareFilesAllTheHashes2)
         lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
         lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
         ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
         ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+    End Sub
+
+    Private Sub compareRadioMD5_Click(sender As Object, e As EventArgs) Handles compareRadioMD5.Click
+        fillInChecksumLabelsOnCompareFilesTab(checksumType.md5)
     End Sub
 
     Private Sub compareRadioSHA1_Click(sender As Object, e As EventArgs) Handles compareRadioSHA1.Click
-        Dim strChecksum1 As String = getDataFromAllTheHashes(checksumType.sha160, compareFilesAllTheHashes1)
-        Dim strChecksum2 As String = getDataFromAllTheHashes(checksumType.sha160, compareFilesAllTheHashes2)
-        lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
-        lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
-        ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
-        ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+        fillInChecksumLabelsOnCompareFilesTab(checksumType.sha160)
     End Sub
 
     Private Sub compareRadioSHA256_Click(sender As Object, e As EventArgs) Handles compareRadioSHA256.Click
-        Dim strChecksum1 As String = getDataFromAllTheHashes(checksumType.sha256, compareFilesAllTheHashes1)
-        Dim strChecksum2 As String = getDataFromAllTheHashes(checksumType.sha256, compareFilesAllTheHashes2)
-        lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
-        lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
-        ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
-        ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+        fillInChecksumLabelsOnCompareFilesTab(checksumType.sha256)
     End Sub
 
     Private Sub compareRadioSHA384_Click(sender As Object, e As EventArgs) Handles compareRadioSHA384.Click
-        Dim strChecksum1 As String = getDataFromAllTheHashes(checksumType.sha384, compareFilesAllTheHashes1)
-        Dim strChecksum2 As String = getDataFromAllTheHashes(checksumType.sha384, compareFilesAllTheHashes2)
-        lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
-        lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
-        ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
-        ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+        fillInChecksumLabelsOnCompareFilesTab(checksumType.sha384)
     End Sub
 
     Private Sub compareRadioSHA512_Click(sender As Object, e As EventArgs) Handles compareRadioSHA512.Click
-        Dim strChecksum1 As String = getDataFromAllTheHashes(checksumType.sha512, compareFilesAllTheHashes1)
-        Dim strChecksum2 As String = getDataFromAllTheHashes(checksumType.sha512, compareFilesAllTheHashes2)
-        lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
-        lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
-        ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
-        ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+        fillInChecksumLabelsOnCompareFilesTab(checksumType.sha512)
     End Sub
 
     Private Sub txtFile1_TextChanged(sender As Object, e As EventArgs) Handles txtFile1.TextChanged
