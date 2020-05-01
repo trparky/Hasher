@@ -102,11 +102,11 @@ Public Class checksums
 End Class
 
 Public Structure allTheHashes
-    Public md5 As String
-    Public sha160 As String
-    Public sha256 As String
-    Public sha384 As String
-    Public sha512 As String
+    Public Property md5 As String
+    Public Property sha160 As String
+    Public Property sha256 As String
+    Public Property sha384 As String
+    Public Property sha512 As String
 End Structure
 
 Public Enum checksumType As Short
