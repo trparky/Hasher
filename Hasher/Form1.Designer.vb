@@ -159,6 +159,8 @@ Partial Class Form1
         Me.lblRoundFileSizesLabel = New System.Windows.Forms.Label()
         Me.btnSetRoundFileSizes = New System.Windows.Forms.Button()
         Me.roundFileSizes = New System.Windows.Forms.NumericUpDown()
+        Me.btnTransferToHashIndividualFilesTab = New System.Windows.Forms.Button()
+        Me.colNewHash = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -761,6 +763,7 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyFileNameLabel)
         Me.tabVerifySavedHashes.Controls.Add(Me.verifyHashesListFiles)
         Me.tabVerifySavedHashes.Controls.Add(Me.btnOpenExistingHashFile)
+        Me.tabVerifySavedHashes.Controls.Add(Me.btnTransferToHashIndividualFilesTab)
         Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
         Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 363)
@@ -853,7 +856,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2})
+        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2, Me.colNewHash})
         Me.verifyHashesListFiles.FullRowSelect = True
         Me.verifyHashesListFiles.HideSelection = False
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
@@ -1592,6 +1595,21 @@ Partial Class Form1
         Me.roundPercentages.TabIndex = 35
         Me.roundPercentages.Value = New Decimal(New Integer() {2, 0, 0, 0})
         '
+        'btnTransferToHashIndividualFilesTab
+        '
+        Me.btnTransferToHashIndividualFilesTab.Enabled = False
+        Me.btnTransferToHashIndividualFilesTab.Location = New System.Drawing.Point(12, 85)
+        Me.btnTransferToHashIndividualFilesTab.Name = "btnTransferToHashIndividualFilesTab"
+        Me.btnTransferToHashIndividualFilesTab.Size = New System.Drawing.Size(142, 67)
+        Me.btnTransferToHashIndividualFilesTab.TabIndex = 26
+        Me.btnTransferToHashIndividualFilesTab.Text = "Transfer to" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & """Hash Individual Files""" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "tab"
+        Me.btnTransferToHashIndividualFilesTab.UseVisualStyleBackColor = True
+        '
+        'colNewHash
+        '
+        Me.colNewHash.Text = "Computed Hash/Checksum (Displays the hash that was computed only if not valid)"
+        Me.colNewHash.Width = 120
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1767,4 +1785,6 @@ Partial Class Form1
     Friend WithEvents btnSetRoundFileSizes As Button
     Friend WithEvents roundFileSizes As NumericUpDown
     Friend WithEvents lblRoundFileSizesLabel As Label
+    Friend WithEvents btnTransferToHashIndividualFilesTab As Button
+    Friend WithEvents colNewHash As ColumnHeader
 End Class

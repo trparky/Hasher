@@ -781,6 +781,7 @@ Public Class Form1
         colFileSize.Width = My.Settings.hashIndividualFilesFileSizeColumnSize
         colChecksum.Width = My.Settings.hashIndividualFilesChecksumColumnSize
         colComputeTime.Width = My.Settings.hashIndividualFilesComputeTimeColumnSize
+        colNewHash.Width = My.Settings.newHashChecksumColumnSize
 
         colFile.Width = My.Settings.verifyHashFileNameColumnSize
         colFileSize2.Width = My.Settings.verifyHashFileSizeColumnSize
@@ -914,12 +915,14 @@ Public Class Form1
                 .SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
                 .SubItems.Add("To Be Tested")
                 .SubItems.Add("To Be Tested")
+                .SubItems.Add("To Be Tested")
                 .boolFileExists = True
             Else
                 .fileSize = -1
                 .computeTime = Nothing
                 .SubItems.Add("")
                 .SubItems.Add("Doesn't Exist")
+                .SubItems.Add("")
                 .SubItems.Add("")
                 .boolFileExists = False
                 .BackColor = Color.LightGray
@@ -1067,18 +1070,21 @@ Public Class Form1
 
                                                                  If doChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine) Then
                                                                      strChecksum = getDataFromAllTheHashes(checksumType, allTheHashes)
+                                                                     item.allTheHashes = allTheHashes
 
                                                                      If strChecksum.Equals(item.hash, StringComparison.OrdinalIgnoreCase) Then
                                                                          item.color = validColor
                                                                          item.SubItems(2).Text = "Valid"
                                                                          item.computeTime = computeStopwatch.Elapsed
                                                                          item.SubItems(3).Text = timespanToHMS(item.computeTime)
+                                                                         item.SubItems(4).Text = ""
                                                                          longFilesThatPassedVerification += 1
                                                                      Else
                                                                          item.color = notValidColor
                                                                          item.SubItems(2).Text = "NOT Valid"
                                                                          item.computeTime = computeStopwatch.Elapsed
                                                                          item.SubItems(3).Text = timespanToHMS(item.computeTime)
+                                                                         item.SubItems(4).Text = If(chkDisplayHashesInUpperCase.Checked, getDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, getDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
                                                                      End If
                                                                  Else
                                                                      item.color = fileNotFoundColor
@@ -1192,6 +1198,7 @@ Public Class Form1
 
                                                      myInvoke(Sub()
                                                                   If Not boolClosingWindow Then
+                                                                      btnTransferToHashIndividualFilesTab.Enabled = True
                                                                       btnOpenExistingHashFile.Text = "Open Hash File"
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       verifyIndividualFilesAllFilesProgressBar.Value = 0
@@ -1216,6 +1223,7 @@ Public Class Form1
             Exit Sub
         End If
 
+        btnTransferToHashIndividualFilesTab.Enabled = False
         btnOpenExistingHashFile.Text = "Abort Processing"
         verifyHashesListFiles.Items.Clear()
 
@@ -1915,6 +1923,7 @@ Public Class Form1
         My.Settings.verifyHashFileSizeColumnSize = colFileSize2.Width
         My.Settings.verifyHashFileResults = colResults.Width
         My.Settings.verifyHashComputeTimeColumnSize = colComputeTime2.Width
+        My.Settings.newHashChecksumColumnSize = colNewHash.Width
     End Sub
 
     Private Sub txtFile1_DragEnter(sender As Object, e As DragEventArgs) Handles txtFile1.DragEnter
@@ -2236,6 +2245,38 @@ Public Class Form1
 
     Private Sub compareRadioSHA384_Click(sender As Object, e As EventArgs) Handles compareRadioSHA384.Click
         fillInChecksumLabelsOnCompareFilesTab(checksumType.sha384)
+    End Sub
+
+    Private Sub btnTransferToHashIndividualFilesTab_Click(sender As Object, e As EventArgs) Handles btnTransferToHashIndividualFilesTab.Click
+        listFiles.Items.Clear()
+        filesInListFiles.Clear()
+        listFiles.BeginUpdate()
+
+        For Each item As myListViewItem In verifyHashesListFiles.Items
+            If Not filesInListFiles.Contains(item.fileName.ToLower) Then
+                filesInListFiles.Add(item.fileName.ToLower)
+
+                Dim itemToBeAdded As New myListViewItem(item.fileName) With {
+                    .fileSize = New IO.FileInfo(item.fileName).Length,
+                    .fileName = item.fileName
+                }
+                With itemToBeAdded
+                    .SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
+                    .SubItems.Add(If(chkDisplayHashesInUpperCase.Checked, item.allTheHashes.sha256.ToUpper, item.allTheHashes.sha256.ToLower))
+                    .SubItems.Add(timespanToHMS(item.computeTime))
+                    .allTheHashes = item.allTheHashes
+                End With
+
+                listFiles.Items.Add(itemToBeAdded)
+            End If
+        Next
+
+        If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
+        listFiles.EndUpdate()
+        colChecksum.Text = "Hash/Checksum (SHA256)"
+        TabControl1.SelectedIndex = tabNumber.hashIndividualFilesTab
+        btnIndividualFilesCopyToClipboard.Enabled = True
+        btnIndividualFilesSaveResultsToDisk.Enabled = True
     End Sub
 
     Private Sub compareRadioSHA512_Click(sender As Object, e As EventArgs) Handles compareRadioSHA512.Click
