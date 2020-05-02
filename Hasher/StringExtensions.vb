@@ -7,6 +7,7 @@ Module StringExtensions
     ''' <return>Returns a Boolean value.</return>
     <Extension()>
     Public Function caseInsensitiveContains(haystack As String, needle As String) As Boolean
+        If String.IsNullOrWhiteSpace(haystack) Or String.IsNullOrWhiteSpace(needle) Then Return False
         Dim index As Integer = haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase)
         Return If(index = -1, False, True)
     End Function
