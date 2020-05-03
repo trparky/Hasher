@@ -89,6 +89,7 @@ Partial Class Form1
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colResults = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colComputeTime2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.verifyListFilesContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.btnOpenExistingHashFile = New System.Windows.Forms.Button()
         Me.tabCompareFiles = New System.Windows.Forms.TabPage()
         Me.compareFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
@@ -160,6 +161,7 @@ Partial Class Form1
         Me.btnSetRoundFileSizes = New System.Windows.Forms.Button()
         Me.roundFileSizes = New System.Windows.Forms.NumericUpDown()
         Me.btnTransferToHashIndividualFilesTab = New System.Windows.Forms.Button()
+        Me.ViewChecksumDifferenceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.colNewHash = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
@@ -169,6 +171,7 @@ Partial Class Form1
         Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
         Me.verifySavedHashesTableLayoutControl.SuspendLayout()
+        Me.verifyListFilesContextMenu.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
         Me.compareFilesTableLayoutControl.SuspendLayout()
         Me.tabCompareAgainstKnownHash.SuspendLayout()
@@ -857,6 +860,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2, Me.colNewHash})
+        Me.verifyHashesListFiles.ContextMenuStrip = Me.verifyListFilesContextMenu
         Me.verifyHashesListFiles.FullRowSelect = True
         Me.verifyHashesListFiles.HideSelection = False
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
@@ -865,6 +869,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.TabIndex = 6
         Me.verifyHashesListFiles.UseCompatibleStateImageBehavior = False
         Me.verifyHashesListFiles.View = System.Windows.Forms.View.Details
+        Me.verifyHashesListFiles.MultiSelect = False
         '
         'colFile
         '
@@ -885,6 +890,12 @@ Partial Class Form1
         '
         Me.colComputeTime2.Text = "Compute Time"
         Me.colComputeTime2.Width = 150
+        '
+        'verifyListFilesContextMenu
+        '
+        Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem})
+        Me.verifyListFilesContextMenu.Name = "verifyListFilesContextMenu"
+        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 48)
         '
         'btnOpenExistingHashFile
         '
@@ -1610,6 +1621,12 @@ Partial Class Form1
         Me.colNewHash.Text = "Computed Hash/Checksum (Displays the hash that was computed only if not valid)"
         Me.colNewHash.Width = 120
         '
+        'ViewChecksumDifferenceToolStripMenuItem
+        '
+        Me.ViewChecksumDifferenceToolStripMenuItem.Name = "ViewChecksumDifferenceToolStripMenuItem"
+        Me.ViewChecksumDifferenceToolStripMenuItem.Size = New System.Drawing.Size(215, 22)
+        Me.ViewChecksumDifferenceToolStripMenuItem.Text = "&View Checksum Difference"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1634,6 +1651,7 @@ Partial Class Form1
         Me.tabVerifySavedHashes.PerformLayout()
         Me.verifySavedHashesTableLayoutControl.ResumeLayout(False)
         Me.verifySavedHashesTableLayoutControl.PerformLayout()
+        Me.verifyListFilesContextMenu.ResumeLayout(False)
         Me.tabCompareFiles.ResumeLayout(False)
         Me.tabCompareFiles.PerformLayout()
         Me.compareFilesTableLayoutControl.ResumeLayout(False)
@@ -1787,4 +1805,6 @@ Partial Class Form1
     Friend WithEvents lblRoundFileSizesLabel As Label
     Friend WithEvents btnTransferToHashIndividualFilesTab As Button
     Friend WithEvents colNewHash As ColumnHeader
+    Friend WithEvents verifyListFilesContextMenu As ContextMenuStrip
+    Friend WithEvents ViewChecksumDifferenceToolStripMenuItem As ToolStripMenuItem
 End Class

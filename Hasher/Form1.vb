@@ -28,6 +28,7 @@ Public Class Form1
     Private shortCurrentlyActiveTab As Short = -1
     Private compareFilesAllTheHashes1 As allTheHashes = Nothing
     Private compareFilesAllTheHashes2 As allTheHashes = Nothing
+    Private checksumTypeForChecksumCompareWindow As checksumType
 
     Private Enum tabNumber As Short
         null = -1
@@ -959,6 +960,8 @@ Public Class Form1
             MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strWindowTitle)
             Exit Sub
         End If
+
+        checksumTypeForChecksumCompareWindow = checksumType
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -2297,5 +2300,30 @@ Public Class Form1
             txtFile2.Text = Nothing
         End If
         btnCompareFiles.Enabled = If(String.IsNullOrEmpty(txtFile1.Text) Or String.IsNullOrEmpty(txtFile2.Text), False, True)
+    End Sub
+
+    Private Sub verifyListFilesContextMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles verifyListFilesContextMenu.Opening
+        If verifyHashesListFiles.Items.Count = 0 Then
+            e.Cancel = True
+            Exit Sub
+        Else
+            If String.IsNullOrEmpty(verifyHashesListFiles.SelectedItems(0).SubItems(4).Text) Or workingThread IsNot Nothing Then
+                e.Cancel = True
+                Exit Sub
+            End If
+        End If
+    End Sub
+
+    Private Sub ViewChecksumDifferenceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ViewChecksumDifferenceToolStripMenuItem.Click
+        Dim selectedItem As myListViewItem = verifyHashesListFiles.SelectedItems(0)
+        Dim stringBuilder As New System.Text.StringBuilder()
+
+        stringBuilder.AppendLine("Hash/Checksum Contained in Checksum File")
+        stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, selectedItem.hash.ToUpper, selectedItem.hash.ToLower))
+        stringBuilder.AppendLine()
+        stringBuilder.AppendLine("Newly Computed Hash/Checksum")
+        stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, getDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.allTheHashes).ToUpper, getDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.allTheHashes).ToLower))
+
+        MsgBox(stringBuilder.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 End Class
