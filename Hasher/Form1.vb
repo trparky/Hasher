@@ -2319,10 +2319,14 @@ Public Class Form1
         Dim stringBuilder As New System.Text.StringBuilder()
 
         stringBuilder.AppendLine("Hash/Checksum Contained in Checksum File")
-        stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, selectedItem.hash.ToUpper, selectedItem.hash.ToLower))
+        With selectedItem.hash
+            stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, .ToUpper, .ToLower))
+        End With
         stringBuilder.AppendLine()
         stringBuilder.AppendLine("Newly Computed Hash/Checksum")
-        stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, getDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.allTheHashes).ToUpper, getDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.allTheHashes).ToLower))
+        With getDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.allTheHashes)
+            stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, .ToUpper, .ToLower))
+        End With
 
         Using frmChecksumDifference As New frmChecksumDifference
             frmChecksumDifference.lblMainLabel.Text = stringBuilder.ToString.Trim
