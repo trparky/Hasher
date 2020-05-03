@@ -2324,6 +2324,19 @@ Public Class Form1
         stringBuilder.AppendLine("Newly Computed Hash/Checksum")
         stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, getDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.allTheHashes).ToUpper, getDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.allTheHashes).ToLower))
 
-        MsgBox(stringBuilder.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
+        Using frmChecksumDifference As New frmChecksumDifference
+            frmChecksumDifference.lblMainLabel.Text = stringBuilder.ToString.Trim
+
+            Dim size As New Size(frmChecksumDifference.lblMainLabel.Size.Width + 40, frmChecksumDifference.Size.Height)
+
+            frmChecksumDifference.Icon = Me.Icon
+            frmChecksumDifference.Size = size
+            frmChecksumDifference.MinimumSize = size
+            frmChecksumDifference.MaximumSize = size
+            frmChecksumDifference.StartPosition = FormStartPosition.CenterParent
+            frmChecksumDifference.ShowDialog(Me)
+        End Using
+
+        stringBuilder = Nothing
     End Sub
 End Class

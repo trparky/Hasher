@@ -90,6 +90,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Check for Update Stuff.vb" />
+    <Compile Include="Checksum Difference.Designer.vb">
+      <DependentUpon>Checksum Difference.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Checksum Difference.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="checksums.vb" />
     <Compile Include="FileAssociation.vb" />
     <Compile Include="Form1.vb">
@@ -131,6 +137,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Benchmark.resx">
       <DependentUpon>Benchmark.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Checksum Difference.resx">
+      <DependentUpon>Checksum Difference.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
