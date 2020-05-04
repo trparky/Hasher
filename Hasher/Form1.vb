@@ -1455,8 +1455,19 @@ Public Class Form1
     Private Sub applyFileSizeSortingToHashList()
         colFileName.Text = "File Name"
         colFileSize.Text = "File Size"
-        colChecksum.Text = "Hash/Checksum"
         colComputeTime.Text = "Compute Time"
+
+        If radioMD5.Checked Then
+            colChecksum.Text = "Hash/Checksum (MD5)"
+        ElseIf radioSHA1.Checked Then
+            colChecksum.Text = "Hash/Checksum (SHA1/SHA160)"
+        ElseIf radioSHA256.Checked Then
+            colChecksum.Text = "Hash/Checksum (SHA256)"
+        ElseIf radioSHA384.Checked Then
+            colChecksum.Text = "Hash/Checksum (SHA384)"
+        ElseIf radioSHA512.Checked Then
+            colChecksum.Text = "Hash/Checksum (SHA512)"
+        End If
 
         Dim new_sorting_column As ColumnHeader = listFiles.Columns(1)
         Dim sort_order As SortOrder = SortOrder.Ascending
