@@ -2268,6 +2268,7 @@ Public Class Form1
                     .SubItems.Add(If(chkDisplayHashesInUpperCase.Checked, item.allTheHashes.sha256.ToUpper, item.allTheHashes.sha256.ToLower))
                     .SubItems.Add(timespanToHMS(item.computeTime))
                     .allTheHashes = item.allTheHashes
+                    .hash = item.allTheHashes.sha256
                 End With
 
                 listFiles.Items.Add(itemToBeAdded)
