@@ -30,6 +30,12 @@ Public Class Form1
     Private compareFilesAllTheHashes2 As allTheHashes = Nothing
     Private checksumTypeForChecksumCompareWindow As checksumType
 
+    Private Const strColumnTitleChecksumMD5 As String = "Hash/Checksum (MD5)"
+    Private Const strColumnTitleChecksumSHA160 As String = "Hash/Checksum (SHA1/SHA160)"
+    Private Const strColumnTitleChecksumSHA256 As String = "Hash/Checksum (SHA256)"
+    Private Const strColumnTitleChecksumSHA384 As String = "Hash/Checksum (SHA384)"
+    Private Const strColumnTitleChecksumSHA512 As String = "Hash/Checksum (SHA512)"
+
     Private Enum tabNumber As Short
         null = -1
         welcomeTab = 0
@@ -538,27 +544,27 @@ Public Class Form1
 
     Private Sub radioMD5_Click(sender As Object, e As EventArgs) Handles radioMD5.Click
         updateChecksumsInListFiles(checksumType.md5)
-        colChecksum.Text = "Hash/Checksum (MD5)"
+        colChecksum.Text = strColumnTitleChecksumMD5
     End Sub
 
     Private Sub radioSHA1_Click(sender As Object, e As EventArgs) Handles radioSHA1.Click
         updateChecksumsInListFiles(checksumType.sha160)
-        colChecksum.Text = "Hash/Checksum (SHA1/SHA160)"
+        colChecksum.Text = strColumnTitleChecksumSHA160
     End Sub
 
     Private Sub radioSHA256_Click(sender As Object, e As EventArgs) Handles radioSHA256.Click
         updateChecksumsInListFiles(checksumType.sha256)
-        colChecksum.Text = "Hash/Checksum (SHA256)"
+        colChecksum.Text = strColumnTitleChecksumSHA256
     End Sub
 
     Private Sub radioSHA384_Click(sender As Object, e As EventArgs) Handles radioSHA384.Click
         updateChecksumsInListFiles(checksumType.sha384)
-        colChecksum.Text = "Hash/Checksum (SHA384)"
+        colChecksum.Text = strColumnTitleChecksumSHA384
     End Sub
 
     Private Sub radioSHA512_Click(sender As Object, e As EventArgs) Handles radioSHA512.Click
         updateChecksumsInListFiles(checksumType.sha512)
-        colChecksum.Text = "Hash/Checksum (SHA512)"
+        colChecksum.Text = strColumnTitleChecksumSHA512
     End Sub
 
     Private Shared Function getFileAssociation(ByVal fileExtension As String, ByRef associatedApplication As String) As Boolean
@@ -1458,15 +1464,15 @@ Public Class Form1
         colComputeTime.Text = "Compute Time"
 
         If radioMD5.Checked Then
-            colChecksum.Text = "Hash/Checksum (MD5)"
+            colChecksum.Text = strColumnTitleChecksumMD5
         ElseIf radioSHA1.Checked Then
-            colChecksum.Text = "Hash/Checksum (SHA1/SHA160)"
+            colChecksum.Text = strColumnTitleChecksumSHA160
         ElseIf radioSHA256.Checked Then
-            colChecksum.Text = "Hash/Checksum (SHA256)"
+            colChecksum.Text = strColumnTitleChecksumSHA256
         ElseIf radioSHA384.Checked Then
-            colChecksum.Text = "Hash/Checksum (SHA384)"
+            colChecksum.Text = strColumnTitleChecksumSHA384
         ElseIf radioSHA512.Checked Then
-            colChecksum.Text = "Hash/Checksum (SHA512)"
+            colChecksum.Text = strColumnTitleChecksumSHA512
         End If
 
         Dim new_sorting_column As ColumnHeader = listFiles.Columns(1)
@@ -2288,7 +2294,7 @@ Public Class Form1
 
         If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
         listFiles.EndUpdate()
-        colChecksum.Text = "Hash/Checksum (SHA256)"
+        colChecksum.Text = strColumnTitleChecksumSHA256
         TabControl1.SelectedIndex = tabNumber.hashIndividualFilesTab
         btnIndividualFilesCopyToClipboard.Enabled = True
         btnIndividualFilesSaveResultsToDisk.Enabled = True
