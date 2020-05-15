@@ -2361,4 +2361,8 @@ Public Class Form1
 
         stringBuilder = Nothing
     End Sub
+
+    Private Sub txtTextToHash_KeyUp(sender As Object, e As KeyEventArgs) Handles txtTextToHash.KeyUp
+        If e.KeyCode = Keys.Back And String.IsNullOrWhiteSpace(txtTextToHash.Text) Then Media.SystemSounds.Exclamation.Play()
+    End Sub
 End Class
