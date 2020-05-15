@@ -82,12 +82,13 @@ Public Class checksums
             sha384Engine.TransformFinalBlock(byteDataBuffer, 0, intBytesRead)
             sha512Engine.TransformFinalBlock(byteDataBuffer, 0, intBytesRead)
 
-            Dim allTheHashes As New allTheHashes
-            allTheHashes.md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", "")
-            allTheHashes.sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", "")
-            allTheHashes.sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", "")
-            allTheHashes.sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", "")
-            allTheHashes.sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
+            Dim allTheHashes As New allTheHashes With {
+                .md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", ""),
+                .sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", ""),
+                .sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", ""),
+                .sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", ""),
+                .sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
+            }
 
             md5Engine.Dispose()
             sha160Engine.Dispose()
