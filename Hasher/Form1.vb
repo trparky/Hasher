@@ -1924,8 +1924,8 @@ Public Class Form1
 
     Private Function getHashOfString(inputString As String, hashType As checksumType) As String
         Using HashAlgorithm As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(hashType)
-            Dim Output As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
-            Return BitConverter.ToString(Output).ToLower().Replace("-", "")
+            Dim byteOutput As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+            Return BitConverter.ToString(byteOutput).ToLower().Replace("-", "")
         End Using
     End Function
 
