@@ -28,6 +28,7 @@ Public Class Form1
     Private shortCurrentlyActiveTab As Short = -1
     Private compareFilesAllTheHashes1 As allTheHashes = Nothing
     Private compareFilesAllTheHashes2 As allTheHashes = Nothing
+    Private hashTextAllTheHashes As allTheHashes = Nothing
     Private checksumTypeForChecksumCompareWindow As checksumType
 
     Private Const strColumnTitleChecksumMD5 As String = "Hash/Checksum (MD5)"
@@ -1279,31 +1280,35 @@ Public Class Form1
     Private Sub txtTextToHash_TextChanged(sender As Object, e As EventArgs) Handles txtTextToHash.TextChanged
         lblHashTextStep1.Text = "Step 1: Input some text: " & myToString(txtTextToHash.Text.Length) & " " & If(txtTextToHash.Text.Length = 1, "Character", "Characters")
         btnComputeTextHash.Enabled = If(txtTextToHash.Text.Length = 0, False, True)
-        clearTextHashResults()
-    End Sub
-
-    Private Sub clearTextHashResults()
         btnCopyTextHashResultsToClipboard.Enabled = False
         txtHashResults.Text = Nothing
+        hashTextAllTheHashes = Nothing
+    End Sub
+
+    Private Sub fillInNewHash(checksumType As checksumType)
+        Dim strHash As String = getDataFromAllTheHashes(checksumType, hashTextAllTheHashes)
+        If Not String.IsNullOrEmpty(strHash) Then txtHashResults.Text = If(chkDisplayHashesInUpperCase.Checked, strHash.ToUpper, strHash.ToLower)
     End Sub
 
     Private Sub btnComputeTextHash_Click(sender As Object, e As EventArgs) Handles btnComputeTextHash.Click
+        hashTextAllTheHashes = getHashOfString(txtTextToHash.Text)
         Dim strHash As String = Nothing
 
         If textRadioMD5.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksumType.md5)
+            strHash = getDataFromAllTheHashes(checksumType.md5, hashTextAllTheHashes)
         ElseIf textRadioSHA1.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksumType.sha160)
+            strHash = getDataFromAllTheHashes(checksumType.sha160, hashTextAllTheHashes)
         ElseIf textRadioSHA256.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksumType.sha256)
+            strHash = getDataFromAllTheHashes(checksumType.sha256, hashTextAllTheHashes)
         ElseIf textRadioSHA384.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksumType.sha384)
+            strHash = getDataFromAllTheHashes(checksumType.sha384, hashTextAllTheHashes)
         ElseIf textRadioSHA512.Checked Then
-            strHash = getHashOfString(txtTextToHash.Text, checksumType.sha512)
+            strHash = getDataFromAllTheHashes(checksumType.sha512, hashTextAllTheHashes)
         End If
 
         txtHashResults.Text = If(chkDisplayHashesInUpperCase.Checked, strHash.ToUpper, strHash.ToLower)
         btnCopyTextHashResultsToClipboard.Enabled = True
+        btnComputeTextHash.Enabled = False
     End Sub
 
     Private Sub btnPasteTextFromWindowsClipboard_Click(sender As Object, e As EventArgs) Handles btnPasteTextFromWindowsClipboard.Click
@@ -1315,23 +1320,23 @@ Public Class Form1
     End Sub
 
     Private Sub textRadioSHA256_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA256.CheckedChanged
-        clearTextHashResults()
+        fillInNewHash(checksumType.sha256)
     End Sub
 
     Private Sub textRadioSHA384_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA384.CheckedChanged
-        clearTextHashResults()
+        fillInNewHash(checksumType.sha384)
     End Sub
 
     Private Sub textRadioSHA512_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA512.CheckedChanged
-        clearTextHashResults()
+        fillInNewHash(checksumType.sha512)
     End Sub
 
     Private Sub textRadioSHA1_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA1.CheckedChanged
-        clearTextHashResults()
+        fillInNewHash(checksumType.sha160)
     End Sub
 
     Private Sub textRadioMD5_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioMD5.CheckedChanged
-        clearTextHashResults()
+        fillInNewHash(checksumType.md5)
     End Sub
 
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
@@ -1927,6 +1932,37 @@ Public Class Form1
             Dim byteOutput As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
             Return BitConverter.ToString(byteOutput).ToLower().Replace("-", "")
         End Using
+    End Function
+
+    Private Function getHashOfString(inputString As String) As allTheHashes
+        Dim md5Engine As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(checksumType.md5)
+        Dim sha160Engine As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(checksumType.sha160)
+        Dim sha256Engine As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(checksumType.sha256)
+        Dim sha384Engine As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(checksumType.sha384)
+        Dim sha512Engine As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(checksumType.sha512)
+        Dim byteArray As Byte() = System.Text.Encoding.UTF8.GetBytes(inputString)
+
+        md5Engine.ComputeHash(byteArray)
+        sha160Engine.ComputeHash(byteArray)
+        sha256Engine.ComputeHash(byteArray)
+        sha384Engine.ComputeHash(byteArray)
+        sha512Engine.ComputeHash(byteArray)
+
+        Dim allTheHashes As New allTheHashes With {
+            .md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", ""),
+            .sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", ""),
+            .sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", ""),
+            .sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", ""),
+            .sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
+        }
+
+        md5Engine.Dispose()
+        sha160Engine.Dispose()
+        sha256Engine.Dispose()
+        sha384Engine.Dispose()
+        sha512Engine.Dispose()
+
+        Return allTheHashes
     End Function
 
     Private Sub listFiles_ColumnWidthChanged(sender As Object, e As ColumnWidthChangedEventArgs) Handles listFiles.ColumnWidthChanged

@@ -285,7 +285,7 @@ Partial Class Form1
         '
         Me.btnCopyTextHashResultsToClipboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnCopyTextHashResultsToClipboard.Enabled = False
-        Me.btnCopyTextHashResultsToClipboard.Location = New System.Drawing.Point(243, 328)
+        Me.btnCopyTextHashResultsToClipboard.Location = New System.Drawing.Point(240, 298)
         Me.btnCopyTextHashResultsToClipboard.Name = "btnCopyTextHashResultsToClipboard"
         Me.btnCopyTextHashResultsToClipboard.Size = New System.Drawing.Size(156, 23)
         Me.btnCopyTextHashResultsToClipboard.TabIndex = 31
@@ -297,7 +297,7 @@ Partial Class Form1
         Me.txtHashResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtHashResults.BackColor = System.Drawing.SystemColors.Window
-        Me.txtHashResults.Location = New System.Drawing.Point(243, 302)
+        Me.txtHashResults.Location = New System.Drawing.Point(240, 272)
         Me.txtHashResults.Name = "txtHashResults"
         Me.txtHashResults.ReadOnly = True
         Me.txtHashResults.Size = New System.Drawing.Size(791, 20)
@@ -308,7 +308,7 @@ Partial Class Form1
         Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(240, 286)
+        Me.Label3.Location = New System.Drawing.Point(238, 256)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
         Me.Label3.TabIndex = 28
@@ -327,7 +327,7 @@ Partial Class Form1
         '
         Me.btnComputeTextHash.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnComputeTextHash.Enabled = False
-        Me.btnComputeTextHash.Location = New System.Drawing.Point(18, 286)
+        Me.btnComputeTextHash.Location = New System.Drawing.Point(18, 250)
         Me.btnComputeTextHash.Name = "btnComputeTextHash"
         Me.btnComputeTextHash.Size = New System.Drawing.Size(216, 71)
         Me.btnComputeTextHash.TabIndex = 26
@@ -339,17 +339,17 @@ Partial Class Form1
         Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(16, 270)
+        Me.Label2.Location = New System.Drawing.Point(16, 234)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(158, 13)
+        Me.Label2.Size = New System.Drawing.Size(459, 13)
         Me.Label2.TabIndex = 25
-        Me.Label2.Text = "Step 3: Compute the hash."
+        Me.Label2.Text = "Step 2: Compute the hashes. (Now computes all five hash types simultaneously)"
         '
         'textRadioMD5
         '
         Me.textRadioMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.textRadioMD5.AutoSize = True
-        Me.textRadioMD5.Location = New System.Drawing.Point(506, 250)
+        Me.textRadioMD5.Location = New System.Drawing.Point(506, 340)
         Me.textRadioMD5.Name = "textRadioMD5"
         Me.textRadioMD5.Size = New System.Drawing.Size(296, 17)
         Me.textRadioMD5.TabIndex = 24
@@ -360,7 +360,7 @@ Partial Class Form1
         '
         Me.textRadioSHA512.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.textRadioSHA512.AutoSize = True
-        Me.textRadioSHA512.Location = New System.Drawing.Point(167, 250)
+        Me.textRadioSHA512.Location = New System.Drawing.Point(167, 340)
         Me.textRadioSHA512.Name = "textRadioSHA512"
         Me.textRadioSHA512.Size = New System.Drawing.Size(68, 17)
         Me.textRadioSHA512.TabIndex = 23
@@ -371,7 +371,7 @@ Partial Class Form1
         '
         Me.textRadioSHA384.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.textRadioSHA384.AutoSize = True
-        Me.textRadioSHA384.Location = New System.Drawing.Point(93, 250)
+        Me.textRadioSHA384.Location = New System.Drawing.Point(93, 340)
         Me.textRadioSHA384.Name = "textRadioSHA384"
         Me.textRadioSHA384.Size = New System.Drawing.Size(68, 17)
         Me.textRadioSHA384.TabIndex = 22
@@ -383,7 +383,7 @@ Partial Class Form1
         Me.textRadioSHA256.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.textRadioSHA256.AutoSize = True
         Me.textRadioSHA256.Checked = True
-        Me.textRadioSHA256.Location = New System.Drawing.Point(19, 250)
+        Me.textRadioSHA256.Location = New System.Drawing.Point(19, 340)
         Me.textRadioSHA256.Name = "textRadioSHA256"
         Me.textRadioSHA256.Size = New System.Drawing.Size(68, 17)
         Me.textRadioSHA256.TabIndex = 21
@@ -395,7 +395,7 @@ Partial Class Form1
         '
         Me.textRadioSHA1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.textRadioSHA1.AutoSize = True
-        Me.textRadioSHA1.Location = New System.Drawing.Point(241, 250)
+        Me.textRadioSHA1.Location = New System.Drawing.Point(241, 340)
         Me.textRadioSHA1.Name = "textRadioSHA1"
         Me.textRadioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.textRadioSHA1.TabIndex = 20
@@ -407,11 +407,11 @@ Partial Class Form1
         Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(15, 234)
+        Me.Label1.Location = New System.Drawing.Point(15, 324)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(179, 13)
+        Me.Label1.Size = New System.Drawing.Size(237, 13)
         Me.Label1.TabIndex = 19
-        Me.Label1.Text = "Step 2: Select your hash type."
+        Me.Label1.Text = "Step 3: Select your hash type for display"
         '
         'lblHashTextStep1
         '
