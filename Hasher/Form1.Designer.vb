@@ -411,7 +411,7 @@ Partial Class Form1
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(237, 13)
         Me.Label1.TabIndex = 19
-        Me.Label1.Text = "Step 3: Select your hash type for display"
+        Me.Label1.Text = "Step 3: Select your hash type for display and copying to the Windows Clipboard"
         '
         'lblHashTextStep1
         '
