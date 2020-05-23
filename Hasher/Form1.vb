@@ -1373,16 +1373,14 @@ Public Class Form1
             e.Cancel = True
             Exit Sub
         Else
-            If workingThread IsNot Nothing Then
-                boolClosingWindow = True
+            boolClosingWindow = True
 
-                If pipeServer IsNot Nothing Then
-                    pipeServer.Disconnect()
-                    pipeServer.Close()
-                End If
-
-                workingThread.Abort()
+            If pipeServer IsNot Nothing Then
+                pipeServer.Disconnect()
+                pipeServer.Close()
             End If
+
+            If workingThread IsNot Nothing Then workingThread.Abort()
 
             My.Settings.windowLocation = Me.Location
         End If
