@@ -143,7 +143,7 @@ Public Class Form1
         Else
             Dim intNumberOfItemsWithoutHash As Integer = listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) String.IsNullOrWhiteSpace(item.allTheHashes.sha160)).Count
 
-            btnComputeHash.Enabled = If(intNumberOfItemsWithoutHash > 0, True, False)
+            btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
 
             If intNumberOfItemsWithoutHash <> listFiles.Items.Count Then
                 btnIndividualFilesCopyToClipboard.Enabled = True
@@ -1279,7 +1279,7 @@ Public Class Form1
 
     Private Sub txtTextToHash_TextChanged(sender As Object, e As EventArgs) Handles txtTextToHash.TextChanged
         lblHashTextStep1.Text = "Step 1: Input some text: " & myToString(txtTextToHash.Text.Length) & " " & If(txtTextToHash.Text.Length = 1, "Character", "Characters")
-        btnComputeTextHash.Enabled = If(txtTextToHash.Text.Length = 0, False, True)
+        btnComputeTextHash.Enabled = txtTextToHash.Text.Length <> 0
         btnCopyTextHashResultsToClipboard.Enabled = False
         txtHashResults.Text = Nothing
         hashTextAllTheHashes = Nothing
@@ -2198,7 +2198,7 @@ Public Class Form1
     End Sub
 
     Private Sub BufferSize_ValueChanged(sender As Object, e As EventArgs) Handles bufferSize.ValueChanged
-        btnSetBufferSize.Enabled = If(My.Settings.shortBufferSize = Decimal.ToInt16(bufferSize.Value), False, True)
+        btnSetBufferSize.Enabled = My.Settings.shortBufferSize <> Decimal.ToInt16(bufferSize.Value)
     End Sub
 
     Private Sub BtnPerformBenchmark_Click(sender As Object, e As EventArgs) Handles btnPerformBenchmark.Click
@@ -2251,11 +2251,11 @@ Public Class Form1
     End Sub
 
     Private Sub roundFileSizes_ValueChanged(sender As Object, e As EventArgs) Handles roundFileSizes.ValueChanged
-        btnSetRoundFileSizes.Enabled = If(My.Settings.roundFileSizes = Decimal.ToByte(roundFileSizes.Value), False, True)
+        btnSetRoundFileSizes.Enabled = My.Settings.roundFileSizes <> Decimal.ToByte(roundFileSizes.Value)
     End Sub
 
     Private Sub roundPercentages_ValueChanged(sender As Object, e As EventArgs) Handles roundPercentages.ValueChanged
-        btnSetRoundPercentages.Enabled = If(My.Settings.roundPercentages = Decimal.ToByte(roundPercentages.Value), False, True)
+        btnSetRoundPercentages.Enabled = My.Settings.roundPercentages <> Decimal.ToByte(roundPercentages.Value)
     End Sub
 
     Private Sub taskPriority_SelectedIndexChanged(sender As Object, e As EventArgs) Handles taskPriority.SelectedIndexChanged
@@ -2343,7 +2343,7 @@ Public Class Form1
             MsgBox("You have selected the same file. Oops.", MsgBoxStyle.Critical, strWindowTitle)
             txtFile1.Text = Nothing
         End If
-        btnCompareFiles.Enabled = If(String.IsNullOrEmpty(txtFile1.Text) Or String.IsNullOrEmpty(txtFile2.Text), False, True)
+        btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
     End Sub
 
     Private Sub txtFile2_TextChanged(sender As Object, e As EventArgs) Handles txtFile2.TextChanged
@@ -2351,7 +2351,7 @@ Public Class Form1
             MsgBox("You have selected the same file. Oops.", MsgBoxStyle.Critical, strWindowTitle)
             txtFile2.Text = Nothing
         End If
-        btnCompareFiles.Enabled = If(String.IsNullOrEmpty(txtFile1.Text) Or String.IsNullOrEmpty(txtFile2.Text), False, True)
+        btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
     End Sub
 
     Private Sub verifyListFilesContextMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles verifyListFilesContextMenu.Opening
