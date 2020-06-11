@@ -34,7 +34,7 @@ Public Module Globals
     End Function
 
     Public Function timespanToHMS(timeSpan As TimeSpan) As String
-        If timeSpan.TotalMilliseconds < 1000 Or timeSpan.Seconds = 0 Then
+        If timeSpan.TotalMilliseconds < 1000 Then
             If My.Settings.boolUseMilliseconds Then
                 Return Math.Round(timeSpan.TotalMilliseconds, 2) & "ms (less than one second)"
             Else
