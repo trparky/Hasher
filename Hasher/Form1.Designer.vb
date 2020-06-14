@@ -163,6 +163,7 @@ Partial Class Form1
         Me.btnTransferToHashIndividualFilesTab = New System.Windows.Forms.Button()
         Me.ViewChecksumDifferenceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.colNewHash = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.lblCompareFilesAllFilesStatus = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -942,11 +943,13 @@ Partial Class Form1
         Me.compareFilesTableLayoutControl.Controls.Add(Me.lblCompareFilesStatus, 0, 0)
         Me.compareFilesTableLayoutControl.Controls.Add(Me.compareFilesProgressBar, 0, 1)
         Me.compareFilesTableLayoutControl.Controls.Add(Me.CompareFilesAllFilesProgress, 1, 1)
+        Me.compareFilesTableLayoutControl.Controls.Add(Me.lblCompareFilesAllFilesStatus, 1, 0)
         Me.compareFilesTableLayoutControl.Location = New System.Drawing.Point(166, 99)
         Me.compareFilesTableLayoutControl.Name = "compareFilesTableLayoutControl"
         Me.compareFilesTableLayoutControl.RowCount = 2
         Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 31.37255!))
         Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 68.62745!))
+        Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.compareFilesTableLayoutControl.Size = New System.Drawing.Size(871, 51)
         Me.compareFilesTableLayoutControl.TabIndex = 35
         '
@@ -1627,6 +1630,15 @@ Partial Class Form1
         Me.ViewChecksumDifferenceToolStripMenuItem.Size = New System.Drawing.Size(215, 22)
         Me.ViewChecksumDifferenceToolStripMenuItem.Text = "&View Checksum Difference"
         '
+        'lblCompareFilesAllFilesStatus
+        '
+        Me.lblCompareFilesAllFilesStatus.AutoSize = True
+        Me.lblCompareFilesAllFilesStatus.Location = New System.Drawing.Point(438, 0)
+        Me.lblCompareFilesAllFilesStatus.Name = "lblCompareFilesAllFilesStatus"
+        Me.lblCompareFilesAllFilesStatus.Size = New System.Drawing.Size(45, 13)
+        Me.lblCompareFilesAllFilesStatus.TabIndex = 35
+        Me.lblCompareFilesAllFilesStatus.Text = "Label10"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1807,4 +1819,5 @@ Partial Class Form1
     Friend WithEvents colNewHash As ColumnHeader
     Friend WithEvents verifyListFilesContextMenu As ContextMenuStrip
     Friend WithEvents ViewChecksumDifferenceToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents lblCompareFilesAllFilesStatus As Label
 End Class
