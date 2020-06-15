@@ -422,7 +422,7 @@ Public Class Form1
         lblIndividualFilesStatus.Visible = False
         lblIndividualFilesStatusProcessingFile.Visible = False
         hashIndividualFilesAllFilesProgressBar.Visible = False
-        lblProcessingFile.Text = ""
+        lblProcessingFile.Text = Nothing
         IndividualFilesProgressBar.Value = 0
         IndividualFilesProgressBar.Visible = False
         ProgressForm.setTaskbarProgressBarValue(0)
@@ -719,10 +719,10 @@ Public Class Form1
         lblVerifyHashStatusProcessingFile.Visible = False
         lblFile1Hash.Text = Nothing
         lblFile2Hash.Text = Nothing
-        lblProcessingFile.Text = ""
-        lblProcessingFileVerify.Text = ""
-        lblCompareFileAgainstKnownHashType.Text = ""
-        lblCompareFilesAllFilesStatus.Text = ""
+        lblProcessingFile.Text = Nothing
+        lblProcessingFileVerify.Text = Nothing
+        lblCompareFileAgainstKnownHashType.Text = Nothing
+        lblCompareFilesAllFilesStatus.Text = Nothing
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
         chkSortByFileSizeAfterLoadingHashFile.Checked = My.Settings.boolSortByFileSizeAfterLoadingHashFile
@@ -1771,7 +1771,7 @@ Public Class Form1
         ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "")
 
         If String.IsNullOrWhiteSpace(txtKnownHash.Text) Then
-            lblCompareFileAgainstKnownHashType.Text = ""
+            lblCompareFileAgainstKnownHashType.Text = Nothing
             btnCompareAgainstKnownHash.Enabled = False
         Else
             txtKnownHash.Text = txtKnownHash.Text.Trim
@@ -1791,7 +1791,7 @@ Public Class Form1
                     lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA512"
                 End If
             Else
-                lblCompareFileAgainstKnownHashType.Text = ""
+                lblCompareFileAgainstKnownHashType.Text = Nothing
                 btnCompareAgainstKnownHash.Enabled = False
             End If
         End If
