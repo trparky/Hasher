@@ -410,7 +410,7 @@ Partial Class Form1
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(15, 324)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(237, 13)
+        Me.Label1.Size = New System.Drawing.Size(459, 13)
         Me.Label1.TabIndex = 19
         Me.Label1.Text = "Step 3: Select your hash type for display and copying to the Windows Clipboard"
         '
@@ -896,7 +896,7 @@ Partial Class Form1
         '
         Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem})
         Me.verifyListFilesContextMenu.Name = "verifyListFilesContextMenu"
-        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 48)
+        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 26)
         '
         'btnOpenExistingHashFile
         '
@@ -935,8 +935,6 @@ Partial Class Form1
         '
         'compareFilesTableLayoutControl
         '
-        Me.compareFilesTableLayoutControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.compareFilesTableLayoutControl.ColumnCount = 2
         Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -944,7 +942,7 @@ Partial Class Form1
         Me.compareFilesTableLayoutControl.Controls.Add(Me.compareFilesProgressBar, 0, 1)
         Me.compareFilesTableLayoutControl.Controls.Add(Me.CompareFilesAllFilesProgress, 1, 1)
         Me.compareFilesTableLayoutControl.Controls.Add(Me.lblCompareFilesAllFilesStatus, 1, 0)
-        Me.compareFilesTableLayoutControl.Location = New System.Drawing.Point(166, 99)
+        Me.compareFilesTableLayoutControl.Location = New System.Drawing.Point(166, 154)
         Me.compareFilesTableLayoutControl.Name = "compareFilesTableLayoutControl"
         Me.compareFilesTableLayoutControl.RowCount = 2
         Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 31.37255!))
@@ -986,7 +984,7 @@ Partial Class Form1
         'lblFile2Hash
         '
         Me.lblFile2Hash.AutoSize = True
-        Me.lblFile2Hash.Location = New System.Drawing.Point(563, 41)
+        Me.lblFile2Hash.Location = New System.Drawing.Point(15, 87)
         Me.lblFile2Hash.Name = "lblFile2Hash"
         Me.lblFile2Hash.Size = New System.Drawing.Size(39, 13)
         Me.lblFile2Hash.TabIndex = 33
@@ -995,7 +993,7 @@ Partial Class Form1
         'lblFile1Hash
         '
         Me.lblFile1Hash.AutoSize = True
-        Me.lblFile1Hash.Location = New System.Drawing.Point(563, 14)
+        Me.lblFile1Hash.Location = New System.Drawing.Point(15, 37)
         Me.lblFile1Hash.Name = "lblFile1Hash"
         Me.lblFile1Hash.Size = New System.Drawing.Size(39, 13)
         Me.lblFile1Hash.TabIndex = 32
@@ -1003,7 +1001,7 @@ Partial Class Form1
         '
         'btnCompareFiles
         '
-        Me.btnCompareFiles.Location = New System.Drawing.Point(18, 99)
+        Me.btnCompareFiles.Location = New System.Drawing.Point(18, 154)
         Me.btnCompareFiles.Name = "btnCompareFiles"
         Me.btnCompareFiles.Size = New System.Drawing.Size(142, 48)
         Me.btnCompareFiles.TabIndex = 29
@@ -1015,7 +1013,7 @@ Partial Class Form1
         '
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(15, 60)
+        Me.Label6.Location = New System.Drawing.Point(15, 115)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(236, 13)
         Me.Label6.TabIndex = 28
@@ -1024,7 +1022,7 @@ Partial Class Form1
         'compareRadioMD5
         '
         Me.compareRadioMD5.AutoSize = True
-        Me.compareRadioMD5.Location = New System.Drawing.Point(505, 76)
+        Me.compareRadioMD5.Location = New System.Drawing.Point(505, 131)
         Me.compareRadioMD5.Name = "compareRadioMD5"
         Me.compareRadioMD5.Size = New System.Drawing.Size(296, 17)
         Me.compareRadioMD5.TabIndex = 26
@@ -1034,7 +1032,7 @@ Partial Class Form1
         'compareRadioSHA512
         '
         Me.compareRadioSHA512.AutoSize = True
-        Me.compareRadioSHA512.Location = New System.Drawing.Point(166, 76)
+        Me.compareRadioSHA512.Location = New System.Drawing.Point(166, 131)
         Me.compareRadioSHA512.Name = "compareRadioSHA512"
         Me.compareRadioSHA512.Size = New System.Drawing.Size(68, 17)
         Me.compareRadioSHA512.TabIndex = 25
@@ -1044,7 +1042,7 @@ Partial Class Form1
         'compareRadioSHA384
         '
         Me.compareRadioSHA384.AutoSize = True
-        Me.compareRadioSHA384.Location = New System.Drawing.Point(92, 76)
+        Me.compareRadioSHA384.Location = New System.Drawing.Point(92, 131)
         Me.compareRadioSHA384.Name = "compareRadioSHA384"
         Me.compareRadioSHA384.Size = New System.Drawing.Size(68, 17)
         Me.compareRadioSHA384.TabIndex = 24
@@ -1055,7 +1053,7 @@ Partial Class Form1
         '
         Me.compareRadioSHA256.AutoSize = True
         Me.compareRadioSHA256.Checked = True
-        Me.compareRadioSHA256.Location = New System.Drawing.Point(18, 76)
+        Me.compareRadioSHA256.Location = New System.Drawing.Point(18, 131)
         Me.compareRadioSHA256.Name = "compareRadioSHA256"
         Me.compareRadioSHA256.Size = New System.Drawing.Size(68, 17)
         Me.compareRadioSHA256.TabIndex = 23
@@ -1066,7 +1064,7 @@ Partial Class Form1
         'compareRadioSHA1
         '
         Me.compareRadioSHA1.AutoSize = True
-        Me.compareRadioSHA1.Location = New System.Drawing.Point(240, 76)
+        Me.compareRadioSHA1.Location = New System.Drawing.Point(240, 131)
         Me.compareRadioSHA1.Name = "compareRadioSHA1"
         Me.compareRadioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.compareRadioSHA1.TabIndex = 22
@@ -1075,8 +1073,9 @@ Partial Class Form1
         '
         'btnCompareFilesBrowseFile2
         '
+        Me.btnCompareFilesBrowseFile2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCompareFilesBrowseFile2.Image = Global.Hasher.My.Resources.Resources.folder_explore
-        Me.btnCompareFilesBrowseFile2.Location = New System.Drawing.Point(532, 36)
+        Me.btnCompareFilesBrowseFile2.Location = New System.Drawing.Point(1009, 60)
         Me.btnCompareFilesBrowseFile2.Name = "btnCompareFilesBrowseFile2"
         Me.btnCompareFilesBrowseFile2.Size = New System.Drawing.Size(25, 23)
         Me.btnCompareFilesBrowseFile2.TabIndex = 5
@@ -1085,8 +1084,9 @@ Partial Class Form1
         '
         'btnCompareFilesBrowseFile1
         '
+        Me.btnCompareFilesBrowseFile1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCompareFilesBrowseFile1.Image = Global.Hasher.My.Resources.Resources.folder_explore
-        Me.btnCompareFilesBrowseFile1.Location = New System.Drawing.Point(532, 9)
+        Me.btnCompareFilesBrowseFile1.Location = New System.Drawing.Point(1009, 9)
         Me.btnCompareFilesBrowseFile1.Name = "btnCompareFilesBrowseFile1"
         Me.btnCompareFilesBrowseFile1.Size = New System.Drawing.Size(25, 23)
         Me.btnCompareFilesBrowseFile1.TabIndex = 4
@@ -1097,7 +1097,7 @@ Partial Class Form1
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(15, 40)
+        Me.Label5.Location = New System.Drawing.Point(15, 65)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(46, 13)
         Me.Label5.TabIndex = 3
@@ -1106,21 +1106,25 @@ Partial Class Form1
         'txtFile2
         '
         Me.txtFile2.AllowDrop = True
+        Me.txtFile2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtFile2.BackColor = System.Drawing.SystemColors.Window
-        Me.txtFile2.Location = New System.Drawing.Point(67, 37)
+        Me.txtFile2.Location = New System.Drawing.Point(67, 62)
         Me.txtFile2.Name = "txtFile2"
         Me.txtFile2.ReadOnly = True
-        Me.txtFile2.Size = New System.Drawing.Size(459, 20)
+        Me.txtFile2.Size = New System.Drawing.Size(936, 20)
         Me.txtFile2.TabIndex = 2
         '
         'txtFile1
         '
         Me.txtFile1.AllowDrop = True
+        Me.txtFile1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtFile1.BackColor = System.Drawing.SystemColors.Window
         Me.txtFile1.Location = New System.Drawing.Point(67, 11)
         Me.txtFile1.Name = "txtFile1"
         Me.txtFile1.ReadOnly = True
-        Me.txtFile1.Size = New System.Drawing.Size(459, 20)
+        Me.txtFile1.Size = New System.Drawing.Size(936, 20)
         Me.txtFile1.TabIndex = 1
         '
         'Label4
