@@ -513,7 +513,7 @@ Partial Class Form1
         Me.lblProcessingFile.Name = "lblProcessingFile"
         Me.lblProcessingFile.Size = New System.Drawing.Size(39, 13)
         Me.lblProcessingFile.TabIndex = 22
-        Me.lblProcessingFile.Text = "Label9"
+        Me.lblProcessingFile.Text = "lblProcessingFile"
         '
         'lblIndividualFilesStatusProcessingFile
         '
@@ -522,7 +522,7 @@ Partial Class Form1
         Me.lblIndividualFilesStatusProcessingFile.Name = "lblIndividualFilesStatusProcessingFile"
         Me.lblIndividualFilesStatusProcessingFile.Size = New System.Drawing.Size(37, 13)
         Me.lblIndividualFilesStatusProcessingFile.TabIndex = 17
-        Me.lblIndividualFilesStatusProcessingFile.Text = "fghfgff"
+        Me.lblIndividualFilesStatusProcessingFile.Text = "lblIndividualFilesStatusProcessingFile"
         '
         'IndividualFilesProgressBar
         '
@@ -814,7 +814,7 @@ Partial Class Form1
         Me.lblProcessingFileVerify.Name = "lblProcessingFileVerify"
         Me.lblProcessingFileVerify.Size = New System.Drawing.Size(39, 13)
         Me.lblProcessingFileVerify.TabIndex = 20
-        Me.lblProcessingFileVerify.Text = "Label9"
+        Me.lblProcessingFileVerify.Text = "lblProcessingFileVerify"
         '
         'VerifyHashProgressBar
         '
@@ -834,7 +834,7 @@ Partial Class Form1
         Me.lblVerifyHashStatusProcessingFile.Name = "lblVerifyHashStatusProcessingFile"
         Me.lblVerifyHashStatusProcessingFile.Size = New System.Drawing.Size(37, 13)
         Me.lblVerifyHashStatusProcessingFile.TabIndex = 18
-        Me.lblVerifyHashStatusProcessingFile.Text = "dfgdfd"
+        Me.lblVerifyHashStatusProcessingFile.Text = "lblVerifyHashStatusProcessingFile"
         '
         'verifyIndividualFilesAllFilesProgressBar
         '
@@ -988,7 +988,7 @@ Partial Class Form1
         Me.lblFile2Hash.Name = "lblFile2Hash"
         Me.lblFile2Hash.Size = New System.Drawing.Size(39, 13)
         Me.lblFile2Hash.TabIndex = 33
-        Me.lblFile2Hash.Text = "Label8"
+        Me.lblFile2Hash.Text = "lblFile2Hash"
         '
         'lblFile1Hash
         '
@@ -997,7 +997,7 @@ Partial Class Form1
         Me.lblFile1Hash.Name = "lblFile1Hash"
         Me.lblFile1Hash.Size = New System.Drawing.Size(39, 13)
         Me.lblFile1Hash.TabIndex = 32
-        Me.lblFile1Hash.Text = "Label7"
+        Me.lblFile1Hash.Text = "lblFile1Hash"
         '
         'btnCompareFiles
         '
@@ -1171,7 +1171,7 @@ Partial Class Form1
         Me.lblCompareFileAgainstKnownHashType.Name = "lblCompareFileAgainstKnownHashType"
         Me.lblCompareFileAgainstKnownHashType.Size = New System.Drawing.Size(39, 13)
         Me.lblCompareFileAgainstKnownHashType.TabIndex = 34
-        Me.lblCompareFileAgainstKnownHashType.Text = "Label9"
+        Me.lblCompareFileAgainstKnownHashType.Text = "lblCompareFileAgainstKnownHashType"
         '
         'compareAgainstKnownHashProgressBar
         '
@@ -1545,7 +1545,7 @@ Partial Class Form1
         Me.lblHashIndividualFilesTotalStatus.Name = "lblHashIndividualFilesTotalStatus"
         Me.lblHashIndividualFilesTotalStatus.Size = New System.Drawing.Size(45, 13)
         Me.lblHashIndividualFilesTotalStatus.TabIndex = 24
-        Me.lblHashIndividualFilesTotalStatus.Text = "Label10"
+        Me.lblHashIndividualFilesTotalStatus.Text = "lblHashIndividualFilesTotalStatus"
         Me.lblHashIndividualFilesTotalStatus.Visible = False
         '
         'lblVerifyHashesTotalStatus
@@ -1556,7 +1556,7 @@ Partial Class Form1
         Me.lblVerifyHashesTotalStatus.Name = "lblVerifyHashesTotalStatus"
         Me.lblVerifyHashesTotalStatus.Size = New System.Drawing.Size(45, 13)
         Me.lblVerifyHashesTotalStatus.TabIndex = 25
-        Me.lblVerifyHashesTotalStatus.Text = "Label10"
+        Me.lblVerifyHashesTotalStatus.Text = "lblVerifyHashesTotalStatus"
         Me.lblVerifyHashesTotalStatus.Visible = False
         '
         'btnSetRoundPercentages
@@ -1641,7 +1641,7 @@ Partial Class Form1
         Me.lblCompareFilesAllFilesStatus.Name = "lblCompareFilesAllFilesStatus"
         Me.lblCompareFilesAllFilesStatus.Size = New System.Drawing.Size(45, 13)
         Me.lblCompareFilesAllFilesStatus.TabIndex = 35
-        Me.lblCompareFilesAllFilesStatus.Text = "Label10"
+        Me.lblCompareFilesAllFilesStatus.Text = "lblCompareFilesAllFilesStatus"
         '
         'Form1
         '
