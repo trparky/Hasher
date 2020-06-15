@@ -1593,7 +1593,7 @@ Partial Class Form1
         '
         'btnSetRoundPercentages
         '
-        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(750, 254)
+        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(701, 251)
         Me.btnSetRoundPercentages.Name = "btnSetRoundPercentages"
         Me.btnSetRoundPercentages.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundPercentages.TabIndex = 36
@@ -1602,7 +1602,7 @@ Partial Class Form1
         '
         'roundPercentages
         '
-        Me.roundPercentages.Location = New System.Drawing.Point(694, 254)
+        Me.roundPercentages.Location = New System.Drawing.Point(645, 254)
         Me.roundPercentages.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundPercentages.Name = "roundPercentages"
         Me.roundPercentages.Size = New System.Drawing.Size(50, 20)
@@ -1612,11 +1612,11 @@ Partial Class Form1
         'lblRoundPercentagesLabel
         '
         Me.lblRoundPercentagesLabel.AutoSize = True
-        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(481, 248)
+        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(501, 245)
         Me.lblRoundPercentagesLabel.Name = "lblRoundPercentagesLabel"
-        Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(207, 26)
+        Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(138, 39)
         Me.lblRoundPercentagesLabel.TabIndex = 34
-        Me.lblRoundPercentagesLabel.Text = "Round percentages to how many numbers" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "after decimal point (Default: 2)"
+        Me.lblRoundPercentagesLabel.Text = "Round percentages to how" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "many numbers after decimal" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "point (Default: 2)"
         '
         'btnSetRoundFileSizes
         '
