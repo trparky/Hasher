@@ -1038,18 +1038,18 @@ Partial Class Form1
         Me.lblFile2Hash.AutoSize = True
         Me.lblFile2Hash.Location = New System.Drawing.Point(15, 87)
         Me.lblFile2Hash.Name = "lblFile2Hash"
-        Me.lblFile2Hash.Size = New System.Drawing.Size(64, 13)
+        Me.lblFile2Hash.Size = New System.Drawing.Size(179, 13)
         Me.lblFile2Hash.TabIndex = 33
-        Me.lblFile2Hash.Text = "lblFile2Hash"
+        Me.lblFile2Hash.Text = "Hash/Checksum: (To Be Computed)"
         '
         'lblFile1Hash
         '
         Me.lblFile1Hash.AutoSize = True
         Me.lblFile1Hash.Location = New System.Drawing.Point(15, 37)
         Me.lblFile1Hash.Name = "lblFile1Hash"
-        Me.lblFile1Hash.Size = New System.Drawing.Size(64, 13)
+        Me.lblFile1Hash.Size = New System.Drawing.Size(179, 13)
         Me.lblFile1Hash.TabIndex = 32
-        Me.lblFile1Hash.Text = "lblFile1Hash"
+        Me.lblFile1Hash.Text = "Hash/Checksum: (To Be Computed)"
         '
         'btnCompareFiles
         '

@@ -717,8 +717,6 @@ Public Class Form1
         verifyIndividualFilesAllFilesProgressBar.Visible = False
         CompareFilesAllFilesProgress.Visible = False
         lblVerifyHashStatusProcessingFile.Visible = False
-        lblFile1Hash.Text = Nothing
-        lblFile2Hash.Text = Nothing
         lblProcessingFile.Text = Nothing
         lblProcessingFileVerify.Text = Nothing
         lblCompareFileAgainstKnownHashType.Text = Nothing
@@ -1990,7 +1988,7 @@ Public Class Form1
         Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
         If receivedData.Count = 1 Then
             txtFile1.Text = receivedData(0)
-            lblFile1Hash.Text = Nothing
+            lblFile1Hash.Text = "Hash/Checksum: (To Be Computed)"
         End If
     End Sub
 
@@ -2002,7 +2000,7 @@ Public Class Form1
         Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
         If receivedData.Count = 1 Then
             txtFile2.Text = receivedData(0)
-            lblFile2Hash.Text = Nothing
+            lblFile2Hash.Text = "Hash/Checksum: (To Be Computed)"
         End If
     End Sub
 
@@ -2346,6 +2344,7 @@ Public Class Form1
             txtFile1.Text = Nothing
         End If
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
+        lblFile1Hash.Text = "Hash/Checksum: (To Be Computed)"
     End Sub
 
     Private Sub txtFile2_TextChanged(sender As Object, e As EventArgs) Handles txtFile2.TextChanged
@@ -2354,6 +2353,7 @@ Public Class Form1
             txtFile2.Text = Nothing
         End If
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
+        lblFile2Hash.Text = "Hash/Checksum: (To Be Computed)"
     End Sub
 
     Private Sub verifyListFilesContextMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles verifyListFilesContextMenu.Opening
