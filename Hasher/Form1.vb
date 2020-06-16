@@ -1663,6 +1663,7 @@ Public Class Form1
                                                                   compareRadioSHA384.Enabled = True
                                                                   compareRadioSHA512.Enabled = True
                                                                   lblCompareFilesStatus.Text = strNoBackgroundProcesses
+                                                                  lblCompareFilesAllFilesStatus.Text = Nothing
                                                                   compareFilesProgressBar.Value = 0
                                                                   compareFilesProgressBar.Visible = False
                                                                   CompareFilesAllFilesProgress.Value = 0
@@ -1702,6 +1703,7 @@ Public Class Form1
                                                                       compareRadioSHA384.Enabled = True
                                                                       compareRadioSHA512.Enabled = True
                                                                       lblCompareFilesStatus.Text = strNoBackgroundProcesses
+                                                                      lblCompareFilesAllFilesStatus.Text = Nothing
                                                                       Me.Text = "Hasher"
                                                                   End If
 
