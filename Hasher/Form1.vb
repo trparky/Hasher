@@ -1729,7 +1729,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnCompareFilesBrowseFile1_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile1.Click
-        lblFile1Hash.Text = Nothing
+        lblFile1Hash.Text = "Hash/Checksum: (To Be Computed)"
         pictureBoxCompareFiles.Image = Nothing
         ToolTip.SetToolTip(lblFile1Hash, "")
 
@@ -1741,7 +1741,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnCompareFilesBrowseFile2_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile2.Click
-        lblFile2Hash.Text = Nothing
+        lblFile2Hash.Text = "Hash/Checksum: (To Be Computed)"
         pictureBoxCompareFiles.Image = Nothing
         ToolTip.SetToolTip(lblFile2Hash, "")
 
