@@ -36,6 +36,7 @@ Public Class Form1
     Private Const strColumnTitleChecksumSHA256 As String = "Hash/Checksum (SHA256)"
     Private Const strColumnTitleChecksumSHA384 As String = "Hash/Checksum (SHA384)"
     Private Const strColumnTitleChecksumSHA512 As String = "Hash/Checksum (SHA512)"
+    Private Const strHashCheksumToBeComputed As String = "Hash/Checksum: (To Be Computed)"
 
     Private Enum tabNumber As Short
         null = -1
@@ -1729,7 +1730,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnCompareFilesBrowseFile1_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile1.Click
-        lblFile1Hash.Text = "Hash/Checksum: (To Be Computed)"
+        lblFile1Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
         ToolTip.SetToolTip(lblFile1Hash, "")
 
@@ -1741,7 +1742,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnCompareFilesBrowseFile2_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile2.Click
-        lblFile2Hash.Text = "Hash/Checksum: (To Be Computed)"
+        lblFile2Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
         ToolTip.SetToolTip(lblFile2Hash, "")
 
@@ -1994,7 +1995,7 @@ Public Class Form1
         Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
         If receivedData.Count = 1 Then
             txtFile1.Text = receivedData(0)
-            lblFile1Hash.Text = "Hash/Checksum: (To Be Computed)"
+            lblFile1Hash.Text = strHashCheksumToBeComputed
             pictureBoxCompareFiles.Image = Nothing
         End If
     End Sub
@@ -2007,7 +2008,7 @@ Public Class Form1
         Dim receivedData As String() = DirectCast(e.Data.GetData(DataFormats.FileDrop), String())
         If receivedData.Count = 1 Then
             txtFile2.Text = receivedData(0)
-            lblFile2Hash.Text = "Hash/Checksum: (To Be Computed)"
+            lblFile2Hash.Text = strHashCheksumToBeComputed
             pictureBoxCompareFiles.Image = Nothing
         End If
     End Sub
@@ -2352,7 +2353,7 @@ Public Class Form1
             txtFile1.Text = Nothing
         End If
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
-        lblFile1Hash.Text = "Hash/Checksum: (To Be Computed)"
+        lblFile1Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
     End Sub
 
@@ -2362,7 +2363,7 @@ Public Class Form1
             txtFile2.Text = Nothing
         End If
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
-        lblFile2Hash.Text = "Hash/Checksum: (To Be Computed)"
+        lblFile2Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
     End Sub
 
