@@ -164,6 +164,7 @@ Partial Class Form1
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -181,6 +182,7 @@ Partial Class Form1
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.roundPercentages, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.roundFileSizes, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -954,6 +956,7 @@ Partial Class Form1
         'tabCompareFiles
         '
         Me.tabCompareFiles.BackColor = System.Drawing.SystemColors.Control
+        Me.tabCompareFiles.Controls.Add(Me.pictureBoxCompareFiles)
         Me.tabCompareFiles.Controls.Add(Me.compareFilesTableLayoutControl)
         Me.tabCompareFiles.Controls.Add(Me.lblFile2Hash)
         Me.tabCompareFiles.Controls.Add(Me.lblFile1Hash)
@@ -1127,7 +1130,7 @@ Partial Class Form1
         '
         Me.btnCompareFilesBrowseFile2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCompareFilesBrowseFile2.Image = Global.Hasher.My.Resources.Resources.folder_explore
-        Me.btnCompareFilesBrowseFile2.Location = New System.Drawing.Point(1009, 60)
+        Me.btnCompareFilesBrowseFile2.Location = New System.Drawing.Point(938, 60)
         Me.btnCompareFilesBrowseFile2.Name = "btnCompareFilesBrowseFile2"
         Me.btnCompareFilesBrowseFile2.Size = New System.Drawing.Size(25, 23)
         Me.btnCompareFilesBrowseFile2.TabIndex = 5
@@ -1138,7 +1141,7 @@ Partial Class Form1
         '
         Me.btnCompareFilesBrowseFile1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCompareFilesBrowseFile1.Image = Global.Hasher.My.Resources.Resources.folder_explore
-        Me.btnCompareFilesBrowseFile1.Location = New System.Drawing.Point(1009, 9)
+        Me.btnCompareFilesBrowseFile1.Location = New System.Drawing.Point(938, 9)
         Me.btnCompareFilesBrowseFile1.Name = "btnCompareFilesBrowseFile1"
         Me.btnCompareFilesBrowseFile1.Size = New System.Drawing.Size(25, 23)
         Me.btnCompareFilesBrowseFile1.TabIndex = 4
@@ -1164,7 +1167,7 @@ Partial Class Form1
         Me.txtFile2.Location = New System.Drawing.Point(67, 62)
         Me.txtFile2.Name = "txtFile2"
         Me.txtFile2.ReadOnly = True
-        Me.txtFile2.Size = New System.Drawing.Size(936, 20)
+        Me.txtFile2.Size = New System.Drawing.Size(865, 20)
         Me.txtFile2.TabIndex = 2
         '
         'txtFile1
@@ -1176,7 +1179,7 @@ Partial Class Form1
         Me.txtFile1.Location = New System.Drawing.Point(67, 11)
         Me.txtFile1.Name = "txtFile1"
         Me.txtFile1.ReadOnly = True
-        Me.txtFile1.Size = New System.Drawing.Size(936, 20)
+        Me.txtFile1.Size = New System.Drawing.Size(865, 20)
         Me.txtFile1.TabIndex = 1
         '
         'Label4
@@ -1650,6 +1653,15 @@ Partial Class Form1
         Me.OpenFileDialog.Multiselect = True
         Me.OpenFileDialog.Title = "Add Files to List..."
         '
+        'pictureBoxCompareFiles
+        '
+        Me.pictureBoxCompareFiles.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pictureBoxCompareFiles.Location = New System.Drawing.Point(969, 14)
+        Me.pictureBoxCompareFiles.Name = "pictureBoxCompareFiles"
+        Me.pictureBoxCompareFiles.Size = New System.Drawing.Size(64, 64)
+        Me.pictureBoxCompareFiles.TabIndex = 36
+        Me.pictureBoxCompareFiles.TabStop = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1687,6 +1699,7 @@ Partial Class Form1
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.roundPercentages, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.roundFileSizes, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1831,4 +1844,5 @@ Partial Class Form1
     Friend WithEvents verifyListFilesContextMenu As ContextMenuStrip
     Friend WithEvents ViewChecksumDifferenceToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents lblCompareFilesAllFilesStatus As Label
+    Friend WithEvents pictureBoxCompareFiles As PictureBox
 End Class
