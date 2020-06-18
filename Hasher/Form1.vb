@@ -943,6 +943,7 @@ Public Class Form1
 
     Private Sub processExistingHashFile(strPathToChecksumFile As String)
         lblVerifyFileNameLabel.Text = "File Name: " & strPathToChecksumFile
+        verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height - 72)
 
         Dim checksumType As checksumType
         Dim checksumFileInfo As New IO.FileInfo(strPathToChecksumFile)
@@ -1128,6 +1129,7 @@ Public Class Form1
                                                                   VerifyHashProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
                                                                   Me.Text = "Hasher"
+                                                                  verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
 
                                                                   Dim sbMessageBoxText As New Text.StringBuilder
 
@@ -1192,6 +1194,7 @@ Public Class Form1
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       verifyHashesListFiles.Items.Clear()
                                                                       Me.Text = "Hasher"
+                                                                      verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
                                                                       lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
                                                                   End If
 

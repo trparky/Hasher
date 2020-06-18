@@ -175,6 +175,7 @@ Partial Class Form1
         Me.verifySavedHashesTableLayoutControl.SuspendLayout()
         Me.verifyListFilesContextMenu.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
+        CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.compareFilesTableLayoutControl.SuspendLayout()
         Me.tabCompareAgainstKnownHash.SuspendLayout()
         CType(Me.pictureBoxVerifyAgainstResults, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -182,7 +183,6 @@ Partial Class Form1
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.roundPercentages, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.roundFileSizes, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabControl1
@@ -776,9 +776,9 @@ Partial Class Form1
         'tabVerifySavedHashes
         '
         Me.tabVerifySavedHashes.BackColor = System.Drawing.SystemColors.Control
+        Me.tabVerifySavedHashes.Controls.Add(Me.verifyHashesListFiles)
         Me.tabVerifySavedHashes.Controls.Add(Me.verifySavedHashesTableLayoutControl)
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyFileNameLabel)
-        Me.tabVerifySavedHashes.Controls.Add(Me.verifyHashesListFiles)
         Me.tabVerifySavedHashes.Controls.Add(Me.btnOpenExistingHashFile)
         Me.tabVerifySavedHashes.Controls.Add(Me.btnTransferToHashIndividualFilesTab)
         Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
@@ -891,7 +891,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
         Me.verifyHashesListFiles.MultiSelect = False
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
-        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 260)
+        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 332)
         Me.verifyHashesListFiles.TabIndex = 6
         Me.verifyHashesListFiles.UseCompatibleStateImageBehavior = False
         Me.verifyHashesListFiles.View = System.Windows.Forms.View.Details
