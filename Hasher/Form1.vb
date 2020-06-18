@@ -8,7 +8,11 @@ Public Class Form1
 #End If
     Private Const strToBeComputed As String = "To Be Computed"
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
+#If DEBUG Then
+    Private Const strWindowTitle As String = "Hasher (Debug Mode)"
+#Else
     Private Const strWindowTitle As String = "Hasher"
+#End If
 
     Private intBufferSize As Integer = My.Settings.shortBufferSize * 1024 * 1024
     Private strLastDirectoryWorkedOn As String
