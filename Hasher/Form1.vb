@@ -1678,9 +1678,11 @@ Public Class Form1
                                                                   If boolSuccessful Then
                                                                       If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
                                                                           pictureBoxCompareFiles.Image = My.Resources.good_check
+                                                                          ToolTip.SetToolTip(pictureBoxCompareFiles, "Both files are the same.")
                                                                           MsgBox("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strWindowTitle)
                                                                       Else
                                                                           pictureBoxCompareFiles.Image = My.Resources.bad_check
+                                                                          ToolTip.SetToolTip(pictureBoxCompareFiles, "The two files don't match.")
                                                                           MsgBox("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strWindowTitle)
                                                                       End If
                                                                   Else
@@ -1735,6 +1737,7 @@ Public Class Form1
     Private Sub btnCompareFilesBrowseFile1_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile1.Click
         lblFile1Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
+        ToolTip.SetToolTip(pictureBoxCompareFiles, "")
         ToolTip.SetToolTip(lblFile1Hash, "")
 
         OpenFileDialog.Title = "Select file #1 to be compared..."
@@ -1747,6 +1750,7 @@ Public Class Form1
     Private Sub btnCompareFilesBrowseFile2_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile2.Click
         lblFile2Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
+        ToolTip.SetToolTip(pictureBoxCompareFiles, "")
         ToolTip.SetToolTip(lblFile2Hash, "")
 
         OpenFileDialog.Title = "Select file #2 to be compared..."
@@ -2000,6 +2004,7 @@ Public Class Form1
             txtFile1.Text = receivedData(0)
             lblFile1Hash.Text = strHashCheksumToBeComputed
             pictureBoxCompareFiles.Image = Nothing
+            ToolTip.SetToolTip(pictureBoxCompareFiles, "")
         End If
     End Sub
 
@@ -2013,6 +2018,7 @@ Public Class Form1
             txtFile2.Text = receivedData(0)
             lblFile2Hash.Text = strHashCheksumToBeComputed
             pictureBoxCompareFiles.Image = Nothing
+            ToolTip.SetToolTip(pictureBoxCompareFiles, "")
         End If
     End Sub
 
@@ -2358,6 +2364,7 @@ Public Class Form1
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
         lblFile1Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
+        ToolTip.SetToolTip(pictureBoxCompareFiles, "")
     End Sub
 
     Private Sub txtFile2_TextChanged(sender As Object, e As EventArgs) Handles txtFile2.TextChanged
@@ -2368,6 +2375,7 @@ Public Class Form1
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
         lblFile2Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
+        ToolTip.SetToolTip(pictureBoxCompareFiles, "")
     End Sub
 
     Private Sub verifyListFilesContextMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles verifyListFilesContextMenu.Opening
