@@ -2325,7 +2325,7 @@ Public Class Form1
         listFiles.BeginUpdate()
 
         For Each item As myListViewItem In verifyHashesListFiles.Items
-            If Not filesInListFiles.Contains(item.fileName.ToLower) Then
+            If Not filesInListFiles.Contains(item.fileName.ToLower) And IO.File.Exists(item.fileName) Then
                 filesInListFiles.Add(item.fileName.ToLower)
 
                 Dim itemToBeAdded As New myListViewItem(item.fileName) With {
