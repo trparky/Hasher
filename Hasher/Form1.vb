@@ -365,7 +365,7 @@ Public Class Form1
                                                                   radioSHA384.Enabled = True
                                                                   radioSHA512.Enabled = True
 
-                                                                  Me.Text = "Hasher"
+                                                                  Me.Text = strWindowTitle
                                                                   resetHashIndividualFilesProgress()
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
@@ -383,7 +383,7 @@ Public Class Form1
                                                                       IndividualFilesProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       resetHashIndividualFilesProgress()
-                                                                      Me.Text = "Hasher"
+                                                                      Me.Text = strWindowTitle
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
@@ -703,6 +703,7 @@ Public Class Form1
         End With
 
         Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
+        Me.Text = strWindowTitle
 
         If areWeAnAdministrator() Then
             Me.Text &= " (WARNING!!! Running as Administrator)"
@@ -1030,7 +1031,7 @@ Public Class Form1
 
                                                      myInvoke(Sub()
                                                                   verifyHashesListFiles.EndUpdate()
-                                                                  Me.Text = "Hasher"
+                                                                  Me.Text = strWindowTitle
                                                                   If chkSortByFileSizeAfterLoadingHashFile.Checked Then applyFileSizeSortingToVerifyList()
                                                                   VerifyHashProgressBar.Value = 0
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
@@ -1128,7 +1129,7 @@ Public Class Form1
                                                                   VerifyHashProgressBar.Value = 0
                                                                   VerifyHashProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                                  Me.Text = "Hasher"
+                                                                  Me.Text = strWindowTitle
                                                                   verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
 
                                                                   Dim sbMessageBoxText As New Text.StringBuilder
@@ -1193,7 +1194,7 @@ Public Class Form1
                                                                       VerifyHashProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       verifyHashesListFiles.Items.Clear()
-                                                                      Me.Text = "Hasher"
+                                                                      Me.Text = strWindowTitle
                                                                       verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
                                                                       lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
                                                                   End If
@@ -1673,7 +1674,7 @@ Public Class Form1
                                                                   CompareFilesAllFilesProgress.Value = 0
                                                                   CompareFilesAllFilesProgress.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                                  Me.Text = "Hasher"
+                                                                  Me.Text = strWindowTitle
 
                                                                   If boolSuccessful Then
                                                                       If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
@@ -1712,7 +1713,7 @@ Public Class Form1
                                                                       compareRadioSHA512.Enabled = True
                                                                       lblCompareFilesStatus.Text = strNoBackgroundProcesses
                                                                       lblCompareFilesAllFilesStatus.Text = Nothing
-                                                                      Me.Text = "Hasher"
+                                                                      Me.Text = strWindowTitle
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
@@ -1886,7 +1887,7 @@ Public Class Form1
                                                                   compareAgainstKnownHashProgressBar.Value = 0
                                                                   compareAgainstKnownHashProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                                  Me.Text = "Hasher"
+                                                                  Me.Text = strWindowTitle
 
                                                                   If boolSuccessful Then
                                                                       If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
@@ -1917,7 +1918,7 @@ Public Class Form1
                                                                       compareAgainstKnownHashProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       lblCompareFilesStatus.Text = strNoBackgroundProcesses
-                                                                      Me.Text = "Hasher"
+                                                                      Me.Text = strWindowTitle
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
