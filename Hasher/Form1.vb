@@ -441,7 +441,7 @@ Public Class Form1
         For Each item As myListViewItem In listFiles.Items
             If Not String.IsNullOrWhiteSpace(item.hash) Then
                 strFile = item.fileName
-                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile, "")
+                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile, Nothing)
                 stringBuilder.AppendLine(item.hash & " *" & strFile)
             End If
         Next
@@ -685,7 +685,7 @@ Public Class Form1
                 commandLineArgument = .CommandLineArgs(0).Trim
 
                 If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", "").Replace(Chr(34), "")
+                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", Nothing).Replace(Chr(34), Nothing)
 
                     If boolNamedPipeServerStarted Then
                         ' In this case this instance of the program is the first executed instance so it has a named pipe server running
@@ -766,8 +766,8 @@ Public Class Form1
                 commandLineArgument = .CommandLineArgs(0).Trim
 
                 If commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
-                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--hashfile=", "")
-                    commandLineArgument = commandLineArgument.Replace(Chr(34), "")
+                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--hashfile=", Nothing)
+                    commandLineArgument = commandLineArgument.Replace(Chr(34), Nothing)
 
                     If IO.File.Exists(commandLineArgument) Then
                         TabControl1.SelectTab(3)
@@ -776,8 +776,8 @@ Public Class Form1
                         processExistingHashFile(commandLineArgument)
                     End If
                 ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
-                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--knownhashfile=", "")
-                    commandLineArgument = commandLineArgument.Replace(Chr(34), "")
+                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--knownhashfile=", Nothing)
+                    commandLineArgument = commandLineArgument.Replace(Chr(34), Nothing)
                     TabControl1.SelectTab(5)
                     txtFileForKnownHash.Text = commandLineArgument
                     txtKnownHash.Select()
@@ -1346,13 +1346,13 @@ Public Class Form1
         If e.TabPageIndex = tabNumber.settingsTab AndAlso shortCurrentlyActiveTab <> tabNumber.null AndAlso Not TabControl1.TabPages(shortCurrentlyActiveTab).Text.Contains("Currently Active") Then
             TabControl1.TabPages(shortCurrentlyActiveTab).Text &= " (Currently Active)"
         ElseIf e.TabPageIndex = shortCurrentlyActiveTab AndAlso TabControl1.TabPages(shortCurrentlyActiveTab).Text.Contains("Currently Active") Then
-            Dim strNewTabText As String = TabControl1.TabPages(shortCurrentlyActiveTab).Text.Replace(" (Currently Active)", "")
+            Dim strNewTabText As String = TabControl1.TabPages(shortCurrentlyActiveTab).Text.Replace(" (Currently Active)", Nothing)
             TabControl1.TabPages(shortCurrentlyActiveTab).Text = strNewTabText
         End If
 
         If e.TabPageIndex = tabNumber.compareFileAgainstKnownHashTab Then
             pictureBoxVerifyAgainstResults.Image = Nothing
-            ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "")
+            ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, Nothing)
             txtFileForKnownHash.Text = Nothing
             txtKnownHash.Text = Nothing
             lblCompareFileAgainstKnownHashType.Text = Nothing
@@ -1737,8 +1737,8 @@ Public Class Form1
     Private Sub btnCompareFilesBrowseFile1_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile1.Click
         lblFile1Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
-        ToolTip.SetToolTip(pictureBoxCompareFiles, "")
-        ToolTip.SetToolTip(lblFile1Hash, "")
+        ToolTip.SetToolTip(pictureBoxCompareFiles, Nothing)
+        ToolTip.SetToolTip(lblFile1Hash, Nothing)
 
         OpenFileDialog.Title = "Select file #1 to be compared..."
         OpenFileDialog.Multiselect = False
@@ -1750,8 +1750,8 @@ Public Class Form1
     Private Sub btnCompareFilesBrowseFile2_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile2.Click
         lblFile2Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
-        ToolTip.SetToolTip(pictureBoxCompareFiles, "")
-        ToolTip.SetToolTip(lblFile2Hash, "")
+        ToolTip.SetToolTip(pictureBoxCompareFiles, Nothing)
+        ToolTip.SetToolTip(lblFile2Hash, Nothing)
 
         OpenFileDialog.Title = "Select file #2 to be compared..."
         OpenFileDialog.Multiselect = False
@@ -1780,7 +1780,7 @@ Public Class Form1
 
     Private Sub txtKnownHash_TextChanged(sender As Object, e As EventArgs) Handles txtKnownHash.TextChanged
         pictureBoxVerifyAgainstResults.Image = Nothing
-        ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "")
+        ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, Nothing)
 
         If String.IsNullOrWhiteSpace(txtKnownHash.Text) Then
             lblCompareFileAgainstKnownHashType.Text = Nothing
@@ -1942,7 +1942,7 @@ Public Class Form1
     Private Function getHashOfString(inputString As String, hashType As checksumType) As String
         Using HashAlgorithm As Security.Cryptography.HashAlgorithm = checksums.getHashEngine(hashType)
             Dim byteOutput As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
-            Return BitConverter.ToString(byteOutput).ToLower().Replace("-", "")
+            Return BitConverter.ToString(byteOutput).ToLower().Replace("-", Nothing)
         End Using
     End Function
 
@@ -1961,11 +1961,11 @@ Public Class Form1
         sha512Engine.ComputeHash(byteArray)
 
         Dim allTheHashes As New allTheHashes With {
-            .md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", ""),
-            .sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", ""),
-            .sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", ""),
-            .sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", ""),
-            .sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
+            .md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", Nothing),
+            .sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", Nothing),
+            .sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", Nothing),
+            .sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", Nothing),
+            .sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", Nothing)
         }
 
         md5Engine.Dispose()
@@ -2004,7 +2004,7 @@ Public Class Form1
             txtFile1.Text = receivedData(0)
             lblFile1Hash.Text = strHashCheksumToBeComputed
             pictureBoxCompareFiles.Image = Nothing
-            ToolTip.SetToolTip(pictureBoxCompareFiles, "")
+            ToolTip.SetToolTip(pictureBoxCompareFiles, Nothing)
         End If
     End Sub
 
@@ -2018,7 +2018,7 @@ Public Class Form1
             txtFile2.Text = receivedData(0)
             lblFile2Hash.Text = strHashCheksumToBeComputed
             pictureBoxCompareFiles.Image = Nothing
-            ToolTip.SetToolTip(pictureBoxCompareFiles, "")
+            ToolTip.SetToolTip(pictureBoxCompareFiles, Nothing)
         End If
     End Sub
 
@@ -2123,7 +2123,7 @@ Public Class Form1
             Dim buffer As Byte() = New Byte(499) {}
             namedPipeServer.Read(buffer, 0, 500)
 
-            Dim strReceivedFileName As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
+            Dim strReceivedFileName As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, Nothing).Trim
             addFileOrDirectoryToHashFileList(strReceivedFileName)
 
             namedPipeServer.Dispose()
@@ -2364,7 +2364,7 @@ Public Class Form1
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
         lblFile1Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
-        ToolTip.SetToolTip(pictureBoxCompareFiles, "")
+        ToolTip.SetToolTip(pictureBoxCompareFiles, Nothing)
     End Sub
 
     Private Sub txtFile2_TextChanged(sender As Object, e As EventArgs) Handles txtFile2.TextChanged
@@ -2375,7 +2375,7 @@ Public Class Form1
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
         lblFile2Hash.Text = strHashCheksumToBeComputed
         pictureBoxCompareFiles.Image = Nothing
-        ToolTip.SetToolTip(pictureBoxCompareFiles, "")
+        ToolTip.SetToolTip(pictureBoxCompareFiles, Nothing)
     End Sub
 
     Private Sub verifyListFilesContextMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles verifyListFilesContextMenu.Opening

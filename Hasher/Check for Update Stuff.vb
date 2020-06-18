@@ -108,7 +108,7 @@ Module Check_for_Update_Stuff_Module
         Dim currentProcessFileName As String = New FileInfo(Application.ExecutablePath).Name
 
         If currentProcessFileName.caseInsensitiveContains(".new.exe") Then
-            Dim mainEXEName As String = caseInsensitiveReplace(currentProcessFileName, ".new.exe", "")
+            Dim mainEXEName As String = caseInsensitiveReplace(currentProcessFileName, ".new.exe", Nothing)
 
             searchForProcessAndKillIt(mainEXEName, False)
 
@@ -304,7 +304,7 @@ Class Check_for_Update_Stuff
 
     Private Shared Function SHA256ChecksumStream(ByRef stream As Stream) As String
         Using SHA256Engine As New Security.Cryptography.SHA256CryptoServiceProvider
-            Return BitConverter.ToString(SHA256Engine.ComputeHash(stream)).ToLower().Replace("-", "").Trim
+            Return BitConverter.ToString(SHA256Engine.ComputeHash(stream)).ToLower().Replace("-", Nothing).Trim
         End Using
     End Function
 
