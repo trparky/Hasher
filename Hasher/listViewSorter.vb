@@ -20,8 +20,8 @@ Class ListViewComparer
         Dim lvSecondListView As ListViewItem = lvInputSecondListView
 
         ' Get the sub-item values.
-        strFirstString = If(lvFirstListView.SubItems.Count <= intColumnNumber, Nothing, lvFirstListView.SubItems(intColumnNumber).Text)
-        strSecondString = If(lvSecondListView.SubItems.Count <= intColumnNumber, Nothing, lvSecondListView.SubItems(intColumnNumber).Text)
+        strFirstString = If(lvFirstListView.SubItems.Count <= intColumnNumber, "", lvFirstListView.SubItems(intColumnNumber).Text)
+        strSecondString = If(lvSecondListView.SubItems.Count <= intColumnNumber, "", lvSecondListView.SubItems(intColumnNumber).Text)
 
         If lvFirstListView.ListView IsNot Nothing Then
             ' Compare them.
