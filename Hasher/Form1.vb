@@ -538,9 +538,12 @@ Public Class Form1
             For index As Integer = 0 To listFiles.Items.Count - 1
                 localMyListViewItemObject = listFiles.Items(index)
                 strChecksum = getDataFromAllTheHashes(checksumType, localMyListViewItemObject.allTheHashes)
-                localMyListViewItemObject.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
-                localMyListViewItemObject.hash = strChecksum
-                updateListViewItem(listFiles.Items(index), localMyListViewItemObject)
+
+                If Not String.IsNullOrWhiteSpace(strChecksum) Then
+                    localMyListViewItemObject.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+                    localMyListViewItemObject.hash = strChecksum
+                    updateListViewItem(listFiles.Items(index), localMyListViewItemObject)
+                End If
             Next
 
             listFiles.EndUpdate()
