@@ -72,6 +72,14 @@ Namespace FileAssociation
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --knownhashfile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
 
+            selectedKey = Registry.ClassesRoot.OpenSubKey("*\Shell", True)
+
+            If selectedKey IsNot Nothing Then
+                selectedKey = selectedKey.CreateSubKey("Compare Two Files")
+                selectedKey.SetValue("icon", FileLocation & ",0", RegistryValueKind.ExpandString)
+                selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --comparefile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
+            End If
+
             selectedKey = Registry.ClassesRoot.OpenSubKey("Folder\Shell", True)
 
             If selectedKey IsNot Nothing Then

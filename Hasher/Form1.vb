@@ -705,6 +705,20 @@ Public Class Form1
                         sendToIPCNamedPipeServer(commandLineArgument)
                         Process.GetCurrentProcess.Kill()
                     End If
+                ElseIf commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--comparefile=", "").Replace(Chr(34), "")
+
+                    If boolNamedPipeServerStarted Then
+                        ' In this case this instance of the program is the first executed instance so it has a named pipe server running
+                        ' in it, but we still need to process the first incoming file passed to it via command line arguments.
+                        txtFile1.Text = commandLineArgument
+                    Else
+                        ' OK, there's already a named pipe server running so we send the file that's been passed to this
+                        ' instance via the command line argument to the first instance via the IPC named pipe server
+                        ' and then exit out of this instance in a very quick way by killing this current process.
+                        sendToIPCNamedPipeServer("--comparefile=" & commandLineArgument)
+                        Process.GetCurrentProcess.Kill()
+                    End If
                 End If
             End If
         End With
@@ -2132,7 +2146,15 @@ Public Class Form1
             namedPipeServer.Read(buffer, 0, 500)
 
             Dim strReceivedFileName As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
-            addFileOrDirectoryToHashFileList(strReceivedFileName)
+
+            If strReceivedFileName.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+                myInvoke(Sub()
+                             txtFile2.Text = strReceivedFileName.caseInsensitiveReplace("--comparefile=", "")
+                             TabControl1.SelectedIndex = tabNumber.compareFilesTab
+                         End Sub)
+            Else
+                addFileOrDirectoryToHashFileList(strReceivedFileName)
+            End If
 
             namedPipeServer.Dispose()
             namedPipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
