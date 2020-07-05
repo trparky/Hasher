@@ -33,11 +33,20 @@ Public Class checksums
         ' Declare some variables.
         Dim byteDataBuffer As Byte()
         Dim intBytesRead As Integer
-        Dim longFileSize As Long, longTotalBytesRead As ULong = 0
+        Dim longTotalBytesRead As ULong = 0
+        Dim longFileSize As Long = New IO.FileInfo(strFileName).Length ' Get the size of the file.
+
+        If longFileSize = 0 Then
+            intBufferSize = 1 ' Even though the size of the file is 0 bytes (empty), we still need a data buffer size of 1 byte.
+        ElseIf longFileSize < intBufferSize Then
+            ' In this case, why have a data buffer size that's larger than the file itself. It doesn't make
+            ' sense. So here we set the data buffer size to the size of the file that's being read to make
+            ' it so that we don't have to read any more data from the drive than we have to.
+            intBufferSize = longFileSize
+        End If
 
         ' Open the file for reading.
         Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
-            longFileSize = stream.Length ' Get the size of the file.
             byteDataBuffer = New Byte(intBufferSize - 1) {} ' Create a data buffer in system memory to store some data.
             intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the above data buffer.
             SyncLock threadLockingObject
