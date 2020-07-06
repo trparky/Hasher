@@ -434,7 +434,7 @@ Public Class Form1
         lblHashIndividualFilesTotalStatus.Visible = False
     End Sub
 
-    Private Function strGetIndividualHashesInStringFormat(strPathOfChecksumFile As String) As String
+    Private Function strGetIndividualHashesInStringFormat(strPathOfChecksumFile As String, checksumType As checksumType) As String
         Dim fileInfo As New IO.FileInfo(strPathOfChecksumFile)
         Dim folderOfChecksumFile As String = If(fileInfo.DirectoryName.Length = 3, fileInfo.DirectoryName, fileInfo.DirectoryName & "\")
         Dim stringBuilder As New Text.StringBuilder()
@@ -446,7 +446,7 @@ Public Class Form1
             If Not String.IsNullOrWhiteSpace(item.hash) Then
                 strFile = item.fileName
                 If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.caseInsensitiveReplace(folderOfChecksumFile, "")
-                stringBuilder.AppendLine(item.hash & " *" & strFile)
+                stringBuilder.AppendLine(getDataFromAllTheHashes(checksumType, item.allTheHashes) & " *" & strFile)
             End If
         Next
 
@@ -482,36 +482,43 @@ Public Class Form1
     End Function
 
     Private Sub btnIndividualFilesSaveResultsToDisk_Click(sender As Object, e As EventArgs) Handles btnIndividualFilesSaveResultsToDisk.Click
-        If Me.radioMD5.Checked Then
-            SaveFileDialog.Filter = "MD5 File|*.md5"
-        ElseIf radioSHA1.Checked Then
-            SaveFileDialog.Filter = "SHA1 File|*.sha1"
-        ElseIf radioSHA256.Checked Then
-            SaveFileDialog.Filter = "SHA256 File|*.sha256"
-        ElseIf radioSHA384.Checked Then
-            SaveFileDialog.Filter = "SHA384 File|*.sha384"
-        ElseIf radioSHA512.Checked Then
-            SaveFileDialog.Filter = "SHA512 File|*.sha512"
-        End If
-
+        SaveFileDialog.Filter = "MD5 File|*.md5|SHA1 File|*.sha1|SHA256 File|*.sha256|SHA384 File|*.sha384|SHA512 File|*.sha512"
         SaveFileDialog.InitialDirectory = strLastDirectoryWorkedOn
         SaveFileDialog.Title = "Save Hash Results to Disk"
         If My.Settings.boolAutoAddExtension Then SaveFileDialog.OverwritePrompt = False ' We handle this in our own code below.
 
+        Dim strFileExtension As String
+        Dim checksumType As checksumType
+
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
+            If SaveFileDialog.FilterIndex = 1 Or SaveFileDialog.FilterIndex = 2 Then
+                Dim msgBoxResult As MsgBoxResult
+
+                If SaveFileDialog.FilterIndex = 1 Then
+                    msgBoxResult = MsgBox("MD5 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+                ElseIf SaveFileDialog.FilterIndex = 2 Then
+                    msgBoxResult = MsgBox("SHA1 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+                End If
+
+                If msgBoxResult = MsgBoxResult.No Then
+                    MsgBox("Your hash data has not been saved to disk.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                    Exit Sub
+                End If
+            End If
+
             If My.Settings.boolAutoAddExtension Then
-                Dim strFileExtension As String = New IO.FileInfo(SaveFileDialog.FileName).Extension
+                strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
 
                 If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                    If Me.radioMD5.Checked Then
+                    If SaveFileDialog.FilterIndex = 1 Then
                         SaveFileDialog.FileName &= ".md5"
-                    ElseIf radioSHA1.Checked Then
+                    ElseIf SaveFileDialog.FilterIndex = 2 Then
                         SaveFileDialog.FileName &= ".sha1"
-                    ElseIf radioSHA256.Checked Then
+                    ElseIf SaveFileDialog.FilterIndex = 3 Then
                         SaveFileDialog.FileName &= ".sha256"
-                    ElseIf radioSHA384.Checked Then
+                    ElseIf SaveFileDialog.FilterIndex = 4 Then
                         SaveFileDialog.FileName &= ".sha384"
-                    ElseIf radioSHA512.Checked Then
+                    ElseIf SaveFileDialog.FilterIndex = 5 Then
                         SaveFileDialog.FileName &= ".sha512"
                     End If
                 End If
@@ -522,8 +529,22 @@ Public Class Form1
                 End If
             End If
 
+            strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
+
+            If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
+                checksumType = checksumType.md5
+            ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
+                checksumType = checksumType.sha160
+            ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
+                checksumType = checksumType.sha256
+            ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
+                checksumType = checksumType.sha384
+            ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                checksumType = checksumType.sha512
+            End If
+
             Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
-                streamWriter.Write(strGetIndividualHashesInStringFormat(SaveFileDialog.FileName))
+                streamWriter.Write(strGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
             End Using
             MsgBox("Your hash results have been written to disk.", MsgBoxStyle.Information, strWindowTitle)
         End If

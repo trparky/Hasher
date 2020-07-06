@@ -586,7 +586,7 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep2.Name = "lblHashIndividualFilesStep2"
         Me.lblHashIndividualFilesStep2.Size = New System.Drawing.Size(345, 13)
         Me.lblHashIndividualFilesStep2.TabIndex = 18
-        Me.lblHashIndividualFilesStep2.Text = "Step 3: Select your hash type for display and saving to disk"
+        Me.lblHashIndividualFilesStep2.Text = "Step 3: Select your hash type for display and copying to the Windows Clipboard"
         '
         'btnIndividualFilesSaveResultsToDisk
         '
