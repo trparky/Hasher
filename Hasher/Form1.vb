@@ -554,19 +554,22 @@ Public Class Form1
     Private Sub updateChecksumsInListFiles(checksumType As checksumType)
         If listFiles.Items.Count <> 0 Then
             listFiles.BeginUpdate()
-            Dim localMyListViewItemObject As myListViewItem
+
             Dim strChecksum As String
+            Dim tempListViewItemCollection As New List(Of myListViewItem)
 
-            For index As Integer = 0 To listFiles.Items.Count - 1
-                localMyListViewItemObject = listFiles.Items(index)
-                strChecksum = getDataFromAllTheHashes(checksumType, localMyListViewItemObject.allTheHashes)
-
-                If Not String.IsNullOrWhiteSpace(strChecksum) Then
-                    localMyListViewItemObject.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
-                    localMyListViewItemObject.hash = strChecksum
-                    updateListViewItem(listFiles.Items(index), localMyListViewItemObject)
-                End If
+            For Each item As myListViewItem In listFiles.Items
+                tempListViewItemCollection.Add(item.Clone())
             Next
+
+            For Each item As myListViewItem In tempListViewItemCollection
+                strChecksum = getDataFromAllTheHashes(checksumType, item.allTheHashes)
+                item.hash = strChecksum
+                item.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+            Next
+
+            listFiles.Items.Clear()
+            listFiles.Items.AddRange(tempListViewItemCollection.ToArray)
 
             listFiles.EndUpdate()
             listFiles.Refresh()
