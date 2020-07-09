@@ -1077,7 +1077,7 @@ Partial Class Form1
         'compareRadioMD5
         '
         Me.compareRadioMD5.AutoSize = True
-        Me.compareRadioMD5.Location = New System.Drawing.Point(505, 131)
+        Me.compareRadioMD5.Location = New System.Drawing.Point(548, 131)
         Me.compareRadioMD5.Name = "compareRadioMD5"
         Me.compareRadioMD5.Size = New System.Drawing.Size(296, 17)
         Me.compareRadioMD5.TabIndex = 26
@@ -1087,11 +1087,13 @@ Partial Class Form1
         'compareRadioSHA512
         '
         Me.compareRadioSHA512.AutoSize = True
+        Me.compareRadioSHA512.Checked = True
         Me.compareRadioSHA512.Location = New System.Drawing.Point(166, 131)
         Me.compareRadioSHA512.Name = "compareRadioSHA512"
-        Me.compareRadioSHA512.Size = New System.Drawing.Size(68, 17)
+        Me.compareRadioSHA512.Size = New System.Drawing.Size(111, 17)
         Me.compareRadioSHA512.TabIndex = 25
-        Me.compareRadioSHA512.Text = "SHA-512"
+        Me.compareRadioSHA512.TabStop = True
+        Me.compareRadioSHA512.Text = "SHA-512 (Default)"
         Me.compareRadioSHA512.UseVisualStyleBackColor = True
         '
         'compareRadioSHA384
@@ -1107,19 +1109,17 @@ Partial Class Form1
         'compareRadioSHA256
         '
         Me.compareRadioSHA256.AutoSize = True
-        Me.compareRadioSHA256.Checked = True
         Me.compareRadioSHA256.Location = New System.Drawing.Point(18, 131)
         Me.compareRadioSHA256.Name = "compareRadioSHA256"
         Me.compareRadioSHA256.Size = New System.Drawing.Size(68, 17)
         Me.compareRadioSHA256.TabIndex = 23
-        Me.compareRadioSHA256.TabStop = True
         Me.compareRadioSHA256.Text = "SHA-256"
         Me.compareRadioSHA256.UseVisualStyleBackColor = True
         '
         'compareRadioSHA1
         '
         Me.compareRadioSHA1.AutoSize = True
-        Me.compareRadioSHA1.Location = New System.Drawing.Point(240, 131)
+        Me.compareRadioSHA1.Location = New System.Drawing.Point(283, 131)
         Me.compareRadioSHA1.Name = "compareRadioSHA1"
         Me.compareRadioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.compareRadioSHA1.TabIndex = 22

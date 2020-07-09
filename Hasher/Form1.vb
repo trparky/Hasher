@@ -1599,7 +1599,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnCompareFiles_Click(sender As Object, e As EventArgs) Handles btnCompareFiles.Click
-        compareRadioSHA256.Checked = True
+        compareRadioSHA512.Checked = True
         If btnCompareFiles.Text = "Abort Processing" Then
             If workingThread IsNot Nothing Then
                 workingThread.Abort()
