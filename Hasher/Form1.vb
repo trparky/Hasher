@@ -1689,8 +1689,23 @@ Public Class Form1
 
                                                      If doChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine) AndAlso doChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine) Then
                                                          boolSuccessful = True
-                                                         strChecksum1 = compareFilesAllTheHashes1.sha256
-                                                         strChecksum2 = compareFilesAllTheHashes2.sha256
+
+                                                         If checksumType = checksumType.md5 Then
+                                                             strChecksum1 = compareFilesAllTheHashes1.md5
+                                                             strChecksum2 = compareFilesAllTheHashes2.md5
+                                                         ElseIf checksumType = checksumType.sha160 Then
+                                                             strChecksum1 = compareFilesAllTheHashes1.sha160
+                                                             strChecksum2 = compareFilesAllTheHashes2.sha160
+                                                         ElseIf checksumType = checksumType.sha256 Then
+                                                             strChecksum1 = compareFilesAllTheHashes1.sha256
+                                                             strChecksum2 = compareFilesAllTheHashes2.sha256
+                                                         ElseIf checksumType = checksumType.sha384 Then
+                                                             strChecksum1 = compareFilesAllTheHashes1.sha384
+                                                             strChecksum2 = compareFilesAllTheHashes2.sha384
+                                                         ElseIf checksumType = checksumType.sha512 Then
+                                                             strChecksum1 = compareFilesAllTheHashes1.sha512
+                                                             strChecksum2 = compareFilesAllTheHashes2.sha512
+                                                         End If
 
                                                          myInvoke(Sub()
                                                                       lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
