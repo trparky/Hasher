@@ -553,6 +553,13 @@ Public Class Form1
 
     Private Sub updateChecksumsInListFiles(checksumType As checksumType)
         If listFiles.Items.Count <> 0 Then
+            Dim selectedItemsIntegerArray As New List(Of Integer)
+            If listFiles.SelectedIndices.Count <> 0 Then
+                For Each item As Integer In listFiles.SelectedIndices()
+                    selectedItemsIntegerArray.Add(item)
+                Next
+            End If
+
             listFiles.BeginUpdate()
 
             Dim strChecksum As String
@@ -570,6 +577,13 @@ Public Class Form1
 
             listFiles.Items.Clear()
             listFiles.Items.AddRange(tempListViewItemCollection.ToArray)
+
+            If selectedItemsIntegerArray.Count <> 0 Then
+                For Each item As Integer In selectedItemsIntegerArray
+                    listFiles.Items(item).Selected = True
+                Next
+                listFiles.Select()
+            End If
 
             listFiles.EndUpdate()
             listFiles.Refresh()
