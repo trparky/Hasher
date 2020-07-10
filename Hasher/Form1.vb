@@ -583,6 +583,7 @@ Public Class Form1
                     listFiles.Items(item).Selected = True
                 Next
                 listFiles.Select()
+                listFiles.EnsureVisible(selectedItemsIntegerArray(selectedItemsIntegerArray.Count - 1))
             End If
 
             listFiles.EndUpdate()
