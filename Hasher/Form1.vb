@@ -1151,7 +1151,7 @@ Public Class Form1
                                                                          longFilesThatPassedVerification += 1
                                                                      Else
                                                                          item.color = notValidColor
-                                                                         item.SubItems(2).Text = "NOT Valid"
+                                                                         item.SubItems(2).Text = "Incorrect Checksum"
                                                                          item.computeTime = computeStopwatch.Elapsed
                                                                          item.SubItems(3).Text = timespanToHMS(item.computeTime)
                                                                          item.SubItems(4).Text = If(chkDisplayHashesInUpperCase.Checked, getDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, getDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
