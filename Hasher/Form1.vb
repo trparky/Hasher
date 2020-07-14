@@ -1,18 +1,9 @@
 ﻿Imports System.IO.Pipes
 
 Public Class Form1
-#If DEBUG Then
-    Private Const boolDebugMode As Boolean = True
-#Else
-    Private Const boolDebugMode As Boolean = False
-#End If
     Private Const strToBeComputed As String = "To Be Computed"
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
-#If DEBUG Then
-    Private Const strWindowTitle As String = "Hasher (Debug Mode)"
-#Else
     Private Const strWindowTitle As String = "Hasher"
-#End If
 
     Private Const strMessageBoxTitleText As String = "Hasher"
     Private intBufferSize As Integer = My.Settings.shortBufferSize * 1024 * 1024
@@ -820,7 +811,8 @@ Public Class Form1
         btnSetRoundPercentages.Enabled = False
         Me.Location = My.Settings.windowLocation
 
-        If boolDebugMode Then
+        If Debugger.IsAttached Then
+            Me.Text &= " (Debugger Attached)"
             btnAddHasherToAllFiles.Visible = False
             btnAssociate.Visible = False
         End If
