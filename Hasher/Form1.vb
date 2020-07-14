@@ -797,6 +797,7 @@ Public Class Form1
         chkUseCommasInNumbers.Checked = My.Settings.boolUseCommasInNumbers
         chkCheckForUpdates.Checked = My.Settings.boolCheckForUpdates
         chkAutoAddExtension.Checked = My.Settings.boolAutoAddExtension
+        chkDisplayValidChecksumString.Checked = My.Settings.boolDisplayValidChecksumString
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             Check_for_Update_Stuff.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -1153,7 +1154,7 @@ Public Class Form1
                                                                          item.SubItems(2).Text = "Valid"
                                                                          item.computeTime = computeStopwatch.Elapsed
                                                                          item.SubItems(3).Text = timespanToHMS(item.computeTime)
-                                                                         item.SubItems(4).Text = ""
+                                                                         item.SubItems(4).Text = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
                                                                          longFilesThatPassedVerification += 1
                                                                      Else
                                                                          item.color = notValidColor
@@ -2510,5 +2511,9 @@ Public Class Form1
 
     Private Sub txtTextToHash_KeyUp(sender As Object, e As KeyEventArgs) Handles txtTextToHash.KeyUp
         If e.KeyCode = Keys.Back And String.IsNullOrWhiteSpace(txtTextToHash.Text) Then Media.SystemSounds.Exclamation.Play()
+    End Sub
+
+    Private Sub chkDisplayValidChecksumString_Click(sender As Object, e As EventArgs) Handles chkDisplayValidChecksumString.Click
+        My.Settings.boolDisplayValidChecksumString = chkDisplayValidChecksumString.Checked
     End Sub
 End Class

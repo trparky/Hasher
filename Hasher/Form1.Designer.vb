@@ -173,6 +173,7 @@ Partial Class Form1
         Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
         Me.verifySavedHashesTableLayoutControl.SuspendLayout()
+        Me.chkDisplayValidChecksumString = New System.Windows.Forms.CheckBox()
         Me.verifyListFilesContextMenu.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
         CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -1315,6 +1316,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkDisplayValidChecksumString)
         Me.tabSettings.Controls.Add(Me.btnSetBufferSize)
         Me.tabSettings.Controls.Add(Me.bufferSize)
         Me.tabSettings.Controls.Add(Me.Label9)
@@ -1423,7 +1425,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 257)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 290)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1432,7 +1434,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 257)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 290)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1662,6 +1664,17 @@ Partial Class Form1
         Me.pictureBoxCompareFiles.TabIndex = 36
         Me.pictureBoxCompareFiles.TabStop = False
         '
+        'chkDisplayValidChecksumString
+        '
+        Me.chkDisplayValidChecksumString.AutoSize = True
+        Me.chkDisplayValidChecksumString.Location = New System.Drawing.Point(15, 254)
+        Me.chkDisplayValidChecksumString.Name = "chkDisplayValidChecksumString"
+        Me.chkDisplayValidChecksumString.Size = New System.Drawing.Size(272, 30)
+        Me.chkDisplayValidChecksumString.TabIndex = 37
+        Me.chkDisplayValidChecksumString.Text = "Display ""Valid Checksum"" instead of leaving it blank" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "in fifth column on ""Verify " &
+    "Saved Hashes"" tab"
+        Me.chkDisplayValidChecksumString.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1845,4 +1858,5 @@ Partial Class Form1
     Friend WithEvents ViewChecksumDifferenceToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents lblCompareFilesAllFilesStatus As Label
     Friend WithEvents pictureBoxCompareFiles As PictureBox
+    Friend WithEvents chkDisplayValidChecksumString As CheckBox
 End Class
