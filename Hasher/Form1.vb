@@ -1144,7 +1144,7 @@ Public Class Form1
 
                                                                      If strChecksum.Equals(item.hash, StringComparison.OrdinalIgnoreCase) Then
                                                                          item.color = validColor
-                                                                         item.SubItems(2).Text = "Valid"
+                                                                         item.SubItems(2).Text = "Valid Checksum"
                                                                          item.computeTime = computeStopwatch.Elapsed
                                                                          item.SubItems(3).Text = timespanToHMS(item.computeTime)
                                                                          item.SubItems(4).Text = strDisplayValidChecksumString
