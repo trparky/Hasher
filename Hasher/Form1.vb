@@ -1104,6 +1104,7 @@ Public Class Form1
                                                      Dim computeStopwatch As Stopwatch
                                                      Dim itemOnGUI As myListViewItem
                                                      Dim allTheHashes As allTheHashes = Nothing
+                                                     Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
 
                                                      For Each item As myListViewItem In items
                                                          myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}",
@@ -1146,7 +1147,7 @@ Public Class Form1
                                                                          item.SubItems(2).Text = "Valid"
                                                                          item.computeTime = computeStopwatch.Elapsed
                                                                          item.SubItems(3).Text = timespanToHMS(item.computeTime)
-                                                                         item.SubItems(4).Text = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
+                                                                         item.SubItems(4).Text = strDisplayValidChecksumString
                                                                          longFilesThatPassedVerification += 1
                                                                      Else
                                                                          item.color = notValidColor
