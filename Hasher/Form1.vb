@@ -3,7 +3,11 @@
 Public Class Form1
     Private Const strToBeComputed As String = "To Be Computed"
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
+#If DEBUG Then
+    Private Const strWindowTitle As String = "Hasher (Debug Build)"
+#Else
     Private Const strWindowTitle As String = "Hasher"
+#End If
 
     Private Const strMessageBoxTitleText As String = "Hasher"
     Private intBufferSize As Integer = My.Settings.shortBufferSize * 1024 * 1024
