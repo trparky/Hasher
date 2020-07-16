@@ -565,8 +565,10 @@ Public Class Form1
                 listViewItem = item.Clone()
                 strChecksum = getDataFromAllTheHashes(checksumType, listViewItem.allTheHashes)
 
-                listViewItem.hash = strChecksum
-                listViewItem.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+                If Not String.IsNullOrWhiteSpace(strChecksum) Then
+                    listViewItem.hash = strChecksum
+                    listViewItem.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+                End If
 
                 tempListViewItemCollection.Add(listViewItem)
                 listViewItem = Nothing
