@@ -545,9 +545,16 @@ Public Class Form1
                 streamWriter.Write(strGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
             End Using
 
-            If MsgBox("Your hash results have been written to disk." & vbCrLf & vbCrLf & "File Name: " & SaveFileDialog.FileName & vbCrLf & "Checksum Type: " & convertChecksumTypeToString(checksumType) & vbCrLf & vbCrLf & "Do you want to open Windows Explorer to the location of the checksum file?", MsgBoxStyle.Information + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-                selectFileInWindowsExplorer(fileInfo.FullName)
+            Dim openInExplorerMsgBoxResult As MsgBoxResult
+
+            If chkOpenInExplorer.Checked Then
+                openInExplorerMsgBoxResult = MsgBoxResult.Yes
+                MsgBox("Your hash results have been written to disk." & vbCrLf & vbCrLf & "File Name: " & SaveFileDialog.FileName & vbCrLf & "Checksum Type: " & convertChecksumTypeToString(checksumType), MsgBoxStyle.Information, strMessageBoxTitleText)
+            Else
+                openInExplorerMsgBoxResult = MsgBox("Your hash results have been written to disk." & vbCrLf & vbCrLf & "File Name: " & SaveFileDialog.FileName & vbCrLf & "Checksum Type: " & convertChecksumTypeToString(checksumType) & vbCrLf & vbCrLf & "Do you want to open Windows Explorer to the location of the checksum file?", MsgBoxStyle.Information + MsgBoxStyle.YesNo, strMessageBoxTitleText)
             End If
+
+            If openInExplorerMsgBoxResult = MsgBoxResult.Yes Then selectFileInWindowsExplorer(fileInfo.FullName)
         End If
     End Sub
 
@@ -833,6 +840,7 @@ Public Class Form1
         chkCheckForUpdates.Checked = My.Settings.boolCheckForUpdates
         chkAutoAddExtension.Checked = My.Settings.boolAutoAddExtension
         chkDisplayValidChecksumString.Checked = My.Settings.boolDisplayValidChecksumString
+        chkOpenInExplorer.Checked = My.Settings.boolOpenInExplorer
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             Check_for_Update_Stuff.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -2553,5 +2561,9 @@ Public Class Form1
 
     Private Sub chkDisplayValidChecksumString_Click(sender As Object, e As EventArgs) Handles chkDisplayValidChecksumString.Click
         My.Settings.boolDisplayValidChecksumString = chkDisplayValidChecksumString.Checked
+    End Sub
+
+    Private Sub chkOpenInExplorer_Click(sender As Object, e As EventArgs) Handles chkOpenInExplorer.Click
+        My.Settings.boolOpenInExplorer = chkOpenInExplorer.Checked
     End Sub
 End Class

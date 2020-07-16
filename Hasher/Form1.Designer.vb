@@ -172,6 +172,7 @@ Partial Class Form1
         Me.hashIndividualFilesTableLayoutControl.SuspendLayout()
         Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
+        Me.chkOpenInExplorer = New System.Windows.Forms.CheckBox()
         Me.verifySavedHashesTableLayoutControl.SuspendLayout()
         Me.chkDisplayValidChecksumString = New System.Windows.Forms.CheckBox()
         Me.verifyListFilesContextMenu.SuspendLayout()
@@ -1316,6 +1317,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkOpenInExplorer)
         Me.tabSettings.Controls.Add(Me.chkDisplayValidChecksumString)
         Me.tabSettings.Controls.Add(Me.btnSetBufferSize)
         Me.tabSettings.Controls.Add(Me.bufferSize)
@@ -1425,7 +1427,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 290)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 326)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1434,7 +1436,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 290)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 326)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1675,6 +1677,16 @@ Partial Class Form1
     "Saved Hashes"" tab"
         Me.chkDisplayValidChecksumString.UseVisualStyleBackColor = True
         '
+        'chkOpenInExplorer
+        '
+        Me.chkOpenInExplorer.AutoSize = True
+        Me.chkOpenInExplorer.Location = New System.Drawing.Point(15, 290)
+        Me.chkOpenInExplorer.Name = "chkOpenInExplorer"
+        Me.chkOpenInExplorer.Size = New System.Drawing.Size(273, 30)
+        Me.chkOpenInExplorer.TabIndex = 38
+        Me.chkOpenInExplorer.Text = "Open Windows Explorer with checksum file selected" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "after saving checksum file to " & "disk by default"
+        Me.chkOpenInExplorer.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1859,4 +1871,5 @@ Partial Class Form1
     Friend WithEvents lblCompareFilesAllFilesStatus As Label
     Friend WithEvents pictureBoxCompareFiles As PictureBox
     Friend WithEvents chkDisplayValidChecksumString As CheckBox
+    Friend WithEvents chkOpenInExplorer As CheckBox
 End Class
