@@ -559,15 +559,17 @@ Public Class Form1
 
             Dim strChecksum As String
             Dim tempListViewItemCollection As New List(Of myListViewItem)
+            Dim listViewItem As myListViewItem
 
             For Each item As myListViewItem In listFiles.Items
-                tempListViewItemCollection.Add(item.Clone())
-            Next
+                listViewItem = item.Clone()
+                strChecksum = getDataFromAllTheHashes(checksumType, listViewItem.allTheHashes)
 
-            For Each item As myListViewItem In tempListViewItemCollection
-                strChecksum = getDataFromAllTheHashes(checksumType, item.allTheHashes)
-                item.hash = strChecksum
-                item.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+                listViewItem.hash = strChecksum
+                listViewItem.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+
+                tempListViewItemCollection.Add(listViewItem)
+                listViewItem = Nothing
             Next
 
             listFiles.Items.Clear()
