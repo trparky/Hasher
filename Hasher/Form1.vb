@@ -481,7 +481,7 @@ Public Class Form1
         SaveFileDialog.Filter = "MD5 File|*.md5|SHA1 File|*.sha1|SHA256 File|*.sha256|SHA384 File|*.sha384|SHA512 File|*.sha512"
         SaveFileDialog.InitialDirectory = strLastDirectoryWorkedOn
         SaveFileDialog.Title = "Save Hash Results to Disk"
-        If My.Settings.boolAutoAddExtension Then SaveFileDialog.OverwritePrompt = False ' We handle this in our own code below.
+        If chkAutoAddExtension.Checked Then SaveFileDialog.OverwritePrompt = False ' We handle this in our own code below.
 
         Dim strFileExtension As String
         Dim checksumType As checksumType
@@ -502,7 +502,7 @@ Public Class Form1
                 End If
             End If
 
-            If My.Settings.boolAutoAddExtension Then
+            If chkAutoAddExtension.Checked Then
                 strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
 
                 If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
@@ -2229,27 +2229,28 @@ Public Class Form1
     End Sub
 
     Private Sub chkDisplayHashesInUpperCase_Click(sender As Object, e As EventArgs) Handles chkDisplayHashesInUpperCase.Click
+        Dim boolDisplayHashesInUpperCase As Boolean = chkDisplayHashesInUpperCase.Checked
         My.Settings.boolDisplayHashesInUpperCase = chkDisplayHashesInUpperCase.Checked
 
         If listFiles.Items.Count <> 0 Then
             For Each item As myListViewItem In listFiles.Items
-                item.SubItems(2).Text = If(My.Settings.boolDisplayHashesInUpperCase, item.hash.ToUpper, item.hash.ToLower)
+                item.SubItems(2).Text = If(boolDisplayHashesInUpperCase, item.hash.ToUpper, item.hash.ToLower)
             Next
         End If
 
         If Not String.IsNullOrWhiteSpace(txtHashResults.Text) Then
-            txtHashResults.Text = If(My.Settings.boolDisplayHashesInUpperCase, txtHashResults.Text.ToUpper, txtHashResults.Text.ToLower)
+            txtHashResults.Text = If(boolDisplayHashesInUpperCase, txtHashResults.Text.ToUpper, txtHashResults.Text.ToLower)
         End If
         If Not String.IsNullOrWhiteSpace(lblFile1Hash.Text) Then
-            lblFile1Hash.Text = If(My.Settings.boolDisplayHashesInUpperCase, lblFile1Hash.Text.ToUpper, lblFile1Hash.Text.ToLower)
+            lblFile1Hash.Text = If(boolDisplayHashesInUpperCase, lblFile1Hash.Text.ToUpper, lblFile1Hash.Text.ToLower)
         End If
         If Not String.IsNullOrWhiteSpace(lblFile2Hash.Text) Then
-            lblFile2Hash.Text = If(My.Settings.boolDisplayHashesInUpperCase, lblFile2Hash.Text.ToUpper, lblFile2Hash.Text.ToLower)
+            lblFile2Hash.Text = If(boolDisplayHashesInUpperCase, lblFile2Hash.Text.ToUpper, lblFile2Hash.Text.ToLower)
         End If
     End Sub
 
     Private Sub BtnSetValidColor_Click(sender As Object, e As EventArgs) Handles btnSetValidColor.Click
-        Using colorDialog As New ColorDialog() With {.Color = My.Settings.validColor}
+        Using colorDialog As New ColorDialog() With {.Color = validColor}
             If colorDialog.ShowDialog() = DialogResult.OK Then
                 My.Settings.validColor = colorDialog.Color
                 lblValidColor.BackColor = colorDialog.Color
@@ -2260,7 +2261,7 @@ Public Class Form1
     End Sub
 
     Private Sub BtnSetNotValidColor_Click(sender As Object, e As EventArgs) Handles btnSetNotValidColor.Click
-        Using colorDialog As New ColorDialog() With {.Color = My.Settings.notValidColor}
+        Using colorDialog As New ColorDialog() With {.Color = notValidColor}
             If colorDialog.ShowDialog() = DialogResult.OK Then
                 My.Settings.notValidColor = colorDialog.Color
                 lblNotValidColor.BackColor = colorDialog.Color
@@ -2271,7 +2272,7 @@ Public Class Form1
     End Sub
 
     Private Sub BtnFileNotFoundColor_Click(sender As Object, e As EventArgs) Handles btnFileNotFoundColor.Click
-        Using colorDialog As New ColorDialog() With {.Color = My.Settings.fileNotFoundColor}
+        Using colorDialog As New ColorDialog() With {.Color = fileNotFoundColor}
             If colorDialog.ShowDialog() = DialogResult.OK Then
                 My.Settings.fileNotFoundColor = colorDialog.Color
                 lblFileNotFoundColor.BackColor = colorDialog.Color
