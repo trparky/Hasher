@@ -526,7 +526,8 @@ Public Class Form1
                 End If
             End If
 
-            strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
+            Dim fileInfo As New IO.FileInfo(SaveFileDialog.FileName)
+            strFileExtension = fileInfo.Extension
 
             If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
                 checksumType = checksumType.md5
@@ -544,7 +545,24 @@ Public Class Form1
                 streamWriter.Write(strGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
             End Using
 
-            MsgBox("Your hash results have been written to disk." & vbCrLf & vbCrLf & "File Name: " & SaveFileDialog.FileName & vbCrLf & "Checksum Type: " & convertChecksumTypeToString(checksumType), MsgBoxStyle.Information, strMessageBoxTitleText)
+            If MsgBox("Your hash results have been written to disk." & vbCrLf & vbCrLf & "File Name: " & SaveFileDialog.FileName & vbCrLf & "Checksum Type: " & convertChecksumTypeToString(checksumType) & vbCrLf & vbCrLf & "Do you want to open Windows Explorer to the location of the checksum file?", MsgBoxStyle.Information + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+                selectFileInWindowsExplorer(fileInfo.FullName)
+            End If
+        End If
+    End Sub
+
+    Private Sub selectFileInWindowsExplorer(ByVal strFullPath As String)
+        If Not String.IsNullOrEmpty(strFullPath) AndAlso IO.File.Exists(strFullPath) Then
+            Dim pidlList As IntPtr = NativeMethod.NativeMethods.ILCreateFromPathW(strFullPath)
+
+            If pidlList <> IntPtr.Zero Then
+                Try
+                    'Runtime.InteropServices.Marshal.ThrowExceptionForHR(NativeMethod.NativeMethods.SHOpenFolderAndSelectItems(pidlList, 0, IntPtr.Zero, 0))
+                    NativeMethod.NativeMethods.SHOpenFolderAndSelectItems(pidlList, 0, IntPtr.Zero, 0)
+                Finally
+                    NativeMethod.NativeMethods.ILFree(pidlList)
+                End Try
+            End If
         End If
     End Sub
 
