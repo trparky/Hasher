@@ -543,9 +543,26 @@ Public Class Form1
             Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
                 streamWriter.Write(strGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
             End Using
-            MsgBox("Your hash results have been written to disk.", MsgBoxStyle.Information, strMessageBoxTitleText)
+
+            MsgBox("Your hash results have been written to disk." & vbCrLf & vbCrLf & "File Name: " & SaveFileDialog.FileName & vbCrLf & "Checksum Type: " & convertChecksumTypeToString(checksumType), MsgBoxStyle.Information, strMessageBoxTitleText)
         End If
     End Sub
+
+    Private Function convertChecksumTypeToString(checksumType As checksumType)
+        If checksumType = checksumType.md5 Then
+            Return "MD5"
+        ElseIf checksumType = checksumType.sha160 Then
+            Return "SHA1/SHA160"
+        ElseIf checksumType = checksumType.sha256 Then
+            Return "SHA256"
+        ElseIf checksumType = checksumType.sha384 Then
+            Return "SHA384"
+        ElseIf checksumType = checksumType.sha512 Then
+            Return "SHA512"
+        Else
+            Return ""
+        End If
+    End Function
 
     Private Sub updateChecksumsInListFiles(checksumType As checksumType)
         If listFiles.Items.Count <> 0 Then
