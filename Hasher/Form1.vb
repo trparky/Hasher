@@ -2255,6 +2255,7 @@ Public Class Form1
                 myInvoke(Sub()
                              txtFile2.Text = strReceivedFileName.caseInsensitiveReplace("--comparefile=", "")
                              TabControl1.SelectedIndex = tabNumber.compareFilesTab
+                             btnCompareFiles.PerformClick()
                          End Sub)
             Else
                 addFileOrDirectoryToHashFileList(strReceivedFileName)
