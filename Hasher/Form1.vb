@@ -2253,9 +2253,18 @@ Public Class Form1
 
             If strReceivedFileName.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
                 myInvoke(Sub()
-                             txtFile2.Text = strReceivedFileName.caseInsensitiveReplace("--comparefile=", "")
+                             Dim strFilePathToBeCompared As String = strReceivedFileName.caseInsensitiveReplace("--comparefile=", "")
+
+                             If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
+                                 txtFile1.Text = strFilePathToBeCompared
+                             ElseIf String.IsNullOrWhiteSpace(txtFile1.Text) And Not String.IsNullOrWhiteSpace(txtFile2.Text) Then
+                                 txtFile1.Text = strFilePathToBeCompared
+                             ElseIf Not String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
+                                 txtFile2.Text = strFilePathToBeCompared
+                             End If
+
                              TabControl1.SelectedIndex = tabNumber.compareFilesTab
-                             btnCompareFiles.PerformClick()
+                             If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub)
             Else
                 addFileOrDirectoryToHashFileList(strReceivedFileName)
