@@ -1358,7 +1358,7 @@ Partial Class Form1
         '
         'btnSetBufferSize
         '
-        Me.btnSetBufferSize.Location = New System.Drawing.Point(751, 129)
+        Me.btnSetBufferSize.Location = New System.Drawing.Point(868, 129)
         Me.btnSetBufferSize.Name = "btnSetBufferSize"
         Me.btnSetBufferSize.Size = New System.Drawing.Size(31, 23)
         Me.btnSetBufferSize.TabIndex = 27
@@ -1367,7 +1367,7 @@ Partial Class Form1
         '
         'bufferSize
         '
-        Me.bufferSize.Location = New System.Drawing.Point(695, 132)
+        Me.bufferSize.Location = New System.Drawing.Point(812, 132)
         Me.bufferSize.Maximum = New Decimal(New Integer() {16, 0, 0, 0})
         Me.bufferSize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.bufferSize.Name = "bufferSize"
@@ -1378,7 +1378,7 @@ Partial Class Form1
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(501, 134)
+        Me.Label9.Location = New System.Drawing.Point(618, 134)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(188, 13)
         Me.Label9.TabIndex = 23
@@ -1427,7 +1427,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 326)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 291)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1436,7 +1436,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 326)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 291)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1476,7 +1476,7 @@ Partial Class Form1
         '
         'btnFileNotFoundColor
         '
-        Me.btnFileNotFoundColor.Location = New System.Drawing.Point(601, 71)
+        Me.btnFileNotFoundColor.Location = New System.Drawing.Point(718, 71)
         Me.btnFileNotFoundColor.Name = "btnFileNotFoundColor"
         Me.btnFileNotFoundColor.Size = New System.Drawing.Size(181, 23)
         Me.btnFileNotFoundColor.TabIndex = 15
@@ -1485,7 +1485,7 @@ Partial Class Form1
         '
         'btnSetColorsBackToDefaults
         '
-        Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(601, 100)
+        Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(718, 100)
         Me.btnSetColorsBackToDefaults.Name = "btnSetColorsBackToDefaults"
         Me.btnSetColorsBackToDefaults.Size = New System.Drawing.Size(181, 23)
         Me.btnSetColorsBackToDefaults.TabIndex = 15
@@ -1494,7 +1494,7 @@ Partial Class Form1
         '
         'btnSetNotValidColor
         '
-        Me.btnSetNotValidColor.Location = New System.Drawing.Point(601, 42)
+        Me.btnSetNotValidColor.Location = New System.Drawing.Point(718, 42)
         Me.btnSetNotValidColor.Name = "btnSetNotValidColor"
         Me.btnSetNotValidColor.Size = New System.Drawing.Size(181, 23)
         Me.btnSetNotValidColor.TabIndex = 14
@@ -1503,7 +1503,7 @@ Partial Class Form1
         '
         'btnSetValidColor
         '
-        Me.btnSetValidColor.Location = New System.Drawing.Point(601, 13)
+        Me.btnSetValidColor.Location = New System.Drawing.Point(718, 13)
         Me.btnSetValidColor.Name = "btnSetValidColor"
         Me.btnSetValidColor.Size = New System.Drawing.Size(181, 23)
         Me.btnSetValidColor.TabIndex = 13
@@ -1513,7 +1513,7 @@ Partial Class Form1
         'lblFileNotFoundColor
         '
         Me.lblFileNotFoundColor.BackColor = System.Drawing.Color.LightGray
-        Me.lblFileNotFoundColor.Location = New System.Drawing.Point(495, 71)
+        Me.lblFileNotFoundColor.Location = New System.Drawing.Point(612, 71)
         Me.lblFileNotFoundColor.Name = "lblFileNotFoundColor"
         Me.lblFileNotFoundColor.Size = New System.Drawing.Size(100, 23)
         Me.lblFileNotFoundColor.TabIndex = 12
@@ -1521,7 +1521,7 @@ Partial Class Form1
         'lblNotValidColor
         '
         Me.lblNotValidColor.BackColor = System.Drawing.Color.Pink
-        Me.lblNotValidColor.Location = New System.Drawing.Point(495, 42)
+        Me.lblNotValidColor.Location = New System.Drawing.Point(612, 42)
         Me.lblNotValidColor.Name = "lblNotValidColor"
         Me.lblNotValidColor.Size = New System.Drawing.Size(100, 23)
         Me.lblNotValidColor.TabIndex = 11
@@ -1529,14 +1529,14 @@ Partial Class Form1
         'lblValidColor
         '
         Me.lblValidColor.BackColor = System.Drawing.Color.LightGreen
-        Me.lblValidColor.Location = New System.Drawing.Point(495, 13)
+        Me.lblValidColor.Location = New System.Drawing.Point(612, 13)
         Me.lblValidColor.Name = "lblValidColor"
         Me.lblValidColor.Size = New System.Drawing.Size(100, 23)
         Me.lblValidColor.TabIndex = 10
         '
         'btnPerformBenchmark
         '
-        Me.btnPerformBenchmark.Location = New System.Drawing.Point(504, 158)
+        Me.btnPerformBenchmark.Location = New System.Drawing.Point(621, 158)
         Me.btnPerformBenchmark.Name = "btnPerformBenchmark"
         Me.btnPerformBenchmark.Size = New System.Drawing.Size(278, 23)
         Me.btnPerformBenchmark.TabIndex = 28
@@ -1557,7 +1557,7 @@ Partial Class Form1
         '
         Me.taskPriority.FormattingEnabled = True
         Me.taskPriority.Items.AddRange(New Object() {"Lowest", "Below Normal", "Normal", "Above Normal", "Highest"})
-        Me.taskPriority.Location = New System.Drawing.Point(657, 187)
+        Me.taskPriority.Location = New System.Drawing.Point(774, 187)
         Me.taskPriority.Name = "taskPriority"
         Me.taskPriority.Size = New System.Drawing.Size(125, 21)
         Me.taskPriority.TabIndex = 31
@@ -1568,7 +1568,7 @@ Partial Class Form1
         'lblTaskPriorityLabel
         '
         Me.lblTaskPriorityLabel.AutoSize = True
-        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(501, 190)
+        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(618, 190)
         Me.lblTaskPriorityLabel.Name = "lblTaskPriorityLabel"
         Me.lblTaskPriorityLabel.Size = New System.Drawing.Size(150, 13)
         Me.lblTaskPriorityLabel.TabIndex = 30
@@ -1591,16 +1591,16 @@ Partial Class Form1
         Me.chkAutoAddExtension.AutoSize = True
         Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 221)
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
-        Me.chkAutoAddExtension.Size = New System.Drawing.Size(398, 30)
+        Me.chkAutoAddExtension.Size = New System.Drawing.Size(520, 17)
         Me.chkAutoAddExtension.TabIndex = 33
-        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Highly Recommended!!!)"
+        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk (Highly Recommended!!!)"
         Me.ToolTip.SetToolTip(Me.chkAutoAddExtension, "Enabling this option automatically tacks on the appropriate file extension when s" &
         "aving checksum data to disk.")
         Me.chkAutoAddExtension.UseVisualStyleBackColor = True
         '
         'btnSetRoundPercentages
         '
-        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(701, 251)
+        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(818, 251)
         Me.btnSetRoundPercentages.Name = "btnSetRoundPercentages"
         Me.btnSetRoundPercentages.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundPercentages.TabIndex = 36
@@ -1609,7 +1609,7 @@ Partial Class Form1
         '
         'roundPercentages
         '
-        Me.roundPercentages.Location = New System.Drawing.Point(645, 254)
+        Me.roundPercentages.Location = New System.Drawing.Point(762, 254)
         Me.roundPercentages.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundPercentages.Name = "roundPercentages"
         Me.roundPercentages.Size = New System.Drawing.Size(50, 20)
@@ -1619,7 +1619,7 @@ Partial Class Form1
         'lblRoundPercentagesLabel
         '
         Me.lblRoundPercentagesLabel.AutoSize = True
-        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(501, 245)
+        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(618, 245)
         Me.lblRoundPercentagesLabel.Name = "lblRoundPercentagesLabel"
         Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(138, 39)
         Me.lblRoundPercentagesLabel.TabIndex = 34
@@ -1627,7 +1627,7 @@ Partial Class Form1
         '
         'btnSetRoundFileSizes
         '
-        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(751, 217)
+        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(868, 217)
         Me.btnSetRoundFileSizes.Name = "btnSetRoundFileSizes"
         Me.btnSetRoundFileSizes.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundFileSizes.TabIndex = 36
@@ -1636,7 +1636,7 @@ Partial Class Form1
         '
         'roundFileSizes
         '
-        Me.roundFileSizes.Location = New System.Drawing.Point(694, 217)
+        Me.roundFileSizes.Location = New System.Drawing.Point(811, 217)
         Me.roundFileSizes.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundFileSizes.Name = "roundFileSizes"
         Me.roundFileSizes.Size = New System.Drawing.Size(50, 20)
@@ -1646,7 +1646,7 @@ Partial Class Form1
         'lblRoundFileSizesLabel
         '
         Me.lblRoundFileSizesLabel.AutoSize = True
-        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(501, 211)
+        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(618, 211)
         Me.lblRoundFileSizesLabel.Name = "lblRoundFileSizesLabel"
         Me.lblRoundFileSizesLabel.Size = New System.Drawing.Size(187, 26)
         Me.lblRoundFileSizesLabel.TabIndex = 34
@@ -1669,22 +1669,21 @@ Partial Class Form1
         'chkDisplayValidChecksumString
         '
         Me.chkDisplayValidChecksumString.AutoSize = True
-        Me.chkDisplayValidChecksumString.Location = New System.Drawing.Point(15, 254)
+        Me.chkDisplayValidChecksumString.Location = New System.Drawing.Point(15, 245)
         Me.chkDisplayValidChecksumString.Name = "chkDisplayValidChecksumString"
-        Me.chkDisplayValidChecksumString.Size = New System.Drawing.Size(272, 30)
+        Me.chkDisplayValidChecksumString.Size = New System.Drawing.Size(485, 17)
         Me.chkDisplayValidChecksumString.TabIndex = 37
-        Me.chkDisplayValidChecksumString.Text = "Display ""Valid Checksum"" instead of leaving it blank" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "in fifth column on ""Verify " &
-    "Saved Hashes"" tab"
+        Me.chkDisplayValidChecksumString.Text = "Display ""Valid Checksum"" instead of leaving it blank in fifth column on ""Verify Saved Hashes"" tab"
         Me.chkDisplayValidChecksumString.UseVisualStyleBackColor = True
         '
         'chkOpenInExplorer
         '
         Me.chkOpenInExplorer.AutoSize = True
-        Me.chkOpenInExplorer.Location = New System.Drawing.Point(15, 290)
+        Me.chkOpenInExplorer.Location = New System.Drawing.Point(15, 268)
         Me.chkOpenInExplorer.Name = "chkOpenInExplorer"
-        Me.chkOpenInExplorer.Size = New System.Drawing.Size(273, 30)
+        Me.chkOpenInExplorer.Size = New System.Drawing.Size(482, 17)
         Me.chkOpenInExplorer.TabIndex = 38
-        Me.chkOpenInExplorer.Text = "Open Windows Explorer with checksum file selected" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "after saving checksum file to " & "disk by default"
+        Me.chkOpenInExplorer.Text = "Open Windows Explorer with checksum file selected after saving checksum file to disk by default"
         Me.chkOpenInExplorer.UseVisualStyleBackColor = True
         '
         'Form1
