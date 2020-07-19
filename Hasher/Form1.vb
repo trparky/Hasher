@@ -30,6 +30,7 @@ Public Class Form1
     Private compareFilesAllTheHashes2 As allTheHashes = Nothing
     Private hashTextAllTheHashes As allTheHashes = Nothing
     Private checksumTypeForChecksumCompareWindow As checksumType
+    Private strLastHashFileLoaded As String = Nothing
 
     Private Const strColumnTitleChecksumMD5 As String = "Hash/Checksum (MD5)"
     Private Const strColumnTitleChecksumSHA160 As String = "Hash/Checksum (SHA1/SHA160)"
@@ -157,6 +158,7 @@ Public Class Form1
         listFiles.Items.Clear()
         filesInListFiles.Clear()
         updateFilesListCountHeader()
+        strLastHashFileLoaded = Nothing
     End Sub
 
     Private Sub btnRemoveSelectedFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveSelectedFiles.Click
@@ -486,6 +488,24 @@ Public Class Form1
 
         Dim strFileExtension As String
         Dim checksumType As checksumType
+
+        If Not String.IsNullOrWhiteSpace(strLastHashFileLoaded) Then
+            strFileExtension = New IO.FileInfo(strLastHashFileLoaded).Extension
+
+            If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
+                SaveFileDialog.FilterIndex = 1
+            ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
+                SaveFileDialog.FilterIndex = 2
+            ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
+                SaveFileDialog.FilterIndex = 3
+            ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
+                SaveFileDialog.FilterIndex = 4
+            ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                SaveFileDialog.FilterIndex = 5
+            End If
+
+            SaveFileDialog.FileName = strLastHashFileLoaded
+        End If
 
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
             If SaveFileDialog.FilterIndex = 1 Or SaveFileDialog.FilterIndex = 2 Then
@@ -1052,6 +1072,7 @@ Public Class Form1
     End Function
 
     Private Sub processExistingHashFile(strPathToChecksumFile As String)
+        strLastHashFileLoaded = strPathToChecksumFile
         lblVerifyFileNameLabel.Text = "File Name: " & strPathToChecksumFile
         verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height - 72)
 
