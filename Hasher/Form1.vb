@@ -1080,6 +1080,7 @@ Public Class Form1
         Dim checksumFileInfo As New IO.FileInfo(strPathToChecksumFile)
         Dim strChecksumFileExtension, strDirectoryThatContainsTheChecksumFile As String
 
+        strLastDirectoryWorkedOn = checksumFileInfo.DirectoryName
         strChecksumFileExtension = checksumFileInfo.Extension
         strDirectoryThatContainsTheChecksumFile = checksumFileInfo.DirectoryName
         checksumFileInfo = Nothing
