@@ -806,7 +806,7 @@ Public Class Form1
                     ' for the lack of a better word. However, this instance has received data from Windows Explorer so we
                     ' need to do something with it, namely pass that data to the first running instance via the named
                     ' pipe and then terminate itself.
-                    sendToIPCNamedPipeServer(commandLineArgument) ' This passes the data to the named pipe server.
+                    sendToIPCNamedPipeServer("--addfile=" & commandLineArgument) ' This passes the data to the named pipe server.
                     Process.GetCurrentProcess.Kill() ' This terminates the process.
                 End If
             ElseIf commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
@@ -2288,8 +2288,8 @@ Public Class Form1
                              TabControl1.SelectedIndex = tabNumber.compareFilesTab
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub)
-            Else
-                addFileOrDirectoryToHashFileList(strReceivedFileName)
+            ElseIf strReceivedFileName.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                addFileOrDirectoryToHashFileList(strReceivedFileName.caseInsensitiveReplace("--addfile=", ""))
             End If
 
             namedPipeServer.Dispose()
