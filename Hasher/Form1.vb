@@ -2271,11 +2271,11 @@ Public Class Form1
             Dim buffer As Byte() = New Byte(499) {}
             namedPipeServer.Read(buffer, 0, 500)
 
-            Dim strReceivedFileName As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
+            Dim strReceivedMessage As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
 
-            If strReceivedFileName.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+            If strReceivedMessage.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
                 myInvoke(Sub()
-                             Dim strFilePathToBeCompared As String = strReceivedFileName.caseInsensitiveReplace("--comparefile=", "")
+                             Dim strFilePathToBeCompared As String = strReceivedMessage.caseInsensitiveReplace("--comparefile=", "")
 
                              If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
                                  txtFile1.Text = strFilePathToBeCompared
@@ -2288,8 +2288,8 @@ Public Class Form1
                              TabControl1.SelectedIndex = tabNumber.compareFilesTab
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub)
-            ElseIf strReceivedFileName.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                addFileOrDirectoryToHashFileList(strReceivedFileName.caseInsensitiveReplace("--addfile=", ""))
+            ElseIf strReceivedMessage.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                addFileOrDirectoryToHashFileList(strReceivedMessage.caseInsensitiveReplace("--addfile=", ""))
             End If
 
             namedPipeServer.Dispose()
