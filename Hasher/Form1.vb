@@ -725,9 +725,9 @@ Public Class Form1
         launchURLInWebBrowser(strPayPal)
     End Sub
 
-    Private Sub sendToIPCNamedPipeServer(strFileName As String)
+    Private Sub sendToIPCNamedPipeServer(strMessageToSend As String)
         Try
-            Using memoryStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strFileName))
+            Using memoryStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strMessageToSend))
                 Dim namedPipeDataStream As New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
                 namedPipeDataStream.Connect(5000)
                 memoryStream.CopyTo(namedPipeDataStream)
