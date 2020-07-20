@@ -815,6 +815,20 @@ Public Class Form1
                     sendToIPCNamedPipeServer(commandLineArgument) ' This passes the data to the named pipe server.
                     Process.GetCurrentProcess.Kill() ' This terminates the process.
                 End If
+            ElseIf commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
+                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--hashfile=", "").Replace(Chr(34), "")
+
+                If IO.File.Exists(commandLineArgument) Then
+                    TabControl1.SelectTab(tabNumber.verifySavedHashesTab)
+                    btnOpenExistingHashFile.Text = "Abort Processing"
+                    verifyHashesListFiles.Items.Clear()
+                    processExistingHashFile(commandLineArgument)
+                End If
+            ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
+                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--knownhashfile=", "").Replace(Chr(34), "")
+                TabControl1.SelectTab(tabNumber.compareFileAgainstKnownHashTab)
+                txtFileForKnownHash.Text = commandLineArgument
+                txtKnownHash.Select()
             End If
         End If
 
@@ -880,30 +894,6 @@ Public Class Form1
         End If
 
         deleteTemporaryNewEXEFile()
-
-        With My.Application
-            If .CommandLineArgs.Count = 1 Then
-                commandLineArgument = .CommandLineArgs(0).Trim
-
-                If commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
-                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--hashfile=", "")
-                    commandLineArgument = commandLineArgument.Replace(Chr(34), "")
-
-                    If IO.File.Exists(commandLineArgument) Then
-                        TabControl1.SelectTab(3)
-                        btnOpenExistingHashFile.Text = "Abort Processing"
-                        verifyHashesListFiles.Items.Clear()
-                        processExistingHashFile(commandLineArgument)
-                    End If
-                ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
-                    commandLineArgument = commandLineArgument.caseInsensitiveReplace("--knownhashfile=", "")
-                    commandLineArgument = commandLineArgument.Replace(Chr(34), "")
-                    TabControl1.SelectTab(5)
-                    txtFileForKnownHash.Text = commandLineArgument
-                    txtKnownHash.Select()
-                End If
-            End If
-        End With
 
         colFileName.Width = My.Settings.hashIndividualFilesFileNameColumnSize
         colFileSize.Width = My.Settings.hashIndividualFilesFileSizeColumnSize
