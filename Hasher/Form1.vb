@@ -1,4 +1,5 @@
 ﻿Imports System.IO.Pipes
+Imports System.Runtime.Remoting.Messaging
 
 Public Class Form1
     Private Const strToBeComputed As String = "To Be Computed"
@@ -786,6 +787,12 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If My.Application.CommandLineArgs.Count = 0 And Environment.OSVersion.Version.Major = 10 Then
+            ' Brings the program to the foreground after launch. This is to work around a bug in Windows 10
+            ' in which the Start Menu doesn't disappear after launching the program from the Start Menu.
+            NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
+        End If
+
         ' This function returns a Boolean value indicating if the name pipe server was started or not.
         Dim boolNamedPipeServerStarted As Boolean = startNamedPipeServer()
         Dim commandLineArgument As String
