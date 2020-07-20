@@ -1,5 +1,4 @@
 ﻿Imports System.IO.Pipes
-Imports System.Runtime.Remoting.Messaging
 
 Public Class Form1
     Private Const strToBeComputed As String = "To Be Computed"
