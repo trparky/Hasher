@@ -793,36 +793,26 @@ Public Class Form1
         If My.Application.CommandLineArgs.Count = 1 Then
             commandLineArgument = My.Application.CommandLineArgs(0).Trim
 
-            If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", "").Replace(Chr(34), "")
-
+            If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Or commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
                 If boolNamedPipeServerStarted Then
                     ' This instance of the program is the first executed instance so it's the host of the named pipe server.
                     ' We still need to process the first incoming file passed to it via command line arguments. After doing
                     ' so, this instance of the program will continue operating as the host of the named pipe server.
-                    addFileOrDirectoryToHashFileList(commandLineArgument)
+                    If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                        ' We now have to strip off what we don't need.
+                        commandLineArgument = commandLineArgument.caseInsensitiveReplace("--addfile=", "").Replace(Chr(34), "")
+                        addFileOrDirectoryToHashFileList(commandLineArgument)
+                    ElseIf commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+                        ' We now have to strip off what we don't need.
+                        commandLineArgument = commandLineArgument.caseInsensitiveReplace("--comparefile=", "").Replace(Chr(34), "")
+                        txtFile1.Text = commandLineArgument
+                    End If
                 Else
                     ' This instance of the program isn't the first running instance, this instance is a secondary instance
                     ' for the lack of a better word. However, this instance has received data from Windows Explorer so we
                     ' need to do something with it, namely pass that data to the first running instance via the named
                     ' pipe and then terminate itself.
-                    sendToIPCNamedPipeServer("--addfile=" & commandLineArgument) ' This passes the data to the named pipe server.
-                    Process.GetCurrentProcess.Kill() ' This terminates the process.
-                End If
-            ElseIf commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.caseInsensitiveReplace("--comparefile=", "").Replace(Chr(34), "")
-
-                If boolNamedPipeServerStarted Then
-                    ' This instance of the program is the first executed instance so it's the host of the named pipe server.
-                    ' We still need to process the first incoming file passed to it via command line arguments. After doing
-                    ' so, this instance of the program will continue operating as the host of the named pipe server.
-                    txtFile1.Text = commandLineArgument
-                Else
-                    ' This instance of the program isn't the first running instance, this instance is a secondary instance
-                    ' for the lack of a better word. However, this instance has received data from Windows Explorer so we
-                    ' need to do something with it, namely pass that data to the first running instance via the named
-                    ' pipe and then terminate itself.
-                    sendToIPCNamedPipeServer("--comparefile=" & commandLineArgument) ' This passes the data to the named pipe server.
+                    sendToIPCNamedPipeServer(commandLineArgument) ' This passes the data to the named pipe server.
                     Process.GetCurrentProcess.Kill() ' This terminates the process.
                 End If
             End If
