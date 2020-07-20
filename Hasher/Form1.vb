@@ -762,7 +762,7 @@ Public Class Form1
             If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
                 If IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) Then
                     myInvoke(Sub()
-                                 TabControl1.SelectTab(2)
+                                 TabControl1.SelectTab(tabNumber.hashIndividualFilesTab)
                                  NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
                              End Sub)
 
@@ -770,7 +770,7 @@ Public Class Form1
                 Else
                     If Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
                         myInvoke(Sub()
-                                     TabControl1.SelectTab(2)
+                                     TabControl1.SelectTab(tabNumber.hashIndividualFilesTab)
                                      NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
                                  End Sub)
 
