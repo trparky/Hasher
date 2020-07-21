@@ -9,6 +9,7 @@ Public Class myListViewItem
     Public Property boolFileExists As Boolean
     Public Property computeTime As TimeSpan
     Public Property allTheHashes As allTheHashes
+    Public Property boolValidHash As Boolean
 
     Public Sub New(strInput As String)
         Me.Text = strInput
@@ -33,6 +34,7 @@ Public Class myListViewItem
             .computeTime = Me.computeTime
             .BackColor = Me.BackColor
             .allTheHashes = Me.allTheHashes
+            .boolValidHash = Me.boolValidHash
         End With
 
         Return newListViewItem

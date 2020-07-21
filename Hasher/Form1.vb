@@ -94,6 +94,7 @@ Public Class Form1
             .boolFileExists = item.boolFileExists
             .computeTime = item.computeTime
             .allTheHashes = item.allTheHashes
+            .boolValidHash = item.boolValidHash
         End With
     End Sub
 
@@ -1209,12 +1210,14 @@ Public Class Form1
                                                                          item.SubItems(3).Text = timespanToHMS(item.computeTime)
                                                                          item.SubItems(4).Text = strDisplayValidChecksumString
                                                                          longFilesThatPassedVerification += 1
+                                                                         item.boolValidHash = True
                                                                      Else
                                                                          item.color = notValidColor
                                                                          item.SubItems(2).Text = "Incorrect Checksum"
                                                                          item.computeTime = computeStopwatch.Elapsed
                                                                          item.SubItems(3).Text = timespanToHMS(item.computeTime)
                                                                          item.SubItems(4).Text = If(chkDisplayHashesInUpperCase.Checked, getDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, getDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
+                                                                         item.boolValidHash = False
                                                                      End If
                                                                  Else
                                                                      item.color = fileNotFoundColor
@@ -2537,6 +2540,9 @@ Public Class Form1
             Exit Sub
         Else
             If String.IsNullOrEmpty(verifyHashesListFiles.SelectedItems(0).SubItems(4).Text) Or workingThread IsNot Nothing Then
+                e.Cancel = True
+                Exit Sub
+            ElseIf Not DirectCast(verifyHashesListFiles.SelectedItems(0), myListViewItem).boolFileExists Or DirectCast(verifyHashesListFiles.SelectedItems(0), myListViewItem).boolValidHash Then
                 e.Cancel = True
                 Exit Sub
             End If
