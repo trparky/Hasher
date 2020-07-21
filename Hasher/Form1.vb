@@ -2535,7 +2535,7 @@ Public Class Form1
     End Sub
 
     Private Sub verifyListFilesContextMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles verifyListFilesContextMenu.Opening
-        If verifyHashesListFiles.Items.Count = 0 Then
+        If verifyHashesListFiles.Items.Count = 0 Or verifyHashesListFiles.SelectedItems.Count = 0 Then
             e.Cancel = True
             Exit Sub
         Else
