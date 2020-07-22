@@ -1692,7 +1692,7 @@ Public Class Form1
         verifyHashesListFiles.Sort()
     End Sub
 
-    Private Sub btnCheckForUpdates_Click_1(sender As Object, e As EventArgs) Handles btnCheckForUpdates.Click
+    Private Sub btnCheckForUpdates_Click(sender As Object, e As EventArgs) Handles btnCheckForUpdates.Click
         Threading.ThreadPool.QueueUserWorkItem(Sub()
                                                    Dim checkForUpdatesClassObject As New Check_for_Update_Stuff(Me)
                                                    checkForUpdatesClassObject.checkForUpdates()
