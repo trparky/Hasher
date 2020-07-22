@@ -990,7 +990,7 @@ Public Class Form1
                                                                 btnIndividualFilesCopyToClipboard.Enabled = False
                                                                 btnIndividualFilesSaveResultsToDisk.Enabled = False
 
-                                                                lblIndividualFilesStatus.Text = "Enumerating files in directory... Please Wait."
+                                                                lblIndividualFilesStatus.Text = "Enumerating files in directory... Please wait."
                                                                 btnAddFilesInFolder.Enabled = False
                                                             End Sub)
 
@@ -1004,7 +1004,7 @@ Public Class Form1
 
                                                    myInvoke(Sub()
                                                                 lblIndividualFilesStatusProcessingFile.Visible = True
-                                                                lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please Wait."
+                                                                lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please wait."
 
                                                                 listFiles.BeginUpdate()
                                                                 listFiles.Items.AddRange(collectionOfListViewItems.ToArray())
@@ -1113,7 +1113,7 @@ Public Class Form1
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim intLineCounter As Integer = 0
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
-                                                     Dim strReadingHashFileMessage As String = "Reading hash file and creating ListView item objects... Please Wait."
+                                                     Dim strReadingHashFileMessage As String = "Reading hash file and creating ListView item objects... Please wait."
 
                                                      myInvoke(Sub()
                                                                   lblVerifyHashStatus.Visible = True
