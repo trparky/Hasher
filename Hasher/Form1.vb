@@ -1,7 +1,7 @@
 ﻿Imports System.IO.Pipes
 
 Public Class Form1
-    Private Const strToBeComputed As String = "To Be Computed"
+    Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
 #If DEBUG Then
     Private Const strWindowTitle As String = "Hasher (Debug Build)"
@@ -186,7 +186,7 @@ Public Class Form1
         }
         With itemToBeAdded
             .SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-            .SubItems.Add(strToBeComputed)
+            .SubItems.Add(strWaitingToBeProcessed)
             .SubItems.Add("")
         End With
 
@@ -334,9 +334,15 @@ Public Class Form1
 
                                                      For Each item As myListViewItem In items
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
+                                                             item.SubItems(2).Text = "Currently being processed... Please wait."
+
                                                              myInvoke(Sub()
                                                                           lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
                                                                           lblIndividualFilesStatusProcessingFile.Text = "Processing " & myToString(index) & " of " & myToString(listFiles.Items.Count) & If(listFiles.Items.Count = 1, " file", " files") & "."
+
+                                                                          itemOnGUI = listFiles.Items(item.Index)
+                                                                          If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
+                                                                          itemOnGUI = Nothing
                                                                       End Sub)
 
                                                              computeStopwatch = Stopwatch.StartNew
@@ -1044,9 +1050,9 @@ Public Class Form1
                     ulongAllBytes += .fileSize
                 End SyncLock
                 .SubItems.Add(fileSizeToHumanSize(listViewItem.fileSize))
-                .SubItems.Add("To Be Tested")
-                .SubItems.Add("To Be Tested")
-                .SubItems.Add("To Be Tested")
+                .SubItems.Add("")
+                .SubItems.Add("")
+                .SubItems.Add(strWaitingToBeProcessed)
                 .boolFileExists = True
             Else
                 .fileSize = -1
@@ -1203,7 +1209,16 @@ Public Class Form1
                                                                                   End Try
                                                                               End Sub
 
-                                                                 myInvoke(Sub() lblVerifyHashStatus.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & ".")
+                                                                 item.SubItems(4).Text = "Currently being processed... Please wait."
+
+                                                                 myInvoke(Sub()
+                                                                              lblVerifyHashStatus.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & "."
+
+                                                                              itemOnGUI = verifyHashesListFiles.Items(item.Index)
+                                                                              If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
+                                                                              itemOnGUI = Nothing
+                                                                          End Sub)
+
                                                                  computeStopwatch = Stopwatch.StartNew
 
                                                                  If doChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine) Then
