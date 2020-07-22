@@ -413,6 +413,18 @@ Namespace My
                 Me("boolOpenInExplorer") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property boolShowPercentageInWindowTitleBar() As Boolean
+            Get
+                Return CType(Me("boolShowPercentageInWindowTitleBar"),Boolean)
+            End Get
+            Set
+                Me("boolShowPercentageInWindowTitleBar") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

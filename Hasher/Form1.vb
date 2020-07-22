@@ -289,6 +289,7 @@ Public Class Form1
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
                                                                                                              lblHashIndividualFilesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "%) has been processed."
+                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                          End SyncLock
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
@@ -876,6 +877,7 @@ Public Class Form1
         chkAutoAddExtension.Checked = My.Settings.boolAutoAddExtension
         chkDisplayValidChecksumString.Checked = My.Settings.boolDisplayValidChecksumString
         chkOpenInExplorer.Checked = My.Settings.boolOpenInExplorer
+        chkShowPercentageInWindowTitleBar.Checked = My.Settings.boolShowPercentageInWindowTitleBar
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             Check_for_Update_Stuff.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -1191,6 +1193,7 @@ Public Class Form1
                                                                                                    SyncLock threadLockingObject
                                                                                                        allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
                                                                                                        lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                       If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                    End SyncLock
                                                                                                    lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed."
                                                                                                    ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
@@ -1767,6 +1770,7 @@ Public Class Form1
                                                                                                          CompareFilesAllFilesProgress.Value = allBytesPercentage
                                                                                                          lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed."
                                                                                                          lblCompareFilesAllFilesStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -2019,6 +2023,7 @@ Public Class Form1
                                                                                                          compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                          ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
                                                                                                          lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & Math.Round(percentage, byteRoundPercentages) & "% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -2605,5 +2610,9 @@ Public Class Form1
 
     Private Sub chkOpenInExplorer_Click(sender As Object, e As EventArgs) Handles chkOpenInExplorer.Click
         My.Settings.boolOpenInExplorer = chkOpenInExplorer.Checked
+    End Sub
+
+    Private Sub chkShowPercentageInWindowTitleBar_Click(sender As Object, e As EventArgs) Handles chkShowPercentageInWindowTitleBar.Click
+        My.Settings.boolShowPercentageInWindowTitleBar = chkShowPercentageInWindowTitleBar.Checked
     End Sub
 End Class

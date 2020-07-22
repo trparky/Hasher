@@ -165,6 +165,7 @@ Partial Class Form1
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
+        Me.chkShowPercentageInWindowTitleBar = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1317,6 +1318,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkShowPercentageInWindowTitleBar)
         Me.tabSettings.Controls.Add(Me.chkOpenInExplorer)
         Me.tabSettings.Controls.Add(Me.chkDisplayValidChecksumString)
         Me.tabSettings.Controls.Add(Me.btnSetBufferSize)
@@ -1427,7 +1429,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 291)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 314)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1436,7 +1438,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 291)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 314)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1686,6 +1688,16 @@ Partial Class Form1
         Me.chkOpenInExplorer.Text = "Open Windows Explorer with checksum file selected after saving checksum file to disk by default"
         Me.chkOpenInExplorer.UseVisualStyleBackColor = True
         '
+        'chkShowPercentageInWindowTitleBar
+        '
+        Me.chkShowPercentageInWindowTitleBar.AutoSize = True
+        Me.chkShowPercentageInWindowTitleBar.Location = New System.Drawing.Point(15, 291)
+        Me.chkShowPercentageInWindowTitleBar.Name = "chkShowPercentageInWindowTitleBar"
+        Me.chkShowPercentageInWindowTitleBar.Size = New System.Drawing.Size(206, 17)
+        Me.chkShowPercentageInWindowTitleBar.TabIndex = 39
+        Me.chkShowPercentageInWindowTitleBar.Text = "Show Percentage in Window Title Bar"
+        Me.chkShowPercentageInWindowTitleBar.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1871,4 +1883,5 @@ Partial Class Form1
     Friend WithEvents pictureBoxCompareFiles As PictureBox
     Friend WithEvents chkDisplayValidChecksumString As CheckBox
     Friend WithEvents chkOpenInExplorer As CheckBox
+    Friend WithEvents chkShowPercentageInWindowTitleBar As CheckBox
 End Class
