@@ -1490,7 +1490,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, do you want to abort?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, strMessageBoxTitleText) = MsgBoxResult.No Then
+        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, are you sure you want to abort?", MsgBoxStyle.YesNo + MsgBoxStyle.Question + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.No Then
             e.Cancel = True
             Exit Sub
         Else
@@ -1502,7 +1502,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, do you want to abort?", MsgBoxStyle.YesNo + MsgBoxStyle.Question, strMessageBoxTitleText) = MsgBoxResult.No Then
+        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, are you sure you want to abort and exit the program?", MsgBoxStyle.YesNo + MsgBoxStyle.Question + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.No Then
             e.Cancel = True
             Exit Sub
         Else
