@@ -243,12 +243,16 @@ Public Class Form1
 
     Private Sub btnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
         If btnComputeHash.Text = "Abort Processing" Then
-            If workingThread IsNot Nothing Then
-                workingThread.Abort()
-                boolBackgroundThreadWorking = False
-            End If
+            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+                If workingThread IsNot Nothing Then
+                    workingThread.Abort()
+                    boolBackgroundThreadWorking = False
+                End If
 
-            Exit Sub
+                Exit Sub
+            Else
+                Exit Sub
+            End If
         End If
 
         btnComputeHash.Text = "Abort Processing"
@@ -1350,12 +1354,16 @@ Public Class Form1
 
     Private Sub btnOpenExistingHashFile_Click(sender As Object, e As EventArgs) Handles btnOpenExistingHashFile.Click
         If btnOpenExistingHashFile.Text = "Abort Processing" Then
-            If workingThread IsNot Nothing Then
-                workingThread.Abort()
-                boolBackgroundThreadWorking = False
-            End If
+            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+                If workingThread IsNot Nothing Then
+                    workingThread.Abort()
+                    boolBackgroundThreadWorking = False
+                End If
 
-            Exit Sub
+                Exit Sub
+            Else
+                Exit Sub
+            End If
         End If
 
         btnTransferToHashIndividualFilesTab.Enabled = False
@@ -1676,12 +1684,16 @@ Public Class Form1
     Private Sub btnCompareFiles_Click(sender As Object, e As EventArgs) Handles btnCompareFiles.Click
         compareRadioSHA512.Checked = True
         If btnCompareFiles.Text = "Abort Processing" Then
-            If workingThread IsNot Nothing Then
-                workingThread.Abort()
-                boolBackgroundThreadWorking = False
-            End If
+            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+                If workingThread IsNot Nothing Then
+                    workingThread.Abort()
+                    boolBackgroundThreadWorking = False
+                End If
 
-            Exit Sub
+                Exit Sub
+            Else
+                Exit Sub
+            End If
         End If
 
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
@@ -1954,12 +1966,16 @@ Public Class Form1
 
     Private Sub btnCompareAgainstKnownHash_Click(sender As Object, e As EventArgs) Handles btnCompareAgainstKnownHash.Click
         If btnCompareAgainstKnownHash.Text = "Abort Processing" Then
-            If workingThread IsNot Nothing Then
-                workingThread.Abort()
-                boolBackgroundThreadWorking = False
-            End If
+            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+                If workingThread IsNot Nothing Then
+                    workingThread.Abort()
+                    boolBackgroundThreadWorking = False
+                End If
 
-            Exit Sub
+                Exit Sub
+            Else
+                Exit Sub
+            End If
         End If
 
         txtFileForKnownHash.Text = txtFileForKnownHash.Text.Trim
