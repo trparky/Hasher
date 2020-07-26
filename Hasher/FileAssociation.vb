@@ -88,5 +88,9 @@ Namespace FileAssociation
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --addfile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
         End Sub
+
+        Public Function doesCompareFilesExist() As Boolean
+            Return If(Registry.ClassesRoot.OpenSubKey("*\Shell\Compare Two Files", False) IsNot Nothing, True, False)
+        End Function
     End Module
 End Namespace

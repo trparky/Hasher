@@ -929,6 +929,10 @@ Public Class Form1
         End If
 
         boolDoneLoading = True
+
+        If Not FileAssociation.doesCompareFilesExist() Then
+            MsgBox("Hasher has a new function! The ability to compare two files from Windows Explorer." & vbCrLf & vbCrLf & "Please go to the Setting tab and click on the ""Add Hasher to All Files"" button to add support to Windows Explorer for this new feature.", MsgBoxStyle.Information, strMessageBoxTitleText)
+        End If
     End Sub
 
     Private Sub deleteTemporaryNewEXEFile()
