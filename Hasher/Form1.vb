@@ -2,6 +2,7 @@
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
+    Private Const strCurrentlyBeingProcessed As String = "Currently being processed... Please wait."
     Private Const strNoBackgroundProcesses As String = "(No Background Processes)"
 #If DEBUG Then
     Private Const strWindowTitle As String = "Hasher (Debug Build)"
@@ -336,7 +337,7 @@ Public Class Form1
 
                                                      For Each item As myListViewItem In items
                                                          If String.IsNullOrWhiteSpace(item.hash) Then
-                                                             item.SubItems(2).Text = "Currently being processed... Please wait."
+                                                             item.SubItems(2).Text = strCurrentlyBeingProcessed
 
                                                              myInvoke(Sub()
                                                                           lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
@@ -1209,7 +1210,7 @@ Public Class Form1
                                                                                   End Try
                                                                               End Sub
 
-                                                                 item.SubItems(4).Text = "Currently being processed... Please wait."
+                                                                 item.SubItems(4).Text = strCurrentlyBeingProcessed
 
                                                                  myInvoke(Sub()
                                                                               lblVerifyHashStatus.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & "."
