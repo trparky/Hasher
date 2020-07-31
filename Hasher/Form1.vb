@@ -127,32 +127,34 @@ Public Class Form1
     End Function
 
     Private Sub updateFilesListCountHeader(Optional boolIncludeSelectedItemCount As Boolean = False)
-        If boolIncludeSelectedItemCount Then
-            lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files ({1} {2} are selected)",
-                                                             myToString(listFiles.Items.Count),
-                                                             myToString(listFiles.SelectedItems.Count),
-                                                             If(listFiles.SelectedItems.Count = 1, "item", "items")
-                                                            )
-        Else
-            lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files",
-                                                             myToString(listFiles.Items.Count)
-                                                            )
-        End If
+        myInvoke(Sub()
+                     If boolIncludeSelectedItemCount Then
+                         lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files ({1} {2} are selected)",
+                                                                          myToString(listFiles.Items.Count),
+                                                                          myToString(listFiles.SelectedItems.Count),
+                                                                          If(listFiles.SelectedItems.Count = 1, "item", "items")
+                                                                         )
+                     Else
+                         lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files",
+                                                                          myToString(listFiles.Items.Count)
+                                                                         )
+                     End If
 
-        If listFiles.Items.Count = 0 Then
-            btnComputeHash.Enabled = False
-            btnIndividualFilesCopyToClipboard.Enabled = False
-            btnIndividualFilesSaveResultsToDisk.Enabled = False
-        Else
-            Dim intNumberOfItemsWithoutHash As Integer = listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) String.IsNullOrWhiteSpace(item.allTheHashes.sha160)).Count
+                     If listFiles.Items.Count = 0 Then
+                         btnComputeHash.Enabled = False
+                         btnIndividualFilesCopyToClipboard.Enabled = False
+                         btnIndividualFilesSaveResultsToDisk.Enabled = False
+                     Else
+                         Dim intNumberOfItemsWithoutHash As Integer = listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) String.IsNullOrWhiteSpace(item.allTheHashes.sha160)).Count
 
-            btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
+                         btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
 
-            If intNumberOfItemsWithoutHash <> listFiles.Items.Count Then
-                btnIndividualFilesCopyToClipboard.Enabled = True
-                btnIndividualFilesSaveResultsToDisk.Enabled = True
-            End If
-        End If
+                         If intNumberOfItemsWithoutHash <> listFiles.Items.Count Then
+                             btnIndividualFilesCopyToClipboard.Enabled = True
+                             btnIndividualFilesSaveResultsToDisk.Enabled = True
+                         End If
+                     End If
+                 End Sub)
     End Sub
 
     Private Sub btnRemoveAllFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveAllFiles.Click
@@ -786,7 +788,7 @@ Public Class Form1
                                  End Sub)
 
                         strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
-                        listFiles.Items.Add(createListFilesObject(strReceivedFileName))
+                        myInvoke(Sub() listFiles.Items.Add(createListFilesObject(strReceivedFileName)))
                     End If
                 End If
 
@@ -1611,30 +1613,32 @@ Public Class Form1
     End Sub
 
     Private Sub applyFileSizeSortingToHashList()
-        colFileName.Text = "File Name"
-        colFileSize.Text = "File Size"
-        colComputeTime.Text = "Compute Time"
+        myInvoke(Sub()
+                     colFileName.Text = "File Name"
+                     colFileSize.Text = "File Size"
+                     colComputeTime.Text = "Compute Time"
 
-        If radioMD5.Checked Then
-            colChecksum.Text = strColumnTitleChecksumMD5
-        ElseIf radioSHA1.Checked Then
-            colChecksum.Text = strColumnTitleChecksumSHA160
-        ElseIf radioSHA256.Checked Then
-            colChecksum.Text = strColumnTitleChecksumSHA256
-        ElseIf radioSHA384.Checked Then
-            colChecksum.Text = strColumnTitleChecksumSHA384
-        ElseIf radioSHA512.Checked Then
-            colChecksum.Text = strColumnTitleChecksumSHA512
-        End If
+                     If radioMD5.Checked Then
+                         colChecksum.Text = strColumnTitleChecksumMD5
+                     ElseIf radioSHA1.Checked Then
+                         colChecksum.Text = strColumnTitleChecksumSHA160
+                     ElseIf radioSHA256.Checked Then
+                         colChecksum.Text = strColumnTitleChecksumSHA256
+                     ElseIf radioSHA384.Checked Then
+                         colChecksum.Text = strColumnTitleChecksumSHA384
+                     ElseIf radioSHA512.Checked Then
+                         colChecksum.Text = strColumnTitleChecksumSHA512
+                     End If
 
-        Dim new_sorting_column As ColumnHeader = listFiles.Columns(1)
-        Dim sort_order As SortOrder = SortOrder.Ascending
+                     Dim new_sorting_column As ColumnHeader = listFiles.Columns(1)
+                     Dim sort_order As SortOrder = SortOrder.Ascending
 
-        m_SortingColumn2 = new_sorting_column
-        m_SortingColumn2.Text = "> File Size"
+                     m_SortingColumn2 = new_sorting_column
+                     m_SortingColumn2.Text = "> File Size"
 
-        listFiles.ListViewItemSorter = New ListViewComparer(1, sort_order)
-        listFiles.Sort()
+                     listFiles.ListViewItemSorter = New ListViewComparer(1, sort_order)
+                     listFiles.Sort()
+                 End Sub)
     End Sub
 
     Private Sub applyFileSizeSortingToVerifyList()
