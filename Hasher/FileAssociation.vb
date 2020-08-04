@@ -90,7 +90,7 @@ Namespace FileAssociation
         End Sub
 
         Public Function doesCompareFilesExist() As Boolean
-            Return If(Registry.ClassesRoot.OpenSubKey("*\Shell\Compare Two Files", False) IsNot Nothing, True, False)
+            Return Registry.ClassesRoot.OpenSubKey("*\Shell\Compare Two Files", False) IsNot Nothing
         End Function
     End Module
 End Namespace
