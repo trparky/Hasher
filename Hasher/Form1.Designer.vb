@@ -166,6 +166,7 @@ Partial Class Form1
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
         Me.chkShowPercentageInWindowTitleBar = New System.Windows.Forms.CheckBox()
+        Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -779,6 +780,7 @@ Partial Class Form1
         'tabVerifySavedHashes
         '
         Me.tabVerifySavedHashes.BackColor = System.Drawing.SystemColors.Control
+        Me.tabVerifySavedHashes.Controls.Add(Me.btnRetestFailedFiles)
         Me.tabVerifySavedHashes.Controls.Add(Me.verifyHashesListFiles)
         Me.tabVerifySavedHashes.Controls.Add(Me.verifySavedHashesTableLayoutControl)
         Me.tabVerifySavedHashes.Controls.Add(Me.lblVerifyFileNameLabel)
@@ -1698,6 +1700,16 @@ Partial Class Form1
         Me.chkShowPercentageInWindowTitleBar.Text = "Show Percentage in Window Title Bar"
         Me.chkShowPercentageInWindowTitleBar.UseVisualStyleBackColor = True
         '
+        'btnRetestFailedFiles
+        '
+        Me.btnRetestFailedFiles.Location = New System.Drawing.Point(12, 158)
+        Me.btnRetestFailedFiles.Name = "btnRetestFailedFiles"
+        Me.btnRetestFailedFiles.Size = New System.Drawing.Size(142, 67)
+        Me.btnRetestFailedFiles.TabIndex = 27
+        Me.btnRetestFailedFiles.Text = "Retest Failed Files"
+        Me.btnRetestFailedFiles.UseVisualStyleBackColor = True
+        Me.btnRetestFailedFiles.Visible = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1884,4 +1896,5 @@ Partial Class Form1
     Friend WithEvents chkDisplayValidChecksumString As CheckBox
     Friend WithEvents chkOpenInExplorer As CheckBox
     Friend WithEvents chkShowPercentageInWindowTitleBar As CheckBox
+    Friend WithEvents btnRetestFailedFiles As Button
 End Class
