@@ -1280,12 +1280,13 @@ Public Class Form1
                                                                   verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
 
                                                                   Dim sbMessageBoxText As New Text.StringBuilder
+                                                                  Dim intFilesThatDidNotPassVerification As Integer = 0
 
                                                                   If intFilesNotFound = 0 Then
                                                                       If longFilesThatPassedVerification = verifyHashesListFiles.Items.Count Then
                                                                           sbMessageBoxText.AppendLine("Processing of hash file complete. All files have passed verification.")
                                                                       Else
-                                                                          Dim intFilesThatDidNotPassVerification As Integer = verifyHashesListFiles.Items.Count - longFilesThatPassedVerification
+                                                                          intFilesThatDidNotPassVerification = verifyHashesListFiles.Items.Count - longFilesThatPassedVerification
                                                                           If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
                                                                           sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
                                                                                                                     myToString(longFilesThatPassedVerification),
@@ -1307,7 +1308,7 @@ Public Class Form1
                                                                                                                    )
                                                                            )
                                                                       Else
-                                                                          Dim intFilesThatDidNotPassVerification As Integer = intTotalFiles - longFilesThatPassedVerification
+                                                                          intFilesThatDidNotPassVerification = intTotalFiles - longFilesThatPassedVerification
                                                                           If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
                                                                           sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification, Unfortunately, {3} {4} didn't pass verification and {5} {6} were not found.",
                                                                                                                     myToString(longFilesThatPassedVerification),
@@ -2795,12 +2796,13 @@ Public Class Form1
                                                                   verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
 
                                                                   Dim sbMessageBoxText As New Text.StringBuilder
+                                                                  Dim intFilesThatDidNotPassVerification As Integer = 0
 
                                                                   If intFilesNotFound = 0 Then
                                                                       If longFilesThatPassedVerification = intFileCount Then
                                                                           sbMessageBoxText.AppendLine("Processing of hash file complete. All files have passed verification.")
                                                                       Else
-                                                                          Dim intFilesThatDidNotPassVerification As Integer = intFileCount - longFilesThatPassedVerification
+                                                                          intFilesThatDidNotPassVerification = intFileCount - longFilesThatPassedVerification
                                                                           If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
                                                                           sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
                                                                                                                     myToString(longFilesThatPassedVerification),
@@ -2822,7 +2824,7 @@ Public Class Form1
                                                                                                                    )
                                                                            )
                                                                       Else
-                                                                          Dim intFilesThatDidNotPassVerification As Integer = intTotalFiles - longFilesThatPassedVerification
+                                                                          intFilesThatDidNotPassVerification = intTotalFiles - longFilesThatPassedVerification
                                                                           If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
                                                                           sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification, Unfortunately, {3} {4} didn't pass verification and {5} {6} were not found.",
                                                                                                                     myToString(longFilesThatPassedVerification),
