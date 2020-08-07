@@ -1,4 +1,5 @@
-﻿Imports System.IO.Pipes
+﻿Imports System.ComponentModel.Design
+Imports System.IO.Pipes
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -82,7 +83,7 @@ Public Class Form1
         End If
     End Function
 
-    Private Sub updateListViewItem(ByRef itemOnGUI As myListViewItem, ByRef item As myListViewItem)
+    Private Sub updateListViewItem(ByRef itemOnGUI As myListViewItem, ByRef item As myListViewItem, Optional boolForceUpdateColor As Boolean = False)
         With itemOnGUI
             For i As Short = 1 To item.SubItems.Count - 1
                 .SubItems(i) = item.SubItems(i)
@@ -96,6 +97,7 @@ Public Class Form1
             .computeTime = item.computeTime
             .allTheHashes = item.allTheHashes
             .boolValidHash = item.boolValidHash
+            If boolForceUpdateColor Then .BackColor = item.color
         End With
     End Sub
 
@@ -1299,6 +1301,7 @@ Public Class Form1
                                                                   Else
                                                                       sbMessageBoxText.AppendLine("Processing of hash file complete.")
                                                                       sbMessageBoxText.AppendLine()
+                                                                      btnRetestFailedFiles.Visible = True
 
                                                                       Dim intTotalFiles As Integer = verifyHashesListFiles.Items.Count - intFilesNotFound
                                                                       If longFilesThatPassedVerification = intTotalFiles Then
@@ -2663,7 +2666,6 @@ Public Class Form1
                                                                   lblVerifyHashesTotalStatus.Visible = True
                                                                   lblVerifyHashesTotalStatus.Text = Nothing
                                                                   lblVerifyHashStatusProcessingFile.Text = Nothing
-                                                                  verifyHashesListFiles.BeginUpdate()
                                                               End Sub)
 
                                                      SyncLock threadLockingObject
@@ -2672,7 +2674,6 @@ Public Class Form1
                                                      End SyncLock
 
                                                      myInvoke(Sub()
-                                                                  verifyHashesListFiles.EndUpdate()
                                                                   Me.Text = strWindowTitle
                                                                   If chkSortByFileSizeAfterLoadingHashFile.Checked Then applyFileSizeSortingToVerifyList()
                                                                   VerifyHashProgressBar.Value = 0
@@ -2692,10 +2693,33 @@ Public Class Form1
 
                                                      For Each item As myListViewItem In items
                                                          If Not item.boolValidHash Then
-                                                             ulongAllBytes += item.fileSize
-                                                             intFileCount += 1
+                                                             If IO.File.Exists(item.fileName) Then
+                                                                 item.boolFileExists = True
+                                                                 item.fileSize = New IO.FileInfo(item.fileName).Length
+                                                                 item.SubItems(1).Text = fileSizeToHumanSize(item.fileSize)
+                                                                 item.SubItems(2).Text = ""
+                                                                 item.SubItems(3).Text = ""
+                                                                 item.SubItems(4).Text = strWaitingToBeProcessed
+                                                                 item.color = Color.FromKnownColor(KnownColor.Window)
+
+                                                                 myInvoke(Sub()
+                                                                              itemOnGUI = verifyHashesListFiles.Items(item.Index)
+                                                                              If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item, True)
+                                                                              itemOnGUI = Nothing
+                                                                          End Sub)
+
+                                                                 ulongAllBytes += item.fileSize
+                                                                 intFileCount += 1
+                                                             Else
+                                                                 item.boolFileExists = False
+                                                             End If
                                                          End If
                                                      Next
+
+                                                     If chkSortByFileSizeAfterLoadingHashFile.Checked Then myInvoke(Sub() applyFileSizeSortingToVerifyList())
+                                                     items.Clear()
+                                                     items = getListViewItems(verifyHashesListFiles)
+                                                     index = 1
 
                                                      For Each item As myListViewItem In items
                                                          myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}",
@@ -2704,7 +2728,7 @@ Public Class Form1
                                                                                                                                If(intFileCount = 1, "file", "files"))
                                                                                                                               )
 
-                                                         If item.boolFileExists And Not item.boolValidHash Then
+                                                         If Not item.boolValidHash Then
                                                              strChecksum = item.hash
                                                              strFileName = item.fileName
 
@@ -2762,6 +2786,12 @@ Public Class Form1
                                                                  Else
                                                                      item.color = fileNotFoundColor
                                                                      item.SubItems(2).Text = "(Error while calculating checksum)"
+                                                                     item.SubItems(4).Text = "(Error while calculating checksum)"
+                                                                     item.boolValidHash = False
+
+                                                                     SyncLock threadLockingObject
+                                                                         ulongAllBytes -= item.fileSize
+                                                                     End SyncLock
                                                                  End If
 
                                                                  subRoutine = Nothing
@@ -2771,12 +2801,12 @@ Public Class Form1
                                                                               If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
                                                                               itemOnGUI = Nothing
                                                                           End Sub)
+
+                                                                 index += 1
                                                              End If
                                                          Else
                                                              item.boolValidHash = False
                                                          End If
-
-                                                         index += 1
                                                      Next
 
                                                      myInvoke(Sub()
@@ -2815,6 +2845,7 @@ Public Class Form1
                                                                   Else
                                                                       sbMessageBoxText.AppendLine("Processing of hash file complete.")
                                                                       sbMessageBoxText.AppendLine()
+                                                                      btnRetestFailedFiles.Visible = True
 
                                                                       Dim intTotalFiles As Integer = intFileCount - intFilesNotFound
                                                                       If longFilesThatPassedVerification = intTotalFiles Then
