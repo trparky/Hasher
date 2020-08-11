@@ -1,4 +1,5 @@
 ﻿Imports System.Security.Principal
+Imports Microsoft.Win32
 
 Public Module Globals
     ''' <summary>These two variables, ulongAllReadBytes and ulongAllBytes, and used to track overall hashing progress of all files to be processed.</summary>
@@ -8,6 +9,15 @@ Public Module Globals
     ''' <summary>Stores the value of the setting for roundNumbers locally.</summary>
     Public byteRoundFileSizes, byteRoundPercentages As Byte
 
+    Public Function myRoundingFunction(value As Double, digits As Integer) As String
+        If digits = 0 Then
+            Return Math.Round(value, digits).ToString
+        Else
+            Dim strFormatString As String = "{0:0." & New String("0", digits) & "}"
+            Return String.Format(strFormatString, Math.Round(value, digits))
+        End If
+    End Function
+
     Public Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
         Dim shortRoundNumber As Short = If(roundToNearestWholeNumber, 0, byteRoundFileSizes)
@@ -15,17 +25,17 @@ Public Module Globals
         If size <= (2 ^ 10) Then
             result = size & " Bytes"
         ElseIf size > (2 ^ 10) And size <= (2 ^ 20) Then
-            result = Math.Round(size / (2 ^ 10), shortRoundNumber) & " KBs"
+            result = myRoundingFunction(size / (2 ^ 10), shortRoundNumber) & " KBs"
         ElseIf size > (2 ^ 20) And size <= (2 ^ 30) Then
-            result = Math.Round(size / (2 ^ 20), shortRoundNumber) & " MBs"
+            result = myRoundingFunction(size / (2 ^ 20), shortRoundNumber) & " MBs"
         ElseIf size > (2 ^ 30) And size <= (2 ^ 40) Then
-            result = Math.Round(size / (2 ^ 30), shortRoundNumber) & " GBs"
+            result = myRoundingFunction(size / (2 ^ 30), shortRoundNumber) & " GBs"
         ElseIf size > (2 ^ 40) And size <= (2 ^ 50) Then
-            result = Math.Round(size / (2 ^ 40), shortRoundNumber) & " TBs"
+            result = myRoundingFunction(size / (2 ^ 40), shortRoundNumber) & " TBs"
         ElseIf size > (2 ^ 50) And size <= (2 ^ 60) Then
-            result = Math.Round(size / (2 ^ 50), shortRoundNumber) & " PBs"
+            result = myRoundingFunction(size / (2 ^ 50), shortRoundNumber) & " PBs"
         ElseIf size > (2 ^ 60) And size <= (2 ^ 70) Then
-            result = Math.Round(size / (2 ^ 50), shortRoundNumber) & " EBs"
+            result = myRoundingFunction(size / (2 ^ 50), shortRoundNumber) & " EBs"
         Else
             result = "(None)"
         End If

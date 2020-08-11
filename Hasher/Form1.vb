@@ -292,12 +292,12 @@ Public Class Form1
                                                                                                          IndividualFilesProgressBar.Value = percentage
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
-                                                                                                             lblHashIndividualFilesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "%) has been processed."
-                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                             lblHashIndividualFilesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) has been processed."
+                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                          End SyncLock
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
-                                                                                                         lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -1205,10 +1205,10 @@ Public Class Form1
                                                                                                VerifyHashProgressBar.Value = percentage
                                                                                                SyncLock threadLockingObject
                                                                                                    allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
-                                                                                                   lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                   If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                   lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                   If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                End SyncLock
-                                                                                               lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                               lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
                                                                                                ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                            End Sub)
@@ -1797,9 +1797,9 @@ Public Class Form1
                                                                                                          End SyncLock
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          CompareFilesAllFilesProgress.Value = allBytesPercentage
-                                                                                                         lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         lblCompareFilesAllFilesStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                         lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         lblCompareFilesAllFilesStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -2051,8 +2051,8 @@ Public Class Form1
                                                                                                          percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                          compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                          ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
-                                                                                                         lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & Math.Round(percentage, byteRoundPercentages) & "% Completed)"
+                                                                                                         lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -2742,10 +2742,10 @@ Public Class Form1
                                                                                                    VerifyHashProgressBar.Value = percentage
                                                                                                    SyncLock threadLockingObject
                                                                                                        allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
-                                                                                                       lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                       If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & Math.Round(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                       lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                       If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                    End SyncLock
-                                                                                                   lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                   lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
                                                                                                    ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                    verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                End Sub)
