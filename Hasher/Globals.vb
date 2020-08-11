@@ -1,5 +1,4 @@
 ﻿Imports System.Security.Principal
-Imports Microsoft.Win32
 
 Public Module Globals
     ''' <summary>These two variables, ulongAllReadBytes and ulongAllBytes, and used to track overall hashing progress of all files to be processed.</summary>
