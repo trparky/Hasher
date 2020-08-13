@@ -2613,7 +2613,7 @@ Public Class Form1
             stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, .ToUpper, .ToLower))
         End With
 
-        Using frmChecksumDifference As New frmChecksumDifference With {.Icon = Me.Icon, .StartPosition = FormStartPosition.CenterParent}
+        Using frmChecksumDifference As New frmChecksumDifference With {.Icon = Icon, .StartPosition = FormStartPosition.CenterParent}
             frmChecksumDifference.lblMainLabel.Text = stringBuilder.ToString.Trim
 
             Dim size As New Size(frmChecksumDifference.lblMainLabel.Size.Width + 40, frmChecksumDifference.Size.Height)
