@@ -2645,7 +2645,7 @@ Public Class Form1
         My.Settings.boolShowPercentageInWindowTitleBar = chkShowPercentageInWindowTitleBar.Checked
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles btnRetestFailedFiles.Click
+    Private Sub btnRetestFailedFiles_Click(sender As Object, e As EventArgs) Handles btnRetestFailedFiles.Click
         verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height - 72)
 
         workingThread = New Threading.Thread(Sub()
