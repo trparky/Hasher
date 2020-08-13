@@ -167,7 +167,7 @@ Public Class Form1
     End Sub
 
     Private Sub btnRemoveSelectedFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveSelectedFiles.Click
-        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox("It would be recommended to use the ""Remove All Files"" button instead, removing this many items (" & myToString(listFiles.SelectedItems.Count) & " items) from the list is a slow process and will make the program appear locked up." & vbCrLf & vbCrLf & "Are you sure you want to remove the items this way?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, Me.Text) = MsgBoxResult.No Then
+        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox("It would be recommended to use the ""Remove All Files"" button instead, removing this many items (" & myToString(listFiles.SelectedItems.Count) & " items) from the list is a slow process and will make the program appear locked up." & vbCrLf & vbCrLf & "Are you sure you want to remove the items this way?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, Text) = MsgBoxResult.No Then
             Exit Sub
         End If
 
@@ -293,7 +293,7 @@ Public Class Form1
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
                                                                                                              lblHashIndividualFilesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) has been processed."
-                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                          End SyncLock
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
@@ -383,7 +383,7 @@ Public Class Form1
                                                                   radioSHA384.Enabled = True
                                                                   radioSHA512.Enabled = True
 
-                                                                  Me.Text = strWindowTitle
+                                                                  Text = strWindowTitle
                                                                   resetHashIndividualFilesProgress()
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
@@ -401,7 +401,7 @@ Public Class Form1
                                                                       IndividualFilesProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       resetHashIndividualFilesProgress()
-                                                                      Me.Text = strWindowTitle
+                                                                      Text = strWindowTitle
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
@@ -848,11 +848,11 @@ Public Class Form1
             End If
         End If
 
-        Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
-        Me.Text = strWindowTitle
+        Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
+        Text = strWindowTitle
 
         If areWeAnAdministrator() Then
-            Me.Text &= " (WARNING!!! Running as Administrator)"
+            Text &= " (WARNING!!! Running as Administrator)"
         Else
             btnAssociate.ImageAlign = ContentAlignment.MiddleLeft
             btnAssociate.Image = My.Resources.UAC
@@ -887,7 +887,7 @@ Public Class Form1
                                             If(Environment.Is64BitProcess, "64", "32"),
                                             If(Environment.Is64BitOperatingSystem, "64", "32")
                                            )
-        Me.Size = My.Settings.windowSize
+        Size = My.Settings.windowSize
         validColor = My.Settings.validColor
         lblValidColor.BackColor = validColor
         notValidColor = My.Settings.notValidColor
@@ -902,10 +902,10 @@ Public Class Form1
         byteRoundPercentages = My.Settings.roundPercentages
         btnSetRoundFileSizes.Enabled = False
         btnSetRoundPercentages.Enabled = False
-        Me.Location = My.Settings.windowLocation
+        Location = My.Settings.windowLocation
 
         If Debugger.IsAttached Then
-            Me.Text &= " (Debugger Attached)"
+            Text &= " (Debugger Attached)"
             btnAddHasherToAllFiles.Visible = False
             btnAssociate.Visible = False
         End If
@@ -1169,7 +1169,7 @@ Public Class Form1
 
                                                      myInvoke(Sub()
                                                                   verifyHashesListFiles.EndUpdate()
-                                                                  Me.Text = strWindowTitle
+                                                                  Text = strWindowTitle
                                                                   If chkSortByFileSizeAfterLoadingHashFile.Checked Then applyFileSizeSortingToVerifyList()
                                                                   VerifyHashProgressBar.Value = 0
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
@@ -1206,7 +1206,7 @@ Public Class Form1
                                                                                                SyncLock threadLockingObject
                                                                                                    allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
                                                                                                    lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                   If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                   If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                End SyncLock
                                                                                                lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
                                                                                                ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
@@ -1280,7 +1280,7 @@ Public Class Form1
                                                                   VerifyHashProgressBar.Value = 0
                                                                   VerifyHashProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                                  Me.Text = strWindowTitle
+                                                                  Text = strWindowTitle
                                                                   verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
 
                                                                   Dim sbMessageBoxText As New Text.StringBuilder
@@ -1349,7 +1349,7 @@ Public Class Form1
                                                                       VerifyHashProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       verifyHashesListFiles.Items.Clear()
-                                                                      Me.Text = strWindowTitle
+                                                                      Text = strWindowTitle
                                                                       verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
                                                                       lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
                                                                   End If
@@ -1545,7 +1545,7 @@ Public Class Form1
 
             If workingThread IsNot Nothing Then workingThread.Abort()
 
-            My.Settings.windowLocation = Me.Location
+            My.Settings.windowLocation = Location
         End If
     End Sub
 
@@ -1799,7 +1799,7 @@ Public Class Form1
                                                                                                          CompareFilesAllFilesProgress.Value = allBytesPercentage
                                                                                                          lblCompareFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
                                                                                                          lblCompareFilesAllFilesStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -1855,7 +1855,7 @@ Public Class Form1
                                                                   CompareFilesAllFilesProgress.Value = 0
                                                                   CompareFilesAllFilesProgress.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                                  Me.Text = strWindowTitle
+                                                                  Text = strWindowTitle
 
                                                                   If boolSuccessful Then
                                                                       If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
@@ -1894,7 +1894,7 @@ Public Class Form1
                                                                       compareRadioSHA512.Enabled = True
                                                                       lblCompareFilesStatus.Text = strNoBackgroundProcesses
                                                                       lblCompareFilesAllFilesStatus.Text = Nothing
-                                                                      Me.Text = strWindowTitle
+                                                                      Text = strWindowTitle
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
@@ -2052,7 +2052,7 @@ Public Class Form1
                                                                                                          compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                          ProgressForm.setTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
                                                                                                          lblCompareAgainstKnownHashStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "% Completed)"
+                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -2073,7 +2073,7 @@ Public Class Form1
                                                                   compareAgainstKnownHashProgressBar.Value = 0
                                                                   compareAgainstKnownHashProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                                  Me.Text = strWindowTitle
+                                                                  Text = strWindowTitle
 
                                                                   If boolSuccessful Then
                                                                       If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
@@ -2104,7 +2104,7 @@ Public Class Form1
                                                                       compareAgainstKnownHashProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       lblCompareFilesStatus.Text = strNoBackgroundProcesses
-                                                                      Me.Text = strWindowTitle
+                                                                      Text = strWindowTitle
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
@@ -2123,7 +2123,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
-        My.Settings.windowSize = Me.Size
+        My.Settings.windowSize = Size
     End Sub
 
     Private Function getHashOfString(inputString As String, hashType As checksumType) As String
@@ -2370,7 +2370,7 @@ Public Class Form1
                 My.Settings.validColor = colorDialog.Color
                 lblValidColor.BackColor = colorDialog.Color
                 validColor = colorDialog.Color
-                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Text)
             End If
         End Using
     End Sub
@@ -2381,7 +2381,7 @@ Public Class Form1
                 My.Settings.notValidColor = colorDialog.Color
                 lblNotValidColor.BackColor = colorDialog.Color
                 notValidColor = colorDialog.Color
-                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Text)
             End If
         End Using
     End Sub
@@ -2392,7 +2392,7 @@ Public Class Form1
                 My.Settings.fileNotFoundColor = colorDialog.Color
                 lblFileNotFoundColor.BackColor = colorDialog.Color
                 fileNotFoundColor = colorDialog.Color
-                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Text)
             End If
         End Using
     End Sub
@@ -2410,7 +2410,7 @@ Public Class Form1
         lblFileNotFoundColor.BackColor = Color.LightGray
         fileNotFoundColor = Color.LightGray
 
-        MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Me.Text)
+        MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, Text)
     End Sub
 
     Private Sub btnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
@@ -2464,14 +2464,14 @@ Public Class Form1
         My.Settings.roundFileSizes = roundFileSizes.Value
         byteRoundFileSizes = roundFileSizes.Value
         btnSetRoundFileSizes.Enabled = False
-        MsgBox("Preference saved.", MsgBoxStyle.Information, Me.Text)
+        MsgBox("Preference saved.", MsgBoxStyle.Information, Text)
     End Sub
 
     Private Sub btnSetRoundPercentages_Click(sender As Object, e As EventArgs) Handles btnSetRoundPercentages.Click
         My.Settings.roundPercentages = roundPercentages.Value
         byteRoundPercentages = roundPercentages.Value
         btnSetRoundPercentages.Enabled = False
-        MsgBox("Preference saved.", MsgBoxStyle.Information, Me.Text)
+        MsgBox("Preference saved.", MsgBoxStyle.Information, Text)
     End Sub
 
     Private Sub roundFileSizes_ValueChanged(sender As Object, e As EventArgs) Handles roundFileSizes.ValueChanged
@@ -2677,7 +2677,7 @@ Public Class Form1
                                                      End SyncLock
 
                                                      myInvoke(Sub()
-                                                                  Me.Text = strWindowTitle
+                                                                  Text = strWindowTitle
                                                                   If chkSortByFileSizeAfterLoadingHashFile.Checked Then applyFileSizeSortingToVerifyList()
                                                                   VerifyHashProgressBar.Value = 0
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
@@ -2744,7 +2744,7 @@ Public Class Form1
                                                                                                    SyncLock threadLockingObject
                                                                                                        allBytesPercentage = ulongAllReadBytes / ulongAllBytes * 100
                                                                                                        lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                       If chkShowPercentageInWindowTitleBar.Checked Then Me.Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                       If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                    End SyncLock
                                                                                                    lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
                                                                                                    ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
@@ -2825,7 +2825,7 @@ Public Class Form1
                                                                   VerifyHashProgressBar.Value = 0
                                                                   VerifyHashProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
-                                                                  Me.Text = strWindowTitle
+                                                                  Text = strWindowTitle
                                                                   verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
 
                                                                   Dim sbMessageBoxText As New Text.StringBuilder
@@ -2894,7 +2894,7 @@ Public Class Form1
                                                                       VerifyHashProgressBar.Visible = False
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       verifyHashesListFiles.Items.Clear()
-                                                                      Me.Text = strWindowTitle
+                                                                      Text = strWindowTitle
                                                                       verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
                                                                       lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
                                                                   End If
