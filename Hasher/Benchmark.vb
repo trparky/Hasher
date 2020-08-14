@@ -6,7 +6,7 @@
     Public boolSetBufferSize As Boolean = False
 
     Private Sub Benchmark_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
+        Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
     End Sub
 
     Private Sub BtnOpenFile_Click(sender As Object, e As EventArgs) Handles btnOpenFile.Click
@@ -34,11 +34,11 @@
                                                      Dim index As Integer = 1
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As ULong)
                                                                                         Try
-                                                                                            Me.Invoke(Sub()
-                                                                                                          percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                          ProgressBar.Value = percentage
-                                                                                                          lblStatus.Text = strFileNameLine & fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed with a " & intBufferSize.ToString & " MB buffer size."
-                                                                                                      End Sub)
+                                                                                            Invoke(Sub()
+                                                                                                       percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                       ProgressBar.Value = percentage
+                                                                                                       lblStatus.Text = strFileNameLine & fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed with a " & intBufferSize.ToString & " MB buffer size."
+                                                                                                   End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
                                                                                     End Sub
@@ -59,22 +59,22 @@
                                                          End If
                                                      Next
 
-                                                     Me.Invoke(Sub()
-                                                                   Me.Text = "Hasher"
-                                                                   MsgBox("Benchmark completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, "Hasher Benchmark")
-                                                               End Sub)
+                                                     Invoke(Sub()
+                                                                Text = "Hasher"
+                                                                MsgBox("Benchmark completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, "Hasher Benchmark")
+                                                            End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                  Finally
-                                                     Me.Invoke(Sub()
-                                                                   If Not boolClosingWindow Then
-                                                                       lblStatus.Text = "(No Background Process Running)"
-                                                                       btnOpenFile.Text = "Open File for Benchmarking"
-                                                                       ProgressBar.Value = 0
-                                                                   End If
+                                                     Invoke(Sub()
+                                                                If Not boolClosingWindow Then
+                                                                    lblStatus.Text = "(No Background Process Running)"
+                                                                    btnOpenFile.Text = "Open File for Benchmarking"
+                                                                    ProgressBar.Value = 0
+                                                                End If
 
-                                                                   boolBackgroundThreadWorking = False
-                                                                   workingThread = Nothing
-                                                               End Sub)
+                                                                boolBackgroundThreadWorking = False
+                                                                workingThread = Nothing
+                                                            End Sub)
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
@@ -124,6 +124,6 @@
 
     Private Sub BtnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
         boolSetBufferSize = True
-        Me.Close()
+        Close()
     End Sub
 End Class
