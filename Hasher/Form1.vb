@@ -40,7 +40,6 @@ Public Class Form1
 
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
-    Private ReadOnly fileAssociationPathParser As New Text.RegularExpressions.Regex("(""{0, 1}[A-Za-z]:  \\.*\.(?:bat|bin|cmd|com|cpl|exe|gadget|inf1|ins|inx|isu|job|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|sct|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf)""{0,1})", System.Text.RegularExpressions.RegexOptions.IgnoreCase + System.Text.RegularExpressions.RegexOptions.Compiled)
 
     Private Enum tabNumber As Short
         null = -1
@@ -696,47 +695,9 @@ Public Class Form1
         colChecksum.Text = strColumnTitleChecksumSHA512
     End Sub
 
-    Private Function getFileAssociation(ByVal fileExtension As String, ByRef associatedApplication As String) As Boolean
-        Try
-            fileExtension = fileExtension.ToLower.Trim
-            If Not fileExtension.StartsWith(".") Then
-                fileExtension = "." & fileExtension
-            End If
-
-            Dim subPath As String = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(fileExtension, False).GetValue(vbNullString)
-            Dim rawExecutablePath As String = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(subPath & "\shell\open\command", False).GetValue(vbNullString)
-
-            ' We use this to parse out the executable path out of the regular junk in the string.
-            Dim matches As Text.RegularExpressions.Match = fileAssociationPathParser.Match(rawExecutablePath)
-
-            associatedApplication = matches.Groups(1).Value.Trim ' And return the value.
-            Return True
-        Catch ex As Exception
-            Return False
-        End Try
-    End Function
-
     Private Sub launchURLInWebBrowser(url As String, Optional errorMessage As String = "An error occurred when trying the URL In your Default browser. The URL has been copied to your Windows Clipboard for you to paste into the address bar in the web browser of your choice.")
         If Not url.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then url = If(chkSSL.Checked, "https://" & url, "http://" & url)
-
-        Try
-            Dim associatedApplication As String = Nothing
-
-            If Not getFileAssociation(".html", associatedApplication) Then
-                Process.Start(url)
-            Else
-                If IO.File.Exists(associatedApplication) Then
-                    Process.Start(associatedApplication, Chr(34) & url & Chr(34))
-                Else
-                    Process.Start(url)
-                End If
-            End If
-        Catch ex2 As ComponentModel.Win32Exception
-            MsgBox("There was an error attempting to launch your web browser. Perhaps rebooting your system will correct this issue.", MsgBoxStyle.Information, strMessageBoxTitleText)
-        Catch ex As Exception
-            copyTextToWindowsClipboard(url)
-            MsgBox(errorMessage, MsgBoxStyle.Information, strMessageBoxTitleText)
-        End Try
+        Process.Start(url)
     End Sub
 
     Private Sub btnDonate_Click(sender As Object, e As EventArgs) Handles btnDonate.Click
