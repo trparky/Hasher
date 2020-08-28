@@ -697,7 +697,13 @@ Public Class Form1
 
     Private Sub launchURLInWebBrowser(url As String, Optional errorMessage As String = "An error occurred when trying the URL In your Default browser. The URL has been copied to your Windows Clipboard for you to paste into the address bar in the web browser of your choice.")
         If Not url.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then url = If(chkSSL.Checked, "https://" & url, "http://" & url)
-        Process.Start(url)
+
+        Try
+            Process.Start(url)
+        Catch ex As Exception
+            copyTextToWindowsClipboard(url)
+            MsgBox(errorMessage, MsgBoxStyle.Information, strMessageBoxTitleText)
+        End Try
     End Sub
 
     Private Sub btnDonate_Click(sender As Object, e As EventArgs) Handles btnDonate.Click
