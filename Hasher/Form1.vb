@@ -40,6 +40,7 @@ Public Class Form1
 
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
+    Private ReadOnly fileAssociationPathParser As New Text.RegularExpressions.Regex("(""{0, 1}[A-Za-z]:  \\.*\.(?:bat|bin|cmd|com|cpl|exe|gadget|inf1|ins|inx|isu|job|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|sct|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf)""{0,1})", System.Text.RegularExpressions.RegexOptions.IgnoreCase + System.Text.RegularExpressions.RegexOptions.Compiled)
 
     Private Enum tabNumber As Short
         null = -1
@@ -695,7 +696,7 @@ Public Class Form1
         colChecksum.Text = strColumnTitleChecksumSHA512
     End Sub
 
-    Private Shared Function getFileAssociation(ByVal fileExtension As String, ByRef associatedApplication As String) As Boolean
+    Private Function getFileAssociation(ByVal fileExtension As String, ByRef associatedApplication As String) As Boolean
         Try
             fileExtension = fileExtension.ToLower.Trim
             If Not fileExtension.StartsWith(".") Then
@@ -706,7 +707,7 @@ Public Class Form1
             Dim rawExecutablePath As String = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(subPath & "\shell\open\command", False).GetValue(vbNullString)
 
             ' We use this to parse out the executable path out of the regular junk in the string.
-            Dim matches As Text.RegularExpressions.Match = System.Text.RegularExpressions.Regex.Match(rawExecutablePath, "(""{0, 1}[A-Za-z]:  \\.*\.(?:bat|bin|cmd|com|cpl|exe|gadget|inf1|ins|inx|isu|job|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|sct|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf)""{0,1})", System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+            Dim matches As Text.RegularExpressions.Match = fileAssociationPathParser.Match(rawExecutablePath)
 
             associatedApplication = matches.Groups(1).Value.Trim ' And return the value.
             Return True
