@@ -14,8 +14,6 @@ Public Class Form1
     Private intBufferSize As Integer = My.Settings.shortBufferSize * 1024 * 1024
     Private strLastDirectoryWorkedOn As String
     Private filesInListFiles As New Specialized.StringCollection
-    Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
-    Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
     Private boolClosingWindow As Boolean = False
@@ -39,6 +37,9 @@ Public Class Form1
     Private Const strColumnTitleChecksumSHA384 As String = "Hash/Checksum (SHA384)"
     Private Const strColumnTitleChecksumSHA512 As String = "Hash/Checksum (SHA512)"
     Private Const strHashCheksumToBeComputed As String = "Hash/Checksum: (To Be Computed)"
+
+    Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
+    Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
 
     Private Enum tabNumber As Short
         null = -1
