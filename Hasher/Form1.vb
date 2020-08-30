@@ -505,8 +505,10 @@ Public Class Form1
 
         Dim strFileExtension As String
         Dim checksumType As checksumType
+        Dim boolDidWeSetAChecksumTypeInTheFileDialogBox As Boolean = False
 
         If Not String.IsNullOrWhiteSpace(strLastHashFileLoaded) Then
+            boolDidWeSetAChecksumTypeInTheFileDialogBox = True
             strFileExtension = New IO.FileInfo(strLastHashFileLoaded).Extension
 
             If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
@@ -522,6 +524,20 @@ Public Class Form1
             End If
 
             SaveFileDialog.FileName = strLastHashFileLoaded
+        End If
+
+        If Not boolDidWeSetAChecksumTypeInTheFileDialogBox Then
+            If radioMD5.Checked Then
+                SaveFileDialog.FilterIndex = 1
+            ElseIf radioSHA1.Checked Then
+                SaveFileDialog.FilterIndex = 2
+            ElseIf radioSHA256.Checked Then
+                SaveFileDialog.FilterIndex = 3
+            ElseIf radioSHA384.Checked Then
+                SaveFileDialog.FilterIndex = 4
+            ElseIf radioSHA512.Checked Then
+                SaveFileDialog.FilterIndex = 5
+            End If
         End If
 
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
