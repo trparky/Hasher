@@ -167,6 +167,8 @@ Partial Class Form1
         Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
         Me.chkShowPercentageInWindowTitleBar = New System.Windows.Forms.CheckBox()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
+        Me.lblDefaultHashLabel = New System.Windows.Forms.Label()
+        Me.defaultHashType = New System.Windows.Forms.ComboBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1320,6 +1322,8 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.defaultHashType)
+        Me.tabSettings.Controls.Add(Me.lblDefaultHashLabel)
         Me.tabSettings.Controls.Add(Me.chkShowPercentageInWindowTitleBar)
         Me.tabSettings.Controls.Add(Me.chkOpenInExplorer)
         Me.tabSettings.Controls.Add(Me.chkDisplayValidChecksumString)
@@ -1710,6 +1714,26 @@ Partial Class Form1
         Me.btnRetestFailedFiles.UseVisualStyleBackColor = True
         Me.btnRetestFailedFiles.Visible = False
         '
+        'lblDefaultHashLabel
+        '
+        Me.lblDefaultHashLabel.AutoSize = True
+        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 295)
+        Me.lblDefaultHashLabel.Name = "lblDefaultHashLabel"
+        Me.lblDefaultHashLabel.Size = New System.Drawing.Size(72, 13)
+        Me.lblDefaultHashLabel.TabIndex = 40
+        Me.lblDefaultHashLabel.Text = "Default Hash:"
+        '
+        'defaultHashType
+        '
+        Me.defaultHashType.FormattingEnabled = True
+        Me.defaultHashType.Items.AddRange(New Object() {"MD5 (Seriously Not Recommended)", "SHA1 (Not Recommended)", "SHA256", "SHA384", "SHA512"})
+        Me.defaultHashType.Location = New System.Drawing.Point(696, 291)
+        Me.defaultHashType.Name = "defaultHashType"
+        Me.defaultHashType.Size = New System.Drawing.Size(203, 21)
+        Me.defaultHashType.TabIndex = 41
+        Me.defaultHashType.Text = "SHA256"
+        Me.ToolTip.SetToolTip(Me.defaultHashType, "This sets the default hash type at program load.")
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1897,4 +1921,6 @@ Partial Class Form1
     Friend WithEvents chkOpenInExplorer As CheckBox
     Friend WithEvents chkShowPercentageInWindowTitleBar As CheckBox
     Friend WithEvents btnRetestFailedFiles As Button
+    Friend WithEvents defaultHashType As ComboBox
+    Friend WithEvents lblDefaultHashLabel As Label
 End Class

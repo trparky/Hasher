@@ -885,6 +885,26 @@ Public Class Form1
         btnSetRoundPercentages.Enabled = False
         Location = My.Settings.windowLocation
 
+        If My.Settings.defaultHash < 0 Or My.Settings.defaultHash > 4 Then My.Settings.defaultHash = 2
+        defaultHashType.SelectedIndex = My.Settings.defaultHash
+
+        If defaultHashType.SelectedIndex = 0 Then
+            radioMD5.Checked = True
+            textRadioMD5.Checked = True
+        ElseIf defaultHashType.SelectedIndex = 1 Then
+            radioSHA1.Checked = True
+            textRadioSHA1.Checked = True
+        ElseIf defaultHashType.SelectedIndex = 2 Then
+            radioSHA256.Checked = True
+            textRadioSHA256.Checked = True
+        ElseIf defaultHashType.SelectedIndex = 3 Then
+            radioSHA384.Checked = True
+            textRadioSHA384.Checked = True
+        ElseIf defaultHashType.SelectedIndex = 4 Then
+            radioSHA512.Checked = True
+            textRadioSHA512.Checked = True
+        End If
+
         If Debugger.IsAttached Then
             Text &= " (Debugger Attached)"
             btnAddHasherToAllFiles.Visible = False
@@ -2906,5 +2926,28 @@ Public Class Form1
             .IsBackground = True
         }
         workingThread.Start()
+    End Sub
+
+    Private Sub defaultHashType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles defaultHashType.SelectedIndexChanged
+        If boolDoneLoading Then
+            If defaultHashType.SelectedIndex = 0 Then
+                radioMD5.Checked = True
+                textRadioMD5.Checked = True
+            ElseIf defaultHashType.SelectedIndex = 1 Then
+                radioSHA1.Checked = True
+                textRadioSHA1.Checked = True
+            ElseIf defaultHashType.SelectedIndex = 2 Then
+                radioSHA256.Checked = True
+                textRadioSHA256.Checked = True
+            ElseIf defaultHashType.SelectedIndex = 3 Then
+                radioSHA384.Checked = True
+                textRadioSHA384.Checked = True
+            ElseIf defaultHashType.SelectedIndex = 4 Then
+                radioSHA512.Checked = True
+                textRadioSHA512.Checked = True
+            End If
+
+            My.Settings.defaultHash = defaultHashType.SelectedIndex
+        End If
     End Sub
 End Class
