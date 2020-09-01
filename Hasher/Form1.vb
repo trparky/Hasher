@@ -450,8 +450,8 @@ Public Class Form1
     End Sub
 
     Private Function strGetIndividualHashesInStringFormat(strPathOfChecksumFile As String, checksumType As checksumType) As String
-        Dim fileInfo As New IO.FileInfo(strPathOfChecksumFile)
-        Dim folderOfChecksumFile As String = If(fileInfo.DirectoryName.Length = 3, fileInfo.DirectoryName, fileInfo.DirectoryName & "\")
+        Dim strDirectoryName As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName
+        Dim folderOfChecksumFile As String = If(strDirectoryName.Length = 3, strDirectoryName, strDirectoryName & "\")
         Dim stringBuilder As New Text.StringBuilder()
         Dim strFile As String
 
