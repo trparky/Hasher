@@ -242,7 +242,7 @@ Public Class Form1
             Case checksumType.sha512
                 Return allTheHashes.sha512
             Case Else
-                Return allTheHashes.sha512
+                Return Nothing
         End Select
     End Function
 
