@@ -11,22 +11,22 @@
     <Setting Name="windowSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">1088, 446</Value>
     </Setting>
-    <Setting Name="hashIndividualFilesFileNameColumnSize" Type="System.Int32" Scope="User">
+    <Setting Name="hashIndividualFilesFileNameColumnSize" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">528</Value>
     </Setting>
-    <Setting Name="hashIndividualFilesFileSizeColumnSize" Type="System.Int32" Scope="User">
+    <Setting Name="hashIndividualFilesFileSizeColumnSize" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">70</Value>
     </Setting>
-    <Setting Name="hashIndividualFilesChecksumColumnSize" Type="System.Int32" Scope="User">
+    <Setting Name="hashIndividualFilesChecksumColumnSize" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">241</Value>
     </Setting>
-    <Setting Name="verifyHashFileNameColumnSize" Type="System.Int32" Scope="User">
+    <Setting Name="verifyHashFileNameColumnSize" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">557</Value>
     </Setting>
-    <Setting Name="verifyHashFileSizeColumnSize" Type="System.Int32" Scope="User">
+    <Setting Name="verifyHashFileSizeColumnSize" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">87</Value>
     </Setting>
-    <Setting Name="verifyHashFileResults" Type="System.Int32" Scope="User">
+    <Setting Name="verifyHashFileResults" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">72</Value>
     </Setting>
     <Setting Name="boolSortByFileSizeAfterLoadingHashFile" Type="System.Boolean" Scope="User">
@@ -38,10 +38,10 @@
     <Setting Name="boolSortFileListingAfterAddingFilesToHash" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="hashIndividualFilesComputeTimeColumnSize" Type="System.Int32" Scope="User">
+    <Setting Name="hashIndividualFilesComputeTimeColumnSize" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">150</Value>
     </Setting>
-    <Setting Name="verifyHashComputeTimeColumnSize" Type="System.Int32" Scope="User">
+    <Setting Name="verifyHashComputeTimeColumnSize" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">150</Value>
     </Setting>
     <Setting Name="boolUseMilliseconds" Type="System.Boolean" Scope="User">
@@ -83,7 +83,7 @@
     <Setting Name="windowLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
-    <Setting Name="newHashChecksumColumnSize" Type="System.Int32" Scope="User">
+    <Setting Name="newHashChecksumColumnSize" Type="System.Int16" Scope="User">
       <Value Profile="(Default)">120</Value>
     </Setting>
     <Setting Name="boolDisplayValidChecksumString" Type="System.Boolean" Scope="User">

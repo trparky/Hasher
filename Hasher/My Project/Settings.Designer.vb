@@ -93,9 +93,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("528")>  _
-        Public Property hashIndividualFilesFileNameColumnSize() As Integer
+        Public Property hashIndividualFilesFileNameColumnSize() As Short
             Get
-                Return CType(Me("hashIndividualFilesFileNameColumnSize"),Integer)
+                Return CType(Me("hashIndividualFilesFileNameColumnSize"),Short)
             End Get
             Set
                 Me("hashIndividualFilesFileNameColumnSize") = value
@@ -105,9 +105,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("70")>  _
-        Public Property hashIndividualFilesFileSizeColumnSize() As Integer
+        Public Property hashIndividualFilesFileSizeColumnSize() As Short
             Get
-                Return CType(Me("hashIndividualFilesFileSizeColumnSize"),Integer)
+                Return CType(Me("hashIndividualFilesFileSizeColumnSize"),Short)
             End Get
             Set
                 Me("hashIndividualFilesFileSizeColumnSize") = value
@@ -117,9 +117,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("241")>  _
-        Public Property hashIndividualFilesChecksumColumnSize() As Integer
+        Public Property hashIndividualFilesChecksumColumnSize() As Short
             Get
-                Return CType(Me("hashIndividualFilesChecksumColumnSize"),Integer)
+                Return CType(Me("hashIndividualFilesChecksumColumnSize"),Short)
             End Get
             Set
                 Me("hashIndividualFilesChecksumColumnSize") = value
@@ -129,9 +129,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("557")>  _
-        Public Property verifyHashFileNameColumnSize() As Integer
+        Public Property verifyHashFileNameColumnSize() As Short
             Get
-                Return CType(Me("verifyHashFileNameColumnSize"),Integer)
+                Return CType(Me("verifyHashFileNameColumnSize"),Short)
             End Get
             Set
                 Me("verifyHashFileNameColumnSize") = value
@@ -141,9 +141,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("87")>  _
-        Public Property verifyHashFileSizeColumnSize() As Integer
+        Public Property verifyHashFileSizeColumnSize() As Short
             Get
-                Return CType(Me("verifyHashFileSizeColumnSize"),Integer)
+                Return CType(Me("verifyHashFileSizeColumnSize"),Short)
             End Get
             Set
                 Me("verifyHashFileSizeColumnSize") = value
@@ -153,9 +153,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("72")>  _
-        Public Property verifyHashFileResults() As Integer
+        Public Property verifyHashFileResults() As Short
             Get
-                Return CType(Me("verifyHashFileResults"),Integer)
+                Return CType(Me("verifyHashFileResults"),Short)
             End Get
             Set
                 Me("verifyHashFileResults") = value
@@ -201,9 +201,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("150")>  _
-        Public Property hashIndividualFilesComputeTimeColumnSize() As Integer
+        Public Property hashIndividualFilesComputeTimeColumnSize() As Short
             Get
-                Return CType(Me("hashIndividualFilesComputeTimeColumnSize"),Integer)
+                Return CType(Me("hashIndividualFilesComputeTimeColumnSize"),Short)
             End Get
             Set
                 Me("hashIndividualFilesComputeTimeColumnSize") = value
@@ -213,9 +213,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("150")>  _
-        Public Property verifyHashComputeTimeColumnSize() As Integer
+        Public Property verifyHashComputeTimeColumnSize() As Short
             Get
-                Return CType(Me("verifyHashComputeTimeColumnSize"),Integer)
+                Return CType(Me("verifyHashComputeTimeColumnSize"),Short)
             End Get
             Set
                 Me("verifyHashComputeTimeColumnSize") = value
@@ -381,9 +381,9 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("120")>  _
-        Public Property newHashChecksumColumnSize() As Integer
+        Public Property newHashChecksumColumnSize() As Short
             Get
-                Return CType(Me("newHashChecksumColumnSize"),Integer)
+                Return CType(Me("newHashChecksumColumnSize"),Short)
             End Get
             Set
                 Me("newHashChecksumColumnSize") = value
