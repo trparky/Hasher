@@ -506,7 +506,7 @@ Public Class Form1
         Dim strFileExtension As String
         Dim checksumType As checksumType
 
-        If String.IsNullOrWhiteSpace(strLastHashFileLoaded) Then
+        If Not String.IsNullOrWhiteSpace(strLastHashFileLoaded) Then
             strFileExtension = New IO.FileInfo(strLastHashFileLoaded).Extension
 
             If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
