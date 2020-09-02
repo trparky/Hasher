@@ -273,6 +273,8 @@ Public Class Form1
         lblIndividualFilesStatus.Visible = True
         shortCurrentlyActiveTab = tabNumber.hashIndividualFilesTab
 
+        Dim longErroredFiles As Long = 0
+
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
@@ -363,6 +365,7 @@ Public Class Form1
                                                                  item.SubItems(2).Text = "(Error while calculating checksum)"
                                                                  item.SubItems(3).Text = ""
                                                                  item.computeTime = Nothing
+                                                                 longErroredFiles += 1
                                                              End If
 
                                                              myInvoke(Sub()
@@ -389,7 +392,11 @@ Public Class Form1
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
 
-                                                                  MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                  If longErroredFiles = 0 Then
+                                                                      MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                  Else
+                                                                      MsgBox("Completed in " & timespanToHMS(stopWatch.Elapsed) & "." & vbCrLf & vbCrLf & longErroredFiles.ToString & If(longErroredFiles = 1, " file", " files") & " experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                  End If
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                      myInvoke(Sub()
@@ -421,7 +428,7 @@ Public Class Form1
                                                                       btnComputeHash.Text = "Compute Hash"
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       hashIndividualFilesAllFilesProgressBar.Value = 0
-                                                                      btnComputeHash.Enabled = False
+                                                                      If longErroredFiles = 0 Then btnComputeHash.Enabled = False
                                                                   End If
                                                               End Sub)
                                                  End Try
