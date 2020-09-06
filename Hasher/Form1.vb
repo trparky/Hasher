@@ -335,12 +335,16 @@ Public Class Form1
 
                                                      SyncLock threadLockingObject
                                                          For Each item As myListViewItem In items
-                                                             If String.IsNullOrWhiteSpace(item.hash) Then ulongAllBytes += item.fileSize
+                                                             If String.IsNullOrWhiteSpace(item.hash) And IO.File.Exists(item.fileName) Then ulongAllBytes += item.fileSize
                                                          Next
                                                      End SyncLock
 
                                                      For Each item As myListViewItem In items
-                                                         If String.IsNullOrWhiteSpace(item.hash) Then
+                                                         SyncLock threadLockingObject
+                                                             If Not IO.File.Exists(item.fileName) Then ulongAllBytes -= item.fileSize
+                                                         End SyncLock
+
+                                                         If String.IsNullOrWhiteSpace(item.hash) And IO.File.Exists(item.fileName) Then
                                                              item.SubItems(2).Text = strCurrentlyBeingProcessed
 
                                                              myInvoke(Sub()
