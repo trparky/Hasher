@@ -793,6 +793,24 @@ Public Class Form1
         End Try
     End Sub
 
+    Private Function getWindows10AccentColor() As Color
+        Try
+            Using regKey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\DWM", False)
+                Dim rawAccentColorValue As Integer = regKey.GetValue("AccentColor", Nothing)
+                Dim strAccentColorInHex As String = rawAccentColorValue.ToString("X").Substring(2, 6)
+
+                Dim strPiece1, strPiece2, strPiece3 As String
+                strPiece1 = strAccentColorInHex.Substring(4, 2)
+                strPiece2 = strAccentColorInHex.Substring(2, 2)
+                strPiece3 = strAccentColorInHex.Substring(0, 2)
+
+                Return ColorTranslator.FromHtml("#" & strPiece1 & strPiece2 & strPiece3)
+            End Using
+        Catch ex As Exception
+            Return Color.LightBlue
+        End Try
+    End Function
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This function returns a Boolean value indicating if the name pipe server was started or not.
         Dim boolNamedPipeServerStarted As Boolean = startNamedPipeServer()
@@ -850,6 +868,27 @@ Public Class Form1
             btnAssociate.Image = My.Resources.UAC
             btnAddHasherToAllFiles.ImageAlign = ContentAlignment.MiddleLeft
             btnAddHasherToAllFiles.Image = My.Resources.UAC
+        End If
+
+        If Environment.OSVersion.Version.Major = 10 Then
+            Dim windowsAccentColor As Color = getWindows10AccentColor()
+
+            IndividualFilesProgressBar.ProgressBarColor = windowsAccentColor
+            hashIndividualFilesAllFilesProgressBar.ProgressBarColor = windowsAccentColor
+            VerifyHashProgressBar.ProgressBarColor = windowsAccentColor
+            verifyIndividualFilesAllFilesProgressBar.ProgressBarColor = windowsAccentColor
+            compareFilesProgressBar.ProgressBarColor = windowsAccentColor
+            CompareFilesAllFilesProgress.ProgressBarColor = windowsAccentColor
+            compareAgainstKnownHashProgressBar.ProgressBarColor = windowsAccentColor
+        Else
+            Dim progressBarColor As Color = ColorTranslator.FromHtml("#06B025")
+            IndividualFilesProgressBar.ProgressBarColor = progressBarColor
+            hashIndividualFilesAllFilesProgressBar.ProgressBarColor = progressBarColor
+            VerifyHashProgressBar.ProgressBarColor = progressBarColor
+            verifyIndividualFilesAllFilesProgressBar.ProgressBarColor = progressBarColor
+            compareFilesProgressBar.ProgressBarColor = progressBarColor
+            CompareFilesAllFilesProgress.ProgressBarColor = progressBarColor
+            compareAgainstKnownHashProgressBar.ProgressBarColor = progressBarColor
         End If
 
         lblIndividualFilesStatusProcessingFile.Visible = False

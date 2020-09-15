@@ -50,8 +50,8 @@ Partial Class Form1
         Me.hashIndividualFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.lblIndividualFilesStatusProcessingFile = New System.Windows.Forms.Label()
         Me.lblProcessingFile = New System.Windows.Forms.Label()
-        Me.IndividualFilesProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.hashIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.IndividualFilesProgressBar = New SmoothProgressBar()
+        Me.hashIndividualFilesAllFilesProgressBar = New SmoothProgressBar()
         Me.lblHashIndividualFilesTotalStatus = New System.Windows.Forms.Label()
         Me.lblIndividualFilesStatus = New System.Windows.Forms.Label()
         Me.lblLine = New System.Windows.Forms.Label()
@@ -79,9 +79,9 @@ Partial Class Form1
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
         Me.verifySavedHashesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
-        Me.VerifyHashProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.VerifyHashProgressBar = New SmoothProgressBar()
         Me.lblVerifyHashStatusProcessingFile = New System.Windows.Forms.Label()
-        Me.verifyIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.verifyIndividualFilesAllFilesProgressBar = New SmoothProgressBar()
         Me.lblVerifyHashesTotalStatus = New System.Windows.Forms.Label()
         Me.lblVerifyHashStatus = New System.Windows.Forms.Label()
         Me.lblProcessingFileVerify = New System.Windows.Forms.Label()
@@ -99,8 +99,8 @@ Partial Class Form1
         Me.tabCompareFiles = New System.Windows.Forms.TabPage()
         Me.compareFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.lblCompareFilesStatus = New System.Windows.Forms.Label()
-        Me.compareFilesProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.CompareFilesAllFilesProgress = New System.Windows.Forms.ProgressBar()
+        Me.compareFilesProgressBar = New SmoothProgressBar()
+        Me.CompareFilesAllFilesProgress = New SmoothProgressBar()
         Me.lblCompareFilesAllFilesStatus = New System.Windows.Forms.Label()
         Me.lblFile2Hash = New System.Windows.Forms.Label()
         Me.lblFile1Hash = New System.Windows.Forms.Label()
@@ -120,7 +120,7 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash = New System.Windows.Forms.TabPage()
         Me.pictureBoxVerifyAgainstResults = New System.Windows.Forms.PictureBox()
         Me.lblCompareFileAgainstKnownHashType = New System.Windows.Forms.Label()
-        Me.compareAgainstKnownHashProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.compareAgainstKnownHashProgressBar = New SmoothProgressBar()
         Me.lblCompareAgainstKnownHashStatus = New System.Windows.Forms.Label()
         Me.btnCompareAgainstKnownHash = New System.Windows.Forms.Button()
         Me.txtKnownHash = New System.Windows.Forms.TextBox()
@@ -1795,7 +1795,7 @@ Partial Class Form1
     Friend WithEvents radioSHA256 As RadioButton
     Friend WithEvents btnComputeHash As Button
     Friend WithEvents lblIndividualFilesStatus As Label
-    Friend WithEvents IndividualFilesProgressBar As ProgressBar
+    Friend WithEvents IndividualFilesProgressBar As SmoothProgressBar
     Friend WithEvents btnIndividualFilesCopyToClipboard As Button
     Friend WithEvents btnIndividualFilesSaveResultsToDisk As Button
     Friend WithEvents SaveFileDialog As SaveFileDialog
@@ -1809,7 +1809,7 @@ Partial Class Form1
     Friend WithEvents colFile As ColumnHeader
     Friend WithEvents colResults As ColumnHeader
     Friend WithEvents btnOpenExistingHashFile As Button
-    Friend WithEvents VerifyHashProgressBar As ProgressBar
+    Friend WithEvents VerifyHashProgressBar As SmoothProgressBar
     Friend WithEvents lblVerifyHashStatus As Label
     Friend WithEvents lblVerifyHashStatusProcessingFile As Label
     Friend WithEvents tabSettings As TabPage
@@ -1853,7 +1853,7 @@ Partial Class Form1
     Friend WithEvents compareRadioSHA1 As RadioButton
     Friend WithEvents Label6 As Label
     Friend WithEvents btnCompareFiles As Button
-    Friend WithEvents compareFilesProgressBar As ProgressBar
+    Friend WithEvents compareFilesProgressBar As SmoothProgressBar
     Friend WithEvents lblCompareFilesStatus As Label
     Friend WithEvents lblFile2Hash As Label
     Friend WithEvents lblFile1Hash As Label
@@ -1863,7 +1863,7 @@ Partial Class Form1
     Friend WithEvents btnBrowseFileForCompareKnownHash As Button
     Friend WithEvents txtFileForKnownHash As TextBox
     Friend WithEvents Label7 As Label
-    Friend WithEvents compareAgainstKnownHashProgressBar As ProgressBar
+    Friend WithEvents compareAgainstKnownHashProgressBar As SmoothProgressBar
     Friend WithEvents lblCompareAgainstKnownHashStatus As Label
     Friend WithEvents btnCompareAgainstKnownHash As Button
     Friend WithEvents lblCompareFileAgainstKnownHashType As Label
@@ -1893,9 +1893,9 @@ Partial Class Form1
     Friend WithEvents btnSetBufferSize As Button
     Friend WithEvents btnPerformBenchmark As Button
     Friend WithEvents chkUseCommasInNumbers As CheckBox
-    Friend WithEvents hashIndividualFilesAllFilesProgressBar As ProgressBar
-    Friend WithEvents verifyIndividualFilesAllFilesProgressBar As ProgressBar
-    Friend WithEvents CompareFilesAllFilesProgress As ProgressBar
+    Friend WithEvents hashIndividualFilesAllFilesProgressBar As SmoothProgressBar
+    Friend WithEvents verifyIndividualFilesAllFilesProgressBar As SmoothProgressBar
+    Friend WithEvents CompareFilesAllFilesProgress As SmoothProgressBar
     Friend WithEvents taskPriority As ComboBox
     Friend WithEvents lblTaskPriorityLabel As Label
     Friend WithEvents chkCheckForUpdates As CheckBox
