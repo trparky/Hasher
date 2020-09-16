@@ -1771,11 +1771,11 @@ Partial Class Form1
         'chkUseThemeColorForProgressBars
         '
         Me.chkUseThemeColorForProgressBars.AutoSize = True
-        Me.chkUseThemeColorForProgressBars.Location = New System.Drawing.Point(906, 105)
+        Me.chkUseThemeColorForProgressBars.Location = New System.Drawing.Point(905, 97)
         Me.chkUseThemeColorForProgressBars.Name = "chkUseThemeColorForProgressBars"
-        Me.chkUseThemeColorForProgressBars.Size = New System.Drawing.Size(108, 17)
+        Me.chkUseThemeColorForProgressBars.Size = New System.Drawing.Size(130, 30)
         Me.chkUseThemeColorForProgressBars.TabIndex = 44
-        Me.chkUseThemeColorForProgressBars.Text = "Use Theme Color"
+        Me.chkUseThemeColorForProgressBars.Text = "Use Theme Color" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Only on Windows 10)"
         Me.chkUseThemeColorForProgressBars.UseVisualStyleBackColor = True
         '
         'lblProgressBarColor
