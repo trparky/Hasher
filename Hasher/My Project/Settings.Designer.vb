@@ -437,6 +437,30 @@ Namespace My
                 Me("defaultHash") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Green")>  _
+        Public Property progressBarColor() As Global.System.Drawing.Color
+            Get
+                Return CType(Me("progressBarColor"),Global.System.Drawing.Color)
+            End Get
+            Set
+                Me("progressBarColor") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property boolUseThemeColorForProgressBars() As Boolean
+            Get
+                Return CType(Me("boolUseThemeColorForProgressBars"),Boolean)
+            End Get
+            Set
+                Me("boolUseThemeColorForProgressBars") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

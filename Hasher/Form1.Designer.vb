@@ -167,6 +167,9 @@ Partial Class Form1
         Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
         Me.chkShowPercentageInWindowTitleBar = New System.Windows.Forms.CheckBox()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
+        Me.chkUseThemeColorForProgressBars = New System.Windows.Forms.CheckBox()
+        Me.lblProgressBarColor = New System.Windows.Forms.Label()
+        Me.btnSetProgressBarColor = New System.Windows.Forms.Button()
         Me.lblDefaultHashLabel = New System.Windows.Forms.Label()
         Me.defaultHashType = New System.Windows.Forms.ComboBox()
         Me.TabControl1.SuspendLayout()
@@ -1322,6 +1325,9 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkUseThemeColorForProgressBars)
+        Me.tabSettings.Controls.Add(Me.lblProgressBarColor)
+        Me.tabSettings.Controls.Add(Me.btnSetProgressBarColor)
         Me.tabSettings.Controls.Add(Me.defaultHashType)
         Me.tabSettings.Controls.Add(Me.lblDefaultHashLabel)
         Me.tabSettings.Controls.Add(Me.chkShowPercentageInWindowTitleBar)
@@ -1366,7 +1372,7 @@ Partial Class Form1
         '
         'btnSetBufferSize
         '
-        Me.btnSetBufferSize.Location = New System.Drawing.Point(868, 129)
+        Me.btnSetBufferSize.Location = New System.Drawing.Point(868, 158)
         Me.btnSetBufferSize.Name = "btnSetBufferSize"
         Me.btnSetBufferSize.Size = New System.Drawing.Size(31, 23)
         Me.btnSetBufferSize.TabIndex = 27
@@ -1375,7 +1381,7 @@ Partial Class Form1
         '
         'bufferSize
         '
-        Me.bufferSize.Location = New System.Drawing.Point(812, 132)
+        Me.bufferSize.Location = New System.Drawing.Point(812, 161)
         Me.bufferSize.Maximum = New Decimal(New Integer() {16, 0, 0, 0})
         Me.bufferSize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.bufferSize.Name = "bufferSize"
@@ -1386,7 +1392,7 @@ Partial Class Form1
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(618, 134)
+        Me.Label9.Location = New System.Drawing.Point(618, 163)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(188, 13)
         Me.Label9.TabIndex = 23
@@ -1493,7 +1499,7 @@ Partial Class Form1
         '
         'btnSetColorsBackToDefaults
         '
-        Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(718, 100)
+        Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(718, 129)
         Me.btnSetColorsBackToDefaults.Name = "btnSetColorsBackToDefaults"
         Me.btnSetColorsBackToDefaults.Size = New System.Drawing.Size(181, 23)
         Me.btnSetColorsBackToDefaults.TabIndex = 15
@@ -1544,7 +1550,7 @@ Partial Class Form1
         '
         'btnPerformBenchmark
         '
-        Me.btnPerformBenchmark.Location = New System.Drawing.Point(621, 158)
+        Me.btnPerformBenchmark.Location = New System.Drawing.Point(621, 187)
         Me.btnPerformBenchmark.Name = "btnPerformBenchmark"
         Me.btnPerformBenchmark.Size = New System.Drawing.Size(278, 23)
         Me.btnPerformBenchmark.TabIndex = 28
@@ -1565,7 +1571,7 @@ Partial Class Form1
         '
         Me.taskPriority.FormattingEnabled = True
         Me.taskPriority.Items.AddRange(New Object() {"Lowest", "Below Normal", "Normal", "Above Normal", "Highest"})
-        Me.taskPriority.Location = New System.Drawing.Point(774, 187)
+        Me.taskPriority.Location = New System.Drawing.Point(774, 216)
         Me.taskPriority.Name = "taskPriority"
         Me.taskPriority.Size = New System.Drawing.Size(125, 21)
         Me.taskPriority.TabIndex = 31
@@ -1576,7 +1582,7 @@ Partial Class Form1
         'lblTaskPriorityLabel
         '
         Me.lblTaskPriorityLabel.AutoSize = True
-        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(618, 190)
+        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(618, 219)
         Me.lblTaskPriorityLabel.Name = "lblTaskPriorityLabel"
         Me.lblTaskPriorityLabel.Size = New System.Drawing.Size(150, 13)
         Me.lblTaskPriorityLabel.TabIndex = 30
@@ -1608,7 +1614,7 @@ Partial Class Form1
         '
         'btnSetRoundPercentages
         '
-        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(818, 251)
+        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(818, 280)
         Me.btnSetRoundPercentages.Name = "btnSetRoundPercentages"
         Me.btnSetRoundPercentages.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundPercentages.TabIndex = 36
@@ -1617,7 +1623,7 @@ Partial Class Form1
         '
         'roundPercentages
         '
-        Me.roundPercentages.Location = New System.Drawing.Point(762, 254)
+        Me.roundPercentages.Location = New System.Drawing.Point(762, 283)
         Me.roundPercentages.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundPercentages.Name = "roundPercentages"
         Me.roundPercentages.Size = New System.Drawing.Size(50, 20)
@@ -1627,7 +1633,7 @@ Partial Class Form1
         'lblRoundPercentagesLabel
         '
         Me.lblRoundPercentagesLabel.AutoSize = True
-        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(618, 245)
+        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(618, 274)
         Me.lblRoundPercentagesLabel.Name = "lblRoundPercentagesLabel"
         Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(138, 39)
         Me.lblRoundPercentagesLabel.TabIndex = 34
@@ -1635,7 +1641,7 @@ Partial Class Form1
         '
         'btnSetRoundFileSizes
         '
-        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(868, 217)
+        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(868, 246)
         Me.btnSetRoundFileSizes.Name = "btnSetRoundFileSizes"
         Me.btnSetRoundFileSizes.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundFileSizes.TabIndex = 36
@@ -1644,7 +1650,7 @@ Partial Class Form1
         '
         'roundFileSizes
         '
-        Me.roundFileSizes.Location = New System.Drawing.Point(811, 217)
+        Me.roundFileSizes.Location = New System.Drawing.Point(811, 246)
         Me.roundFileSizes.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundFileSizes.Name = "roundFileSizes"
         Me.roundFileSizes.Size = New System.Drawing.Size(50, 20)
@@ -1654,7 +1660,7 @@ Partial Class Form1
         'lblRoundFileSizesLabel
         '
         Me.lblRoundFileSizesLabel.AutoSize = True
-        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(618, 211)
+        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(618, 240)
         Me.lblRoundFileSizesLabel.Name = "lblRoundFileSizesLabel"
         Me.lblRoundFileSizesLabel.Size = New System.Drawing.Size(187, 26)
         Me.lblRoundFileSizesLabel.TabIndex = 34
@@ -1717,7 +1723,7 @@ Partial Class Form1
         'lblDefaultHashLabel
         '
         Me.lblDefaultHashLabel.AutoSize = True
-        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 295)
+        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 324)
         Me.lblDefaultHashLabel.Name = "lblDefaultHashLabel"
         Me.lblDefaultHashLabel.Size = New System.Drawing.Size(72, 13)
         Me.lblDefaultHashLabel.TabIndex = 40
@@ -1727,12 +1733,39 @@ Partial Class Form1
         '
         Me.defaultHashType.FormattingEnabled = True
         Me.defaultHashType.Items.AddRange(New Object() {"MD5 (Seriously Not Recommended)", "SHA1 (Not Recommended)", "SHA256", "SHA384", "SHA512"})
-        Me.defaultHashType.Location = New System.Drawing.Point(696, 291)
+        Me.defaultHashType.Location = New System.Drawing.Point(696, 320)
         Me.defaultHashType.Name = "defaultHashType"
         Me.defaultHashType.Size = New System.Drawing.Size(203, 21)
         Me.defaultHashType.TabIndex = 41
         Me.defaultHashType.Text = "SHA256"
         Me.ToolTip.SetToolTip(Me.defaultHashType, "This sets the default hash type at program load.")
+        '
+        'chkUseThemeColorForProgressBars
+        '
+        Me.chkUseThemeColorForProgressBars.AutoSize = True
+        Me.chkUseThemeColorForProgressBars.Location = New System.Drawing.Point(906, 105)
+        Me.chkUseThemeColorForProgressBars.Name = "chkUseThemeColorForProgressBars"
+        Me.chkUseThemeColorForProgressBars.Size = New System.Drawing.Size(108, 17)
+        Me.chkUseThemeColorForProgressBars.TabIndex = 44
+        Me.chkUseThemeColorForProgressBars.Text = "Use Theme Color"
+        Me.chkUseThemeColorForProgressBars.UseVisualStyleBackColor = True
+        '
+        'lblProgressBarColor
+        '
+        Me.lblProgressBarColor.BackColor = System.Drawing.Color.Green
+        Me.lblProgressBarColor.Location = New System.Drawing.Point(612, 100)
+        Me.lblProgressBarColor.Name = "lblProgressBarColor"
+        Me.lblProgressBarColor.Size = New System.Drawing.Size(100, 23)
+        Me.lblProgressBarColor.TabIndex = 43
+        '
+        'btnSetProgressBarColor
+        '
+        Me.btnSetProgressBarColor.Location = New System.Drawing.Point(718, 100)
+        Me.btnSetProgressBarColor.Name = "btnSetProgressBarColor"
+        Me.btnSetProgressBarColor.Size = New System.Drawing.Size(181, 23)
+        Me.btnSetProgressBarColor.TabIndex = 42
+        Me.btnSetProgressBarColor.Text = "Set Progress Bar Color"
+        Me.btnSetProgressBarColor.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1741,7 +1774,7 @@ Partial Class Form1
         Me.ClientSize = New System.Drawing.Size(1072, 414)
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(960, 446)
+        Me.MinimumSize = New System.Drawing.Size(1088, 446)
         Me.Name = "Form1"
         Me.Text = "Hasher"
         Me.TabControl1.ResumeLayout(False)
@@ -1923,4 +1956,7 @@ Partial Class Form1
     Friend WithEvents btnRetestFailedFiles As Button
     Friend WithEvents defaultHashType As ComboBox
     Friend WithEvents lblDefaultHashLabel As Label
+    Friend WithEvents lblProgressBarColor As Label
+    Friend WithEvents btnSetProgressBarColor As Button
+    Friend WithEvents chkUseThemeColorForProgressBars As CheckBox
 End Class
