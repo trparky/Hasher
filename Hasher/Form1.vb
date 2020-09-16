@@ -896,7 +896,7 @@ Public Class Form1
 
         progressBarColor = My.Settings.progressBarColor
         chkUseThemeColorForProgressBars.Checked = My.Settings.boolUseThemeColorForProgressBars
-        chkUseThemeColorForProgressBars.Visible = Environment.OSVersion.Version.Major = 10
+        chkUseThemeColorForProgressBars.Enabled = Environment.OSVersion.Version.Major = 10
         btnSetProgressBarColor.Enabled = Not chkUseThemeColorForProgressBars.Checked
         lblProgressBarColor.BackColor = If(My.Settings.boolUseThemeColorForProgressBars, getWindows10AccentColor(), My.Settings.progressBarColor)
         loadProgressBarColors()
