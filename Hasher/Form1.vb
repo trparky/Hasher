@@ -2476,6 +2476,7 @@ Public Class Form1
             My.Settings.progressBarColor = Color.Green
             lblProgressBarColor.BackColor = Color.Green
             progressBarColor = Color.Green
+            loadProgressBarColorsSub(Color.Green)
         End If
 
         MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
