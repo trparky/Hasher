@@ -813,11 +813,8 @@ Public Class Form1
 
     Private Sub loadProgressBarColors()
         If Environment.OSVersion.Version.Major = 10 Then
-            If My.Settings.boolUseThemeColorForProgressBars Then
-                loadProgressBarColorsSub(getWindows10AccentColor())
-            Else
-                loadProgressBarColorsSub(My.Settings.progressBarColor)
-            End If
+            Dim color As Color = If(My.Settings.boolUseThemeColorForProgressBars, getWindows10AccentColor(), My.Settings.progressBarColor)
+            loadProgressBarColorsSub(color)
         Else
             loadProgressBarColorsSub(My.Settings.progressBarColor)
         End If
