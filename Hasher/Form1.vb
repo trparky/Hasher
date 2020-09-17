@@ -2469,6 +2469,7 @@ Public Class Form1
             My.Settings.progressBarColor = color
             lblProgressBarColor.BackColor = color
             progressBarColor = color
+            loadProgressBarColorsSub(color)
         Else
             My.Settings.progressBarColor = Color.Green
             lblProgressBarColor.BackColor = Color.Green
