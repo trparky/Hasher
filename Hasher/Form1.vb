@@ -807,7 +807,7 @@ Public Class Form1
                 Return ColorTranslator.FromHtml("#" & strPiece1 & strPiece2 & strPiece3)
             End Using
         Catch ex As Exception
-            Return Color.LightBlue
+            Return My.Settings.progressBarColor
         End Try
     End Function
 
@@ -831,6 +831,7 @@ Public Class Form1
         compareFilesProgressBar.ProgressBarColor = color
         CompareFilesAllFilesProgress.ProgressBarColor = color
         compareAgainstKnownHashProgressBar.ProgressBarColor = color
+        lblProgressBarColor.BackColor = color
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -898,7 +899,6 @@ Public Class Form1
         chkUseThemeColorForProgressBars.Checked = My.Settings.boolUseThemeColorForProgressBars
         chkUseThemeColorForProgressBars.Enabled = Environment.OSVersion.Version.Major = 10
         btnSetProgressBarColor.Enabled = Not chkUseThemeColorForProgressBars.Checked
-        lblProgressBarColor.BackColor = If(My.Settings.boolUseThemeColorForProgressBars, getWindows10AccentColor(), My.Settings.progressBarColor)
         loadProgressBarColors()
 
         lblIndividualFilesStatusProcessingFile.Visible = False
@@ -2467,7 +2467,7 @@ Public Class Form1
         lblFileNotFoundColor.BackColor = Color.LightGray
         fileNotFoundColor = Color.LightGray
 
-        If Environment.OSVersion.Version.Major = 10 Then
+        If Environment.OSVersion.Version.Major = 10 And chkUseThemeColorForProgressBars.Checked Then
             Dim color As Color = getWindows10AccentColor()
             My.Settings.progressBarColor = color
             lblProgressBarColor.BackColor = color
@@ -3024,7 +3024,6 @@ Public Class Form1
     Private Sub chkUseThemeColorForProgressBars_Click(sender As Object, e As EventArgs) Handles chkUseThemeColorForProgressBars.Click
         My.Settings.boolUseThemeColorForProgressBars = chkUseThemeColorForProgressBars.Checked
         btnSetProgressBarColor.Enabled = Not My.Settings.boolUseThemeColorForProgressBars
-        lblProgressBarColor.BackColor = If(My.Settings.boolUseThemeColorForProgressBars, getWindows10AccentColor(), My.Settings.progressBarColor)
         loadProgressBarColors()
     End Sub
 End Class
