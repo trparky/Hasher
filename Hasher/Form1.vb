@@ -926,6 +926,7 @@ Public Class Form1
                                             If(Environment.Is64BitOperatingSystem, "64", "32")
                                            )
         Size = My.Settings.windowSize
+        If My.Settings.boolWindowMaximized Then WindowState = FormWindowState.Maximized
         validColor = My.Settings.validColor
         lblValidColor.BackColor = validColor
         notValidColor = My.Settings.notValidColor
@@ -2166,6 +2167,10 @@ Public Class Form1
 
     Private Sub Form1_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
         My.Settings.windowSize = Size
+    End Sub
+
+    Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles Me.Resize
+        If boolDoneLoading Then My.Settings.boolWindowMaximized = WindowState = FormWindowState.Maximized
     End Sub
 
     Private Function getHashOfString(inputString As String, hashType As checksumType) As String
