@@ -1460,7 +1460,7 @@ Partial Class Form1
         'chkSortByFileSizeAfterLoadingHashFile
         '
         Me.chkSortByFileSizeAfterLoadingHashFile.AutoSize = True
-        Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 59)
+        Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 221)
         Me.chkSortByFileSizeAfterLoadingHashFile.Name = "chkSortByFileSizeAfterLoadingHashFile"
         Me.chkSortByFileSizeAfterLoadingHashFile.Size = New System.Drawing.Size(244, 17)
         Me.chkSortByFileSizeAfterLoadingHashFile.TabIndex = 4
@@ -1498,7 +1498,7 @@ Partial Class Form1
         'chkRecurrsiveDirectorySearch
         '
         Me.chkRecurrsiveDirectorySearch.AutoSize = True
-        Me.chkRecurrsiveDirectorySearch.Location = New System.Drawing.Point(15, 13)
+        Me.chkRecurrsiveDirectorySearch.Location = New System.Drawing.Point(15, 198)
         Me.chkRecurrsiveDirectorySearch.Name = "chkRecurrsiveDirectorySearch"
         Me.chkRecurrsiveDirectorySearch.Size = New System.Drawing.Size(434, 17)
         Me.chkRecurrsiveDirectorySearch.TabIndex = 0
@@ -1621,7 +1621,7 @@ Partial Class Form1
         'chkCheckForUpdates
         '
         Me.chkCheckForUpdates.AutoSize = True
-        Me.chkCheckForUpdates.Location = New System.Drawing.Point(15, 198)
+        Me.chkCheckForUpdates.Location = New System.Drawing.Point(15, 13)
         Me.chkCheckForUpdates.Name = "chkCheckForUpdates"
         Me.chkCheckForUpdates.Size = New System.Drawing.Size(261, 17)
         Me.chkCheckForUpdates.TabIndex = 32
@@ -1631,7 +1631,7 @@ Partial Class Form1
         'chkAutoAddExtension
         '
         Me.chkAutoAddExtension.AutoSize = True
-        Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 221)
+        Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 59)
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
         Me.chkAutoAddExtension.Size = New System.Drawing.Size(520, 17)
         Me.chkAutoAddExtension.TabIndex = 33
