@@ -1555,25 +1555,25 @@ Partial Class Form1
         'lblFileNotFoundColor
         '
         Me.lblFileNotFoundColor.BackColor = System.Drawing.Color.LightGray
-        Me.lblFileNotFoundColor.Location = New System.Drawing.Point(612, 71)
+        Me.lblFileNotFoundColor.Location = New System.Drawing.Point(621, 71)
         Me.lblFileNotFoundColor.Name = "lblFileNotFoundColor"
-        Me.lblFileNotFoundColor.Size = New System.Drawing.Size(100, 23)
+        Me.lblFileNotFoundColor.Size = New System.Drawing.Size(91, 23)
         Me.lblFileNotFoundColor.TabIndex = 12
         '
         'lblNotValidColor
         '
         Me.lblNotValidColor.BackColor = System.Drawing.Color.Pink
-        Me.lblNotValidColor.Location = New System.Drawing.Point(612, 42)
+        Me.lblNotValidColor.Location = New System.Drawing.Point(621, 42)
         Me.lblNotValidColor.Name = "lblNotValidColor"
-        Me.lblNotValidColor.Size = New System.Drawing.Size(100, 23)
+        Me.lblNotValidColor.Size = New System.Drawing.Size(91, 23)
         Me.lblNotValidColor.TabIndex = 11
         '
         'lblValidColor
         '
         Me.lblValidColor.BackColor = System.Drawing.Color.LightGreen
-        Me.lblValidColor.Location = New System.Drawing.Point(612, 13)
+        Me.lblValidColor.Location = New System.Drawing.Point(621, 13)
         Me.lblValidColor.Name = "lblValidColor"
-        Me.lblValidColor.Size = New System.Drawing.Size(100, 23)
+        Me.lblValidColor.Size = New System.Drawing.Size(91, 23)
         Me.lblValidColor.TabIndex = 10
         '
         'btnPerformBenchmark
@@ -1781,9 +1781,9 @@ Partial Class Form1
         'lblProgressBarColor
         '
         Me.lblProgressBarColor.BackColor = System.Drawing.Color.Green
-        Me.lblProgressBarColor.Location = New System.Drawing.Point(612, 100)
+        Me.lblProgressBarColor.Location = New System.Drawing.Point(621, 100)
         Me.lblProgressBarColor.Name = "lblProgressBarColor"
-        Me.lblProgressBarColor.Size = New System.Drawing.Size(100, 23)
+        Me.lblProgressBarColor.Size = New System.Drawing.Size(91, 23)
         Me.lblProgressBarColor.TabIndex = 43
         '
         'btnSetProgressBarColor
