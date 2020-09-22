@@ -1303,6 +1303,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtKnownHash.BackColor = System.Drawing.SystemColors.Window
         Me.txtKnownHash.Location = New System.Drawing.Point(99, 38)
+        Me.txtKnownHash.MaxLength = 128
         Me.txtKnownHash.Name = "txtKnownHash"
         Me.txtKnownHash.Size = New System.Drawing.Size(724, 20)
         Me.txtKnownHash.TabIndex = 9
