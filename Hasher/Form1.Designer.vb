@@ -1597,13 +1597,13 @@ Partial Class Form1
         '
         'taskPriority
         '
+        Me.taskPriority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.taskPriority.FormattingEnabled = True
         Me.taskPriority.Items.AddRange(New Object() {"Lowest", "Below Normal", "Normal", "Above Normal", "Highest"})
         Me.taskPriority.Location = New System.Drawing.Point(774, 216)
         Me.taskPriority.Name = "taskPriority"
         Me.taskPriority.Size = New System.Drawing.Size(125, 21)
         Me.taskPriority.TabIndex = 31
-        Me.taskPriority.Text = "Highest"
         Me.ToolTip.SetToolTip(Me.taskPriority, "This sets the priority of the task relative to everything else that's running on " &
         "your computer.")
         '
@@ -1759,13 +1759,13 @@ Partial Class Form1
         '
         'defaultHashType
         '
+        Me.defaultHashType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.defaultHashType.FormattingEnabled = True
         Me.defaultHashType.Items.AddRange(New Object() {"MD5 (Seriously Not Recommended)", "SHA1 (Not Recommended)", "SHA256", "SHA384", "SHA512"})
         Me.defaultHashType.Location = New System.Drawing.Point(696, 320)
         Me.defaultHashType.Name = "defaultHashType"
         Me.defaultHashType.Size = New System.Drawing.Size(203, 21)
         Me.defaultHashType.TabIndex = 41
-        Me.defaultHashType.Text = "SHA256"
         Me.ToolTip.SetToolTip(Me.defaultHashType, "This sets the default hash type at program load.")
         '
         'chkUseThemeColorForProgressBars
