@@ -796,17 +796,25 @@ Public Class Form1
     Private Function getWindows10AccentColor() As Color
         Try
             Using regKey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\DWM", False)
+                ' Retrieves the specified value from the Windows Registry Key that was opened above.
                 Dim rawAccentColorValue As Integer = regKey.GetValue("AccentColor", Nothing)
+
+                ' Converts the Integer value into a hex string.
                 Dim strAccentColorInHex As String = rawAccentColorValue.ToString("X")
 
+                ' Microsoft for whatever reason saves the color data in a weird way to the Registry so we have
+                ' to parse the String data ourselves first before trying to parse it with the ColorTranslator.
                 Dim strPiece1, strPiece2, strPiece3 As String
                 strPiece1 = strAccentColorInHex.Substring(6, 2)
                 strPiece2 = strAccentColorInHex.Substring(4, 2)
                 strPiece3 = strAccentColorInHex.Substring(2, 2)
 
+                ' And now we use the ColorTranslator to convert the hex value into a color.
                 Return ColorTranslator.FromHtml("#" & strPiece1 & strPiece2 & strPiece3)
             End Using
         Catch ex As Exception
+            ' If something goes wrong at any point in the above code, we simply let the exception handler handle the error and return
+            ' what's in the program settings. Yes, I know... it's dirty but it works and that's all that really matters to me here.
             Return My.Settings.progressBarColor
         End Try
     End Function
