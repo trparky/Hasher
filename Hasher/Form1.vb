@@ -797,12 +797,12 @@ Public Class Form1
         Try
             Using regKey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\DWM", False)
                 Dim rawAccentColorValue As Integer = regKey.GetValue("AccentColor", Nothing)
-                Dim strAccentColorInHex As String = rawAccentColorValue.ToString("X").Substring(2, 6)
+                Dim strAccentColorInHex As String = rawAccentColorValue.ToString("X")
 
                 Dim strPiece1, strPiece2, strPiece3 As String
-                strPiece1 = strAccentColorInHex.Substring(4, 2)
-                strPiece2 = strAccentColorInHex.Substring(2, 2)
-                strPiece3 = strAccentColorInHex.Substring(0, 2)
+                strPiece1 = strAccentColorInHex.Substring(6, 2)
+                strPiece2 = strAccentColorInHex.Substring(4, 2)
+                strPiece3 = strAccentColorInHex.Substring(2, 2)
 
                 Return ColorTranslator.FromHtml("#" & strPiece1 & strPiece2 & strPiece3)
             End Using
