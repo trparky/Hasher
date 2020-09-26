@@ -2620,36 +2620,72 @@ Public Class Form1
     End Sub
 
     Private Sub btnTransferToHashIndividualFilesTab_Click(sender As Object, e As EventArgs) Handles btnTransferToHashIndividualFilesTab.Click
-        listFiles.Items.Clear()
-        filesInListFiles.Clear()
-        listFiles.BeginUpdate()
+        Threading.ThreadPool.QueueUserWorkItem(Sub()
+                                                   myInvoke(Sub()
+                                                                btnTransferToHashIndividualFilesTab.Enabled = False
+                                                                VerifyHashProgressBar.Visible = True
+                                                                lblVerifyHashStatus.Visible = True
+                                                                verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height - 72)
 
-        For Each item As myListViewItem In verifyHashesListFiles.Items
-            If Not filesInListFiles.Contains(item.fileName.ToLower) And IO.File.Exists(item.fileName) Then
-                filesInListFiles.Add(item.fileName.ToLower)
+                                                                listFiles.Items.Clear()
+                                                                filesInListFiles.Clear()
+                                                                listFiles.BeginUpdate()
+                                                            End Sub)
 
-                Dim itemToBeAdded As New myListViewItem(item.fileName) With {
-                    .fileSize = New IO.FileInfo(item.fileName).Length,
-                    .fileName = item.fileName
-                }
-                With itemToBeAdded
-                    .SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
-                    .SubItems.Add(If(chkDisplayHashesInUpperCase.Checked, item.allTheHashes.sha256.ToUpper, item.allTheHashes.sha256.ToLower))
-                    .SubItems.Add(timespanToHMS(item.computeTime))
-                    .allTheHashes = item.allTheHashes
-                    .hash = item.allTheHashes.sha256
-                End With
+                                                   boolBackgroundThreadWorking = True
+                                                   Dim listOfListViewItems As New List(Of myListViewItem)
+                                                   Dim intLineCounter As Integer = 0
+                                                   Dim listViewItemCollection As ListView.ListViewItemCollection = getListViewItems(verifyHashesListFiles)
 
-                listFiles.Items.Add(itemToBeAdded)
-            End If
-        Next
+                                                   For Each item As myListViewItem In listViewItemCollection
+                                                       intLineCounter += 1
+                                                       myInvoke(Sub()
+                                                                    VerifyHashProgressBar.Value = intLineCounter / listViewItemCollection.Count * 100
+                                                                    ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value)
+                                                                    lblVerifyHashStatus.Text = "Processing item " & myToString(intLineCounter) & " of " & myToString(listViewItemCollection.Count) & " (" & VerifyHashProgressBar.Value & "%)."
+                                                                End Sub)
 
-        If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
-        listFiles.EndUpdate()
-        colChecksum.Text = strColumnTitleChecksumSHA256
-        TabControl1.SelectedIndex = tabNumber.hashIndividualFilesTab
-        btnIndividualFilesCopyToClipboard.Enabled = True
-        btnIndividualFilesSaveResultsToDisk.Enabled = True
+                                                       If Not filesInListFiles.Contains(item.fileName.ToLower) And IO.File.Exists(item.fileName) Then
+                                                           filesInListFiles.Add(item.fileName.ToLower)
+
+                                                           Dim itemToBeAdded As New myListViewItem(item.fileName) With {
+                                                               .fileSize = New IO.FileInfo(item.fileName).Length,
+                                                               .fileName = item.fileName
+                                                           }
+                                                           With itemToBeAdded
+                                                               .SubItems.Add(fileSizeToHumanSize(itemToBeAdded.fileSize))
+                                                               .SubItems.Add(If(chkDisplayHashesInUpperCase.Checked, item.allTheHashes.sha256.ToUpper, item.allTheHashes.sha256.ToLower))
+                                                               .SubItems.Add(timespanToHMS(item.computeTime))
+                                                               .allTheHashes = item.allTheHashes
+                                                               .hash = item.allTheHashes.sha256
+                                                           End With
+
+                                                           listOfListViewItems.Add(itemToBeAdded)
+                                                       End If
+                                                   Next
+
+                                                   myInvoke(Sub()
+                                                                boolBackgroundThreadWorking = False
+                                                                listFiles.Items.AddRange(listOfListViewItems.ToArray)
+                                                                listOfListViewItems = Nothing
+
+                                                                If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
+                                                                listFiles.EndUpdate()
+                                                                colChecksum.Text = strColumnTitleChecksumSHA256
+                                                                TabControl1.SelectedIndex = tabNumber.hashIndividualFilesTab
+                                                                btnIndividualFilesCopyToClipboard.Enabled = True
+                                                                btnIndividualFilesSaveResultsToDisk.Enabled = True
+
+                                                                ProgressForm.setTaskbarProgressBarValue(0)
+                                                                VerifyHashProgressBar.Value = 0
+                                                                lblVerifyHashStatus.Text = Nothing
+                                                                listViewItemCollection = Nothing
+                                                                btnTransferToHashIndividualFilesTab.Enabled = True
+                                                                VerifyHashProgressBar.Visible = False
+                                                                lblVerifyHashStatus.Visible = False
+                                                                verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
+                                                            End Sub)
+                                               End Sub)
     End Sub
 
     Private Sub compareRadioSHA512_Click(sender As Object, e As EventArgs) Handles compareRadioSHA512.Click
