@@ -1172,6 +1172,7 @@ Public Class Form1
                                                      Dim boolFileExists As Boolean
                                                      Dim intFileCount As Integer = 0
                                                      Dim strLineInFile As String
+                                                     Dim listOfListViewItems As New List(Of myListViewItem)
 
                                                      myInvoke(Sub()
                                                                   btnRetestFailedFiles.Visible = False
@@ -1218,7 +1219,7 @@ Public Class Form1
                                                                      strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
                                                                  End If
 
-                                                                 myInvoke(Sub() verifyHashesListFiles.Items.Add(createListViewItemForHashFileEntry(strFileName, strChecksum, intFilesNotFound, boolFileExists)))
+                                                                 listOfListViewItems.Add(createListViewItemForHashFileEntry(strFileName, strChecksum, intFilesNotFound, boolFileExists))
                                                                  If boolFileExists Then intFileCount += 1
                                                              End If
 
@@ -1227,6 +1228,7 @@ Public Class Form1
                                                      Next
 
                                                      myInvoke(Sub()
+                                                                  verifyHashesListFiles.Items.AddRange(listOfListViewItems.ToArray)
                                                                   verifyHashesListFiles.EndUpdate()
                                                                   Text = strWindowTitle
                                                                   If chkSortByFileSizeAfterLoadingHashFile.Checked Then applyFileSizeSortingToVerifyList()
@@ -1237,6 +1239,7 @@ Public Class Form1
 
                                                      newDataInFileArray = Nothing
                                                      strLineInFile = Nothing
+                                                     listOfListViewItems = Nothing
 
                                                      Dim items As ListView.ListViewItemCollection = getListViewItems(verifyHashesListFiles)
                                                      Dim strChecksumInFile As String = Nothing
