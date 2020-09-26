@@ -1171,6 +1171,7 @@ Public Class Form1
                                                      Dim strReadingHashFileMessage As String = "Reading hash file and creating ListView item objects... Please wait."
                                                      Dim boolFileExists As Boolean
                                                      Dim intFileCount As Integer = 0
+                                                     Dim strLineInFile As String
 
                                                      myInvoke(Sub()
                                                                   btnRetestFailedFiles.Visible = False
@@ -1191,12 +1192,19 @@ Public Class Form1
                                                          ulongAllBytes = 0
                                                      End SyncLock
 
-                                                     For Each strLineInFile As String In dataInFileArray
+                                                     Dim newDataInFileArray As New List(Of String)
+                                                     For Each strLineInFile In dataInFileArray
+                                                         If Not strLineInFile.StartsWith("'") Then newDataInFileArray.Add(strLineInFile)
+                                                     Next
+                                                     strLineInFile = Nothing
+                                                     dataInFileArray = Nothing
+
+                                                     For Each strLineInFile In newDataInFileArray
                                                          intLineCounter += 1
                                                          myInvoke(Sub()
-                                                                      VerifyHashProgressBar.Value = intLineCounter / dataInFileArray.LongLength * 100
+                                                                      VerifyHashProgressBar.Value = intLineCounter / newDataInFileArray.LongCount * 100
                                                                       ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value)
-                                                                      lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & myToString(intLineCounter) & " of " & myToString(dataInFileArray.LongLength) & " (" & VerifyHashProgressBar.Value & "%)."
+                                                                      lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & myToString(intLineCounter) & " of " & myToString(newDataInFileArray.LongCount) & " (" & VerifyHashProgressBar.Value & "%)."
                                                                   End Sub)
 
                                                          If Not String.IsNullOrEmpty(strLineInFile) Then
@@ -1227,7 +1235,8 @@ Public Class Form1
                                                                   lblVerifyHashStatusProcessingFile.Visible = True
                                                               End Sub)
 
-                                                     dataInFileArray = Nothing
+                                                     newDataInFileArray = Nothing
+                                                     strLineInFile = Nothing
 
                                                      Dim items As ListView.ListViewItemCollection = getListViewItems(verifyHashesListFiles)
                                                      Dim strChecksumInFile As String = Nothing
