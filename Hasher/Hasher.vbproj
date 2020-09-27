@@ -196,9 +196,9 @@
     <None Include="Resources\green_dollar.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FastDirectoryEnumerator\FastDirectoryEnumerator.csproj">
+    <ProjectReference Include="..\CSharp\CSharp.csproj">
       <Project>{14795806-6b6e-4767-a245-3e9be01897af}</Project>
-      <Name>FastDirectoryEnumerator</Name>
+      <Name>CSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

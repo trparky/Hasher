@@ -7,8 +7,8 @@
     <ProjectGuid>{14795806-6B6E-4767-A245-3E9BE01897AF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FastDirectoryEnumerator</RootNamespace>
-    <AssemblyName>FastDirectoryEnumerator</AssemblyName>
+    <RootNamespace>CSharp</RootNamespace>
+    <AssemblyName>CSharp</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

@@ -8,7 +8,7 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Hasher", "Hasher\Hasher.vbp
 		{14795806-6B6E-4767-A245-3E9BE01897AF} = {14795806-6B6E-4767-A245-3E9BE01897AF}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastDirectoryEnumerator", "FastDirectoryEnumerator\FastDirectoryEnumerator.csproj", "{14795806-6B6E-4767-A245-3E9BE01897AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp", "CSharp\CSharp.csproj", "{14795806-6B6E-4767-A245-3E9BE01897AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
