@@ -1001,22 +1001,6 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub recursiveDirectorySearch(ByVal strDirectory As String, ByRef collectionOfListViewItems As List(Of ListViewItem))
-        Try
-            For Each strFileName As String In IO.Directory.EnumerateFiles(strDirectory)
-                addFileToList(strFileName, collectionOfListViewItems)
-            Next
-        Catch ex As Exception
-        End Try
-
-        Try
-            For Each directory As String In IO.Directory.EnumerateDirectories(strDirectory)
-                recursiveDirectorySearch(directory, collectionOfListViewItems)
-            Next
-        Catch ex As Exception
-        End Try
-    End Sub
-
     Sub addFileToList(strFileName As String, ByRef collectionOfListViewItems As List(Of ListViewItem))
         If Not filesInListFiles.Contains(strFileName.Trim.ToLower) Then
             collectionOfListViewItems.Add(createListFilesObject(strFileName))
@@ -1043,15 +1027,36 @@ Public Class Form1
                                                                 btnIndividualFilesCopyToClipboard.Enabled = False
                                                                 btnIndividualFilesSaveResultsToDisk.Enabled = False
 
-                                                                lblIndividualFilesStatus.Text = "Enumerating files in directory... Please wait."
+                                                                IndividualFilesProgressBar.Visible = True
+                                                                lblIndividualFilesStatus.Visible = True
+                                                                lblProcessingFile.Text = "Enumerating files in directory... Please wait."
                                                                 btnAddFilesInFolder.Enabled = False
                                                             End Sub)
 
                                                    If chkRecurrsiveDirectorySearch.Checked Then
-                                                       recursiveDirectorySearch(directoryPath, collectionOfListViewItems)
+                                                       Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", IO.SearchOption.AllDirectories)
+                                                       Dim intFileIndexNumber As Integer = 0
+                                                       Dim intTotalNumberOfFiles As Integer = filesInDirectory.Count
+                                                       Dim percentage As Double
+
+                                                       For Each filedata As FastDirectoryEnumerator.FileData In filesInDirectory
+                                                           intFileIndexNumber += 1
+                                                           myInvoke(Sub()
+                                                                        percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
+                                                                        IndividualFilesProgressBar.Value = percentage
+                                                                        lblIndividualFilesStatus.Text = "Processing file " & myToString(intFileIndexNumber) & " of " & myToString(intTotalNumberOfFiles) & "."
+                                                                    End Sub)
+                                                           addFileToList(filedata.Path, collectionOfListViewItems)
+                                                       Next
+
+                                                       myInvoke(Sub()
+                                                                    lblProcessingFile.Text = Nothing
+                                                                    IndividualFilesProgressBar.Visible = False
+                                                                    lblIndividualFilesStatus.Text = Nothing
+                                                                End Sub)
                                                    Else
-                                                       For Each strFileName As String In IO.Directory.EnumerateFiles(directoryPath)
-                                                           addFileToList(strFileName, collectionOfListViewItems)
+                                                       For Each filedata As FastDirectoryEnumerator.FileData In FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", IO.SearchOption.TopDirectoryOnly)
+                                                           addFileToList(filedata.Path, collectionOfListViewItems)
                                                        Next
                                                    End If
 

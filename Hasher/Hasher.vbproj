@@ -59,6 +59,10 @@
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Costura, Version=1.6.2.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Costura.Fody.1.6.2\lib\dotnet\Costura.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -138,7 +142,9 @@
     <Compile Include="SmoothProgressBar.designer.vb">
       <DependentUpon>SmoothProgressBar.vb</DependentUpon>
     </Compile>
-    <Compile Include="SmoothProgressBar.vb" />
+    <Compile Include="SmoothProgressBar.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="StringExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +185,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\folder_explore.png" />
   </ItemGroup>
   <ItemGroup>
@@ -188,5 +195,20 @@
     <None Include="Resources\good check.png" />
     <None Include="Resources\green_dollar.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FastDirectoryEnumerator\FastDirectoryEnumerator.csproj">
+      <Project>{14795806-6b6e-4767-a245-3e9be01897af}</Project>
+      <Name>FastDirectoryEnumerator</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets'))" />
+  </Target>
+  <Import Project="..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" />
+  <Import Project="..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" />
 </Project>

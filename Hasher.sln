@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2019
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Hasher", "Hasher\Hasher.vbproj", "{CBCA2ED4-D73A-40F2-9BAB-1C1F1A5534A5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{14795806-6B6E-4767-A245-3E9BE01897AF} = {14795806-6B6E-4767-A245-3E9BE01897AF}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastDirectoryEnumerator", "FastDirectoryEnumerator\FastDirectoryEnumerator.csproj", "{14795806-6B6E-4767-A245-3E9BE01897AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{CBCA2ED4-D73A-40F2-9BAB-1C1F1A5534A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBCA2ED4-D73A-40F2-9BAB-1C1F1A5534A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBCA2ED4-D73A-40F2-9BAB-1C1F1A5534A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14795806-6B6E-4767-A245-3E9BE01897AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14795806-6B6E-4767-A245-3E9BE01897AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14795806-6B6E-4767-A245-3E9BE01897AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14795806-6B6E-4767-A245-3E9BE01897AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
