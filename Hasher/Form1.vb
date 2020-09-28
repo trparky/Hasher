@@ -61,15 +61,12 @@ Public Class Form1
     ''' </summary>
     ''' <param name="input"></param>
     Private Sub myInvoke(input As [Delegate])
-        Try
-            If boolClosingWindow Then Exit Sub
-            If InvokeRequired() Then
-                Invoke(input)
-            Else
-                input.DynamicInvoke()
-            End If
-        Catch ex As ObjectDisposedException
-        End Try
+        If boolClosingWindow Then Exit Sub
+        If InvokeRequired() Then
+            Invoke(input)
+        Else
+            input.DynamicInvoke()
+        End If
     End Sub
 
     Private Function getListViewItems(ByVal lstview As ListView) As ListView.ListViewItemCollection
