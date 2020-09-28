@@ -1010,6 +1010,8 @@ Public Class Form1
 
     Private Sub addFilesFromDirectory(directoryPath As String)
         workingThread = New Threading.Thread(Sub()
+                                                 Dim oldFilesInListFiles As Specialized.StringCollection = filesInListFiles
+
                                                  Try
                                                      strLastDirectoryWorkedOn = directoryPath
                                                      Dim collectionOfListViewItems As New List(Of ListViewItem)
@@ -1087,6 +1089,9 @@ Public Class Form1
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                      myInvoke(Sub()
+                                                                  filesInListFiles.Clear()
+                                                                  filesInListFiles = oldFilesInListFiles
+
                                                                   btnAddFilesInFolder.Text = "&Add File(s) in Folder ..."
                                                                   lblProcessingFile.Text = Nothing
                                                                   lblIndividualFilesStatus.Text = Nothing
