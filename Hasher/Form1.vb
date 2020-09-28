@@ -1033,34 +1033,27 @@ Public Class Form1
                                                                 btnAddFilesInFolder.Enabled = False
                                                             End Sub)
 
-                                                   If chkRecurrsiveDirectorySearch.Checked Then
-                                                       Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", IO.SearchOption.AllDirectories)
-                                                       Dim intFileIndexNumber As Integer = 0
-                                                       Dim intTotalNumberOfFiles As Integer = filesInDirectory.Count
-                                                       Dim percentage As Double
+                                                   Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
+                                                   Dim intFileIndexNumber As Integer = 0
+                                                   Dim intTotalNumberOfFiles As Integer = filesInDirectory.Count
+                                                   Dim percentage As Double
 
-                                                       For Each filedata As FastDirectoryEnumerator.FileData In filesInDirectory
-                                                           intFileIndexNumber += 1
-                                                           myInvoke(Sub()
-                                                                        percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
-                                                                        IndividualFilesProgressBar.Value = percentage
-                                                                        lblIndividualFilesStatus.Text = "Processing file " & myToString(intFileIndexNumber) & " of " & myToString(intTotalNumberOfFiles) & "."
-                                                                    End Sub)
-                                                           addFileToList(filedata.Path, collectionOfListViewItems)
-                                                       Next
-
+                                                   For Each filedata As FastDirectoryEnumerator.FileData In filesInDirectory
+                                                       intFileIndexNumber += 1
                                                        myInvoke(Sub()
-                                                                    lblProcessingFile.Text = Nothing
-                                                                    IndividualFilesProgressBar.Visible = False
-                                                                    lblIndividualFilesStatus.Text = Nothing
+                                                                    percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
+                                                                    IndividualFilesProgressBar.Value = percentage
+                                                                    lblIndividualFilesStatus.Text = "Processing file " & myToString(intFileIndexNumber) & " of " & myToString(intTotalNumberOfFiles) & "."
                                                                 End Sub)
-                                                   Else
-                                                       For Each filedata As FastDirectoryEnumerator.FileData In FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", IO.SearchOption.TopDirectoryOnly)
-                                                           addFileToList(filedata.Path, collectionOfListViewItems)
-                                                       Next
-                                                   End If
+                                                       addFileToList(filedata.Path, collectionOfListViewItems)
+                                                   Next
+
+                                                   filesInDirectory = Nothing
 
                                                    myInvoke(Sub()
+                                                                lblProcessingFile.Text = Nothing
+                                                                IndividualFilesProgressBar.Visible = False
+                                                                lblIndividualFilesStatus.Text = Nothing
                                                                 lblIndividualFilesStatusProcessingFile.Visible = True
                                                                 lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please wait."
 
