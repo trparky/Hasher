@@ -13,7 +13,7 @@ namespace FastDirectoryEnumerator
     /// <see cref="FastDirectoryEnumerator"/> class.
     /// </summary>
     [Serializable]
-    public class FileData
+    public struct FileData
     {
         /// <summary>
         /// Attributes of the file.
