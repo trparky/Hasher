@@ -769,6 +769,7 @@ Public Class Form1
     ''' <param name="strReceivedFileName">This parameter contains the path of either a file or a directory.</param>
     Private Sub addFileOrDirectoryToHashFileList(strReceivedFileName As String)
         Try
+            If boolBackgroundThreadWorking Then Exit Sub
             If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
                 If IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) Then
                     myInvoke(Sub()
@@ -1011,86 +1012,126 @@ Public Class Form1
     End Sub
 
     Private Sub addFilesFromDirectory(directoryPath As String)
-        Threading.ThreadPool.QueueUserWorkItem(Sub()
-                                                   strLastDirectoryWorkedOn = directoryPath
-                                                   Dim collectionOfListViewItems As New List(Of ListViewItem)
-                                                   Dim index As Integer = 0
+        workingThread = New Threading.Thread(Sub()
+                                                 Try
+                                                     strLastDirectoryWorkedOn = directoryPath
+                                                     Dim collectionOfListViewItems As New List(Of ListViewItem)
+                                                     Dim index As Integer = 0
+                                                     boolBackgroundThreadWorking = True
 
-                                                   myInvoke(Sub()
-                                                                btnAddIndividualFiles.Enabled = False
-                                                                btnAddFilesInFolder.Enabled = False
-                                                                btnRemoveSelectedFiles.Enabled = False
-                                                                btnRemoveAllFiles.Enabled = False
-                                                                radioSHA256.Enabled = False
-                                                                radioSHA384.Enabled = False
-                                                                radioSHA512.Enabled = False
-                                                                radioSHA1.Enabled = False
-                                                                radioMD5.Enabled = False
-                                                                btnComputeHash.Enabled = False
-                                                                btnIndividualFilesCopyToClipboard.Enabled = False
-                                                                btnIndividualFilesSaveResultsToDisk.Enabled = False
+                                                     myInvoke(Sub()
+                                                                  btnAddFilesInFolder.Text = "Abort Adding Files"
+                                                                  btnAddIndividualFiles.Enabled = False
+                                                                  btnRemoveSelectedFiles.Enabled = False
+                                                                  btnRemoveAllFiles.Enabled = False
+                                                                  radioSHA256.Enabled = False
+                                                                  radioSHA384.Enabled = False
+                                                                  radioSHA512.Enabled = False
+                                                                  radioSHA1.Enabled = False
+                                                                  radioMD5.Enabled = False
+                                                                  btnComputeHash.Enabled = False
+                                                                  btnIndividualFilesCopyToClipboard.Enabled = False
+                                                                  btnIndividualFilesSaveResultsToDisk.Enabled = False
 
-                                                                IndividualFilesProgressBar.Visible = True
-                                                                lblIndividualFilesStatus.Visible = True
-                                                                lblProcessingFile.Text = "Enumerating files in directory... Please wait."
-                                                                btnAddFilesInFolder.Enabled = False
-                                                            End Sub)
+                                                                  IndividualFilesProgressBar.Visible = True
+                                                                  lblIndividualFilesStatus.Visible = True
+                                                                  lblProcessingFile.Text = "Enumerating files in directory... Please wait."
+                                                              End Sub)
 
-                                                   Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
-                                                   Dim intFileIndexNumber As Integer = 0
-                                                   Dim intTotalNumberOfFiles As Integer = filesInDirectory.Count
-                                                   Dim percentage As Double
+                                                     Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
+                                                     Dim intFileIndexNumber As Integer = 0
+                                                     Dim intTotalNumberOfFiles As Integer = filesInDirectory.Count
+                                                     Dim percentage As Double
 
-                                                   For Each filedata As FastDirectoryEnumerator.FileData In filesInDirectory
-                                                       intFileIndexNumber += 1
-                                                       myInvoke(Sub()
-                                                                    percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
-                                                                    IndividualFilesProgressBar.Value = percentage
-                                                                    lblIndividualFilesStatus.Text = "Processing file " & myToString(intFileIndexNumber) & " of " & myToString(intTotalNumberOfFiles) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%)."
-                                                                End Sub)
-                                                       addFileToList(filedata.Path, collectionOfListViewItems)
-                                                   Next
+                                                     For Each filedata As FastDirectoryEnumerator.FileData In filesInDirectory
+                                                         intFileIndexNumber += 1
+                                                         myInvoke(Sub()
+                                                                      percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
+                                                                      IndividualFilesProgressBar.Value = percentage
+                                                                      ProgressForm.setTaskbarProgressBarValue(percentage)
+                                                                      lblIndividualFilesStatus.Text = "Processing file " & myToString(intFileIndexNumber) & " of " & myToString(intTotalNumberOfFiles) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%)."
+                                                                  End Sub)
+                                                         addFileToList(filedata.Path, collectionOfListViewItems)
+                                                     Next
 
-                                                   filesInDirectory = Nothing
+                                                     filesInDirectory = Nothing
 
-                                                   myInvoke(Sub()
-                                                                lblProcessingFile.Text = Nothing
-                                                                IndividualFilesProgressBar.Visible = False
-                                                                lblIndividualFilesStatus.Text = Nothing
-                                                                lblIndividualFilesStatusProcessingFile.Visible = True
-                                                                lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please wait."
+                                                     myInvoke(Sub()
+                                                                  lblProcessingFile.Text = Nothing
+                                                                  IndividualFilesProgressBar.Visible = False
+                                                                  lblIndividualFilesStatus.Text = Nothing
+                                                                  lblIndividualFilesStatusProcessingFile.Visible = True
+                                                                  lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please wait."
 
-                                                                listFiles.BeginUpdate()
-                                                                listFiles.Items.AddRange(collectionOfListViewItems.ToArray())
-                                                                If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
-                                                                listFiles.EndUpdate()
+                                                                  listFiles.BeginUpdate()
+                                                                  listFiles.Items.AddRange(collectionOfListViewItems.ToArray())
+                                                                  If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
+                                                                  listFiles.EndUpdate()
 
-                                                                lblIndividualFilesStatusProcessingFile.Text = Nothing
-                                                                lblIndividualFilesStatus.Text = strNoBackgroundProcesses
-                                                                IndividualFilesProgressBar.Value = 0
-                                                                IndividualFilesProgressBar.Visible = False
-                                                                ProgressForm.setTaskbarProgressBarValue(0)
-                                                                btnAddFilesInFolder.Enabled = True
+                                                                  lblIndividualFilesStatusProcessingFile.Text = Nothing
+                                                                  lblIndividualFilesStatus.Text = strNoBackgroundProcesses
+                                                                  IndividualFilesProgressBar.Value = 0
+                                                                  IndividualFilesProgressBar.Visible = False
+                                                                  ProgressForm.setTaskbarProgressBarValue(0)
 
-                                                                updateFilesListCountHeader()
+                                                                  updateFilesListCountHeader()
 
-                                                                btnAddIndividualFiles.Enabled = True
-                                                                btnAddFilesInFolder.Enabled = True
-                                                                btnRemoveSelectedFiles.Enabled = True
-                                                                btnRemoveAllFiles.Enabled = True
-                                                                radioSHA256.Enabled = True
-                                                                radioSHA384.Enabled = True
-                                                                radioSHA512.Enabled = True
-                                                                radioSHA1.Enabled = True
-                                                                radioMD5.Enabled = True
-                                                                btnComputeHash.Enabled = True
-                                                                btnIndividualFilesCopyToClipboard.Enabled = True
-                                                                btnIndividualFilesSaveResultsToDisk.Enabled = True
-                                                            End Sub)
-                                               End Sub)
+                                                                  btnAddIndividualFiles.Enabled = True
+                                                                  btnRemoveSelectedFiles.Enabled = True
+                                                                  btnRemoveAllFiles.Enabled = True
+                                                                  radioSHA256.Enabled = True
+                                                                  radioSHA384.Enabled = True
+                                                                  radioSHA512.Enabled = True
+                                                                  radioSHA1.Enabled = True
+                                                                  radioMD5.Enabled = True
+                                                                  btnComputeHash.Enabled = True
+                                                                  btnIndividualFilesCopyToClipboard.Enabled = True
+                                                                  btnIndividualFilesSaveResultsToDisk.Enabled = True
+                                                              End Sub)
+                                                 Catch ex As Threading.ThreadAbortException
+                                                     myInvoke(Sub()
+                                                                  btnAddFilesInFolder.Text = "&Add File(s) in Folder ..."
+                                                                  lblProcessingFile.Text = Nothing
+                                                                  lblIndividualFilesStatus.Text = Nothing
+                                                                  IndividualFilesProgressBar.Value = 0
+                                                                  IndividualFilesProgressBar.Visible = False
+                                                                  ProgressForm.setTaskbarProgressBarValue(0)
+
+                                                                  updateFilesListCountHeader()
+
+                                                                  btnAddIndividualFiles.Enabled = True
+                                                                  btnRemoveSelectedFiles.Enabled = True
+                                                                  btnRemoveAllFiles.Enabled = True
+                                                                  radioSHA256.Enabled = True
+                                                                  radioSHA384.Enabled = True
+                                                                  radioSHA512.Enabled = True
+                                                                  radioSHA1.Enabled = True
+                                                                  radioMD5.Enabled = True
+
+                                                                  If listFiles.Items.Count <> 0 Then
+                                                                      btnComputeHash.Enabled = True
+                                                                      btnIndividualFilesCopyToClipboard.Enabled = True
+                                                                      btnIndividualFilesSaveResultsToDisk.Enabled = True
+                                                                  End If
+                                                              End Sub)
+                                                 Finally
+                                                     boolBackgroundThreadWorking = False
+                                                 End Try
+                                             End Sub) With {
+            .Priority = getThreadPriority(),
+            .Name = "Directory Scanning Thread",
+            .IsBackground = True
+        }
+        workingThread.Start()
     End Sub
 
     Private Sub btnAddFilesInFolder_Click(sender As Object, e As EventArgs) Handles btnAddFilesInFolder.Click
+        If btnAddFilesInFolder.Text = "Abort Adding Files" AndAlso workingThread IsNot Nothing AndAlso MsgBox("Are you sure you want to abort adding files?", MsgBoxStyle.Question + vbYesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+            workingThread.Abort()
+            boolBackgroundThreadWorking = False
+            Exit Sub
+        End If
+
         If FolderBrowserDialog.ShowDialog = DialogResult.OK Then addFilesFromDirectory(FolderBrowserDialog.SelectedPath)
     End Sub
 
@@ -1480,6 +1521,7 @@ Public Class Form1
     End Sub
 
     Private Sub listFiles_DragDrop(sender As Object, e As DragEventArgs) Handles listFiles.DragDrop
+        If boolBackgroundThreadWorking Then Exit Sub
         For Each strItem As String In e.Data.GetData(DataFormats.FileDrop)
             If IO.File.Exists(strItem) Or IO.Directory.Exists(strItem) Then
                 If IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) Then
@@ -1596,7 +1638,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, are you sure you want to abort and exit the program?", MsgBoxStyle.YesNo + MsgBoxStyle.Question + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.No Then
+        If boolBackgroundThreadWorking AndAlso MsgBox("Background tasks are being processed, are you sure you want to abort and exit the program?", MsgBoxStyle.YesNo + MsgBoxStyle.Question + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.No Then
             e.Cancel = True
             Exit Sub
         Else
