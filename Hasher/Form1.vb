@@ -271,6 +271,7 @@ Public Class Form1
         IndividualFilesProgressBar.Visible = True
         lblHashIndividualFilesTotalStatus.Visible = True
         lblIndividualFilesStatus.Visible = True
+        lblIndividualFilesStatusProcessingFile.Visible = True
         shortCurrentlyActiveTab = tabNumber.hashIndividualFilesTab
 
         Dim longErroredFiles As Long = 0
@@ -1056,19 +1057,20 @@ Public Class Form1
                                                      filesInDirectory = Nothing
 
                                                      myInvoke(Sub()
-                                                                  lblProcessingFile.Text = Nothing
+                                                                  lblProcessingFile.Text = "Adding files to list... Please wait."
                                                                   IndividualFilesProgressBar.Visible = False
                                                                   lblIndividualFilesStatus.Text = Nothing
-                                                                  lblIndividualFilesStatusProcessingFile.Visible = True
-                                                                  lblIndividualFilesStatusProcessingFile.Text = "Adding files to list... Please wait."
+                                                              End Sub)
 
+                                                     Threading.Thread.Sleep(250)
+
+                                                     myInvoke(Sub()
                                                                   listFiles.BeginUpdate()
                                                                   listFiles.Items.AddRange(collectionOfListViewItems.ToArray())
                                                                   If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
                                                                   listFiles.EndUpdate()
 
-                                                                  lblIndividualFilesStatusProcessingFile.Text = Nothing
-                                                                  lblIndividualFilesStatus.Text = strNoBackgroundProcesses
+                                                                  lblProcessingFile.Text = Nothing
                                                                   IndividualFilesProgressBar.Value = 0
                                                                   IndividualFilesProgressBar.Visible = False
                                                                   ProgressForm.setTaskbarProgressBarValue(0)
