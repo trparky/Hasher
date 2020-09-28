@@ -1043,7 +1043,7 @@ Public Class Form1
                                                        myInvoke(Sub()
                                                                     percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
                                                                     IndividualFilesProgressBar.Value = percentage
-                                                                    lblIndividualFilesStatus.Text = "Processing file " & myToString(intFileIndexNumber) & " of " & myToString(intTotalNumberOfFiles) & "."
+                                                                    lblIndividualFilesStatus.Text = "Processing file " & myToString(intFileIndexNumber) & " of " & myToString(intTotalNumberOfFiles) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%)."
                                                                 End Sub)
                                                        addFileToList(filedata.Path, collectionOfListViewItems)
                                                    Next
