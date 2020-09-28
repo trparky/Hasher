@@ -1003,12 +1003,6 @@ Public Class Form1
         End Try
     End Sub
 
-    Sub addFileToList(strFileName As String, ByRef collectionOfListViewItems As List(Of ListViewItem))
-        If Not filesInListFiles.Contains(strFileName.Trim.ToLower) Then
-            collectionOfListViewItems.Add(createListFilesObject(strFileName))
-        End If
-    End Sub
-
     Private Sub addFilesFromDirectory(directoryPath As String)
         workingThread = New Threading.Thread(Sub()
                                                  Dim oldFilesInListFiles As Specialized.StringCollection = filesInListFiles
@@ -1051,7 +1045,9 @@ Public Class Form1
                                                                       ProgressForm.setTaskbarProgressBarValue(percentage)
                                                                       lblIndividualFilesStatus.Text = "Processing file " & myToString(intFileIndexNumber) & " of " & myToString(intTotalNumberOfFiles) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%)."
                                                                   End Sub)
-                                                         addFileToList(filedata.Path, collectionOfListViewItems)
+                                                         If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
+                                                             collectionOfListViewItems.Add(createListFilesObject(filedata.Path))
+                                                         End If
                                                      Next
 
                                                      filesInDirectory = Nothing
