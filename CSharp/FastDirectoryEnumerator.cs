@@ -516,11 +516,11 @@ namespace FastDirectoryEnumerator
 
                     if (m_currentContext.SubdirectoriesToProcess == null)
                     {
-                        string[] subDirectories = Directory.GetDirectories(m_path);
-                        m_currentContext.SubdirectoriesToProcess = new Stack<string>(subDirectories);
+                        try { string[] subDirectories = Directory.GetDirectories(m_path); m_currentContext.SubdirectoriesToProcess = new Stack<string>(subDirectories); }
+                        catch { }
                     }
 
-                    if (m_currentContext.SubdirectoriesToProcess.Count > 0)
+                    if ((m_currentContext.SubdirectoriesToProcess != null) && (m_currentContext.SubdirectoriesToProcess.Count > 0))
                     {
                         string subDir = m_currentContext.SubdirectoriesToProcess.Pop();
 
