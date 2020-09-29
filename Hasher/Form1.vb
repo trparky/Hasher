@@ -1032,6 +1032,7 @@ Public Class Form1
                                                                   IndividualFilesProgressBar.Visible = True
                                                                   lblIndividualFilesStatus.Visible = True
                                                                   lblProcessingFile.Text = "Enumerating files in directory... Please wait."
+                                                                  lblIndividualFilesStatus.Text = Nothing
                                                               End Sub)
 
                                                      Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
