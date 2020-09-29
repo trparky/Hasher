@@ -333,6 +333,7 @@ Public Class Form1
                                                      Dim itemOnGUI As myListViewItem
                                                      Dim items As ListView.ListViewItemCollection = getListViewItems(listFiles)
                                                      Dim allTheHashes As allTheHashes = Nothing
+                                                     Dim fileCountPercentage As Double
 
                                                      SyncLock threadLockingObject
                                                          For Each item As myListViewItem In items
@@ -349,8 +350,9 @@ Public Class Form1
                                                              item.SubItems(2).Text = strCurrentlyBeingProcessed
 
                                                              myInvoke(Sub()
+                                                                          fileCountPercentage = index / listFiles.Items.Count * 100
                                                                           lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
-                                                                          lblIndividualFilesStatusProcessingFile.Text = "Processing " & myToString(index) & " of " & myToString(listFiles.Items.Count) & If(listFiles.Items.Count = 1, " file", " files") & "."
+                                                                          lblIndividualFilesStatusProcessingFile.Text = "Processing file " & myToString(index) & " of " & myToString(listFiles.Items.Count) & If(listFiles.Items.Count = 1, " file", " files") & " (" & myRoundingFunction(fileCountPercentage, byteRoundPercentages) & "%)."
 
                                                                           itemOnGUI = listFiles.Items(item.Index)
                                                                           If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
@@ -1247,7 +1249,7 @@ Public Class Form1
                                                          myInvoke(Sub()
                                                                       VerifyHashProgressBar.Value = intLineCounter / newDataInFileArray.LongCount * 100
                                                                       ProgressForm.setTaskbarProgressBarValue(VerifyHashProgressBar.Value)
-                                                                      lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & myToString(intLineCounter) & " of " & myToString(newDataInFileArray.LongCount) & " (" & VerifyHashProgressBar.Value & "%)."
+                                                                      lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & myToString(intLineCounter) & " of " & myToString(newDataInFileArray.LongCount) & " (" & myRoundingFunction(VerifyHashProgressBar.Value, byteRoundPercentages) & "%)."
                                                                   End Sub)
 
                                                          If Not String.IsNullOrEmpty(strLineInFile) Then
@@ -1291,12 +1293,15 @@ Public Class Form1
                                                      Dim itemOnGUI As myListViewItem
                                                      Dim allTheHashes As allTheHashes = Nothing
                                                      Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
+                                                     Dim fileCountPercentage As Double
 
                                                      For Each item As myListViewItem In items
-                                                         myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}",
+                                                         fileCountPercentage = index / intFileCount * 100
+                                                         myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2} ({3}%).",
                                                                                                                                myToString(index),
                                                                                                                                myToString(intFileCount),
-                                                                                                                               If(intFileCount = 1, "file", "files"))
+                                                                                                                               If(intFileCount = 1, "file", "files"),
+                                                                                                                               myRoundingFunction(fileCountPercentage, byteRoundPercentages))
                                                                                                                               )
 
                                                          If item.boolFileExists Then
