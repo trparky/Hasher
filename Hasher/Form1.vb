@@ -1086,6 +1086,7 @@ Public Class Form1
                                                                   btnComputeHash.Enabled = True
                                                                   btnIndividualFilesCopyToClipboard.Enabled = True
                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = True
+                                                                  btnAddFilesInFolder.Text = "&Add File(s) in Folder ..."
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                      myInvoke(Sub()
