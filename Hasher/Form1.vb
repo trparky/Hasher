@@ -1056,8 +1056,6 @@ Public Class Form1
 
                                                      myInvoke(Sub()
                                                                   lblProcessingFile.Text = "Adding files to list... Please wait."
-                                                                  IndividualFilesProgressBar.Visible = False
-                                                                  lblIndividualFilesStatus.Text = Nothing
                                                               End Sub)
 
                                                      Threading.Thread.Sleep(250)
@@ -1068,48 +1066,18 @@ Public Class Form1
                                                                   If chkSortFileListingAfterAddingFilesToHash.Checked Then applyFileSizeSortingToHashList()
                                                                   listFiles.EndUpdate()
 
-                                                                  lblProcessingFile.Text = Nothing
-                                                                  IndividualFilesProgressBar.Value = 0
-                                                                  IndividualFilesProgressBar.Visible = False
-                                                                  ProgressForm.setTaskbarProgressBarValue(0)
-
                                                                   updateFilesListCountHeader()
 
-                                                                  btnAddIndividualFiles.Enabled = True
-                                                                  btnRemoveSelectedFiles.Enabled = True
-                                                                  btnRemoveAllFiles.Enabled = True
-                                                                  radioSHA256.Enabled = True
-                                                                  radioSHA384.Enabled = True
-                                                                  radioSHA512.Enabled = True
-                                                                  radioSHA1.Enabled = True
-                                                                  radioMD5.Enabled = True
                                                                   btnComputeHash.Enabled = True
                                                                   btnIndividualFilesCopyToClipboard.Enabled = True
                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = True
-                                                                  btnAddFilesInFolder.Text = "&Add File(s) in Folder ..."
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
+                                                     filesInListFiles.Clear()
+                                                     filesInListFiles = oldFilesInListFiles
+
                                                      myInvoke(Sub()
-                                                                  filesInListFiles.Clear()
-                                                                  filesInListFiles = oldFilesInListFiles
-
-                                                                  btnAddFilesInFolder.Text = "&Add File(s) in Folder ..."
-                                                                  lblProcessingFile.Text = Nothing
-                                                                  lblIndividualFilesStatus.Text = Nothing
-                                                                  IndividualFilesProgressBar.Value = 0
-                                                                  IndividualFilesProgressBar.Visible = False
-                                                                  ProgressForm.setTaskbarProgressBarValue(0)
-
                                                                   updateFilesListCountHeader()
-
-                                                                  btnAddIndividualFiles.Enabled = True
-                                                                  btnRemoveSelectedFiles.Enabled = True
-                                                                  btnRemoveAllFiles.Enabled = True
-                                                                  radioSHA256.Enabled = True
-                                                                  radioSHA384.Enabled = True
-                                                                  radioSHA512.Enabled = True
-                                                                  radioSHA1.Enabled = True
-                                                                  radioMD5.Enabled = True
 
                                                                   If listFiles.Items.Count <> 0 Then
                                                                       btnComputeHash.Enabled = True
@@ -1118,6 +1086,26 @@ Public Class Form1
                                                                   End If
                                                               End Sub)
                                                  Finally
+                                                     If Not boolClosingWindow Then myInvoke(Sub()
+                                                                                                lblIndividualFilesStatus.Text = Nothing
+                                                                                                lblProcessingFile.Text = Nothing
+                                                                                                btnAddFilesInFolder.Text = "&Add File(s) in Folder ..."
+                                                                                                IndividualFilesProgressBar.Value = 0
+                                                                                                IndividualFilesProgressBar.Visible = False
+                                                                                                ProgressForm.setTaskbarProgressBarValue(0)
+                                                                                                btnAddIndividualFiles.Enabled = True
+                                                                                                btnRemoveSelectedFiles.Enabled = True
+                                                                                                btnRemoveAllFiles.Enabled = True
+
+                                                                                                If listFiles.Items.Count <> 0 Then
+                                                                                                    radioSHA256.Enabled = True
+                                                                                                    radioSHA384.Enabled = True
+                                                                                                    radioSHA512.Enabled = True
+                                                                                                    radioSHA1.Enabled = True
+                                                                                                    radioMD5.Enabled = True
+                                                                                                End If
+                                                                                            End Sub)
+
                                                      boolBackgroundThreadWorking = False
                                                  End Try
                                              End Sub) With {
