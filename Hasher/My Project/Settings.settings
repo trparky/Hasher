@@ -98,12 +98,6 @@
     <Setting Name="defaultHash" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="progressBarColor" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">Green</Value>
-    </Setting>
-    <Setting Name="boolUseThemeColorForProgressBars" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="boolWindowMaximized" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>

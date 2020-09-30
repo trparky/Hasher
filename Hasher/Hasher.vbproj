@@ -139,12 +139,6 @@
     </Compile>
     <Compile Include="myListViewItem.vb" />
     <Compile Include="NativeMethod.vb" />
-    <Compile Include="SmoothProgressBar.designer.vb">
-      <DependentUpon>SmoothProgressBar.vb</DependentUpon>
-    </Compile>
-    <Compile Include="SmoothProgressBar.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="StringExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -166,9 +160,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="progressForm.resx">
       <DependentUpon>progressForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SmoothProgressBar.resx">
-      <DependentUpon>SmoothProgressBar.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

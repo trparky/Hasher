@@ -797,55 +797,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Function getWindows10AccentColor() As Color
-        Try
-            Using regKey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\Microsoft\Windows\DWM", False)
-                ' Retrieves the specified value from the Windows Registry Key that was opened above.
-                Dim rawAccentColorValue As Integer = regKey.GetValue("AccentColor", Nothing)
-
-                ' Converts the Integer value into a hex string.
-                Dim strAccentColorInHex As String = rawAccentColorValue.ToString("X")
-
-                ' Microsoft for whatever reason saves the color data in a weird way to the Registry so we have
-                ' to parse the String data ourselves first before trying to parse it with the ColorTranslator.
-                Dim strPiece1, strPiece2, strPiece3 As String
-                strPiece1 = strAccentColorInHex.Substring(6, 2)
-                strPiece2 = strAccentColorInHex.Substring(4, 2)
-                strPiece3 = strAccentColorInHex.Substring(2, 2)
-
-                ' And now we use the ColorTranslator to convert the hex value into a color.
-                Return ColorTranslator.FromHtml("#" & strPiece1 & strPiece2 & strPiece3)
-            End Using
-        Catch ex As Exception
-            ' If something goes wrong at any point in the above code, we simply let the exception handler handle the error and return
-            ' what's in the program settings. Yes, I know... it's dirty but it works and that's all that really matters to me here.
-            Return My.Settings.progressBarColor
-        End Try
-    End Function
-
-    Private Sub loadProgressBarColors()
-        If Environment.OSVersion.Version.Major = 10 Then
-            Dim color As Color = If(My.Settings.boolUseThemeColorForProgressBars, getWindows10AccentColor(), My.Settings.progressBarColor)
-            loadProgressBarColorsSub(color)
-        Else
-            loadProgressBarColorsSub(My.Settings.progressBarColor)
-        End If
-    End Sub
-
-    Private Sub loadProgressBarColorsSub(color As Color)
-        IndividualFilesProgressBar.ProgressBarColor = color
-        hashIndividualFilesAllFilesProgressBar.ProgressBarColor = color
-        VerifyHashProgressBar.ProgressBarColor = color
-        verifyIndividualFilesAllFilesProgressBar.ProgressBarColor = color
-        compareFilesProgressBar.ProgressBarColor = color
-        CompareFilesAllFilesProgress.ProgressBarColor = color
-        compareAgainstKnownHashProgressBar.ProgressBarColor = color
-        lblProgressBarColor.BackColor = color
-    End Sub
-
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If Environment.OSVersion.Version.Major <> 10 Then My.Settings.boolUseThemeColorForProgressBars = False
-
         ' This function returns a Boolean value indicating if the name pipe server was started or not.
         Dim boolNamedPipeServerStarted As Boolean = startNamedPipeServer()
         Dim commandLineArgument As String
@@ -903,12 +855,6 @@ Public Class Form1
             btnAddHasherToAllFiles.ImageAlign = ContentAlignment.MiddleLeft
             btnAddHasherToAllFiles.Image = My.Resources.UAC
         End If
-
-        progressBarColor = My.Settings.progressBarColor
-        chkUseThemeColorForProgressBars.Checked = My.Settings.boolUseThemeColorForProgressBars
-        chkUseThemeColorForProgressBars.Enabled = Environment.OSVersion.Version.Major = 10
-        btnSetProgressBarColor.Enabled = Not chkUseThemeColorForProgressBars.Checked
-        loadProgressBarColors()
 
         lblIndividualFilesStatusProcessingFile.Visible = False
         hashIndividualFilesAllFilesProgressBar.Visible = False
@@ -2504,47 +2450,6 @@ Public Class Form1
         End Using
     End Sub
 
-    Private Sub btnSetProgressBarColor_Click(sender As Object, e As EventArgs) Handles btnSetProgressBarColor.Click
-        Using colorDialog As New ColorDialog() With {.Color = fileNotFoundColor}
-            If colorDialog.ShowDialog() = DialogResult.OK Then
-                My.Settings.progressBarColor = colorDialog.Color
-                lblProgressBarColor.BackColor = colorDialog.Color
-                progressBarColor = colorDialog.Color
-                loadProgressBarColors()
-                MsgBox("Progress bar colors have been set successfully.", MsgBoxStyle.Information, strMessageBoxTitleText)
-            End If
-        End Using
-    End Sub
-
-    Private Sub BtnSetColorsBackToDefaults_Click(sender As Object, e As EventArgs) Handles btnSetColorsBackToDefaults.Click
-        My.Settings.validColor = Color.LightGreen
-        lblValidColor.BackColor = Color.LightGreen
-        validColor = Color.LightGreen
-
-        My.Settings.notValidColor = Color.Pink
-        lblNotValidColor.BackColor = Color.Pink
-        notValidColor = Color.Pink
-
-        My.Settings.fileNotFoundColor = Color.LightGray
-        lblFileNotFoundColor.BackColor = Color.LightGray
-        fileNotFoundColor = Color.LightGray
-
-        If Environment.OSVersion.Version.Major = 10 And chkUseThemeColorForProgressBars.Checked Then
-            Dim color As Color = getWindows10AccentColor()
-            My.Settings.progressBarColor = color
-            lblProgressBarColor.BackColor = color
-            progressBarColor = color
-            loadProgressBarColorsSub(color)
-        Else
-            My.Settings.progressBarColor = Color.Green
-            lblProgressBarColor.BackColor = Color.Green
-            progressBarColor = Color.Green
-            loadProgressBarColorsSub(Color.Green)
-        End If
-
-        MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
-    End Sub
-
     Private Sub btnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
         Dim shortBufferSize As Short = Decimal.ToInt16(bufferSize.Value)
         intBufferSize = shortBufferSize * 1024 * 1024
@@ -3119,11 +3024,5 @@ Public Class Form1
             radioSHA512.Checked = True
             textRadioSHA512.Checked = True
         End If
-    End Sub
-
-    Private Sub chkUseThemeColorForProgressBars_Click(sender As Object, e As EventArgs) Handles chkUseThemeColorForProgressBars.Click
-        My.Settings.boolUseThemeColorForProgressBars = chkUseThemeColorForProgressBars.Checked
-        btnSetProgressBarColor.Enabled = Not My.Settings.boolUseThemeColorForProgressBars
-        loadProgressBarColors()
     End Sub
 End Class

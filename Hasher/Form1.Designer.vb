@@ -50,8 +50,8 @@ Partial Class Form1
         Me.hashIndividualFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.lblIndividualFilesStatusProcessingFile = New System.Windows.Forms.Label()
         Me.lblProcessingFile = New System.Windows.Forms.Label()
-        Me.IndividualFilesProgressBar = New Hasher.SmoothProgressBar()
-        Me.hashIndividualFilesAllFilesProgressBar = New Hasher.SmoothProgressBar()
+        Me.IndividualFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.hashIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblHashIndividualFilesTotalStatus = New System.Windows.Forms.Label()
         Me.lblIndividualFilesStatus = New System.Windows.Forms.Label()
         Me.lblLine = New System.Windows.Forms.Label()
@@ -79,9 +79,9 @@ Partial Class Form1
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
         Me.verifySavedHashesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
-        Me.VerifyHashProgressBar = New Hasher.SmoothProgressBar()
+        Me.VerifyHashProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblVerifyHashStatusProcessingFile = New System.Windows.Forms.Label()
-        Me.verifyIndividualFilesAllFilesProgressBar = New Hasher.SmoothProgressBar()
+        Me.verifyIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblVerifyHashesTotalStatus = New System.Windows.Forms.Label()
         Me.lblVerifyHashStatus = New System.Windows.Forms.Label()
         Me.lblProcessingFileVerify = New System.Windows.Forms.Label()
@@ -99,8 +99,8 @@ Partial Class Form1
         Me.tabCompareFiles = New System.Windows.Forms.TabPage()
         Me.compareFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.lblCompareFilesStatus = New System.Windows.Forms.Label()
-        Me.compareFilesProgressBar = New Hasher.SmoothProgressBar()
-        Me.CompareFilesAllFilesProgress = New Hasher.SmoothProgressBar()
+        Me.compareFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.CompareFilesAllFilesProgress = New System.Windows.Forms.ProgressBar()
         Me.lblCompareFilesAllFilesStatus = New System.Windows.Forms.Label()
         Me.lblFile2Hash = New System.Windows.Forms.Label()
         Me.lblFile1Hash = New System.Windows.Forms.Label()
@@ -120,7 +120,7 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash = New System.Windows.Forms.TabPage()
         Me.pictureBoxVerifyAgainstResults = New System.Windows.Forms.PictureBox()
         Me.lblCompareFileAgainstKnownHashType = New System.Windows.Forms.Label()
-        Me.compareAgainstKnownHashProgressBar = New Hasher.SmoothProgressBar()
+        Me.compareAgainstKnownHashProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblCompareAgainstKnownHashStatus = New System.Windows.Forms.Label()
         Me.btnCompareAgainstKnownHash = New System.Windows.Forms.Button()
         Me.txtKnownHash = New System.Windows.Forms.TextBox()
@@ -167,9 +167,6 @@ Partial Class Form1
         Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
         Me.chkShowPercentageInWindowTitleBar = New System.Windows.Forms.CheckBox()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
-        Me.chkUseThemeColorForProgressBars = New System.Windows.Forms.CheckBox()
-        Me.lblProgressBarColor = New System.Windows.Forms.Label()
-        Me.btnSetProgressBarColor = New System.Windows.Forms.Button()
         Me.lblDefaultHashLabel = New System.Windows.Forms.Label()
         Me.defaultHashType = New System.Windows.Forms.ComboBox()
         Me.TabControl1.SuspendLayout()
@@ -530,13 +527,9 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.IndividualFilesProgressBar.Location = New System.Drawing.Point(3, 19)
-        Me.IndividualFilesProgressBar.Maximum = 100
-        Me.IndividualFilesProgressBar.Minimum = 0
         Me.IndividualFilesProgressBar.Name = "IndividualFilesProgressBar"
-        Me.IndividualFilesProgressBar.ProgressBarColor = System.Drawing.Color.LightGreen
         Me.IndividualFilesProgressBar.Size = New System.Drawing.Size(394, 27)
         Me.IndividualFilesProgressBar.TabIndex = 14
-        Me.IndividualFilesProgressBar.Value = 0
         Me.IndividualFilesProgressBar.Visible = False
         '
         'hashIndividualFilesAllFilesProgressBar
@@ -545,13 +538,9 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.hashIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(403, 19)
-        Me.hashIndividualFilesAllFilesProgressBar.Maximum = 100
-        Me.hashIndividualFilesAllFilesProgressBar.Minimum = 0
         Me.hashIndividualFilesAllFilesProgressBar.Name = "hashIndividualFilesAllFilesProgressBar"
-        Me.hashIndividualFilesAllFilesProgressBar.ProgressBarColor = System.Drawing.Color.LightGreen
         Me.hashIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(394, 27)
         Me.hashIndividualFilesAllFilesProgressBar.TabIndex = 23
-        Me.hashIndividualFilesAllFilesProgressBar.Value = 0
         '
         'lblHashIndividualFilesTotalStatus
         '
@@ -833,13 +822,9 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.VerifyHashProgressBar.Location = New System.Drawing.Point(3, 19)
-        Me.VerifyHashProgressBar.Maximum = 100
-        Me.VerifyHashProgressBar.Minimum = 0
         Me.VerifyHashProgressBar.Name = "VerifyHashProgressBar"
-        Me.VerifyHashProgressBar.ProgressBarColor = System.Drawing.Color.LightGreen
         Me.VerifyHashProgressBar.Size = New System.Drawing.Size(432, 27)
         Me.VerifyHashProgressBar.TabIndex = 16
-        Me.VerifyHashProgressBar.Value = 0
         Me.VerifyHashProgressBar.Visible = False
         '
         'lblVerifyHashStatusProcessingFile
@@ -857,13 +842,9 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.verifyIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(441, 19)
-        Me.verifyIndividualFilesAllFilesProgressBar.Maximum = 100
-        Me.verifyIndividualFilesAllFilesProgressBar.Minimum = 0
         Me.verifyIndividualFilesAllFilesProgressBar.Name = "verifyIndividualFilesAllFilesProgressBar"
-        Me.verifyIndividualFilesAllFilesProgressBar.ProgressBarColor = System.Drawing.Color.LightGreen
         Me.verifyIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(433, 27)
         Me.verifyIndividualFilesAllFilesProgressBar.TabIndex = 24
-        Me.verifyIndividualFilesAllFilesProgressBar.Value = 0
         '
         'lblVerifyHashesTotalStatus
         '
@@ -1038,13 +1019,9 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.compareFilesProgressBar.Location = New System.Drawing.Point(3, 19)
-        Me.compareFilesProgressBar.Maximum = 100
-        Me.compareFilesProgressBar.Minimum = 0
         Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
-        Me.compareFilesProgressBar.ProgressBarColor = System.Drawing.Color.LightGreen
         Me.compareFilesProgressBar.Size = New System.Drawing.Size(429, 29)
         Me.compareFilesProgressBar.TabIndex = 31
-        Me.compareFilesProgressBar.Value = 0
         Me.compareFilesProgressBar.Visible = False
         '
         'CompareFilesAllFilesProgress
@@ -1053,13 +1030,9 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CompareFilesAllFilesProgress.Location = New System.Drawing.Point(438, 19)
-        Me.CompareFilesAllFilesProgress.Maximum = 100
-        Me.CompareFilesAllFilesProgress.Minimum = 0
         Me.CompareFilesAllFilesProgress.Name = "CompareFilesAllFilesProgress"
-        Me.CompareFilesAllFilesProgress.ProgressBarColor = System.Drawing.Color.LightGreen
         Me.CompareFilesAllFilesProgress.Size = New System.Drawing.Size(430, 29)
         Me.CompareFilesAllFilesProgress.TabIndex = 34
-        Me.CompareFilesAllFilesProgress.Value = 0
         '
         'lblCompareFilesAllFilesStatus
         '
@@ -1269,13 +1242,9 @@ Partial Class Form1
         Me.compareAgainstKnownHashProgressBar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.compareAgainstKnownHashProgressBar.Location = New System.Drawing.Point(158, 83)
-        Me.compareAgainstKnownHashProgressBar.Maximum = 100
-        Me.compareAgainstKnownHashProgressBar.Minimum = 0
         Me.compareAgainstKnownHashProgressBar.Name = "compareAgainstKnownHashProgressBar"
-        Me.compareAgainstKnownHashProgressBar.ProgressBarColor = System.Drawing.Color.LightGreen
         Me.compareAgainstKnownHashProgressBar.Size = New System.Drawing.Size(861, 23)
         Me.compareAgainstKnownHashProgressBar.TabIndex = 33
-        Me.compareAgainstKnownHashProgressBar.Value = 0
         Me.compareAgainstKnownHashProgressBar.Visible = False
         '
         'lblCompareAgainstKnownHashStatus
@@ -1354,9 +1323,6 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
-        Me.tabSettings.Controls.Add(Me.chkUseThemeColorForProgressBars)
-        Me.tabSettings.Controls.Add(Me.lblProgressBarColor)
-        Me.tabSettings.Controls.Add(Me.btnSetProgressBarColor)
         Me.tabSettings.Controls.Add(Me.defaultHashType)
         Me.tabSettings.Controls.Add(Me.lblDefaultHashLabel)
         Me.tabSettings.Controls.Add(Me.chkShowPercentageInWindowTitleBar)
@@ -1401,7 +1367,7 @@ Partial Class Form1
         '
         'btnSetBufferSize
         '
-        Me.btnSetBufferSize.Location = New System.Drawing.Point(868, 158)
+        Me.btnSetBufferSize.Location = New System.Drawing.Point(868, 129)
         Me.btnSetBufferSize.Name = "btnSetBufferSize"
         Me.btnSetBufferSize.Size = New System.Drawing.Size(31, 23)
         Me.btnSetBufferSize.TabIndex = 27
@@ -1410,7 +1376,7 @@ Partial Class Form1
         '
         'bufferSize
         '
-        Me.bufferSize.Location = New System.Drawing.Point(812, 161)
+        Me.bufferSize.Location = New System.Drawing.Point(812, 132)
         Me.bufferSize.Maximum = New Decimal(New Integer() {16, 0, 0, 0})
         Me.bufferSize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.bufferSize.Name = "bufferSize"
@@ -1421,7 +1387,7 @@ Partial Class Form1
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(618, 163)
+        Me.Label9.Location = New System.Drawing.Point(618, 134)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(188, 13)
         Me.Label9.TabIndex = 23
@@ -1528,7 +1494,7 @@ Partial Class Form1
         '
         'btnSetColorsBackToDefaults
         '
-        Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(718, 129)
+        Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(718, 100)
         Me.btnSetColorsBackToDefaults.Name = "btnSetColorsBackToDefaults"
         Me.btnSetColorsBackToDefaults.Size = New System.Drawing.Size(181, 23)
         Me.btnSetColorsBackToDefaults.TabIndex = 15
@@ -1579,7 +1545,7 @@ Partial Class Form1
         '
         'btnPerformBenchmark
         '
-        Me.btnPerformBenchmark.Location = New System.Drawing.Point(621, 187)
+        Me.btnPerformBenchmark.Location = New System.Drawing.Point(621, 158)
         Me.btnPerformBenchmark.Name = "btnPerformBenchmark"
         Me.btnPerformBenchmark.Size = New System.Drawing.Size(278, 23)
         Me.btnPerformBenchmark.TabIndex = 28
@@ -1601,7 +1567,7 @@ Partial Class Form1
         Me.taskPriority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.taskPriority.FormattingEnabled = True
         Me.taskPriority.Items.AddRange(New Object() {"Lowest", "Below Normal", "Normal", "Above Normal", "Highest"})
-        Me.taskPriority.Location = New System.Drawing.Point(774, 216)
+        Me.taskPriority.Location = New System.Drawing.Point(774, 187)
         Me.taskPriority.Name = "taskPriority"
         Me.taskPriority.Size = New System.Drawing.Size(125, 21)
         Me.taskPriority.TabIndex = 31
@@ -1611,7 +1577,7 @@ Partial Class Form1
         'lblTaskPriorityLabel
         '
         Me.lblTaskPriorityLabel.AutoSize = True
-        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(618, 219)
+        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(618, 190)
         Me.lblTaskPriorityLabel.Name = "lblTaskPriorityLabel"
         Me.lblTaskPriorityLabel.Size = New System.Drawing.Size(150, 13)
         Me.lblTaskPriorityLabel.TabIndex = 30
@@ -1643,7 +1609,7 @@ Partial Class Form1
         '
         'btnSetRoundPercentages
         '
-        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(818, 280)
+        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(818, 251)
         Me.btnSetRoundPercentages.Name = "btnSetRoundPercentages"
         Me.btnSetRoundPercentages.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundPercentages.TabIndex = 36
@@ -1652,7 +1618,7 @@ Partial Class Form1
         '
         'roundPercentages
         '
-        Me.roundPercentages.Location = New System.Drawing.Point(762, 283)
+        Me.roundPercentages.Location = New System.Drawing.Point(762, 254)
         Me.roundPercentages.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundPercentages.Name = "roundPercentages"
         Me.roundPercentages.Size = New System.Drawing.Size(50, 20)
@@ -1662,7 +1628,7 @@ Partial Class Form1
         'lblRoundPercentagesLabel
         '
         Me.lblRoundPercentagesLabel.AutoSize = True
-        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(618, 274)
+        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(618, 245)
         Me.lblRoundPercentagesLabel.Name = "lblRoundPercentagesLabel"
         Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(138, 39)
         Me.lblRoundPercentagesLabel.TabIndex = 34
@@ -1670,7 +1636,7 @@ Partial Class Form1
         '
         'btnSetRoundFileSizes
         '
-        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(868, 246)
+        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(868, 217)
         Me.btnSetRoundFileSizes.Name = "btnSetRoundFileSizes"
         Me.btnSetRoundFileSizes.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundFileSizes.TabIndex = 36
@@ -1679,7 +1645,7 @@ Partial Class Form1
         '
         'roundFileSizes
         '
-        Me.roundFileSizes.Location = New System.Drawing.Point(811, 246)
+        Me.roundFileSizes.Location = New System.Drawing.Point(811, 217)
         Me.roundFileSizes.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundFileSizes.Name = "roundFileSizes"
         Me.roundFileSizes.Size = New System.Drawing.Size(50, 20)
@@ -1689,7 +1655,7 @@ Partial Class Form1
         'lblRoundFileSizesLabel
         '
         Me.lblRoundFileSizesLabel.AutoSize = True
-        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(618, 240)
+        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(618, 211)
         Me.lblRoundFileSizesLabel.Name = "lblRoundFileSizesLabel"
         Me.lblRoundFileSizesLabel.Size = New System.Drawing.Size(187, 26)
         Me.lblRoundFileSizesLabel.TabIndex = 34
@@ -1752,7 +1718,7 @@ Partial Class Form1
         'lblDefaultHashLabel
         '
         Me.lblDefaultHashLabel.AutoSize = True
-        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 324)
+        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 295)
         Me.lblDefaultHashLabel.Name = "lblDefaultHashLabel"
         Me.lblDefaultHashLabel.Size = New System.Drawing.Size(72, 13)
         Me.lblDefaultHashLabel.TabIndex = 40
@@ -1763,38 +1729,11 @@ Partial Class Form1
         Me.defaultHashType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.defaultHashType.FormattingEnabled = True
         Me.defaultHashType.Items.AddRange(New Object() {"MD5 (Seriously Not Recommended)", "SHA1 (Not Recommended)", "SHA256", "SHA384", "SHA512"})
-        Me.defaultHashType.Location = New System.Drawing.Point(696, 320)
+        Me.defaultHashType.Location = New System.Drawing.Point(696, 291)
         Me.defaultHashType.Name = "defaultHashType"
         Me.defaultHashType.Size = New System.Drawing.Size(203, 21)
         Me.defaultHashType.TabIndex = 41
         Me.ToolTip.SetToolTip(Me.defaultHashType, "This sets the default hash type at program load.")
-        '
-        'chkUseThemeColorForProgressBars
-        '
-        Me.chkUseThemeColorForProgressBars.AutoSize = True
-        Me.chkUseThemeColorForProgressBars.Location = New System.Drawing.Point(905, 97)
-        Me.chkUseThemeColorForProgressBars.Name = "chkUseThemeColorForProgressBars"
-        Me.chkUseThemeColorForProgressBars.Size = New System.Drawing.Size(130, 30)
-        Me.chkUseThemeColorForProgressBars.TabIndex = 44
-        Me.chkUseThemeColorForProgressBars.Text = "Use Theme Color" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Only on Windows 10)"
-        Me.chkUseThemeColorForProgressBars.UseVisualStyleBackColor = True
-        '
-        'lblProgressBarColor
-        '
-        Me.lblProgressBarColor.BackColor = System.Drawing.Color.Green
-        Me.lblProgressBarColor.Location = New System.Drawing.Point(621, 100)
-        Me.lblProgressBarColor.Name = "lblProgressBarColor"
-        Me.lblProgressBarColor.Size = New System.Drawing.Size(91, 23)
-        Me.lblProgressBarColor.TabIndex = 43
-        '
-        'btnSetProgressBarColor
-        '
-        Me.btnSetProgressBarColor.Location = New System.Drawing.Point(718, 100)
-        Me.btnSetProgressBarColor.Name = "btnSetProgressBarColor"
-        Me.btnSetProgressBarColor.Size = New System.Drawing.Size(181, 23)
-        Me.btnSetProgressBarColor.TabIndex = 42
-        Me.btnSetProgressBarColor.Text = "Set Progress Bar Color"
-        Me.btnSetProgressBarColor.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -1857,7 +1796,7 @@ Partial Class Form1
     Friend WithEvents radioSHA256 As RadioButton
     Friend WithEvents btnComputeHash As Button
     Friend WithEvents lblIndividualFilesStatus As Label
-    Friend WithEvents IndividualFilesProgressBar As SmoothProgressBar
+    Friend WithEvents IndividualFilesProgressBar As ProgressBar
     Friend WithEvents btnIndividualFilesCopyToClipboard As Button
     Friend WithEvents btnIndividualFilesSaveResultsToDisk As Button
     Friend WithEvents SaveFileDialog As SaveFileDialog
@@ -1871,7 +1810,7 @@ Partial Class Form1
     Friend WithEvents colFile As ColumnHeader
     Friend WithEvents colResults As ColumnHeader
     Friend WithEvents btnOpenExistingHashFile As Button
-    Friend WithEvents VerifyHashProgressBar As SmoothProgressBar
+    Friend WithEvents VerifyHashProgressBar As ProgressBar
     Friend WithEvents lblVerifyHashStatus As Label
     Friend WithEvents lblVerifyHashStatusProcessingFile As Label
     Friend WithEvents tabSettings As TabPage
@@ -1915,7 +1854,7 @@ Partial Class Form1
     Friend WithEvents compareRadioSHA1 As RadioButton
     Friend WithEvents Label6 As Label
     Friend WithEvents btnCompareFiles As Button
-    Friend WithEvents compareFilesProgressBar As SmoothProgressBar
+    Friend WithEvents compareFilesProgressBar As ProgressBar
     Friend WithEvents lblCompareFilesStatus As Label
     Friend WithEvents lblFile2Hash As Label
     Friend WithEvents lblFile1Hash As Label
@@ -1925,7 +1864,7 @@ Partial Class Form1
     Friend WithEvents btnBrowseFileForCompareKnownHash As Button
     Friend WithEvents txtFileForKnownHash As TextBox
     Friend WithEvents Label7 As Label
-    Friend WithEvents compareAgainstKnownHashProgressBar As SmoothProgressBar
+    Friend WithEvents compareAgainstKnownHashProgressBar As ProgressBar
     Friend WithEvents lblCompareAgainstKnownHashStatus As Label
     Friend WithEvents btnCompareAgainstKnownHash As Button
     Friend WithEvents lblCompareFileAgainstKnownHashType As Label
@@ -1955,9 +1894,9 @@ Partial Class Form1
     Friend WithEvents btnSetBufferSize As Button
     Friend WithEvents btnPerformBenchmark As Button
     Friend WithEvents chkUseCommasInNumbers As CheckBox
-    Friend WithEvents hashIndividualFilesAllFilesProgressBar As SmoothProgressBar
-    Friend WithEvents verifyIndividualFilesAllFilesProgressBar As SmoothProgressBar
-    Friend WithEvents CompareFilesAllFilesProgress As SmoothProgressBar
+    Friend WithEvents hashIndividualFilesAllFilesProgressBar As ProgressBar
+    Friend WithEvents verifyIndividualFilesAllFilesProgressBar As ProgressBar
+    Friend WithEvents CompareFilesAllFilesProgress As ProgressBar
     Friend WithEvents taskPriority As ComboBox
     Friend WithEvents lblTaskPriorityLabel As Label
     Friend WithEvents chkCheckForUpdates As CheckBox
@@ -1985,7 +1924,4 @@ Partial Class Form1
     Friend WithEvents btnRetestFailedFiles As Button
     Friend WithEvents defaultHashType As ComboBox
     Friend WithEvents lblDefaultHashLabel As Label
-    Friend WithEvents lblProgressBarColor As Label
-    Friend WithEvents btnSetProgressBarColor As Button
-    Friend WithEvents chkUseThemeColorForProgressBars As CheckBox
 End Class
