@@ -2452,6 +2452,22 @@ Public Class Form1
         End Using
     End Sub
 
+    Private Sub btnSetColorsBackToDefaults_Click(sender As Object, e As EventArgs) Handles btnSetColorsBackToDefaults.Click
+        My.Settings.validColor = Color.LightGreen
+        lblValidColor.BackColor = Color.LightGreen
+        validColor = Color.LightGreen
+
+        My.Settings.notValidColor = Color.Pink
+        lblNotValidColor.BackColor = Color.Pink
+        notValidColor = Color.Pink
+
+        My.Settings.fileNotFoundColor = Color.LightGray
+        lblFileNotFoundColor.BackColor = Color.LightGray
+        fileNotFoundColor = Color.LightGray
+
+        MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
+    End Sub
+
     Private Sub btnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
         Dim shortBufferSize As Short = Decimal.ToInt16(bufferSize.Value)
         intBufferSize = shortBufferSize * 1024 * 1024
