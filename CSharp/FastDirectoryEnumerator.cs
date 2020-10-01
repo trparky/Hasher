@@ -388,13 +388,13 @@ namespace FastDirectoryEnumerator
             }
 
             private string m_path;
-            private string m_filter;
-            private SearchOption m_searchOption;
-            private Stack<SearchContext> m_contextStack;
+            private readonly string m_filter;
+            private readonly SearchOption m_searchOption;
+            private readonly Stack<SearchContext> m_contextStack;
             private SearchContext m_currentContext;
 
             private SafeFindHandle m_hndFindFile;
-            private WIN32_FIND_DATA m_win_find_data = new WIN32_FIND_DATA();
+            private readonly WIN32_FIND_DATA m_win_find_data = new WIN32_FIND_DATA();
 
             /// <summary>
             /// Initializes a new instance of the <see cref="FileEnumerator"/> class.
