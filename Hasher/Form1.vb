@@ -865,8 +865,8 @@ Public Class Form1
         lblProcessingFileVerify.Text = Nothing
         lblCompareFileAgainstKnownHashType.Text = Nothing
         lblCompareFilesAllFilesStatus.Text = Nothing
-        lblIndividualFilesStatusProcessingFile = Nothing
-        lblHashIndividualFilesTotalStatus = Nothing
+        lblIndividualFilesStatusProcessingFile.Text = Nothing
+        lblHashIndividualFilesTotalStatus.Text = Nothing
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
         chkSSL.Checked = My.Settings.boolSSL
         chkSortByFileSizeAfterLoadingHashFile.Checked = My.Settings.boolSortByFileSizeAfterLoadingHashFile
