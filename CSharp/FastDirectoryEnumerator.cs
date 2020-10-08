@@ -500,7 +500,7 @@ namespace FastDirectoryEnumerator
                 //If the call to FindNextFile or FindFirstFile succeeded...
                 if (retval)
                 {
-                    if (((FileAttributes)m_win_find_data.dwFileAttributes & FileAttributes.Directory) == FileAttributes.Directory)
+                    if ((m_win_find_data.dwFileAttributes & FileAttributes.Directory) == FileAttributes.Directory)
                     {
                         //Ignore folders for now.   We call MoveNext recursively here to 
                         // move to the next item that FindNextFile will return.
