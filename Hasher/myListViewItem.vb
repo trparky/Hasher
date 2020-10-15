@@ -15,9 +15,6 @@ Public Class myListViewItem
         Me.Text = strInput
     End Sub
 
-    Public Sub New()
-    End Sub
-
     Public Overrides Function Clone() As Object Implements ICloneable.Clone
         Dim newListViewItem As New myListViewItem(Me.Text)
 
