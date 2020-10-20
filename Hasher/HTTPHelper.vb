@@ -202,7 +202,7 @@ End Class
 ''' <summary>Allows you to easily POST and upload files to a remote HTTP server without you, the programmer, knowing anything about how it all works. This class does it all for you. It handles adding a User Agent String, additional HTTP Request Headers, string data to your HTTP POST data, and files to be uploaded in the HTTP POST data.</summary>
 <CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")>
 Public Class httpHelper
-    Private Const classVersion As String = "1.313"
+    Private Const classVersion As String = "1.315"
 
     Private strUserAgentString As String = Nothing
     Private boolUseProxy As Boolean = False
@@ -221,10 +221,10 @@ Public Class httpHelper
     Private intDownloadBufferSize As Integer = 8191 ' The default is 8192 bytes or 8 KBs.
 
 #Disable Warning IDE0044 ' Add readonly modifier
-    Private additionalHTTPHeaders As New Dictionary(Of String, String)
-    Private httpCookies As New Dictionary(Of String, cookieDetails)
-    Private postData As New Dictionary(Of String, Object)
-    Private getData As New Dictionary(Of String, String)
+    Private ReadOnly additionalHTTPHeaders As New Dictionary(Of String, String)
+    Private ReadOnly httpCookies As New Dictionary(Of String, cookieDetails)
+    Private ReadOnly postData As New Dictionary(Of String, Object)
+    Private ReadOnly getData As New Dictionary(Of String, String)
 #Enable Warning IDE0044 ' Add readonly modifier
     Private downloadStatusDetails As downloadStatusDetails
     Private credentials As credentials
@@ -906,21 +906,17 @@ beginAgain:
 
                 If ex2.Status = Net.WebExceptionStatus.ProtocolError Then
                     Throw handleWebExceptionProtocolError(fileDownloadURL, ex2)
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.TrustFailure Then
                     lastException = New sslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
                     Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New dnsLookupError(String.Format("There was an error while looking up the DNS records for the domain name {0}{1}{0}.", Chr(34), strDomainName), ex2)
                     Throw lastException
-                    Return False
                 End If
 
                 lastException = New Net.WebException(ex.Message, ex2)
                 Throw lastException
-                Return False
             End If
 
             Return False
@@ -1036,21 +1032,17 @@ beginAgain:
 
                 If ex2.Status = Net.WebExceptionStatus.ProtocolError Then
                     Throw handleWebExceptionProtocolError(fileDownloadURL, ex2)
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.TrustFailure Then
                     lastException = New sslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
                     Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New dnsLookupError(String.Format("There was an error while looking up the DNS records for the domain name {0}{1}{0}.", Chr(34), strDomainName), ex2)
                     Throw lastException
-                    Return False
                 End If
 
                 lastException = New Net.WebException(ex.Message, ex2)
                 Throw lastException
-                Return False
             End If
 
             Return False
@@ -1122,26 +1114,21 @@ beginAgain:
 
                 If ex2.Status = Net.WebExceptionStatus.ProtocolError Then
                     Throw handleWebExceptionProtocolError(url, ex2)
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.TrustFailure Then
                     lastException = New sslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
                     Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New dnsLookupError(String.Format("There was an error while looking up the DNS records for the domain name {0}{1}{0}.", Chr(34), strDomainName), ex2)
                     Throw lastException
-                    Return False
                 End If
 
                 lastException = New Net.WebException(ex.Message, ex2)
                 Throw lastException
-                Return False
             End If
 
             lastException = New Exception(ex.Message, ex)
             Throw lastException
-            Return False
         End Try
     End Function
 
@@ -1207,26 +1194,21 @@ beginAgain:
 
                 If ex2.Status = Net.WebExceptionStatus.ProtocolError Then
                     Throw handleWebExceptionProtocolError(url, ex2)
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.TrustFailure Then
                     lastException = New sslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
                     Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New dnsLookupError(String.Format("There was an error while looking up the DNS records for the domain name {0}{1}{0}.", Chr(34), strDomainName), ex2)
                     Throw lastException
-                    Return False
                 End If
 
                 lastException = New Net.WebException(ex.Message, ex2)
                 Throw lastException
-                Return False
             End If
 
             lastException = New Exception(ex.Message, ex)
             Throw lastException
-            Return False
         End Try
     End Function
 
@@ -1349,26 +1331,21 @@ beginAgain:
 
                 If ex2.Status = Net.WebExceptionStatus.ProtocolError Then
                     Throw handleWebExceptionProtocolError(url, ex2)
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.TrustFailure Then
                     lastException = New sslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
-                    Return False
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
                     Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New dnsLookupError(String.Format("There was an error while looking up the DNS records for the domain name {0}{1}{0}.", Chr(34), strDomainName), ex2)
                     Throw lastException
-                    Return False
                 End If
 
                 lastException = New Net.WebException(ex.Message, ex2)
                 Throw lastException
-                Return False
             End If
 
             lastException = New Exception(ex.Message, ex)
             Throw lastException
-            Return False
         End Try
     End Function
 
