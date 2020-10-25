@@ -1299,8 +1299,6 @@ Public Class Form1
                                                                  item.SubItems(2).Text = "(Error while calculating checksum)"
                                                              End If
 
-                                                             subRoutine = Nothing
-
                                                              myInvoke(Sub()
                                                                           itemOnGUI = verifyHashesListFiles.Items(item.Index)
                                                                           If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
@@ -1312,6 +1310,8 @@ Public Class Form1
                                                              item.boolValidHash = False
                                                          End If
                                                      Next
+
+                                                     subRoutine = Nothing
 
                                                      myInvoke(Sub()
                                                                   For Each item As myListViewItem In verifyHashesListFiles.Items
