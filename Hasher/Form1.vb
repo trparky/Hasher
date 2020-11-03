@@ -41,6 +41,14 @@ Public Class Form1
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
 
+    Private Function generateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
+        Return String.Format("Processing file {0} of {1} {2}.",
+                             myToString(intCurrentFile),
+                             myToString(intTotalFiles),
+                             If(intTotalFiles = 1, "file", "files")
+               )
+    End Function
+
     Private Enum tabNumber As Short
         null = -1
         welcomeTab = 0
@@ -352,7 +360,7 @@ Public Class Form1
                                                              myInvoke(Sub()
                                                                           fileCountPercentage = index / listFiles.Items.Count * 100
                                                                           lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.fileName).Name & "."
-                                                                          lblIndividualFilesStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}.", myToString(index), myToString(listFiles.Items.Count), If(listFiles.Items.Count = 1, "file", "files"))
+                                                                          lblIndividualFilesStatusProcessingFile.Text = generateProcessingFileString(index, listFiles.Items.Count)
 
                                                                           itemOnGUI = listFiles.Items(item.Index)
                                                                           If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
@@ -994,7 +1002,7 @@ Public Class Form1
                                                                       percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
                                                                       IndividualFilesProgressBar.Value = percentage
                                                                       ProgressForm.setTaskbarProgressBarValue(percentage)
-                                                                      lblIndividualFilesStatus.Text = String.Format("Processing file {0} of {1} {2}.", myToString(intFileIndexNumber), myToString(intTotalNumberOfFiles), If(intTotalNumberOfFiles = 1, "file", "files"))
+                                                                      lblIndividualFilesStatus.Text = generateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
                                                                   End Sub)
                                                          If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
                                                              collectionOfListViewItems.Add(createListFilesObject(filedata.Path))
@@ -1251,11 +1259,7 @@ Public Class Form1
 
                                                      For Each item As myListViewItem In items
                                                          fileCountPercentage = index / intFileCount * 100
-                                                         myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}.",
-                                                                                                                               myToString(index),
-                                                                                                                               myToString(intFileCount),
-                                                                                                                               If(intFileCount = 1, "file", "files"))
-                                                                                                                              )
+                                                         myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = generateProcessingFileString(index, intFileCount))
 
                                                          If item.boolFileExists Then
                                                              strChecksum = item.hash
@@ -2813,11 +2817,7 @@ Public Class Form1
                                                      index = 1
 
                                                      For Each item As myListViewItem In items
-                                                         myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = String.Format("Processing file {0} of {1} {2}.",
-                                                                                                                               myToString(index),
-                                                                                                                               myToString(intFileCount),
-                                                                                                                               If(intFileCount = 1, "file", "files"))
-                                                                                                                              )
+                                                         myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = generateProcessingFileString(index, intFileCount))
 
                                                          If Not item.boolValidHash Then
                                                              strChecksum = item.hash
