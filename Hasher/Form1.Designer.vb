@@ -165,6 +165,7 @@ Partial Class Form1
         Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
+        Me.chkShowFileProgressInFileList = New System.Windows.Forms.CheckBox()
         Me.chkShowPercentageInWindowTitleBar = New System.Windows.Forms.CheckBox()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
         Me.lblDefaultHashLabel = New System.Windows.Forms.Label()
@@ -206,7 +207,7 @@ Partial Class Form1
         Me.TabControl1.Location = New System.Drawing.Point(12, 12)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1048, 389)
+        Me.TabControl1.Size = New System.Drawing.Size(1048, 408)
         Me.TabControl1.TabIndex = 0
         '
         'tabWelcome
@@ -590,7 +591,7 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblHashIndividualFilesStep2.Location = New System.Drawing.Point(15, 283)
         Me.lblHashIndividualFilesStep2.Name = "lblHashIndividualFilesStep2"
-        Me.lblHashIndividualFilesStep2.Size = New System.Drawing.Size(345, 13)
+        Me.lblHashIndividualFilesStep2.Size = New System.Drawing.Size(459, 13)
         Me.lblHashIndividualFilesStep2.TabIndex = 18
         Me.lblHashIndividualFilesStep2.Text = "Step 3: Select your hash type for display and copying to the Windows Clipboard"
         '
@@ -1323,6 +1324,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkShowFileProgressInFileList)
         Me.tabSettings.Controls.Add(Me.defaultHashType)
         Me.tabSettings.Controls.Add(Me.lblDefaultHashLabel)
         Me.tabSettings.Controls.Add(Me.chkShowPercentageInWindowTitleBar)
@@ -1361,7 +1363,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.lblRoundFileSizesLabel)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
-        Me.tabSettings.Size = New System.Drawing.Size(1040, 363)
+        Me.tabSettings.Size = New System.Drawing.Size(1040, 382)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
         '
@@ -1436,7 +1438,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 314)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 337)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1445,7 +1447,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 314)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 337)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1724,6 +1726,16 @@ Partial Class Form1
         Me.lblDefaultHashLabel.TabIndex = 40
         Me.lblDefaultHashLabel.Text = "Default Hash:"
         '
+        'chkShowFileProgressInFileList
+        '
+        Me.chkShowFileProgressInFileList.AutoSize = True
+        Me.chkShowFileProgressInFileList.Location = New System.Drawing.Point(15, 314)
+        Me.chkShowFileProgressInFileList.Name = "chkShowFileProgressInFileList"
+        Me.chkShowFileProgressInFileList.Size = New System.Drawing.Size(165, 17)
+        Me.chkShowFileProgressInFileList.TabIndex = 42
+        Me.chkShowFileProgressInFileList.Text = "Show File Progress in File List"
+        Me.chkShowFileProgressInFileList.UseVisualStyleBackColor = True
+        '
         'defaultHashType
         '
         Me.defaultHashType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
@@ -1739,10 +1751,10 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1072, 414)
+        Me.ClientSize = New System.Drawing.Size(1072, 433)
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(1088, 446)
+        Me.MinimumSize = New System.Drawing.Size(1088, 472)
         Me.Name = "Form1"
         Me.Text = "Hasher"
         Me.TabControl1.ResumeLayout(False)
@@ -1924,4 +1936,5 @@ Partial Class Form1
     Friend WithEvents btnRetestFailedFiles As Button
     Friend WithEvents defaultHashType As ComboBox
     Friend WithEvents lblDefaultHashLabel As Label
+    Friend WithEvents chkShowFileProgressInFileList As CheckBox
 End Class

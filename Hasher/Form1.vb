@@ -318,9 +318,12 @@ Public Class Form1
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                          lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         itemOnGUI = listFiles.Items(intIndexBeingWorkedOn)
-                                                                                                         currentItem.SubItems(2).Text = lblIndividualFilesStatus.Text
-                                                                                                         If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, currentItem)
+
+                                                                                                         If chkShowFileProgressInFileList.Checked Then
+                                                                                                             itemOnGUI = listFiles.Items(intIndexBeingWorkedOn)
+                                                                                                             currentItem.SubItems(2).Text = lblIndividualFilesStatus.Text
+                                                                                                             If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, currentItem)
+                                                                                                         End If
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -900,6 +903,7 @@ Public Class Form1
         chkDisplayValidChecksumString.Checked = My.Settings.boolDisplayValidChecksumString
         chkOpenInExplorer.Checked = My.Settings.boolOpenInExplorer
         chkShowPercentageInWindowTitleBar.Checked = My.Settings.boolShowPercentageInWindowTitleBar
+        chkShowFileProgressInFileList.Checked = My.Settings.boolShowFileProgressInFileList
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             Check_for_Update_Stuff.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -1263,10 +1267,12 @@ Public Class Form1
                                                                                                              lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
                                                                                                              If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                          End SyncLock
-                                                                                                         itemOnGUI = verifyHashesListFiles.Items(intIndexBeingWorkedOn)
                                                                                                          lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         currentItem.SubItems(4).Text = lblProcessingFileVerify.Text
-                                                                                                         If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, currentItem)
+                                                                                                         If chkShowFileProgressInFileList.Checked Then
+                                                                                                             itemOnGUI = verifyHashesListFiles.Items(intIndexBeingWorkedOn)
+                                                                                                             currentItem.SubItems(4).Text = lblProcessingFileVerify.Text
+                                                                                                             If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, currentItem)
+                                                                                                         End If
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                      End Sub)
@@ -3058,5 +3064,9 @@ Public Class Form1
             radioSHA512.Checked = True
             textRadioSHA512.Checked = True
         End If
+    End Sub
+
+    Private Sub chkShowFileProgressInFileList_Click(sender As Object, e As EventArgs) Handles chkShowFileProgressInFileList.Click
+        My.Settings.boolShowFileProgressInFileList = chkShowFileProgressInFileList.Checked
     End Sub
 End Class

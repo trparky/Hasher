@@ -449,6 +449,18 @@ Namespace My
                 Me("boolWindowMaximized") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property boolShowFileProgressInFileList() As Boolean
+            Get
+                Return CType(Me("boolShowFileProgressInFileList"),Boolean)
+            End Get
+            Set
+                Me("boolShowFileProgressInFileList") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
