@@ -291,6 +291,14 @@ Public Class Form1
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksumType
                                                      Dim index As Integer = 1
+                                                     Dim intIndexBeingWorkedOn As Integer
+                                                     Dim currentItem As myListViewItem = Nothing
+                                                     Dim itemOnGUI As myListViewItem
+                                                     Dim stopWatch As Stopwatch = Stopwatch.StartNew
+                                                     Dim computeStopwatch As Stopwatch
+                                                     Dim items As ListView.ListViewItemCollection = getListViewItems(listFiles)
+                                                     Dim allTheHashes As allTheHashes = Nothing
+                                                     Dim fileCountPercentage As Double
 
                                                      SyncLock threadLockingObject
                                                          ulongAllReadBytes = 0
@@ -310,6 +318,9 @@ Public Class Form1
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                          lblIndividualFilesStatus.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         itemOnGUI = listFiles.Items(intIndexBeingWorkedOn)
+                                                                                                         currentItem.SubItems(2).Text = lblIndividualFilesStatus.Text
+                                                                                                         If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, currentItem)
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -335,14 +346,6 @@ Public Class Form1
                                                                   End If
                                                               End Sub)
 
-
-                                                     Dim stopWatch As Stopwatch = Stopwatch.StartNew
-                                                     Dim computeStopwatch As Stopwatch
-                                                     Dim itemOnGUI As myListViewItem
-                                                     Dim items As ListView.ListViewItemCollection = getListViewItems(listFiles)
-                                                     Dim allTheHashes As allTheHashes = Nothing
-                                                     Dim fileCountPercentage As Double
-
                                                      SyncLock threadLockingObject
                                                          For Each item As myListViewItem In items
                                                              If String.IsNullOrWhiteSpace(item.hash) And IO.File.Exists(item.fileName) Then ulongAllBytes += item.fileSize
@@ -350,6 +353,9 @@ Public Class Form1
                                                      End SyncLock
 
                                                      For Each item As myListViewItem In items
+                                                         currentItem = item
+                                                         intIndexBeingWorkedOn = item.Index
+
                                                          SyncLock threadLockingObject
                                                              If Not IO.File.Exists(item.fileName) Then ulongAllBytes -= item.fileSize
                                                          End SyncLock
@@ -1163,6 +1169,8 @@ Public Class Form1
                                                      Dim intFileCount As Integer = 0
                                                      Dim strLineInFile As String
                                                      Dim listOfListViewItems As New List(Of myListViewItem)
+                                                     Dim intIndexBeingWorkedOn As Integer
+                                                     Dim currentItem As myListViewItem = Nothing
 
                                                      myInvoke(Sub()
                                                                   btnRetestFailedFiles.Visible = False
@@ -1249,7 +1257,10 @@ Public Class Form1
                                                                                                              lblVerifyHashesTotalStatus.Text = fileSizeToHumanSize(ulongAllReadBytes) & " of " & fileSizeToHumanSize(ulongAllBytes) & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
                                                                                                              If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                          End SyncLock
+                                                                                                         itemOnGUI = verifyHashesListFiles.Items(intIndexBeingWorkedOn)
                                                                                                          lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         currentItem.SubItems(4).Text = lblProcessingFileVerify.Text
+                                                                                                         If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, currentItem)
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                      End Sub)
@@ -1258,6 +1269,8 @@ Public Class Form1
                                                                                     End Sub
 
                                                      For Each item As myListViewItem In items
+                                                         currentItem = item
+                                                         intIndexBeingWorkedOn = item.Index
                                                          fileCountPercentage = index / intFileCount * 100
                                                          myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = generateProcessingFileString(index, intFileCount))
 
