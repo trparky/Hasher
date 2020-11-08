@@ -1435,7 +1435,7 @@ Public Class Form1
 
                                                      myInvoke(Sub()
                                                                   If Not boolClosingWindow Then
-                                                                      btnTransferToHashIndividualFilesTab.Enabled = True
+                                                                      btnTransferToHashIndividualFilesTab.Enabled = verifyHashesListFiles.Items.Count <> 0
                                                                       btnOpenExistingHashFile.Text = "Open Hash File"
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       verifyIndividualFilesAllFilesProgressBar.Value = 0
