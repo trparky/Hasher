@@ -283,6 +283,9 @@ Public Class Form1
         shortCurrentlyActiveTab = tabNumber.hashIndividualFilesTab
 
         Dim longErroredFiles As Long = 0
+        Dim itemOnGUI As myListViewItem
+        Dim currentItem As myListViewItem = Nothing
+        Dim intIndexBeingWorkedOn As Integer
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -291,9 +294,6 @@ Public Class Form1
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As checksumType
                                                      Dim index As Integer = 1
-                                                     Dim intIndexBeingWorkedOn As Integer
-                                                     Dim currentItem As myListViewItem = Nothing
-                                                     Dim itemOnGUI As myListViewItem
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim computeStopwatch As Stopwatch
                                                      Dim items As ListView.ListViewItemCollection = getListViewItems(listFiles)
@@ -431,6 +431,13 @@ Public Class Form1
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       resetHashIndividualFilesProgress()
                                                                       Text = strWindowTitle
+
+                                                                      itemOnGUI = listFiles.Items(intIndexBeingWorkedOn)
+                                                                      currentItem.SubItems(2).Text = strWaitingToBeProcessed
+                                                                      If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, currentItem)
+
+                                                                      Dim intNumberOfItemsWithoutHash As Integer = listFiles.Items.Cast(Of myListViewItem).Where(Function(item As myListViewItem) String.IsNullOrWhiteSpace(item.allTheHashes.sha160)).Count
+                                                                      btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
@@ -449,7 +456,6 @@ Public Class Form1
                                                                       btnComputeHash.Text = "Compute Hash"
                                                                       ProgressForm.setTaskbarProgressBarValue(0)
                                                                       hashIndividualFilesAllFilesProgressBar.Value = 0
-                                                                      If longErroredFiles = 0 Then btnComputeHash.Enabled = False
                                                                   End If
                                                               End Sub)
                                                  End Try
