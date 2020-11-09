@@ -2760,6 +2760,9 @@ Public Class Form1
         verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height - 72)
 
         workingThread = New Threading.Thread(Sub()
+                                                 Dim itemOnGUI As myListViewItem = Nothing
+                                                 Dim currentItem As myListViewItem = Nothing
+
                                                  Try
                                                      boolBackgroundThreadWorking = True
                                                      Dim strChecksum, strFileName As String
@@ -2799,12 +2802,12 @@ Public Class Form1
                                                      Dim percentage, allBytesPercentage As Double
                                                      Dim subRoutine As [Delegate]
                                                      Dim computeStopwatch As Stopwatch
-                                                     Dim itemOnGUI As myListViewItem
                                                      Dim allTheHashes As allTheHashes = Nothing
                                                      Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
                                                      Dim intFileCount As Integer = 0
 
                                                      For Each item As myListViewItem In items
+                                                         myInvoke(Sub() itemOnGUI = verifyHashesListFiles.Items(item.Index))
                                                          If Not item.boolValidHash Then
                                                              If IO.File.Exists(item.fileName) Then
                                                                  item.boolFileExists = True
@@ -2815,11 +2818,7 @@ Public Class Form1
                                                                  item.SubItems(4).Text = strWaitingToBeProcessed
                                                                  item.color = Color.FromKnownColor(KnownColor.Window)
 
-                                                                 myInvoke(Sub()
-                                                                              itemOnGUI = verifyHashesListFiles.Items(item.Index)
-                                                                              If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item, True)
-                                                                              itemOnGUI = Nothing
-                                                                          End Sub)
+                                                                 myInvoke(Sub() updateListViewItem(itemOnGUI, item, True))
 
                                                                  ulongAllBytes += item.fileSize
                                                                  intFileCount += 1
@@ -2835,7 +2834,11 @@ Public Class Form1
                                                      index = 1
 
                                                      For Each item As myListViewItem In items
-                                                         myInvoke(Sub() lblVerifyHashStatusProcessingFile.Text = generateProcessingFileString(index, intFileCount))
+                                                         currentItem = item
+                                                         myInvoke(Sub()
+                                                                      itemOnGUI = verifyHashesListFiles.Items(item.Index)
+                                                                      lblVerifyHashStatusProcessingFile.Text = generateProcessingFileString(index, intFileCount)
+                                                                  End Sub)
 
                                                          If Not item.boolValidHash Then
                                                              strChecksum = item.hash
@@ -2853,6 +2856,10 @@ Public Class Form1
                                                                                                        If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & myRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                    End SyncLock
                                                                                                    lblProcessingFileVerify.Text = fileSizeToHumanSize(totalBytesRead) & " of " & fileSizeToHumanSize(size) & " (" & myRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                   If chkShowFileProgressInFileList.Checked Then
+                                                                                                       currentItem.SubItems(4).Text = lblProcessingFileVerify.Text
+                                                                                                       itemOnGUI.SubItems(4) = currentItem.SubItems(4)
+                                                                                                   End If
                                                                                                    ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                    verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                End Sub)
@@ -2864,10 +2871,7 @@ Public Class Form1
 
                                                                  myInvoke(Sub()
                                                                               lblVerifyHashStatus.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & "."
-
-                                                                              itemOnGUI = verifyHashesListFiles.Items(item.Index)
-                                                                              If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
-                                                                              itemOnGUI = Nothing
+                                                                              updateListViewItem(itemOnGUI, item)
                                                                           End Sub)
 
                                                                  computeStopwatch = Stopwatch.StartNew
@@ -2905,11 +2909,7 @@ Public Class Form1
 
                                                                  subRoutine = Nothing
 
-                                                                 myInvoke(Sub()
-                                                                              itemOnGUI = verifyHashesListFiles.Items(item.Index)
-                                                                              If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, item)
-                                                                              itemOnGUI = Nothing
-                                                                          End Sub)
+                                                                 myInvoke(Sub() updateListViewItem(itemOnGUI, item))
 
                                                                  index += 1
                                                              End If
@@ -3010,6 +3010,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
+                                                     itemOnGUI = Nothing
                                                      shortCurrentlyActiveTab = tabNumber.null
                                                      SyncLock threadLockingObject
                                                          ulongAllReadBytes = 0
