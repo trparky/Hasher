@@ -322,7 +322,7 @@ Public Class Form1
                                                                                                          If chkShowFileProgressInFileList.Checked Then
                                                                                                              itemOnGUI = listFiles.Items(intIndexBeingWorkedOn)
                                                                                                              currentItem.SubItems(2).Text = lblIndividualFilesStatus.Text
-                                                                                                             If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, currentItem)
+                                                                                                             If itemOnGUI IsNot Nothing Then itemOnGUI.SubItems(2) = currentItem.SubItems(2)
                                                                                                          End If
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
@@ -1271,7 +1271,7 @@ Public Class Form1
                                                                                                          If chkShowFileProgressInFileList.Checked Then
                                                                                                              itemOnGUI = verifyHashesListFiles.Items(intIndexBeingWorkedOn)
                                                                                                              currentItem.SubItems(4).Text = lblProcessingFileVerify.Text
-                                                                                                             If itemOnGUI IsNot Nothing Then updateListViewItem(itemOnGUI, currentItem)
+                                                                                                             If itemOnGUI IsNot Nothing Then itemOnGUI.SubItems(4) = currentItem.SubItems(4)
                                                                                                          End If
                                                                                                          ProgressForm.setTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
