@@ -1486,12 +1486,10 @@ Public Class Form1
         If boolBackgroundThreadWorking Then Exit Sub
         For Each strItem As String In e.Data.GetData(DataFormats.FileDrop)
             If IO.File.Exists(strItem) Or IO.Directory.Exists(strItem) Then
-                If IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) Then
-                    addFilesFromDirectory(strItem)
+                If Not IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strItem.Trim.ToLower) Then
+                    listFiles.Items.Add(createListFilesObject(strItem))
                 Else
-                    If Not filesInListFiles.Contains(strItem.Trim.ToLower) Then
-                        listFiles.Items.Add(createListFilesObject(strItem))
-                    End If
+                    addFilesFromDirectory(strItem)
                 End If
             End If
         Next
