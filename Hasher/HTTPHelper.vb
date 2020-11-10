@@ -200,7 +200,6 @@ Class credentials
 End Class
 
 ''' <summary>Allows you to easily POST and upload files to a remote HTTP server without you, the programmer, knowing anything about how it all works. This class does it all for you. It handles adding a User Agent String, additional HTTP Request Headers, string data to your HTTP POST data, and files to be uploaded in the HTTP POST data.</summary>
-<CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")>
 Public Class httpHelper
     Private Const classVersion As String = "1.315"
 
@@ -220,12 +219,10 @@ Public Class httpHelper
     Private _intDownloadThreadSleepTime As Integer = 1000
     Private intDownloadBufferSize As Integer = 8191 ' The default is 8192 bytes or 8 KBs.
 
-#Disable Warning IDE0044 ' Add readonly modifier
     Private ReadOnly additionalHTTPHeaders As New Dictionary(Of String, String)
     Private ReadOnly httpCookies As New Dictionary(Of String, cookieDetails)
     Private ReadOnly postData As New Dictionary(Of String, Object)
     Private ReadOnly getData As New Dictionary(Of String, String)
-#Enable Warning IDE0044 ' Add readonly modifier
     Private downloadStatusDetails As downloadStatusDetails
     Private credentials As credentials
 
@@ -934,7 +931,6 @@ beginAgain:
     ''' <exception cref="httpProtocolException">This exception is thrown if the server responds with an HTTP Error.</exception>
     ''' <exception cref="sslErrorException">If this function throws an sslErrorException, an error occurred while negotiating an SSL connection.</exception>
     ''' <exception cref="dnsLookupError">If this function throws a dnsLookupError exception it means that the domain name wasn't able to be resolved properly.</exception>
-    <CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")>
     Public Function downloadFile(fileDownloadURL As String, localFileName As String, throwExceptionIfLocalFileExists As Boolean, Optional throwExceptionIfError As Boolean = True) As Boolean
         Dim fileWriteStream As FileStream = Nothing
         Dim httpWebRequest As Net.HttpWebRequest = Nothing
