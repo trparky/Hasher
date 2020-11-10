@@ -789,23 +789,21 @@ Public Class Form1
         Try
             If boolBackgroundThreadWorking Then Exit Sub
             If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
-                If IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) Then
+                If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
+                    myInvoke(Sub()
+                                 TabControl1.SelectTab(tabNumber.hashIndividualFilesTab)
+                                 NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
+                             End Sub)
+
+                    strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
+                    myInvoke(Sub() listFiles.Items.Add(createListFilesObject(strReceivedFileName)))
+                Else
                     myInvoke(Sub()
                                  TabControl1.SelectTab(tabNumber.hashIndividualFilesTab)
                                  NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
                              End Sub)
 
                     addFilesFromDirectory(strReceivedFileName)
-                Else
-                    If Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
-                        myInvoke(Sub()
-                                     TabControl1.SelectTab(tabNumber.hashIndividualFilesTab)
-                                     NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
-                                 End Sub)
-
-                        strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
-                        myInvoke(Sub() listFiles.Items.Add(createListFilesObject(strReceivedFileName)))
-                    End If
                 End If
 
                 updateFilesListCountHeader()
