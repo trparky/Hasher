@@ -8,7 +8,7 @@ Public Module Globals
     ''' <summary>Stores the value of the setting for roundNumbers locally.</summary>
     Public byteRoundFileSizes, byteRoundPercentages As Byte
 
-    Public Function myRoundingFunction(value As Double, digits As Integer) As String
+    Public Function MyRoundingFunction(value As Double, digits As Integer) As String
         If digits = 0 Then
             Return Math.Round(value, digits).ToString
         Else
@@ -17,24 +17,24 @@ Public Module Globals
         End If
     End Function
 
-    Public Function fileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
+    Public Function FileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
         Dim shortRoundNumber As Short = If(roundToNearestWholeNumber, 0, byteRoundFileSizes)
 
         If size <= (2 ^ 10) Then
             result = size & " Bytes"
         ElseIf size > (2 ^ 10) And size <= (2 ^ 20) Then
-            result = myRoundingFunction(size / (2 ^ 10), shortRoundNumber) & " KBs"
+            result = MyRoundingFunction(size / (2 ^ 10), shortRoundNumber) & " KBs"
         ElseIf size > (2 ^ 20) And size <= (2 ^ 30) Then
-            result = myRoundingFunction(size / (2 ^ 20), shortRoundNumber) & " MBs"
+            result = MyRoundingFunction(size / (2 ^ 20), shortRoundNumber) & " MBs"
         ElseIf size > (2 ^ 30) And size <= (2 ^ 40) Then
-            result = myRoundingFunction(size / (2 ^ 30), shortRoundNumber) & " GBs"
+            result = MyRoundingFunction(size / (2 ^ 30), shortRoundNumber) & " GBs"
         ElseIf size > (2 ^ 40) And size <= (2 ^ 50) Then
-            result = myRoundingFunction(size / (2 ^ 40), shortRoundNumber) & " TBs"
+            result = MyRoundingFunction(size / (2 ^ 40), shortRoundNumber) & " TBs"
         ElseIf size > (2 ^ 50) And size <= (2 ^ 60) Then
-            result = myRoundingFunction(size / (2 ^ 50), shortRoundNumber) & " PBs"
+            result = MyRoundingFunction(size / (2 ^ 50), shortRoundNumber) & " PBs"
         ElseIf size > (2 ^ 60) And size <= (2 ^ 70) Then
-            result = myRoundingFunction(size / (2 ^ 50), shortRoundNumber) & " EBs"
+            result = MyRoundingFunction(size / (2 ^ 50), shortRoundNumber) & " EBs"
         Else
             result = "(None)"
         End If
@@ -42,7 +42,7 @@ Public Module Globals
         Return result
     End Function
 
-    Public Function timespanToHMS(timeSpan As TimeSpan) As String
+    Public Function TimespanToHMS(timeSpan As TimeSpan) As String
         If timeSpan.TotalMilliseconds < 1000 Then
             If My.Settings.boolUseMilliseconds Then
                 Return Math.Round(timeSpan.TotalMilliseconds, 2) & "ms (less than one second)"
@@ -72,7 +72,7 @@ Public Module Globals
         Return strReturnedString
     End Function
 
-    Public Function areWeAnAdministrator() As Boolean
+    Public Function AreWeAnAdministrator() As Boolean
         Try
             Return New WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)
         Catch ex As Exception

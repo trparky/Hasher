@@ -17,7 +17,7 @@ Namespace FileAssociation
             selectedKey = selectedKey.OpenSubKey("Shell\Verify with Hasher\command", True)
 
             If selectedKey IsNot Nothing Then
-                If Not selectedKey.GetValue("", Nothing).ToString.caseInsensitiveContains("hasher.exe") Then
+                If Not selectedKey.GetValue("", Nothing).ToString.CaseInsensitiveContains("hasher.exe") Then
                     selectedKey.SetValue("", String.Format("{0}{1}{0} --hashfile={0}%1{0}", Chr(34), application), RegistryValueKind.ExpandString)
                 End If
             End If
@@ -54,7 +54,7 @@ Namespace FileAssociation
             CreateAssociation(extension, description, FileLocation, FileLocation & ",0")
         End Sub
 
-        Public Sub addAssociationWithAllFiles()
+        Public Sub AddAssociationWithAllFiles()
             Dim selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey("*\Shell", True)
             Dim FileLocation As String = Reflection.Assembly.GetExecutingAssembly().Location
 
@@ -89,7 +89,7 @@ Namespace FileAssociation
             End If
         End Sub
 
-        Public Function doesCompareFilesExist() As Boolean
+        Public Function DoesCompareFilesExist() As Boolean
             Return Registry.ClassesRoot.OpenSubKey("*\Shell\Compare Two Files", False) IsNot Nothing
         End Function
     End Module

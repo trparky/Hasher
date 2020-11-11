@@ -13,7 +13,7 @@ Namespace My
                 Dim commandLineArgument As String = Application.CommandLineArgs(0).Trim
 
                 If commandLineArgument.Equals("-update", StringComparison.OrdinalIgnoreCase) Then
-                    doUpdateAtStartup()
+                    DoUpdateAtStartup()
                 ElseIf commandLineArgument.Equals("-associatefiletype", StringComparison.OrdinalIgnoreCase) Then
                     FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
                     FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
@@ -22,7 +22,7 @@ Namespace My
                     FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
                     Process.GetCurrentProcess.Kill()
                 ElseIf commandLineArgument.Equals("-associateallfiles", StringComparison.OrdinalIgnoreCase) Then
-                    FileAssociation.addAssociationWithAllFiles()
+                    FileAssociation.AddAssociationWithAllFiles()
                     Process.GetCurrentProcess.Kill()
                 End If
             End If

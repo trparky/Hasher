@@ -1,4 +1,4 @@
-Public Class checksums
+Public Class Checksums
     Private checksumStatusUpdater As [Delegate]
 
     ''' <summary>This allows you to set up a function to be run while your checksum is being processed. This function can be used to update things on the GUI during a checksum.</summary>
@@ -13,23 +13,23 @@ Public Class checksums
         checksumStatusUpdater = inputDelegate
     End Sub
 
-    Public Shared Function getHashEngine(hashType As checksumType) As Security.Cryptography.HashAlgorithm
-        If hashType = checksumType.md5 Then
+    Public Shared Function GetHashEngine(hashType As ChecksumType) As Security.Cryptography.HashAlgorithm
+        If hashType = ChecksumType.md5 Then
             Return New Security.Cryptography.MD5CryptoServiceProvider
-        ElseIf hashType = checksumType.sha160 Then
+        ElseIf hashType = ChecksumType.sha160 Then
             Return New Security.Cryptography.SHA1CryptoServiceProvider
-        ElseIf hashType = checksumType.sha256 Then
+        ElseIf hashType = ChecksumType.sha256 Then
             Return New Security.Cryptography.SHA256CryptoServiceProvider
-        ElseIf hashType = checksumType.sha384 Then
+        ElseIf hashType = ChecksumType.sha384 Then
             Return New Security.Cryptography.SHA384CryptoServiceProvider
-        ElseIf hashType = checksumType.sha512 Then
+        ElseIf hashType = ChecksumType.sha512 Then
             Return New Security.Cryptography.SHA512CryptoServiceProvider
         Else
             Return New Security.Cryptography.SHA256CryptoServiceProvider
         End If
     End Function
 
-    Public Function performFileHash(strFileName As String, intBufferSize As Integer) As allTheHashes
+    Public Function PerformFileHash(strFileName As String, intBufferSize As Integer) As AllTheHashes
         ' Declare some variables.
         Dim byteDataBuffer As Byte()
         Dim intBytesRead As Integer
@@ -57,11 +57,11 @@ Public Class checksums
             ' Call the status updating delegate.
             checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead)
 
-            Dim md5Engine As Security.Cryptography.HashAlgorithm = getHashEngine(checksumType.md5)
-            Dim sha160Engine As Security.Cryptography.HashAlgorithm = getHashEngine(checksumType.sha160)
-            Dim sha256Engine As Security.Cryptography.HashAlgorithm = getHashEngine(checksumType.sha256)
-            Dim sha384Engine As Security.Cryptography.HashAlgorithm = getHashEngine(checksumType.sha384)
-            Dim sha512Engine As Security.Cryptography.HashAlgorithm = getHashEngine(checksumType.sha512)
+            Dim md5Engine As Security.Cryptography.HashAlgorithm = GetHashEngine(ChecksumType.md5)
+            Dim sha160Engine As Security.Cryptography.HashAlgorithm = GetHashEngine(ChecksumType.sha160)
+            Dim sha256Engine As Security.Cryptography.HashAlgorithm = GetHashEngine(ChecksumType.sha256)
+            Dim sha384Engine As Security.Cryptography.HashAlgorithm = GetHashEngine(ChecksumType.sha384)
+            Dim sha512Engine As Security.Cryptography.HashAlgorithm = GetHashEngine(ChecksumType.sha512)
 
             ' We're going to loop until all the data for the file we're processing has been read from disk.
             Do While longTotalBytesRead < longFileSize
@@ -91,12 +91,12 @@ Public Class checksums
             sha384Engine.TransformFinalBlock(byteDataBuffer, 0, intBytesRead)
             sha512Engine.TransformFinalBlock(byteDataBuffer, 0, intBytesRead)
 
-            Dim allTheHashes As New allTheHashes With {
-                .md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", ""),
-                .sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", ""),
-                .sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", ""),
-                .sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", ""),
-                .sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
+            Dim allTheHashes As New AllTheHashes With {
+                .Md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", ""),
+                .Sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", ""),
+                .Sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", ""),
+                .Sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", ""),
+                .Sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
             }
 
             md5Engine.Dispose()
@@ -111,15 +111,15 @@ Public Class checksums
     End Function
 End Class
 
-Public Structure allTheHashes
-    Public Property md5 As String
-    Public Property sha160 As String
-    Public Property sha256 As String
-    Public Property sha384 As String
-    Public Property sha512 As String
+Public Structure AllTheHashes
+    Public Property Md5 As String
+    Public Property Sha160 As String
+    Public Property Sha256 As String
+    Public Property Sha384 As String
+    Public Property Sha512 As String
 End Structure
 
-Public Enum checksumType As Short
+Public Enum ChecksumType As Short
     md5
     sha160
     sha256

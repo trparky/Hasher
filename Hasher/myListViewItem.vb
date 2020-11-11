@@ -1,46 +1,46 @@
 ﻿' This class extends the ListViewItem so that I can add more properties to it for my purposes.
-Public Class myListViewItem
+Public Class MyListViewItem
     Inherits ListViewItem
     Implements ICloneable
-    Public Property fileSize As Long
-    Public Property hash As String
-    Public Property fileName As String
-    Public Property color As Color
-    Public Property boolFileExists As Boolean
-    Public Property computeTime As TimeSpan
-    Public Property allTheHashes As allTheHashes
-    Public Property boolValidHash As Boolean
+    Public Property FileSize As Long
+    Public Property Hash As String
+    Public Property FileName As String
+    Public Property Color As Color
+    Public Property BoolFileExists As Boolean
+    Public Property ComputeTime As TimeSpan
+    Public Property AllTheHashes As AllTheHashes
+    Public Property BoolValidHash As Boolean
 
     Public Sub New(strInput As String)
         Me.Text = strInput
     End Sub
 
     Public Overrides Function Clone() As Object Implements ICloneable.Clone
-        Dim newListViewItem As New myListViewItem(Me.Text)
+        Dim newListViewItem As New MyListViewItem(Me.Text)
 
         For index As Short = 1 To Me.SubItems.Count - 1
             newListViewItem.SubItems.Add(Me.SubItems(index))
         Next
 
         With newListViewItem
-            .fileSize = Me.fileSize
-            .hash = Me.hash
-            .fileName = Me.fileName
-            .color = Me.color
-            .boolFileExists = Me.boolFileExists
-            .computeTime = Me.computeTime
+            .FileSize = Me.FileSize
+            .Hash = Me.Hash
+            .FileName = Me.FileName
+            .Color = Me.Color
+            .BoolFileExists = Me.BoolFileExists
+            .ComputeTime = Me.ComputeTime
             .BackColor = Me.BackColor
-            .allTheHashes = Me.allTheHashes
-            .boolValidHash = Me.boolValidHash
+            .AllTheHashes = Me.AllTheHashes
+            .BoolValidHash = Me.BoolValidHash
         End With
 
         Return newListViewItem
     End Function
 End Class
 
-Public Class benchmarkListViewItem
+Public Class BenchmarkListViewItem
     Inherits ListViewItem
-    Public Property bufferSize As Short
+    Public Property BufferSize As Short
 
     Public Sub New(strInput As String)
         Me.Text = strInput
