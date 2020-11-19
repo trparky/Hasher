@@ -2607,6 +2607,20 @@ Public Class Form1
                                                    Dim listOfListViewItems As New List(Of MyListViewItem)
                                                    Dim intLineCounter As Integer = 0
                                                    Dim listViewItemCollection As ListView.ListViewItemCollection = GetListViewItems(verifyHashesListFiles)
+                                                   Dim strHashString As String
+                                                   Dim checksumType As ChecksumType
+
+                                                   If My.Settings.defaultHash = 0 Then
+                                                       checksumType = ChecksumType.md5
+                                                   ElseIf My.Settings.defaultHash = 1 Then
+                                                       checksumType = ChecksumType.sha160
+                                                   ElseIf My.Settings.defaultHash = 2 Then
+                                                       checksumType = ChecksumType.sha256
+                                                   ElseIf My.Settings.defaultHash = 3 Then
+                                                       checksumType = ChecksumType.sha384
+                                                   ElseIf My.Settings.defaultHash = 4 Then
+                                                       checksumType = ChecksumType.sha512
+                                                   End If
 
                                                    For Each item As MyListViewItem In listViewItemCollection
                                                        intLineCounter += 1
@@ -2624,11 +2638,12 @@ Public Class Form1
                                                                .FileName = item.FileName
                                                            }
                                                            With itemToBeAdded
+                                                               strHashString = GetDataFromAllTheHashes(checksumType, item.AllTheHashes)
                                                                .SubItems.Add(FileSizeToHumanSize(itemToBeAdded.FileSize))
-                                                               .SubItems.Add(If(chkDisplayHashesInUpperCase.Checked, item.AllTheHashes.Sha256.ToUpper, item.AllTheHashes.Sha256.ToLower))
+                                                               .SubItems.Add(If(chkDisplayHashesInUpperCase.Checked, strHashString.ToUpper, strHashString.ToLower))
                                                                .SubItems.Add(TimespanToHMS(item.ComputeTime))
                                                                .AllTheHashes = item.AllTheHashes
-                                                               .Hash = item.AllTheHashes.Sha256
+                                                               .Hash = strHashString
                                                            End With
 
                                                            listOfListViewItems.Add(itemToBeAdded)
