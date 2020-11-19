@@ -3051,18 +3051,23 @@ Public Class Form1
         If defaultHashType.SelectedIndex = 0 Then
             radioMD5.Checked = True
             textRadioMD5.Checked = True
+            colChecksum.Text = "Hash/Checksum (MD5)"
         ElseIf defaultHashType.SelectedIndex = 1 Then
             radioSHA1.Checked = True
             textRadioSHA1.Checked = True
+            colChecksum.Text = "Hash/Checksum (SHA1/SHA160)"
         ElseIf defaultHashType.SelectedIndex = 2 Then
             radioSHA256.Checked = True
             textRadioSHA256.Checked = True
+            colChecksum.Text = "Hash/Checksum (SHA256)"
         ElseIf defaultHashType.SelectedIndex = 3 Then
             radioSHA384.Checked = True
             textRadioSHA384.Checked = True
+            colChecksum.Text = "Hash/Checksum (SHA384)"
         ElseIf defaultHashType.SelectedIndex = 4 Then
             radioSHA512.Checked = True
             textRadioSHA512.Checked = True
+            colChecksum.Text = "Hash/Checksum (SHA512)"
         End If
     End Sub
 
