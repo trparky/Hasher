@@ -645,7 +645,6 @@ Public Class Form1
 
             If pidlList <> IntPtr.Zero Then
                 Try
-                    'Runtime.InteropServices.Marshal.ThrowExceptionForHR(NativeMethod.NativeMethods.SHOpenFolderAndSelectItems(pidlList, 0, IntPtr.Zero, 0))
                     NativeMethod.NativeMethods.SHOpenFolderAndSelectItems(pidlList, 0, IntPtr.Zero, 0)
                 Finally
                     NativeMethod.NativeMethods.ILFree(pidlList)
