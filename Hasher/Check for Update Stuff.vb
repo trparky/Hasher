@@ -263,10 +263,8 @@ Class Check_for_Update_Stuff
                 If rule.IdentityReference.Value.Equals(WindowsIdentity.GetCurrent.User.Value, StringComparison.OrdinalIgnoreCase) Then
                     directoryAccessRights = DirectCast(rule, FileSystemAccessRule)
 
-                    If directoryAccessRights.AccessControlType = AccessControlType.Allow Then
-                        If directoryAccessRights.FileSystemRights = (FileSystemRights.Read Or FileSystemRights.Modify Or FileSystemRights.Write Or FileSystemRights.FullControl) Then
-                            Return True
-                        End If
+                    If directoryAccessRights.AccessControlType = AccessControlType.Allow AndAlso directoryAccessRights.FileSystemRights = (FileSystemRights.Read Or FileSystemRights.Modify Or FileSystemRights.Write Or FileSystemRights.FullControl) Then
+                        Return True
                     End If
                 End If
             Next
