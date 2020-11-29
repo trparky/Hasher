@@ -653,7 +653,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Function ConvertChecksumTypeToString(checksumType As ChecksumType)
+    Private Function ConvertChecksumTypeToString(checksumType As ChecksumType) As String
         If checksumType = ChecksumType.md5 Then
             Return "MD5"
         ElseIf checksumType = ChecksumType.sha160 Then
