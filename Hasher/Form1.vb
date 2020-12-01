@@ -193,11 +193,10 @@ Public Class Form1
     Private Function CreateListFilesObject(strFileName As String) As MyListViewItem
         filesInListFiles.Add(strFileName.Trim.ToLower)
 
-        Dim itemToBeAdded As New MyListViewItem(strFileName) With {
-            .FileSize = New IO.FileInfo(strFileName).Length,
-            .FileName = strFileName
-        }
+        Dim itemToBeAdded As New MyListViewItem(strFileName)
         With itemToBeAdded
+            .FileSize = New IO.FileInfo(strFileName).Length
+            .FileName = strFileName
             .SubItems.Add(FileSizeToHumanSize(itemToBeAdded.FileSize))
             .SubItems.Add(strWaitingToBeProcessed)
             .SubItems.Add("")
