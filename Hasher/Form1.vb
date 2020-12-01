@@ -1023,6 +1023,8 @@ Public Class Form1
                                                      MyInvoke(Sub()
                                                                   listFiles.BeginUpdate()
                                                                   listFiles.Items.AddRange(collectionOfListViewItems.ToArray())
+                                                                  collectionOfListViewItems.Clear()
+                                                                  collectionOfListViewItems = Nothing
                                                                   If chkSortFileListingAfterAddingFilesToHash.Checked Then ApplyFileSizeSortingToHashList()
                                                                   listFiles.EndUpdate()
 
