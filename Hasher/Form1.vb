@@ -23,7 +23,7 @@ Public Class Form1
     Private ReadOnly strNamedPipeServerName As String = "hasher_" & GetHashOfString(Environment.UserName, ChecksumType.sha256).Substring(0, 10)
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolDidWePerformAPreviousHash As Boolean = False
-    Private validColor, notValidColor, fileNotFoundColor, progressBarColor As Color
+    Private validColor, notValidColor, fileNotFoundColor As Color
     Private shortCurrentlyActiveTab As Short = -1
     Private compareFilesAllTheHashes1 As AllTheHashes = Nothing
     Private compareFilesAllTheHashes2 As AllTheHashes = Nothing
