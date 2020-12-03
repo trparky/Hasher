@@ -38,6 +38,12 @@ Public Class Form1
     Private Const strColumnTitleChecksumSHA512 As String = "Hash/Checksum (SHA512)"
     Private Const strHashCheksumToBeComputed As String = "Hash/Checksum: (To Be Computed)"
 
+    Private Const ChecksumFilterIndexMD5 As Integer = 1
+    Private Const ChecksumFilterIndexSHA160 As Integer = 2
+    Private Const ChecksumFilterIndexSHA256 As Integer = 3
+    Private Const ChecksumFilterIndexSHA384 As Integer = 4
+    Private Const ChecksumFilterIndexSHA512 As Integer = 5
+
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([a-zA-Z0-9]*) \*(.*)", System.Text.RegularExpressions.RegexOptions.Compiled)
     Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
 
@@ -531,7 +537,7 @@ Public Class Form1
         SaveFileDialog.Filter = "MD5 File|*.md5|SHA1 File|*.sha1|SHA256 File|*.sha256|SHA384 File|*.sha384|SHA512 File|*.sha512"
         SaveFileDialog.InitialDirectory = strLastDirectoryWorkedOn
         SaveFileDialog.Title = "Save Hash Results to Disk"
-        SaveFileDialog.FilterIndex = 3
+        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
         If chkAutoAddExtension.Checked Then SaveFileDialog.OverwritePrompt = False ' We handle this in our own code below.
 
         Dim strFileExtension As String
@@ -541,39 +547,39 @@ Public Class Form1
             strFileExtension = New IO.FileInfo(strLastHashFileLoaded).Extension
 
             If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = 1
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
             ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = 2
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
             ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = 3
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
             ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = 4
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
             ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = 5
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
             End If
 
             SaveFileDialog.FileName = strLastHashFileLoaded
         Else
             If radioMD5.Checked Then
-                SaveFileDialog.FilterIndex = 1
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
             ElseIf radioSHA1.Checked Then
-                SaveFileDialog.FilterIndex = 2
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
             ElseIf radioSHA256.Checked Then
-                SaveFileDialog.FilterIndex = 3
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
             ElseIf radioSHA384.Checked Then
-                SaveFileDialog.FilterIndex = 4
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
             ElseIf radioSHA512.Checked Then
-                SaveFileDialog.FilterIndex = 5
+                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
             End If
         End If
 
         If SaveFileDialog.ShowDialog() = DialogResult.OK Then
-            If SaveFileDialog.FilterIndex = 1 Or SaveFileDialog.FilterIndex = 2 Then
+            If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Or SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
                 Dim msgBoxResult As MsgBoxResult
 
-                If SaveFileDialog.FilterIndex = 1 Then
+                If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
                     msgBoxResult = MsgBox("MD5 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
-                ElseIf SaveFileDialog.FilterIndex = 2 Then
+                ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
                     msgBoxResult = MsgBox("SHA1 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                 End If
 
@@ -587,15 +593,15 @@ Public Class Form1
                 strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
 
                 If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                    If SaveFileDialog.FilterIndex = 1 Then
+                    If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
                         SaveFileDialog.FileName &= ".md5"
-                    ElseIf SaveFileDialog.FilterIndex = 2 Then
+                    ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
                         SaveFileDialog.FileName &= ".sha1"
-                    ElseIf SaveFileDialog.FilterIndex = 3 Then
+                    ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256 Then
                         SaveFileDialog.FileName &= ".sha256"
-                    ElseIf SaveFileDialog.FilterIndex = 4 Then
+                    ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384 Then
                         SaveFileDialog.FileName &= ".sha384"
-                    ElseIf SaveFileDialog.FilterIndex = 5 Then
+                    ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512 Then
                         SaveFileDialog.FileName &= ".sha512"
                     End If
                 End If
