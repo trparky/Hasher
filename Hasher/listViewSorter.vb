@@ -2,8 +2,8 @@
 Class ListViewComparer
     Implements IComparer
 
-    Private intColumnNumber As Integer
-    Private soSortOrder As SortOrder
+    Private ReadOnly intColumnNumber As Integer
+    Private ReadOnly soSortOrder As SortOrder
 
     Public Sub New(ByVal intInputColumnNumber As Integer, ByVal soInputSortOrder As SortOrder)
         intColumnNumber = intInputColumnNumber

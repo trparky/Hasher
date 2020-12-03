@@ -1,5 +1,5 @@
 Public Class Checksums
-    Private checksumStatusUpdater As [Delegate]
+    Private ReadOnly checksumStatusUpdater As [Delegate]
 
     ''' <summary>This allows you to set up a function to be run while your checksum is being processed. This function can be used to update things on the GUI during a checksum.</summary>
     ''' <example>
