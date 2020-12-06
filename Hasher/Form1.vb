@@ -24,7 +24,7 @@ Public Class Form1
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolDidWePerformAPreviousHash As Boolean = False
     Private validColor, notValidColor, fileNotFoundColor As Color
-    Private shortCurrentlyActiveTab As Short = -1
+    Private intCurrentlyActiveTab As Integer = -1
     Private compareFilesAllTheHashes1 As AllTheHashes = Nothing
     Private compareFilesAllTheHashes2 As AllTheHashes = Nothing
     Private hashTextAllTheHashes As AllTheHashes = Nothing
@@ -283,7 +283,7 @@ Public Class Form1
         lblHashIndividualFilesTotalStatus.Visible = True
         lblIndividualFilesStatus.Visible = True
         lblIndividualFilesStatusProcessingFile.Visible = True
-        shortCurrentlyActiveTab = TabNumberHashIndividualFilesTab
+        intCurrentlyActiveTab = TabNumberHashIndividualFilesTab
 
         Dim longErroredFiles As Long = 0
         Dim itemOnGUI As MyListViewItem = Nothing
@@ -446,7 +446,7 @@ Public Class Form1
                                                               End Sub)
                                                  Finally
                                                      itemOnGUI = Nothing
-                                                     shortCurrentlyActiveTab = TabNumberNull
+                                                     intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
                                                          ulongAllReadBytes = 0
                                                          ulongAllBytes = 0
@@ -1136,7 +1136,7 @@ Public Class Form1
         strChecksumFileExtension = checksumFileInfo.Extension
         strDirectoryThatContainsTheChecksumFile = checksumFileInfo.DirectoryName
         checksumFileInfo = Nothing
-        shortCurrentlyActiveTab = TabNumberVerifySavedHashesTab
+        intCurrentlyActiveTab = TabNumberVerifySavedHashesTab
 
         If strChecksumFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
             checksumType = ChecksumType.md5
@@ -1423,7 +1423,7 @@ Public Class Form1
                                                               End Sub)
                                                  Finally
                                                      itemOnGUI = Nothing
-                                                     shortCurrentlyActiveTab = TabNumberNull
+                                                     intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
                                                          ulongAllReadBytes = 0
                                                          ulongAllBytes = 0
@@ -1566,11 +1566,11 @@ Public Class Form1
     End Sub
 
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
-        If e.TabPageIndex = TabNumberSettingsTab AndAlso shortCurrentlyActiveTab <> TabNumberNull AndAlso Not TabControl1.TabPages(shortCurrentlyActiveTab).Text.Contains("Currently Active") Then
-            TabControl1.TabPages(shortCurrentlyActiveTab).Text &= " (Currently Active)"
-        ElseIf e.TabPageIndex = shortCurrentlyActiveTab AndAlso TabControl1.TabPages(shortCurrentlyActiveTab).Text.Contains("Currently Active") Then
-            Dim strNewTabText As String = TabControl1.TabPages(shortCurrentlyActiveTab).Text.Replace(" (Currently Active)", "")
-            TabControl1.TabPages(shortCurrentlyActiveTab).Text = strNewTabText
+        If e.TabPageIndex = TabNumberSettingsTab AndAlso intCurrentlyActiveTab <> TabNumberNull AndAlso Not TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
+            TabControl1.TabPages(intCurrentlyActiveTab).Text &= " (Currently Active)"
+        ElseIf e.TabPageIndex = intCurrentlyActiveTab AndAlso TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
+            Dim strNewTabText As String = TabControl1.TabPages(intCurrentlyActiveTab).Text.Replace(" (Currently Active)", "")
+            TabControl1.TabPages(intCurrentlyActiveTab).Text = strNewTabText
         End If
 
         If e.TabPageIndex = TabNumberCompareFileAgainstKnownHashTab Then
@@ -1579,7 +1579,7 @@ Public Class Form1
             txtFileForKnownHash.Text = Nothing
             txtKnownHash.Text = Nothing
             lblCompareFileAgainstKnownHashType.Text = Nothing
-        ElseIf e.TabPageIndex = TabNumberwelcomeTab Or e.TabPageIndex = TabNumbersettingsTab Or e.TabPageIndex = shortCurrentlyActiveTab Then
+        ElseIf e.TabPageIndex = TabNumberWelcomeTab Or e.TabPageIndex = TabNumberSettingsTab Or e.TabPageIndex = intCurrentlyActiveTab Then
             Exit Sub
         End If
 
@@ -1820,7 +1820,7 @@ Public Class Form1
         txtFile2.Enabled = False
         btnCompareFiles.Text = "Abort Processing"
         compareFilesProgressBar.Visible = True
-        shortCurrentlyActiveTab = TabNumberCompareFilesTab
+        intCurrentlyActiveTab = TabNumberCompareFilesTab
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -1967,7 +1967,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
-                                                     shortCurrentlyActiveTab = TabNumberNull
+                                                     intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
                                                          ulongAllReadBytes = 0
                                                          ulongAllBytes = 0
@@ -2089,7 +2089,7 @@ Public Class Form1
         btnCompareAgainstKnownHash.Text = "Abort Processing"
         boolDidWePerformAPreviousHash = True
         compareAgainstKnownHashProgressBar.Visible = True
-        shortCurrentlyActiveTab = TabNumberCompareFileAgainstKnownHashTab
+        intCurrentlyActiveTab = TabNumberCompareFileAgainstKnownHashTab
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -2177,7 +2177,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
-                                                     shortCurrentlyActiveTab = TabNumberNull
+                                                     intCurrentlyActiveTab = TabNumberNull
                                                  End Try
                                              End Sub) With {
             .Priority = GetThreadPriority(),
@@ -3021,7 +3021,7 @@ Public Class Form1
                                                               End Sub)
                                                  Finally
                                                      itemOnGUI = Nothing
-                                                     shortCurrentlyActiveTab = TabNumberNull
+                                                     intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
                                                          ulongAllReadBytes = 0
                                                          ulongAllBytes = 0
