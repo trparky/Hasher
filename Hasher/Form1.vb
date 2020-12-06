@@ -221,7 +221,7 @@ Public Class Form1
                 strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
 
                 If Not filesInListFiles.Contains(OpenFileDialog.FileName.Trim.ToLower) Then
-                    listFiles.Items.Add(CreateListFilesObject(OpenFileDialog.FileName))
+                    If IO.File.Exists(OpenFileDialog.FileName) Then listFiles.Items.Add(CreateListFilesObject(OpenFileDialog.FileName))
                 End If
             Else
                 strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileNames(0)).DirectoryName
@@ -229,7 +229,7 @@ Public Class Form1
                 listFiles.BeginUpdate()
                 For Each strFileName As String In OpenFileDialog.FileNames
                     If Not filesInListFiles.Contains(strFileName.Trim.ToLower) Then
-                        listFiles.Items.Add(CreateListFilesObject(strFileName))
+                        If IO.File.Exists(strFileName) Then listFiles.Items.Add(CreateListFilesObject(strFileName))
                     End If
                 Next
                 listFiles.EndUpdate()
@@ -798,7 +798,7 @@ Public Class Form1
 
                 If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
                     strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
-                    MyInvoke(Sub() listFiles.Items.Add(CreateListFilesObject(strReceivedFileName)))
+                    MyInvoke(Sub() If IO.File.Exists(strReceivedFileName) Then listFiles.Items.Add(CreateListFilesObject(strReceivedFileName)))
                 Else
                     AddFilesFromDirectory(strReceivedFileName)
                 End If
@@ -1011,7 +1011,7 @@ Public Class Form1
                                                                       lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
                                                                   End Sub)
                                                          If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
-                                                             collectionOfListViewItems.Add(CreateListFilesObject(filedata.Path))
+                                                             If IO.File.Exists(filedata.Path) Then collectionOfListViewItems.Add(CreateListFilesObject(filedata.Path))
                                                          End If
                                                      Next
 
@@ -1484,7 +1484,7 @@ Public Class Form1
         For Each strItem As String In e.Data.GetData(DataFormats.FileDrop)
             If IO.File.Exists(strItem) Or IO.Directory.Exists(strItem) Then
                 If Not IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strItem.Trim.ToLower) Then
-                    listFiles.Items.Add(CreateListFilesObject(strItem))
+                    If IO.File.Exists(strItem) Then listFiles.Items.Add(CreateListFilesObject(strItem))
                 Else
                     AddFilesFromDirectory(strItem)
                 End If
