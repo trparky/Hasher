@@ -2616,15 +2616,15 @@ Public Class Form1
                                                    Dim strHashString As String
                                                    Dim checksumType As ChecksumType
 
-                                                   If My.Settings.defaultHash = 0 Then
+                                                   If My.Settings.defaultHash = ChecksumType.md5 Then
                                                        checksumType = ChecksumType.md5
-                                                   ElseIf My.Settings.defaultHash = 1 Then
+                                                   ElseIf My.Settings.defaultHash = ChecksumType.sha160 Then
                                                        checksumType = ChecksumType.sha160
-                                                   ElseIf My.Settings.defaultHash = 2 Then
+                                                   ElseIf My.Settings.defaultHash = ChecksumType.sha256 Then
                                                        checksumType = ChecksumType.sha256
-                                                   ElseIf My.Settings.defaultHash = 3 Then
+                                                   ElseIf My.Settings.defaultHash = ChecksumType.sha384 Then
                                                        checksumType = ChecksumType.sha384
-                                                   ElseIf My.Settings.defaultHash = 4 Then
+                                                   ElseIf My.Settings.defaultHash = ChecksumType.sha512 Then
                                                        checksumType = ChecksumType.sha512
                                                    End If
 
