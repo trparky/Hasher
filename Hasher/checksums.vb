@@ -33,7 +33,7 @@ Public Class Checksums
         ' Declare some variables.
         Dim byteDataBuffer As Byte()
         Dim intBytesRead As Integer
-        Dim longTotalBytesRead As ULong = 0
+        Dim longTotalBytesRead As Long = 0
         Dim longFileSize As Long = New IO.FileInfo(strFileName).Length ' Get the size of the file.
 
         If longFileSize = 0 Then
@@ -50,7 +50,7 @@ Public Class Checksums
             byteDataBuffer = New Byte(intBufferSize - 1) {} ' Create a data buffer in system memory to store some data.
             intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the above data buffer.
             SyncLock threadLockingObject
-                ulongAllReadBytes += intBytesRead
+                longAllReadBytes += intBytesRead
             End SyncLock
             longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
@@ -75,7 +75,7 @@ Public Class Checksums
                 Array.Clear(byteDataBuffer, 0, byteDataBuffer.Length) ' Clear the Byte Array.
                 intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the data buffer that was created above.
                 SyncLock threadLockingObject
-                    ulongAllReadBytes += intBytesRead
+                    longAllReadBytes += intBytesRead
                 End SyncLock
                 longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
