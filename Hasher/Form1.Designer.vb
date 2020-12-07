@@ -1604,7 +1604,7 @@ Partial Class Form1
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
         Me.chkAutoAddExtension.Size = New System.Drawing.Size(520, 17)
         Me.chkAutoAddExtension.TabIndex = 33
-        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to filename when saving results to disk (Highly Recommended!!!)"
+        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to file name when saving results to disk (Highly Recommended!!!)"
         Me.ToolTip.SetToolTip(Me.chkAutoAddExtension, "Enabling this option automatically tacks on the appropriate file extension when s" &
         "aving checksum data to disk.")
         Me.chkAutoAddExtension.UseVisualStyleBackColor = True
