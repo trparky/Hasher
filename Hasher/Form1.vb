@@ -496,6 +496,10 @@ Public Class Form1
             End If
         Next
 
+        stringBuilder.AppendLine("'")
+        stringBuilder.AppendLine("' End of hash data.")
+        stringBuilder.AppendLine("'")
+
         Return stringBuilder.ToString()
     End Function
 
@@ -509,6 +513,10 @@ Public Class Form1
                 stringBuilder.AppendLine(item.Hash & " *" & item.FileName)
             End If
         Next
+
+        stringBuilder.AppendLine("'")
+        stringBuilder.AppendLine("' End of hash data.")
+        stringBuilder.AppendLine("'")
 
         Return stringBuilder.ToString()
     End Function
