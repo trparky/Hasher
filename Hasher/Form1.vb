@@ -496,10 +496,7 @@ Public Class Form1
             End If
         Next
 
-        stringBuilder.AppendLine("'")
-        stringBuilder.AppendLine("' End of hash data.")
-        stringBuilder.AppendLine("'")
-
+        AddEndOfHashLines(stringBuilder)
         Return stringBuilder.ToString()
     End Function
 
@@ -514,12 +511,15 @@ Public Class Form1
             End If
         Next
 
+        AddEndOfHashLines(stringBuilder)
+        Return stringBuilder.ToString()
+    End Function
+
+    Private Sub AddEndOfHashLines(ByRef stringBuilder As Text.StringBuilder)
         stringBuilder.AppendLine("'")
         stringBuilder.AppendLine("' End of hash data.")
         stringBuilder.AppendLine("'")
-
-        Return stringBuilder.ToString()
-    End Function
+    End Sub
 
     Private Sub BtnIndividualFilesCopyToClipboard_Click(sender As Object, e As EventArgs) Handles btnIndividualFilesCopyToClipboard.Click
         If CopyTextToWindowsClipboard(StrGetIndividualHashesInStringFormat().Trim) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
