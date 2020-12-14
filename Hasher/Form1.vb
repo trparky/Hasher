@@ -1355,7 +1355,7 @@ Public Class Form1
 
                                                                   If intFilesNotFound = 0 Then
                                                                       If longFilesThatPassedVerification = intFileCount Then
-                                                                          sbMessageBoxText.AppendLine("Processing of hash file complete. All files have passed verification.")
+                                                                          sbMessageBoxText.AppendLine("Processing of hash file complete. All " & MyToString(intFileCount) & " files have passed verification.")
                                                                       Else
                                                                           intFilesThatDidNotPassVerification = intFileCount - longFilesThatPassedVerification
                                                                           If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
