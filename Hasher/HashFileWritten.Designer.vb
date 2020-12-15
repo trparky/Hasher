@@ -49,7 +49,7 @@ Partial Class FrmHashFileWritten
         Me.BtnOK.Name = "BtnOK"
         Me.BtnOK.Size = New System.Drawing.Size(75, 23)
         Me.BtnOK.TabIndex = 1
-        Me.BtnOK.Text = "OK"
+        Me.BtnOK.Text = "&OK"
         Me.BtnOK.UseVisualStyleBackColor = True
         '
         'BtnYes
@@ -59,7 +59,7 @@ Partial Class FrmHashFileWritten
         Me.BtnYes.Name = "BtnYes"
         Me.BtnYes.Size = New System.Drawing.Size(75, 23)
         Me.BtnYes.TabIndex = 2
-        Me.BtnYes.Text = "Yes"
+        Me.BtnYes.Text = "&Yes"
         Me.BtnYes.UseVisualStyleBackColor = True
         Me.BtnYes.Visible = False
         '
@@ -70,7 +70,7 @@ Partial Class FrmHashFileWritten
         Me.BtnNo.Name = "BtnNo"
         Me.BtnNo.Size = New System.Drawing.Size(75, 23)
         Me.BtnNo.TabIndex = 3
-        Me.BtnNo.Text = "No"
+        Me.BtnNo.Text = "&No"
         Me.BtnNo.UseVisualStyleBackColor = True
         Me.BtnNo.Visible = False
         '
