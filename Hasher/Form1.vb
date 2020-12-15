@@ -608,6 +608,8 @@ Public Class Form1
                     End If
                 End If
 
+                Media.SystemSounds.Exclamation.Play()
+
                 If IO.File.Exists(SaveFileDialog.FileName) AndAlso MsgBox("The file named """ & New IO.FileInfo(SaveFileDialog.FileName).Name & """ already exists." & vbCrLf & vbCrLf & "Are you absolutely sure you want to replace it?", MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, "Overwrite?") = MsgBoxResult.No Then
                     MsgBox("Save Results to Disk Aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                     Exit Sub
