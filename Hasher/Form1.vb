@@ -650,7 +650,7 @@ Public Class Form1
         Using frmHashFileWritten As New FrmHashFileWritten With {.Icon = Icon, .StartPosition = FormStartPosition.CenterParent}
             With frmHashFileWritten
                 .lblMainLabel.Text = String.Format(.lblMainLabel.Text, fileName, ConvertChecksumTypeToString(checksumtype))
-                Dim size As Size
+
 
                 If BoolAskUserOpenInExplorer Then
                     .lblMainLabel.Text &= vbCrLf & vbCrLf & "Do you want to open Windows Explorer to the location of the checksum file?"
@@ -658,12 +658,12 @@ Public Class Form1
                     .BtnYes.Visible = True
                     .BtnNo.Visible = True
                     .BtnNo.Select()
-
-                    size = New Size(frmHashFileWritten.lblMainLabel.Size.Width + 70, FrmChecksumDifference.Size.Height + 20)
                 Else
-                    size = New Size(frmHashFileWritten.lblMainLabel.Size.Width + 70, FrmChecksumDifference.Size.Height)
+                    .lblMainLabel.Text &= vbCrLf & vbCrLf & "Windows Explorer will now open to the location of the checksum file."
                     .BtnOK.Select()
                 End If
+
+                Dim size As New Size(frmHashFileWritten.lblMainLabel.Size.Width + 70, FrmChecksumDifference.Size.Height + 20)
 
                 .Size = size
                 .MinimumSize = size
