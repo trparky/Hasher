@@ -663,11 +663,9 @@ Public Class Form1
                     .BtnOK.Select()
                 End If
 
-                Dim size As New Size(frmHashFileWritten.lblMainLabel.Size.Width + 70, FrmChecksumDifference.Size.Height + 20)
-
-                .Size = size
-                .MinimumSize = size
-                .MaximumSize = size
+                .Size = New Size(frmHashFileWritten.lblMainLabel.Size.Width + 70, FrmChecksumDifference.Size.Height + 20)
+                .MinimumSize = .Size
+                .MaximumSize = .Size
             End With
 
             frmHashFileWritten.ShowDialog(Me)
