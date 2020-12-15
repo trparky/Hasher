@@ -21,4 +21,8 @@
         OutUserResponse = UserResponse.yes
         Me.Close()
     End Sub
+
+    Private Sub FrmHashFileWritten_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Media.SystemSounds.Exclamation.Play()
+    End Sub
 End Class
