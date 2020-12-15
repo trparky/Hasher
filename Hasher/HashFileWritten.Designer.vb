@@ -55,7 +55,7 @@ Partial Class FrmHashFileWritten
         'BtnYes
         '
         Me.BtnYes.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BtnYes.Location = New System.Drawing.Point(190, 10)
+        Me.BtnYes.Location = New System.Drawing.Point(109, 10)
         Me.BtnYes.Name = "BtnYes"
         Me.BtnYes.Size = New System.Drawing.Size(75, 23)
         Me.BtnYes.TabIndex = 2
@@ -66,7 +66,7 @@ Partial Class FrmHashFileWritten
         'BtnNo
         '
         Me.BtnNo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BtnNo.Location = New System.Drawing.Point(109, 10)
+        Me.BtnNo.Location = New System.Drawing.Point(190, 10)
         Me.BtnNo.Name = "BtnNo"
         Me.BtnNo.Size = New System.Drawing.Size(75, 23)
         Me.BtnNo.TabIndex = 3
