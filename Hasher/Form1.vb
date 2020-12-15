@@ -637,14 +637,52 @@ Public Class Form1
 
             If chkOpenInExplorer.Checked Then
                 openInExplorerMsgBoxResult = MsgBoxResult.Yes
-                MsgBox("Your hash results have been written to disk." & vbCrLf & vbCrLf & "File Name: " & SaveFileDialog.FileName & vbCrLf & "Checksum Type: " & ConvertChecksumTypeToString(checksumType), MsgBoxStyle.Information, strMessageBoxTitleText)
+                ShowHashFileWrittenWindow(False, SaveFileDialog.FileName, checksumType)
             Else
-                openInExplorerMsgBoxResult = MsgBox("Your hash results have been written to disk." & vbCrLf & vbCrLf & "File Name: " & SaveFileDialog.FileName & vbCrLf & "Checksum Type: " & ConvertChecksumTypeToString(checksumType) & vbCrLf & vbCrLf & "Do you want to open Windows Explorer to the location of the checksum file?", MsgBoxStyle.Information + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+                openInExplorerMsgBoxResult = ShowHashFileWrittenWindow(True, SaveFileDialog.FileName, checksumType)
             End If
 
             If openInExplorerMsgBoxResult = MsgBoxResult.Yes Then SelectFileInWindowsExplorer(fileInfo.FullName)
         End If
     End Sub
+
+    Private Function ShowHashFileWrittenWindow(BoolAskUserOpenInExplorer As Boolean, fileName As String, checksumtype As ChecksumType) As MsgBoxResult
+        Using frmHashFileWritten As New FrmHashFileWritten With {.Icon = Icon, .StartPosition = FormStartPosition.CenterParent}
+            With frmHashFileWritten
+                .lblMainLabel.Text = String.Format(.lblMainLabel.Text, fileName, ConvertChecksumTypeToString(checksumtype))
+                Dim size As Size
+
+                If BoolAskUserOpenInExplorer Then
+                    .lblMainLabel.Text &= vbCrLf & vbCrLf & "Do you want to open Windows Explorer to the location of the checksum file?"
+                    .BtnOK.Visible = False
+                    .BtnYes.Visible = True
+                    .BtnNo.Visible = True
+                    .BtnNo.Select()
+
+                    size = New Size(frmHashFileWritten.lblMainLabel.Size.Width + 70, FrmChecksumDifference.Size.Height + 20)
+                Else
+                    size = New Size(frmHashFileWritten.lblMainLabel.Size.Width + 70, FrmChecksumDifference.Size.Height)
+                    .BtnOK.Select()
+                End If
+
+                .Size = size
+                .MinimumSize = size
+                .MaximumSize = size
+            End With
+
+            frmHashFileWritten.ShowDialog(Me)
+
+            If frmHashFileWritten.OutUserResponse = FrmHashFileWritten.UserResponse.ok Then
+                Return MsgBoxResult.Yes
+            ElseIf frmHashFileWritten.OutUserResponse = FrmHashFileWritten.UserResponse.yes Then
+                Return MsgBoxResult.Yes
+            ElseIf frmHashFileWritten.OutUserResponse = FrmHashFileWritten.UserResponse.no Then
+                Return MsgBoxResult.No
+            End If
+        End Using
+
+        Return MsgBoxResult.Yes
+    End Function
 
     Private Sub SelectFileInWindowsExplorer(ByVal strFullPath As String)
         If Not String.IsNullOrEmpty(strFullPath) AndAlso IO.File.Exists(strFullPath) Then
