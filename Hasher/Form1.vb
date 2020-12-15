@@ -1076,8 +1076,8 @@ Public Class Form1
                                                                   UpdateFilesListCountHeader()
 
                                                                   btnComputeHash.Enabled = True
-                                                                  btnIndividualFilesCopyToClipboard.Enabled = True
-                                                                  btnIndividualFilesSaveResultsToDisk.Enabled = True
+                                                                  btnIndividualFilesCopyToClipboard.Enabled = False
+                                                                  btnIndividualFilesSaveResultsToDisk.Enabled = False
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                      filesInListFiles.Clear()
@@ -1088,8 +1088,8 @@ Public Class Form1
 
                                                                   If listFiles.Items.Count <> 0 Then
                                                                       btnComputeHash.Enabled = True
-                                                                      btnIndividualFilesCopyToClipboard.Enabled = True
-                                                                      btnIndividualFilesSaveResultsToDisk.Enabled = True
+                                                                      btnIndividualFilesCopyToClipboard.Enabled = False
+                                                                      btnIndividualFilesSaveResultsToDisk.Enabled = False
                                                                   End If
                                                               End Sub)
                                                  Finally
