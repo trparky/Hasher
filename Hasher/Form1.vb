@@ -649,37 +649,20 @@ Public Class Form1
     End Sub
 
     Private Function ShowHashFileWrittenWindow(BoolAskUserOpenInExplorer As Boolean, fileName As String, checksumtype As ChecksumType) As MsgBoxResult
-        Using frmHashFileWritten As New FrmHashFileWritten With {.Icon = Icon, .StartPosition = FormStartPosition.CenterParent}
-            With frmHashFileWritten
-                .lblMainLabel.Text = String.Format(.lblMainLabel.Text, fileName, ConvertChecksumTypeToString(checksumtype))
+        Dim StringBuilder As New Text.StringBuilder()
+        StringBuilder.AppendLine("Your hash results have been written to disk.")
+        StringBuilder.AppendLine()
+        StringBuilder.AppendLine("File Name: " & fileName)
+        StringBuilder.AppendLine("Checksum Type: " & ConvertChecksumTypeToString(checksumtype))
+        StringBuilder.AppendLine()
 
-
-                If BoolAskUserOpenInExplorer Then
-                    .lblMainLabel.Text &= vbCrLf & vbCrLf & "Do you want to open Windows Explorer to the location of the checksum file?"
-                    .BtnOK.Visible = False
-                    .BtnYes.Visible = True
-                    .BtnNo.Visible = True
-                    .BtnNo.Select()
-                Else
-                    .lblMainLabel.Text &= vbCrLf & vbCrLf & "Windows Explorer will now open to the location of the checksum file."
-                    .BtnOK.Select()
-                End If
-
-                .Size = New Size(frmHashFileWritten.lblMainLabel.Size.Width + 70, FrmChecksumDifference.Size.Height + 20)
-                .MinimumSize = .Size
-                .MaximumSize = .Size
-            End With
-
-            frmHashFileWritten.ShowDialog(Me)
-
-            If frmHashFileWritten.OutUserResponse = FrmHashFileWritten.UserResponse.ok Then
-                Return MsgBoxResult.Yes
-            ElseIf frmHashFileWritten.OutUserResponse = FrmHashFileWritten.UserResponse.yes Then
-                Return MsgBoxResult.Yes
-            ElseIf frmHashFileWritten.OutUserResponse = FrmHashFileWritten.UserResponse.no Then
-                Return MsgBoxResult.No
-            End If
-        End Using
+        If BoolAskUserOpenInExplorer Then
+            StringBuilder.AppendLine("Do you want to open Windows Explorer to the location of the checksum file?")
+            Return WPFCustomMessageBox.CustomMessageBox.ShowYesNo(StringBuilder.ToString.Trim, strMessageBoxTitleText, "Yes", "No", Windows.MessageBoxImage.Question)
+        Else
+            StringBuilder.AppendLine("Windows Explorer will now open to the location of the checksum file.")
+            Return WPFCustomMessageBox.CustomMessageBox.ShowOK(StringBuilder.ToString.Trim, strMessageBoxTitleText, "OK", Windows.MessageBoxImage.Information)
+        End If
 
         Return MsgBoxResult.Yes
     End Function
