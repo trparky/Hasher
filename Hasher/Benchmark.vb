@@ -85,7 +85,7 @@
     End Sub
 
     Private Sub Benchmark_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If boolBackgroundThreadWorking AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Benchmarks are being processed, do you want to abort?", "Hasher Benchmark", "Yes", "No", Windows.MessageBoxImage.Question) = MsgBoxResult.No Then
+        If boolBackgroundThreadWorking AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Benchmarks are being processed, do you want to abort?", "Hasher Benchmark", "Yes", "No", Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.No Then
             e.Cancel = True
             Exit Sub
         Else

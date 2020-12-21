@@ -411,9 +411,9 @@ Class Check_for_Update_Stuff
         End Try
     End Function
 
-    Private Function BackgroundThreadMessageBox(ByVal strMsgBoxPrompt As String, ByVal strMsgBoxTitle As String) As MsgBoxResult
+    Private Function BackgroundThreadMessageBox(ByVal strMsgBoxPrompt As String, ByVal strMsgBoxTitle As String) As Windows.MessageBoxResult
         If windowObject.InvokeRequired Then
-            Return CType(windowObject.Invoke(New Func(Of MsgBoxResult)(Function() WPFCustomMessageBox.CustomMessageBox.ShowYesNo(strMsgBoxPrompt, strMsgBoxTitle, strYes, strNo, Windows.MessageBoxImage.Question))), MsgBoxResult)
+            Return windowObject.Invoke(New Func(Of Windows.MessageBoxResult)(Function() WPFCustomMessageBox.CustomMessageBox.ShowYesNo(strMsgBoxPrompt, strMsgBoxTitle, strYes, strNo, Windows.MessageBoxImage.Question)))
         Else
             Return WPFCustomMessageBox.CustomMessageBox.ShowYesNo(strMsgBoxPrompt, strMsgBoxTitle, strYes, strNo, Windows.MessageBoxImage.Question)
         End If
@@ -437,7 +437,7 @@ Class Check_for_Update_Stuff
                     Dim response As ProcessUpdateXMLResponse = ProcessUpdateXMLData(xmlData, remoteVersion, remoteBuild)
 
                     If response = ProcessUpdateXMLResponse.newVersion Then
-                        If BackgroundThreadMessageBox(String.Format("An update to Hasher (version {0} Build {1}) is available to be downloaded, do you want to download and update to this new version?", remoteVersion, remoteBuild), strMessageBoxTitleText) = MsgBoxResult.Yes Then
+                        If BackgroundThreadMessageBox(String.Format("An update to Hasher (version {0} Build {1}) is available to be downloaded, do you want to download and update to this new version?", remoteVersion, remoteBuild), strMessageBoxTitleText) = Windows.MessageBoxResult.Yes Then
                             DownloadAndPerformUpdate()
                         Else
                             windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("The update will not be downloaded.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information))
