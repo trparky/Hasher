@@ -11,6 +11,10 @@ Module Check_for_Update_Stuff_Module
     Private Const strZipFileName As String = "Hasher.zip"
     ' Change these variables whenever you import this module into a program's code to handle software updates.
 
+    Public Const strNo As String = "No"
+    Public Const strYes As String = "Yes"
+    Public Const strOK As String = "OK"
+
     ''' <summary>Checks to see if a Process ID or PID exists on the system.</summary>
     ''' <param name="PID">The PID of the process you are checking the existance of.</param>
     ''' <param name="processObject">If the PID does exist, the function writes back to this argument in a ByRef way a Process Object that can be interacted with outside of this function.</param>
@@ -118,7 +122,7 @@ Module Check_for_Update_Stuff_Module
             Process.Start(New ProcessStartInfo With {.FileName = mainEXEName})
             Process.GetCurrentProcess.Kill()
         Else
-            MsgBox("The environment is not ready for an update. This process will now terminate.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+            WPFCustomMessageBox.CustomMessageBox.ShowOK("The environment is not ready for an update. This process will now terminate.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
             Process.GetCurrentProcess.Kill()
         End If
     End Sub
@@ -289,28 +293,28 @@ Class Check_for_Update_Stuff
                     Else
                         ' The checksums don't match. Oops.
                         If boolGiveUserAnErrorMessage Then
-                            windowObject.Invoke(Sub() MsgBox("There was an error in the download, checksums don't match. Update process aborted.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                            windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error in the download, checksums don't match. Update process aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error))
                         End If
 
                         Return False
                     End If
                 Else
                     If boolGiveUserAnErrorMessage Then
-                        windowObject.Invoke(Sub() MsgBox("Invalid SHA2 file detected. Update process aborted.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                        windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("Invalid SHA2 file detected. Update process aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error))
                     End If
 
                     Return False
                 End If
             Else
                 If boolGiveUserAnErrorMessage Then
-                    windowObject.Invoke(Sub() MsgBox("There was an error downloading the checksum verification file. Update process aborted.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                    windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error downloading the checksum verification file. Update process aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error))
                 End If
 
                 Return False
             End If
         Catch ex As Exception
             If boolGiveUserAnErrorMessage Then
-                windowObject.Invoke(Sub() MsgBox("There was an error downloading the checksum verification file. Update process aborted.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error downloading the checksum verification file. Update process aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error))
             End If
 
             Return False
@@ -335,12 +339,12 @@ Class Check_for_Update_Stuff
 
         Using memoryStream As New MemoryStream()
             If Not httpHelper.DownloadFile(programZipFileURL, memoryStream, False) Then
-                windowObject.Invoke(Sub() MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error while downloading required files.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error))
                 Exit Sub
             End If
 
             If Not VerifyChecksum(programZipFileSHA256URL, memoryStream, httpHelper, True) Then
-                windowObject.Invoke(Sub() MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error while downloading required files.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error))
                 Exit Sub
             End If
 
@@ -349,7 +353,7 @@ Class Check_for_Update_Stuff
             ' This checks to see if the file was extracted successfully from the downloaded ZIP file.
             If Not ExtractFileFromZIPFile(memoryStream, programFileNameInZIP, newExecutableName) Then
                 ' Nope, something went wrong; let's abort.
-                windowObject.Invoke(Sub() MsgBox("There was an error while extracting required files from the downloaded ZIP file.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error while extracting required files from the downloaded ZIP file.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error))
                 Exit Sub
             End If
         End Using
@@ -407,11 +411,11 @@ Class Check_for_Update_Stuff
         End Try
     End Function
 
-    Private Function BackgroundThreadMessageBox(ByVal strMsgBoxPrompt As String, ByVal style As MsgBoxStyle, ByVal strMsgBoxTitle As String) As MsgBoxResult
+    Private Function BackgroundThreadMessageBox(ByVal strMsgBoxPrompt As String, ByVal strMsgBoxTitle As String) As MsgBoxResult
         If windowObject.InvokeRequired Then
-            Return CType(windowObject.Invoke(New Func(Of MsgBoxResult)(Function() MsgBox(strMsgBoxPrompt, style, strMsgBoxTitle))), MsgBoxResult)
+            Return CType(windowObject.Invoke(New Func(Of MsgBoxResult)(Function() WPFCustomMessageBox.CustomMessageBox.ShowYesNo(strMsgBoxPrompt, strMsgBoxTitle, strYes, strNo, Windows.MessageBoxImage.Question))), MsgBoxResult)
         Else
-            Return MsgBox(strMsgBoxPrompt, style, strMsgBoxTitle)
+            Return WPFCustomMessageBox.CustomMessageBox.ShowYesNo(strMsgBoxPrompt, strMsgBoxTitle, strYes, strNo, Windows.MessageBoxImage.Question)
         End If
     End Function
 
@@ -421,7 +425,7 @@ Class Check_for_Update_Stuff
                             End Sub)
 
         If Not My.Computer.Network.IsAvailable Then
-            windowObject.Invoke(Sub() MsgBox("No Internet connection detected.", MsgBoxStyle.Information, strMessageBoxTitleText))
+            windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("No Internet connection detected.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information))
         Else
             Try
                 Dim xmlData As String = Nothing
@@ -433,20 +437,20 @@ Class Check_for_Update_Stuff
                     Dim response As ProcessUpdateXMLResponse = ProcessUpdateXMLData(xmlData, remoteVersion, remoteBuild)
 
                     If response = ProcessUpdateXMLResponse.newVersion Then
-                        If BackgroundThreadMessageBox(String.Format("An update to Hasher (version {0} Build {1}) is available to be downloaded, do you want to download and update to this new version?", remoteVersion, remoteBuild), MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+                        If BackgroundThreadMessageBox(String.Format("An update to Hasher (version {0} Build {1}) is available to be downloaded, do you want to download and update to this new version?", remoteVersion, remoteBuild), strMessageBoxTitleText) = MsgBoxResult.Yes Then
                             DownloadAndPerformUpdate()
                         Else
-                            windowObject.Invoke(Sub() MsgBox("The update will not be downloaded.", MsgBoxStyle.Information, strMessageBoxTitleText))
+                            windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("The update will not be downloaded.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information))
                         End If
                     ElseIf response = ProcessUpdateXMLResponse.noUpdateNeeded AndAlso boolShowMessageBox Then
-                        windowObject.Invoke(Sub() MsgBox("You already have the latest version, there is no need to update this program.", MsgBoxStyle.Information, strMessageBoxTitleText))
+                        windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("You already have the latest version, there is no need to update this program.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information))
                     ElseIf (response = ProcessUpdateXMLResponse.parseError Or response = ProcessUpdateXMLResponse.exceptionError) AndAlso boolShowMessageBox Then
-                        windowObject.Invoke(Sub() MsgBox("There was an error when trying to parse the response from the server.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                        windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error when trying to parse the response from the server.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error))
                     ElseIf response = ProcessUpdateXMLResponse.newerVersionThanWebSite AndAlso boolShowMessageBox Then
-                        windowObject.Invoke(Sub() MsgBox("This is weird, you have a version that's newer than what's listed on the web site.", MsgBoxStyle.Information, strMessageBoxTitleText))
+                        windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("This is weird, you have a version that's newer than what's listed on the web site.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information))
                     End If
                 Else
-                    If boolShowMessageBox Then windowObject.Invoke(Sub() MsgBox("There was an error checking for updates.", MsgBoxStyle.Information, strMessageBoxTitleText))
+                    If boolShowMessageBox Then windowObject.Invoke(Sub() WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error checking for updates.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information))
                 End If
             Catch ex As Exception
                 ' Ok, we crashed but who cares.
