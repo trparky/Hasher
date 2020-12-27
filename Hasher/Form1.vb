@@ -1,4 +1,5 @@
 ﻿Imports System.IO.Pipes
+Imports WK.Libraries.BetterFolderBrowserNS
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -1116,6 +1117,12 @@ Public Class Form1
             boolBackgroundThreadWorking = False
             Exit Sub
         End If
+
+        Dim FolderBrowserDialog As New BetterFolderBrowser With {
+            .Title = "Browse for folder location...",
+            .Multiselect = False,
+            .RootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        }
 
         If FolderBrowserDialog.ShowDialog = DialogResult.OK Then AddFilesFromDirectory(FolderBrowserDialog.SelectedPath)
     End Sub

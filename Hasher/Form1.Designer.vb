@@ -162,7 +162,6 @@ Partial Class Form1
         Me.lblRoundFileSizesLabel = New System.Windows.Forms.Label()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
-        Me.FolderBrowserDialog = New System.Windows.Forms.FolderBrowserDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
         Me.chkShowFileProgressInFileList = New System.Windows.Forms.CheckBox()
@@ -1813,7 +1812,6 @@ Partial Class Form1
     Friend WithEvents btnIndividualFilesSaveResultsToDisk As Button
     Friend WithEvents SaveFileDialog As SaveFileDialog
     Friend WithEvents lblIndividualFilesStatusProcessingFile As Label
-    Friend WithEvents FolderBrowserDialog As FolderBrowserDialog
     Friend WithEvents lblHashIndividualFilesStep3 As Label
     Friend WithEvents lblHashIndividualFilesStep2 As Label
     Friend WithEvents lblWelcomeText As Label
