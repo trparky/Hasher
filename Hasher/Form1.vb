@@ -1292,7 +1292,7 @@ Public Class Form1
                                                                                                          percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                          VerifyHashProgressBar.Value = percentage
                                                                                                          SyncLock threadLockingObject
-                                                                                                             allBytesPercentage = longAllReadBytes / longAllBytes * 100
+                                                                                                             allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
                                                                                                              lblVerifyHashesTotalStatus.Text = FileSizeToHumanSize(longAllReadBytes) & " of " & FileSizeToHumanSize(longAllBytes) & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
                                                                                                              If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                          End SyncLock
@@ -1898,7 +1898,7 @@ Public Class Form1
                                                                                                          percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                          compareFilesProgressBar.Value = percentage
                                                                                                          SyncLock threadLockingObject
-                                                                                                             allBytesPercentage = longAllReadBytes / longAllBytes * 100
+                                                                                                             allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
                                                                                                          End SyncLock
                                                                                                          ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          CompareFilesAllFilesProgress.Value = allBytesPercentage
@@ -2901,7 +2901,7 @@ Public Class Form1
                                                                                                    percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                    VerifyHashProgressBar.Value = percentage
                                                                                                    SyncLock threadLockingObject
-                                                                                                       allBytesPercentage = longAllReadBytes / longAllBytes * 100
+                                                                                                       allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
                                                                                                        lblVerifyHashesTotalStatus.Text = FileSizeToHumanSize(longAllReadBytes) & " of " & FileSizeToHumanSize(longAllBytes) & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
                                                                                                        If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
                                                                                                    End SyncLock
