@@ -39,10 +39,6 @@ Public Class Form1
     Private Const strColumnTitleChecksumSHA512 As String = "Hash/Checksum (SHA512)"
     Private Const strHashChecksumToBeComputed As String = "Hash/Checksum: (To Be Computed)"
 
-    Private Const strNo As String = "No"
-    Private Const strYes As String = "Yes"
-    Private Const strOK As String = "OK"
-
     Private Const ChecksumFilterIndexMD5 As Integer = 1
     Private Const ChecksumFilterIndexSHA160 As Integer = 2
     Private Const ChecksumFilterIndexSHA256 As Integer = 3

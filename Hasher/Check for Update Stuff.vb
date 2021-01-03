@@ -11,10 +11,6 @@ Module Check_for_Update_Stuff_Module
     Private Const strZipFileName As String = "Hasher.zip"
     ' Change these variables whenever you import this module into a program's code to handle software updates.
 
-    Public Const strNo As String = "No"
-    Public Const strYes As String = "Yes"
-    Public Const strOK As String = "OK"
-
     ''' <summary>Checks to see if a Process ID or PID exists on the system.</summary>
     ''' <param name="PID">The PID of the process you are checking the existance of.</param>
     ''' <param name="processObject">If the PID does exist, the function writes back to this argument in a ByRef way a Process Object that can be interacted with outside of this function.</param>
