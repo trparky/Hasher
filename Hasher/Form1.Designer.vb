@@ -138,7 +138,6 @@ Partial Class Form1
         Me.chkSortByFileSizeAfterLoadingHashFile = New System.Windows.Forms.CheckBox()
         Me.btnAddHasherToAllFiles = New System.Windows.Forms.Button()
         Me.btnAssociate = New System.Windows.Forms.Button()
-        Me.chkSSL = New System.Windows.Forms.CheckBox()
         Me.chkRecurrsiveDirectorySearch = New System.Windows.Forms.CheckBox()
         Me.chkDisplayHashesInUpperCase = New System.Windows.Forms.CheckBox()
         Me.btnFileNotFoundColor = New System.Windows.Forms.Button()
@@ -1338,7 +1337,6 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.chkSortByFileSizeAfterLoadingHashFile)
         Me.tabSettings.Controls.Add(Me.btnAddHasherToAllFiles)
         Me.tabSettings.Controls.Add(Me.btnAssociate)
-        Me.tabSettings.Controls.Add(Me.chkSSL)
         Me.tabSettings.Controls.Add(Me.chkRecurrsiveDirectorySearch)
         Me.tabSettings.Controls.Add(Me.chkDisplayHashesInUpperCase)
         Me.tabSettings.Controls.Add(Me.btnFileNotFoundColor)
@@ -1398,7 +1396,7 @@ Partial Class Form1
         'chkUseMilliseconds
         '
         Me.chkUseMilliseconds.AutoSize = True
-        Me.chkUseMilliseconds.Location = New System.Drawing.Point(15, 128)
+        Me.chkUseMilliseconds.Location = New System.Drawing.Point(15, 105)
         Me.chkUseMilliseconds.Name = "chkUseMilliseconds"
         Me.chkUseMilliseconds.Size = New System.Drawing.Size(332, 17)
         Me.chkUseMilliseconds.TabIndex = 7
@@ -1408,7 +1406,7 @@ Partial Class Form1
         'chkSortFileListingAfterAddingFilesToHash
         '
         Me.chkSortFileListingAfterAddingFilesToHash.AutoSize = True
-        Me.chkSortFileListingAfterAddingFilesToHash.Location = New System.Drawing.Point(15, 82)
+        Me.chkSortFileListingAfterAddingFilesToHash.Location = New System.Drawing.Point(15, 59)
         Me.chkSortFileListingAfterAddingFilesToHash.Name = "chkSortFileListingAfterAddingFilesToHash"
         Me.chkSortFileListingAfterAddingFilesToHash.Size = New System.Drawing.Size(262, 17)
         Me.chkSortFileListingAfterAddingFilesToHash.TabIndex = 6
@@ -1418,7 +1416,7 @@ Partial Class Form1
         'chkSaveChecksumFilesWithRelativePaths
         '
         Me.chkSaveChecksumFilesWithRelativePaths.AutoSize = True
-        Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 105)
+        Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 82)
         Me.chkSaveChecksumFilesWithRelativePaths.Name = "chkSaveChecksumFilesWithRelativePaths"
         Me.chkSaveChecksumFilesWithRelativePaths.Size = New System.Drawing.Size(212, 17)
         Me.chkSaveChecksumFilesWithRelativePaths.TabIndex = 5
@@ -1428,7 +1426,7 @@ Partial Class Form1
         'chkSortByFileSizeAfterLoadingHashFile
         '
         Me.chkSortByFileSizeAfterLoadingHashFile.AutoSize = True
-        Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 221)
+        Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 198)
         Me.chkSortByFileSizeAfterLoadingHashFile.Name = "chkSortByFileSizeAfterLoadingHashFile"
         Me.chkSortByFileSizeAfterLoadingHashFile.Size = New System.Drawing.Size(244, 17)
         Me.chkSortByFileSizeAfterLoadingHashFile.TabIndex = 4
@@ -1437,7 +1435,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 337)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 314)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1446,27 +1444,17 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 337)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 314)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
         Me.btnAssociate.Text = "Associate File Hash Files with Hasher"
         Me.btnAssociate.UseVisualStyleBackColor = True
         '
-        'chkSSL
-        '
-        Me.chkSSL.AutoSize = True
-        Me.chkSSL.Location = New System.Drawing.Point(15, 36)
-        Me.chkSSL.Name = "chkSSL"
-        Me.chkSSL.Size = New System.Drawing.Size(361, 17)
-        Me.chkSSL.TabIndex = 1
-        Me.chkSSL.Text = "Use SSL to check for and download program updates (Recommended)"
-        Me.chkSSL.UseVisualStyleBackColor = True
-        '
         'chkRecurrsiveDirectorySearch
         '
         Me.chkRecurrsiveDirectorySearch.AutoSize = True
-        Me.chkRecurrsiveDirectorySearch.Location = New System.Drawing.Point(15, 198)
+        Me.chkRecurrsiveDirectorySearch.Location = New System.Drawing.Point(15, 175)
         Me.chkRecurrsiveDirectorySearch.Name = "chkRecurrsiveDirectorySearch"
         Me.chkRecurrsiveDirectorySearch.Size = New System.Drawing.Size(434, 17)
         Me.chkRecurrsiveDirectorySearch.TabIndex = 0
@@ -1477,7 +1465,7 @@ Partial Class Form1
         'chkDisplayHashesInUpperCase
         '
         Me.chkDisplayHashesInUpperCase.AutoSize = True
-        Me.chkDisplayHashesInUpperCase.Location = New System.Drawing.Point(15, 152)
+        Me.chkDisplayHashesInUpperCase.Location = New System.Drawing.Point(15, 129)
         Me.chkDisplayHashesInUpperCase.Name = "chkDisplayHashesInUpperCase"
         Me.chkDisplayHashesInUpperCase.Size = New System.Drawing.Size(207, 17)
         Me.chkDisplayHashesInUpperCase.TabIndex = 8
@@ -1556,7 +1544,7 @@ Partial Class Form1
         'chkUseCommasInNumbers
         '
         Me.chkUseCommasInNumbers.AutoSize = True
-        Me.chkUseCommasInNumbers.Location = New System.Drawing.Point(15, 175)
+        Me.chkUseCommasInNumbers.Location = New System.Drawing.Point(15, 152)
         Me.chkUseCommasInNumbers.Name = "chkUseCommasInNumbers"
         Me.chkUseCommasInNumbers.Size = New System.Drawing.Size(194, 17)
         Me.chkUseCommasInNumbers.TabIndex = 29
@@ -1599,7 +1587,7 @@ Partial Class Form1
         'chkAutoAddExtension
         '
         Me.chkAutoAddExtension.AutoSize = True
-        Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 59)
+        Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 36)
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
         Me.chkAutoAddExtension.Size = New System.Drawing.Size(520, 17)
         Me.chkAutoAddExtension.TabIndex = 33
@@ -1679,7 +1667,7 @@ Partial Class Form1
         'chkDisplayValidChecksumString
         '
         Me.chkDisplayValidChecksumString.AutoSize = True
-        Me.chkDisplayValidChecksumString.Location = New System.Drawing.Point(15, 245)
+        Me.chkDisplayValidChecksumString.Location = New System.Drawing.Point(15, 222)
         Me.chkDisplayValidChecksumString.Name = "chkDisplayValidChecksumString"
         Me.chkDisplayValidChecksumString.Size = New System.Drawing.Size(485, 17)
         Me.chkDisplayValidChecksumString.TabIndex = 37
@@ -1689,7 +1677,7 @@ Partial Class Form1
         'chkOpenInExplorer
         '
         Me.chkOpenInExplorer.AutoSize = True
-        Me.chkOpenInExplorer.Location = New System.Drawing.Point(15, 268)
+        Me.chkOpenInExplorer.Location = New System.Drawing.Point(15, 245)
         Me.chkOpenInExplorer.Name = "chkOpenInExplorer"
         Me.chkOpenInExplorer.Size = New System.Drawing.Size(482, 17)
         Me.chkOpenInExplorer.TabIndex = 38
@@ -1699,7 +1687,7 @@ Partial Class Form1
         'chkShowPercentageInWindowTitleBar
         '
         Me.chkShowPercentageInWindowTitleBar.AutoSize = True
-        Me.chkShowPercentageInWindowTitleBar.Location = New System.Drawing.Point(15, 291)
+        Me.chkShowPercentageInWindowTitleBar.Location = New System.Drawing.Point(15, 268)
         Me.chkShowPercentageInWindowTitleBar.Name = "chkShowPercentageInWindowTitleBar"
         Me.chkShowPercentageInWindowTitleBar.Size = New System.Drawing.Size(206, 17)
         Me.chkShowPercentageInWindowTitleBar.TabIndex = 39
@@ -1728,7 +1716,7 @@ Partial Class Form1
         'chkShowFileProgressInFileList
         '
         Me.chkShowFileProgressInFileList.AutoSize = True
-        Me.chkShowFileProgressInFileList.Location = New System.Drawing.Point(15, 314)
+        Me.chkShowFileProgressInFileList.Location = New System.Drawing.Point(15, 291)
         Me.chkShowFileProgressInFileList.Name = "chkShowFileProgressInFileList"
         Me.chkShowFileProgressInFileList.Size = New System.Drawing.Size(165, 17)
         Me.chkShowFileProgressInFileList.TabIndex = 42
@@ -1846,7 +1834,6 @@ Partial Class Form1
     Friend WithEvents colFileSize2 As ColumnHeader
     Friend WithEvents listFilesContextMenu As ContextMenuStrip
     Friend WithEvents CopyHashToClipboardToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents chkSSL As CheckBox
     Friend WithEvents lblDownloadNotification As Label
     Friend WithEvents btnCheckForUpdates As Button
     Friend WithEvents tabCompareFiles As TabPage

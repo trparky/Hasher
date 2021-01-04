@@ -768,7 +768,7 @@ Public Class Form1
     End Sub
 
     Private Sub LaunchURLInWebBrowser(url As String, Optional errorMessage As String = "An error occurred when trying the URL In your Default browser. The URL has been copied to your Windows Clipboard for you to paste into the address bar in the web browser of your choice.")
-        If Not url.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then url = If(chkSSL.Checked, "https://" & url, "http://" & url)
+        If Not url.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then url = "https://" & url
 
         Try
             Process.Start(url)
@@ -907,7 +907,6 @@ Public Class Form1
         lblIndividualFilesStatusProcessingFile.Text = Nothing
         lblHashIndividualFilesTotalStatus.Text = Nothing
         chkRecurrsiveDirectorySearch.Checked = My.Settings.boolRecurrsiveDirectorySearch
-        chkSSL.Checked = My.Settings.boolSSL
         chkSortByFileSizeAfterLoadingHashFile.Checked = My.Settings.boolSortByFileSizeAfterLoadingHashFile
         chkSortFileListingAfterAddingFilesToHash.Checked = My.Settings.boolSortFileListingAfterAddingFilesToHash
         chkSaveChecksumFilesWithRelativePaths.Checked = My.Settings.boolSaveChecksumFilesWithRelativePaths
@@ -2041,10 +2040,6 @@ Public Class Form1
         OpenFileDialog.Filter = "Show All Files|*.*"
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile2.Text = OpenFileDialog.FileName
-    End Sub
-
-    Private Sub ChkSSL_Click(sender As Object, e As EventArgs) Handles chkSSL.Click
-        My.Settings.boolSSL = chkSSL.Checked
     End Sub
 
     Private Sub BtnBrowseFileForCompareKnownHash_Click(sender As Object, e As EventArgs) Handles btnBrowseFileForCompareKnownHash.Click
