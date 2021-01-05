@@ -1122,7 +1122,7 @@ Public Class Form1
         If FolderBrowserDialog.ShowDialog = DialogResult.OK Then AddFilesFromDirectory(FolderBrowserDialog.SelectedPath)
     End Sub
 
-    Private Shared Function CreateListViewItemForHashFileEntry(strFileName As String, strChecksum As String, ByRef intFilesNotFound As Integer, ByRef boolFileExists As Boolean) As MyListViewItem
+    Private Shared Function CreateListViewItemForHashFileEntry(strFileName As String, strChecksum As String, ByRef longFilesThatWereNotFound As Long, ByRef boolFileExists As Boolean) As MyListViewItem
         Dim listViewItem As New MyListViewItem(strFileName) With {.Hash = strChecksum, .FileName = strFileName}
 
         With listViewItem
@@ -1146,7 +1146,7 @@ Public Class Form1
                 .SubItems.Add("")
                 .BoolFileExists = False
                 .BackColor = Color.LightGray
-                intFilesNotFound += 1
+                longFilesThatWereNotFound += 1
                 boolFileExists = True
             End If
         End With
@@ -1194,7 +1194,9 @@ Public Class Form1
                                                      Dim strChecksum, strFileName As String
                                                      Dim index As Integer = 1
                                                      Dim longFilesThatPassedVerification As Long = 0
-                                                     Dim intFilesNotFound As Integer = 0
+                                                     Dim longFilesThatDidNotPassVerification As Long = 0
+                                                     Dim longFilesThatWereNotFound As Long = 0
+                                                     Dim longTotalFiles As Long
                                                      Dim regExMatchObject As Text.RegularExpressions.Match
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim intLineCounter As Integer = 0
@@ -1252,7 +1254,7 @@ Public Class Form1
                                                                      strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
                                                                  End If
 
-                                                                 listOfListViewItems.Add(CreateListViewItemForHashFileEntry(strFileName, strChecksum, intFilesNotFound, boolFileExists))
+                                                                 listOfListViewItems.Add(CreateListViewItemForHashFileEntry(strFileName, strChecksum, longFilesThatWereNotFound, boolFileExists))
                                                                  If boolFileExists Then intFileCount += 1
                                                              End If
 
@@ -1303,6 +1305,8 @@ Public Class Form1
                                                                                         End Try
                                                                                     End Sub
 
+                                                     longTotalFiles = items.Count
+
                                                      For Each item As MyListViewItem In items
                                                          currentItem = item
                                                          intIndexBeingWorkedOn = item.Index
@@ -1344,11 +1348,13 @@ Public Class Form1
                                                                      item.ComputeTime = computeStopwatch.Elapsed
                                                                      item.SubItems(3).Text = TimespanToHMS(item.ComputeTime)
                                                                      item.SubItems(4).Text = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
+                                                                     longFilesThatDidNotPassVerification += 1
                                                                      item.BoolValidHash = False
                                                                  End If
                                                              Else
                                                                  item.Color = fileNotFoundColor
                                                                  item.SubItems(2).Text = "(Error while calculating checksum)"
+                                                                 longFilesThatWereNotFound += 1
                                                              End If
 
                                                              MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item))
@@ -1378,9 +1384,8 @@ Public Class Form1
                                                                   verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
 
                                                                   Dim sbMessageBoxText As New Text.StringBuilder
-                                                                  Dim intFilesThatDidNotPassVerification As Integer = 0
 
-                                                                  If intFilesNotFound = 0 Then
+                                                                  If longFilesThatWereNotFound = 0 And longFilesThatWereNotFound = 0 Then
                                                                       If longFilesThatPassedVerification = intFileCount Then
                                                                           If intFileCount = 1 Then
                                                                               sbMessageBoxText.AppendLine("Processing of hash file complete. The one file in the hash file has passed verification.")
@@ -1388,13 +1393,12 @@ Public Class Form1
                                                                               sbMessageBoxText.AppendLine("Processing of hash file complete. All " & MyToString(intFileCount) & " files have passed verification.")
                                                                           End If
                                                                       Else
-                                                                          intFilesThatDidNotPassVerification = intFileCount - longFilesThatPassedVerification
-                                                                          If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
+                                                                          If longFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
                                                                           sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
                                                                                                                     MyToString(longFilesThatPassedVerification),
                                                                                                                     MyToString(intFileCount),
-                                                                                                                    MyToString(intFilesThatDidNotPassVerification),
-                                                                                                                    If(intFilesThatDidNotPassVerification = 1, "file", "files")
+                                                                                                                    MyToString(longFilesThatDidNotPassVerification),
+                                                                                                                    If(longFilesThatDidNotPassVerification = 1, "file", "files")
                                                                                                                    )
                                                                            )
                                                                       End If
@@ -1403,24 +1407,33 @@ Public Class Form1
                                                                       sbMessageBoxText.AppendLine()
                                                                       btnRetestFailedFiles.Visible = True
 
-                                                                      Dim intTotalFiles As Integer = intFileCount - intFilesNotFound
-                                                                      If longFilesThatPassedVerification = intTotalFiles Then
+                                                                      If longFilesThatPassedVerification = longTotalFiles Then
                                                                           sbMessageBoxText.AppendLine(String.Format("All files have passed verification. Unfortunately, {0} {1} were not found.",
-                                                                                                                    MyToString(intFilesNotFound),
-                                                                                                                    If(intFilesNotFound = 1, "file", "files")
+                                                                                                                    MyToString(longFilesThatWereNotFound),
+                                                                                                                    If(longFilesThatWereNotFound = 1, "file", "files")
                                                                                                                    )
                                                                            )
                                                                       Else
-                                                                          intFilesThatDidNotPassVerification = intTotalFiles - longFilesThatPassedVerification
-                                                                          If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
-                                                                          sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification, Unfortunately, {3} {4} didn't pass verification and {5} {6} were not found.",
-                                                                                                                    MyToString(longFilesThatPassedVerification),
-                                                                                                                    MyToString(intTotalFiles),
-                                                                                                                    If(intTotalFiles = 1, "file", "files"),
-                                                                                                                    MyToString(intFilesThatDidNotPassVerification),
-                                                                                                                    If(intFilesThatDidNotPassVerification = 1, "file", "files"),
-                                                                                                                    MyToString(intFilesNotFound),
-                                                                                                                    If(intFilesNotFound = 1, "file", "files")
+                                                                          If longFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
+
+                                                                          If longFilesThatPassedVerification = 0 Then
+                                                                              sbMessageBoxText.Append(String.Format("None of the files out of {0} {1} passed verification. ",
+                                                                                                                        MyToString(longFilesThatWereNotFound),
+                                                                                                                        If(longFilesThatWereNotFound = 1, "file", "files")
+                                                                                                                       )
+                                                                               )
+                                                                          Else
+                                                                              sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification.",
+                                                                                                                        MyToString(longFilesThatPassedVerification),
+                                                                                                                        MyToString(longFilesThatWereNotFound),
+                                                                                                                        If(longFilesThatWereNotFound = 1, "file", "files")
+                                                                                                                       )
+                                                                               )
+                                                                              sbMessageBoxText.AppendLine()
+                                                                          End If
+                                                                          sbMessageBoxText.AppendLine(String.Format("{0} {1} were not found.",
+                                                                                                                    MyToString(longFilesThatWereNotFound),
+                                                                                                                    If(longFilesThatWereNotFound = 1, "file", "files")
                                                                                                                    )
                                                                            )
                                                                       End If
