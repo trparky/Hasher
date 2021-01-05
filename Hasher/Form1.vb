@@ -1614,7 +1614,7 @@ Public Class Form1
     End Sub
 
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
-        If e.TabPageIndex = TabNumberSettingsTab AndAlso intCurrentlyActiveTab <> TabNumberNull AndAlso Not TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
+        If (e.TabPageIndex = TabNumberSettingsTab Or e.TabPageIndex = TabNumberWelcomeTab) AndAlso intCurrentlyActiveTab <> TabNumberNull AndAlso Not TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
             TabControl1.TabPages(intCurrentlyActiveTab).Text &= " (Currently Active)"
         ElseIf e.TabPageIndex = intCurrentlyActiveTab AndAlso TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
             Dim strNewTabText As String = TabControl1.TabPages(intCurrentlyActiveTab).Text.Replace(" (Currently Active)", "")
