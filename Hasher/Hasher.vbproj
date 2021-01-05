@@ -190,7 +190,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="calculator.ico" />
-    <None Include="Resources\informationIcon.png" />
     <None Include="Resources\UAC.png" />
     <None Include="Resources\bad check.png" />
     <None Include="Resources\good check.png" />

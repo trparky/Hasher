@@ -130,9 +130,6 @@
   <data name="green_dollar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\green_dollar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="informationIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\informationIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="UAC" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UAC.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
