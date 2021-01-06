@@ -1230,7 +1230,7 @@ Public Class Form1
 
                                                      Dim newDataInFileArray As New List(Of String)
                                                      For Each strLineInFile In dataInFileArray
-                                                         If Not strLineInFile.StartsWith("'") Then newDataInFileArray.Add(strLineInFile)
+                                                         If Not strLineInFile.Trim.StartsWith("'") Then newDataInFileArray.Add(strLineInFile)
                                                      Next
                                                      strLineInFile = Nothing
                                                      dataInFileArray = Nothing
