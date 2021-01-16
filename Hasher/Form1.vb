@@ -2678,8 +2678,8 @@ Public Class Form1
                                                                     lblVerifyHashStatus.Text = "Processing item " & MyToString(intLineCounter) & " of " & MyToString(listViewItemCollection.Count) & " (" & VerifyHashProgressBar.Value & "%)."
                                                                 End Sub)
 
-                                                       If Not filesInListFiles.Contains(item.FileName.ToLower) And IO.File.Exists(item.FileName) Then
-                                                           filesInListFiles.Add(item.FileName.ToLower)
+                                                       If Not filesInListFiles.Contains(item.FileName.Trim.ToLower) And IO.File.Exists(item.FileName) Then
+                                                           filesInListFiles.Add(item.FileName.Trim.ToLower)
 
                                                            Dim itemToBeAdded As New MyListViewItem(item.FileName) With {
                                                                .FileSize = New IO.FileInfo(item.FileName).Length,
