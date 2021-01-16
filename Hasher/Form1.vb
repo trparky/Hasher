@@ -14,7 +14,7 @@ Public Class Form1
     Private Const strMessageBoxTitleText As String = "Hasher"
     Private intBufferSize As Integer = My.Settings.shortBufferSize * 1024 * 1024
     Private strLastDirectoryWorkedOn As String
-    Private filesInListFiles As New Specialized.StringCollection
+    Private filesInListFiles As New List(Of String)
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
     Private boolClosingWindow As Boolean = False
@@ -994,7 +994,7 @@ Public Class Form1
 
     Private Sub AddFilesFromDirectory(directoryPath As String)
         workingThread = New Threading.Thread(Sub()
-                                                 Dim oldFilesInListFiles As Specialized.StringCollection = filesInListFiles
+                                                 Dim oldFilesInListFiles As List(Of String) = filesInListFiles
 
                                                  Try
                                                      strLastDirectoryWorkedOn = directoryPath
