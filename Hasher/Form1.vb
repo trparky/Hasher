@@ -1517,6 +1517,8 @@ Public Class Form1
 
         Dim oldMultiValue As Boolean = OpenFileDialog.Multiselect
 
+        lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
+
         OpenFileDialog.Title = "Select a hash file to verify..."
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
