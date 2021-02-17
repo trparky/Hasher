@@ -165,6 +165,7 @@ Partial Class Form1
         Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
         Me.chkShowFileProgressInFileList = New System.Windows.Forms.CheckBox()
         Me.chkShowPercentageInWindowTitleBar = New System.Windows.Forms.CheckBox()
+        Me.ChkIncludeEntryCountInFileNameHeader = New System.Windows.Forms.CheckBox()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
         Me.lblDefaultHashLabel = New System.Windows.Forms.Label()
         Me.defaultHashType = New System.Windows.Forms.ComboBox()
@@ -1358,6 +1359,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.btnSetRoundFileSizes)
         Me.tabSettings.Controls.Add(Me.roundFileSizes)
         Me.tabSettings.Controls.Add(Me.lblRoundFileSizesLabel)
+        Me.tabSettings.Controls.Add(Me.ChkIncludeEntryCountInFileNameHeader)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 382)
@@ -1435,7 +1437,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 314)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 337)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1444,7 +1446,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 314)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 337)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1694,6 +1696,16 @@ Partial Class Form1
         Me.chkShowPercentageInWindowTitleBar.Text = "Show Percentage in Window Title Bar"
         Me.chkShowPercentageInWindowTitleBar.UseVisualStyleBackColor = True
         '
+        'ChkIncludeEntryCountInFileNameHeader
+        '
+        Me.ChkIncludeEntryCountInFileNameHeader.AutoSize = True
+        Me.ChkIncludeEntryCountInFileNameHeader.Location = New System.Drawing.Point(15, 314)
+        Me.ChkIncludeEntryCountInFileNameHeader.Name = "chkIncludeEntryCountInFileNameHeader"
+        Me.ChkIncludeEntryCountInFileNameHeader.Size = New System.Drawing.Size(354, 17)
+        Me.ChkIncludeEntryCountInFileNameHeader.TabIndex = 43
+        Me.ChkIncludeEntryCountInFileNameHeader.Text = "Include entry count in file name header on ""Verify Saved Hashes"" tab"
+        Me.ChkIncludeEntryCountInFileNameHeader.UseVisualStyleBackColor = True
+        '
         'btnRetestFailedFiles
         '
         Me.btnRetestFailedFiles.Location = New System.Drawing.Point(12, 158)
@@ -1922,4 +1934,5 @@ Partial Class Form1
     Friend WithEvents defaultHashType As ComboBox
     Friend WithEvents lblDefaultHashLabel As Label
     Friend WithEvents chkShowFileProgressInFileList As CheckBox
+    Friend WithEvents ChkIncludeEntryCountInFileNameHeader As CheckBox
 End Class

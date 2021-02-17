@@ -919,6 +919,7 @@ Public Class Form1
         chkOpenInExplorer.Checked = My.Settings.boolOpenInExplorer
         chkShowPercentageInWindowTitleBar.Checked = My.Settings.boolShowPercentageInWindowTitleBar
         chkShowFileProgressInFileList.Checked = My.Settings.boolShowFileProgressInFileList
+        ChkIncludeEntryCountInFileNameHeader.Checked = My.Settings.boolIncludeEntryCountInFileNameHeader
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             Check_for_Update_Stuff.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -1234,6 +1235,8 @@ Public Class Form1
                                                      Next
                                                      strLineInFile = Nothing
                                                      dataInFileArray = Nothing
+
+                                                     If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= " (" & newDataInFileArray.Count & " " & If(newDataInFileArray.Count = 1, "entry", "entries") & " in hash file)")
 
                                                      For Each strLineInFile In newDataInFileArray
                                                          intLineCounter += 1
@@ -3121,5 +3124,9 @@ Public Class Form1
 
     Private Sub ChkShowFileProgressInFileList_Click(sender As Object, e As EventArgs) Handles chkShowFileProgressInFileList.Click
         My.Settings.boolShowFileProgressInFileList = chkShowFileProgressInFileList.Checked
+    End Sub
+
+    Private Sub ChkIncludeEntryCountInFileNameHeader_Click(sender As Object, e As EventArgs) Handles ChkIncludeEntryCountInFileNameHeader.Click
+        My.Settings.boolIncludeEntryCountInFileNameHeader = ChkIncludeEntryCountInFileNameHeader.Checked
     End Sub
 End Class
