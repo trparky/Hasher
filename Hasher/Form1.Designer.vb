@@ -159,8 +159,6 @@ Partial Class Form1
         Me.btnSetRoundFileSizes = New System.Windows.Forms.Button()
         Me.roundFileSizes = New System.Windows.Forms.NumericUpDown()
         Me.lblRoundFileSizesLabel = New System.Windows.Forms.Label()
-        Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
-        Me.SaveFileDialog = New System.Windows.Forms.SaveFileDialog()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
         Me.chkShowFileProgressInFileList = New System.Windows.Forms.CheckBox()
@@ -1652,11 +1650,6 @@ Partial Class Form1
         Me.lblRoundFileSizesLabel.TabIndex = 34
         Me.lblRoundFileSizesLabel.Text = "Round file sizes to how many numbers" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "after decimal point (Default: 2)"
         '
-        'OpenFileDialog
-        '
-        Me.OpenFileDialog.Multiselect = True
-        Me.OpenFileDialog.Title = "Add Files to List..."
-        '
         'pictureBoxCompareFiles
         '
         Me.pictureBoxCompareFiles.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1796,7 +1789,6 @@ Partial Class Form1
     Friend WithEvents btnRemoveAllFiles As Button
     Friend WithEvents btnAddFilesInFolder As Button
     Friend WithEvents btnAddIndividualFiles As Button
-    Friend WithEvents OpenFileDialog As OpenFileDialog
     Friend WithEvents listFiles As ListView
     Friend WithEvents colFileName As ColumnHeader
     Friend WithEvents lblHashIndividualFilesStep1 As Label
@@ -1810,7 +1802,6 @@ Partial Class Form1
     Friend WithEvents IndividualFilesProgressBar As ProgressBar
     Friend WithEvents btnIndividualFilesCopyToClipboard As Button
     Friend WithEvents btnIndividualFilesSaveResultsToDisk As Button
-    Friend WithEvents SaveFileDialog As SaveFileDialog
     Friend WithEvents lblIndividualFilesStatusProcessingFile As Label
     Friend WithEvents lblHashIndividualFilesStep3 As Label
     Friend WithEvents lblHashIndividualFilesStep2 As Label

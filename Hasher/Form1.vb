@@ -207,39 +207,37 @@ Public Class Form1
     End Function
 
     Private Sub BtnAddIndividualFiles_Click(sender As Object, e As EventArgs) Handles btnAddIndividualFiles.Click
-        OpenFileDialog.Title = "Select Files to be Hashed..."
-        OpenFileDialog.Multiselect = True
-        OpenFileDialog.Filter = "Show All Files|*.*"
-        OpenFileDialog.ValidateNames = True
-        OpenFileDialog.CheckFileExists = True
-        OpenFileDialog.CheckPathExists = True
-        OpenFileDialog.FileName = ""
-        OpenFileDialog.Multiselect = True
+        Using OpenFileDialog As New OpenFileDialog
+            OpenFileDialog.Title = "Select Files to be Hashed..."
+            OpenFileDialog.Multiselect = True
+            OpenFileDialog.Filter = "Show All Files|*.*"
+            OpenFileDialog.Multiselect = True
 
-        If OpenFileDialog.ShowDialog() = DialogResult.OK Then
-            If OpenFileDialog.FileNames.Count = 0 Then
-                WPFCustomMessageBox.CustomMessageBox.ShowOK("You must select some files.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
-            ElseIf OpenFileDialog.FileNames.Count = 1 Then
-                strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
+            If OpenFileDialog.ShowDialog() = DialogResult.OK Then
+                If OpenFileDialog.FileNames.Count = 0 Then
+                    WPFCustomMessageBox.CustomMessageBox.ShowOK("You must select some files.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+                ElseIf OpenFileDialog.FileNames.Count = 1 Then
+                    strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
 
-                If Not filesInListFiles.Contains(OpenFileDialog.FileName.Trim.ToLower) Then
-                    If IO.File.Exists(OpenFileDialog.FileName) Then listFiles.Items.Add(CreateListFilesObject(OpenFileDialog.FileName))
-                End If
-            Else
-                strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileNames(0)).DirectoryName
-
-                listFiles.BeginUpdate()
-                For Each strFileName As String In OpenFileDialog.FileNames
-                    If Not filesInListFiles.Contains(strFileName.Trim.ToLower) Then
-                        If IO.File.Exists(strFileName) Then listFiles.Items.Add(CreateListFilesObject(strFileName))
+                    If Not filesInListFiles.Contains(OpenFileDialog.FileName.Trim.ToLower) Then
+                        If IO.File.Exists(OpenFileDialog.FileName) Then listFiles.Items.Add(CreateListFilesObject(OpenFileDialog.FileName))
                     End If
-                Next
-                listFiles.EndUpdate()
-            End If
-        End If
+                Else
+                    strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileNames(0)).DirectoryName
 
-        UpdateFilesListCountHeader()
-        If chkSortFileListingAfterAddingFilesToHash.Checked Then ApplyFileSizeSortingToHashList()
+                    listFiles.BeginUpdate()
+                    For Each strFileName As String In OpenFileDialog.FileNames
+                        If Not filesInListFiles.Contains(strFileName.Trim.ToLower) Then
+                            If IO.File.Exists(strFileName) Then listFiles.Items.Add(CreateListFilesObject(strFileName))
+                        End If
+                    Next
+                    listFiles.EndUpdate()
+                End If
+            End If
+
+            UpdateFilesListCountHeader()
+            If chkSortFileListingAfterAddingFilesToHash.Checked Then ApplyFileSizeSortingToHashList()
+        End Using
     End Sub
 
     Private Function GetDataFromAllTheHashes(checksum As ChecksumType, allTheHashes As AllTheHashes) As String
@@ -542,116 +540,118 @@ Public Class Form1
     End Function
 
     Private Sub BtnIndividualFilesSaveResultsToDisk_Click(sender As Object, e As EventArgs) Handles btnIndividualFilesSaveResultsToDisk.Click
-        SaveFileDialog.Filter = "MD5 File|*.md5|SHA1 File|*.sha1|SHA256 File|*.sha256|SHA384 File|*.sha384|SHA512 File|*.sha512"
-        SaveFileDialog.InitialDirectory = strLastDirectoryWorkedOn
-        SaveFileDialog.Title = "Save Hash Results to Disk"
-        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
-        If chkAutoAddExtension.Checked Then SaveFileDialog.OverwritePrompt = False ' We handle this in our own code below.
+        Using SaveFileDialog As New SaveFileDialog
+            SaveFileDialog.Filter = "MD5 File|*.md5|SHA1 File|*.sha1|SHA256 File|*.sha256|SHA384 File|*.sha384|SHA512 File|*.sha512"
+            SaveFileDialog.InitialDirectory = strLastDirectoryWorkedOn
+            SaveFileDialog.Title = "Save Hash Results to Disk"
+            SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
+            If chkAutoAddExtension.Checked Then SaveFileDialog.OverwritePrompt = False ' We handle this in our own code below.
 
-        Dim strFileExtension As String
-        Dim checksumType As ChecksumType
+            Dim strFileExtension As String
+            Dim checksumType As ChecksumType
 
-        If Not String.IsNullOrWhiteSpace(strLastHashFileLoaded) Then
-            strFileExtension = New IO.FileInfo(strLastHashFileLoaded).Extension
+            If Not String.IsNullOrWhiteSpace(strLastHashFileLoaded) Then
+                strFileExtension = New IO.FileInfo(strLastHashFileLoaded).Extension
 
-            If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
-            ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
-            ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
-            ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
-            ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
-            End If
-
-            SaveFileDialog.FileName = strLastHashFileLoaded
-        Else
-            If radioMD5.Checked Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
-            ElseIf radioSHA1.Checked Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
-            ElseIf radioSHA256.Checked Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
-            ElseIf radioSHA384.Checked Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
-            ElseIf radioSHA512.Checked Then
-                SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
-            End If
-        End If
-
-        If SaveFileDialog.ShowDialog() = DialogResult.OK Then
-            If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Or SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                Dim msgBoxResult As Windows.MessageBoxResult
-
-                If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
-                    msgBoxResult = WPFCustomMessageBox.CustomMessageBox.ShowYesNo("MD5 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question)
-                ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                    msgBoxResult = WPFCustomMessageBox.CustomMessageBox.ShowYesNo("SHA1 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question)
+                If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
+                ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
+                ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
+                ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
+                ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
                 End If
 
-                If msgBoxResult = Windows.MessageBoxResult.No Then
-                    WPFCustomMessageBox.CustomMessageBox.ShowOK("Your hash data has not been saved to disk.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
-                    Exit Sub
+                SaveFileDialog.FileName = strLastHashFileLoaded
+            Else
+                If radioMD5.Checked Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
+                ElseIf radioSHA1.Checked Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
+                ElseIf radioSHA256.Checked Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
+                ElseIf radioSHA384.Checked Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
+                ElseIf radioSHA512.Checked Then
+                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
                 End If
             End If
 
-            If chkAutoAddExtension.Checked Then
-                strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
+            If SaveFileDialog.ShowDialog() = DialogResult.OK Then
+                If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Or SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
+                    Dim msgBoxResult As Windows.MessageBoxResult
 
-                If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
                     If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
-                        SaveFileDialog.FileName &= ".md5"
+                        msgBoxResult = WPFCustomMessageBox.CustomMessageBox.ShowYesNo("MD5 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question)
                     ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                        SaveFileDialog.FileName &= ".sha1"
-                    ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256 Then
-                        SaveFileDialog.FileName &= ".sha256"
-                    ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384 Then
-                        SaveFileDialog.FileName &= ".sha384"
-                    ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512 Then
-                        SaveFileDialog.FileName &= ".sha512"
+                        msgBoxResult = WPFCustomMessageBox.CustomMessageBox.ShowYesNo("SHA1 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question)
+                    End If
+
+                    If msgBoxResult = Windows.MessageBoxResult.No Then
+                        WPFCustomMessageBox.CustomMessageBox.ShowOK("Your hash data has not been saved to disk.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                        Exit Sub
                     End If
                 End If
 
-                Media.SystemSounds.Exclamation.Play()
+                If chkAutoAddExtension.Checked Then
+                    strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
 
-                If IO.File.Exists(SaveFileDialog.FileName) AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("The file named """ & New IO.FileInfo(SaveFileDialog.FileName).Name & """ already exists." & vbCrLf & vbCrLf & "Are you absolutely sure you want to replace it?", "Overwrite?", strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.No Then
-                    WPFCustomMessageBox.CustomMessageBox.ShowOK("Save Results to Disk Aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
-                    Exit Sub
+                    If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                        If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
+                            SaveFileDialog.FileName &= ".md5"
+                        ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
+                            SaveFileDialog.FileName &= ".sha1"
+                        ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256 Then
+                            SaveFileDialog.FileName &= ".sha256"
+                        ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384 Then
+                            SaveFileDialog.FileName &= ".sha384"
+                        ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512 Then
+                            SaveFileDialog.FileName &= ".sha512"
+                        End If
+                    End If
+
+                    Media.SystemSounds.Exclamation.Play()
+
+                    If IO.File.Exists(SaveFileDialog.FileName) AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("The file named """ & New IO.FileInfo(SaveFileDialog.FileName).Name & """ already exists." & vbCrLf & vbCrLf & "Are you absolutely sure you want to replace it?", "Overwrite?", strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.No Then
+                        WPFCustomMessageBox.CustomMessageBox.ShowOK("Save Results to Disk Aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                        Exit Sub
+                    End If
                 End If
+
+                Dim fileInfo As New IO.FileInfo(SaveFileDialog.FileName)
+                strFileExtension = fileInfo.Extension
+
+                If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
+                    checksumType = ChecksumType.md5
+                ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
+                    checksumType = ChecksumType.sha160
+                ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
+                    checksumType = ChecksumType.sha256
+                ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
+                    checksumType = ChecksumType.sha384
+                ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                    checksumType = ChecksumType.sha512
+                End If
+
+                Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
+                    streamWriter.Write(StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
+                End Using
+
+                Dim openInExplorerMsgBoxResult As Windows.MessageBoxResult
+
+                If chkOpenInExplorer.Checked Then
+                    openInExplorerMsgBoxResult = Windows.MessageBoxResult.Yes
+                    ShowHashFileWrittenWindow(False, SaveFileDialog.FileName, checksumType)
+                Else
+                    openInExplorerMsgBoxResult = ShowHashFileWrittenWindow(True, SaveFileDialog.FileName, checksumType)
+                End If
+
+                If openInExplorerMsgBoxResult = Windows.MessageBoxResult.Yes Then SelectFileInWindowsExplorer(fileInfo.FullName)
             End If
-
-            Dim fileInfo As New IO.FileInfo(SaveFileDialog.FileName)
-            strFileExtension = fileInfo.Extension
-
-            If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = ChecksumType.md5
-            ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = ChecksumType.sha160
-            ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = ChecksumType.sha256
-            ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = ChecksumType.sha384
-            ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                checksumType = ChecksumType.sha512
-            End If
-
-            Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
-                streamWriter.Write(StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
-            End Using
-
-            Dim openInExplorerMsgBoxResult As Windows.MessageBoxResult
-
-            If chkOpenInExplorer.Checked Then
-                openInExplorerMsgBoxResult = Windows.MessageBoxResult.Yes
-                ShowHashFileWrittenWindow(False, SaveFileDialog.FileName, checksumType)
-            Else
-                openInExplorerMsgBoxResult = ShowHashFileWrittenWindow(True, SaveFileDialog.FileName, checksumType)
-            End If
-
-            If openInExplorerMsgBoxResult = Windows.MessageBoxResult.Yes Then SelectFileInWindowsExplorer(fileInfo.FullName)
-        End If
+        End Using
     End Sub
 
     Private Function ShowHashFileWrittenWindow(BoolAskUserOpenInExplorer As Boolean, fileName As String, checksumtype As ChecksumType) As Windows.MessageBoxResult
@@ -1119,15 +1119,15 @@ Public Class Form1
             Exit Sub
         End If
 
-        OpenFileDialog.Title = "Browse for folder location..."
-        OpenFileDialog.Multiselect = False
-        OpenFileDialog.Filter = "Show All Files|*.*"
-        OpenFileDialog.ValidateNames = False
-        OpenFileDialog.CheckFileExists = False
-        OpenFileDialog.CheckPathExists = True
-        OpenFileDialog.FileName = "Select Folder"
+        Using OpenFileDialog As New OpenFileDialog
+            OpenFileDialog.Title = "Browse for folder location..."
+            OpenFileDialog.Filter = "Show All Files|*.*"
+            OpenFileDialog.ValidateNames = False
+            OpenFileDialog.CheckFileExists = False
+            OpenFileDialog.FileName = "Select Folder"
 
-        If OpenFileDialog.ShowDialog = DialogResult.OK Then AddFilesFromDirectory(IO.Path.GetDirectoryName(OpenFileDialog.FileName))
+            If OpenFileDialog.ShowDialog = DialogResult.OK Then AddFilesFromDirectory(IO.Path.GetDirectoryName(OpenFileDialog.FileName))
+        End Using
     End Sub
 
     Private Shared Function CreateListViewItemForHashFileEntry(strFileName As String, strChecksum As String, ByRef longFilesThatWereNotFound As Long, ByRef boolFileExists As Boolean) As MyListViewItem
@@ -1522,26 +1522,19 @@ Public Class Form1
         btnOpenExistingHashFile.Text = "Abort Processing"
         verifyHashesListFiles.Items.Clear()
 
-        Dim oldMultiValue As Boolean = OpenFileDialog.Multiselect
+        Using OpenFileDialog As New OpenFileDialog
+            lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
 
-        lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
+            OpenFileDialog.Title = "Select a hash file to verify..."
+            OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
+            OpenFileDialog.Multiselect = True
 
-        OpenFileDialog.Title = "Select a hash file to verify..."
-        OpenFileDialog.Multiselect = False
-        OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
-        OpenFileDialog.ValidateNames = True
-        OpenFileDialog.CheckFileExists = True
-        OpenFileDialog.CheckPathExists = True
-        OpenFileDialog.FileName = ""
-        OpenFileDialog.Multiselect = True
-
-        If OpenFileDialog.ShowDialog() = DialogResult.OK Then
-            ProcessExistingHashFile(OpenFileDialog.FileName)
-        Else
-            btnOpenExistingHashFile.Text = "Open Hash File"
-        End If
-
-        OpenFileDialog.Multiselect = oldMultiValue
+            If OpenFileDialog.ShowDialog() = DialogResult.OK Then
+                ProcessExistingHashFile(OpenFileDialog.FileName)
+            Else
+                btnOpenExistingHashFile.Text = "Open Hash File"
+            End If
+        End Using
     End Sub
 
     Private Sub ListFiles_DragDrop(sender As Object, e As DragEventArgs) Handles listFiles.DragDrop
@@ -2052,16 +2045,12 @@ Public Class Form1
         ToolTip.SetToolTip(pictureBoxCompareFiles, "")
         ToolTip.SetToolTip(lblFile1Hash, "")
 
-        OpenFileDialog.Title = "Select file #1 to be compared..."
-        OpenFileDialog.Multiselect = False
-        OpenFileDialog.Filter = "Show All Files|*.*"
-        OpenFileDialog.ValidateNames = True
-        OpenFileDialog.CheckFileExists = True
-        OpenFileDialog.CheckPathExists = True
-        OpenFileDialog.FileName = ""
-        OpenFileDialog.Multiselect = True
+        Using OpenFileDialog As New OpenFileDialog
+            OpenFileDialog.Title = "Select file #1 to be compared..."
+            OpenFileDialog.Filter = "Show All Files|*.*"
 
-        If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile1.Text = OpenFileDialog.FileName
+            If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile1.Text = OpenFileDialog.FileName
+        End Using
     End Sub
 
     Private Sub BtnCompareFilesBrowseFile2_Click(sender As Object, e As EventArgs) Handles btnCompareFilesBrowseFile2.Click
@@ -2070,35 +2059,28 @@ Public Class Form1
         ToolTip.SetToolTip(pictureBoxCompareFiles, "")
         ToolTip.SetToolTip(lblFile2Hash, "")
 
-        OpenFileDialog.Title = "Select file #2 to be compared..."
-        OpenFileDialog.Multiselect = False
-        OpenFileDialog.Filter = "Show All Files|*.*"
-        OpenFileDialog.ValidateNames = True
-        OpenFileDialog.CheckFileExists = True
-        OpenFileDialog.CheckPathExists = True
-        OpenFileDialog.FileName = ""
-        OpenFileDialog.Multiselect = True
+        Using OpenFileDialog As New OpenFileDialog
+            OpenFileDialog.Title = "Select file #2 to be compared..."
+            OpenFileDialog.Filter = "Show All Files|*.*"
 
-        If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile2.Text = OpenFileDialog.FileName
+            If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile2.Text = OpenFileDialog.FileName
+        End Using
     End Sub
 
     Private Sub BtnBrowseFileForCompareKnownHash_Click(sender As Object, e As EventArgs) Handles btnBrowseFileForCompareKnownHash.Click
         If boolDidWePerformAPreviousHash Then txtKnownHash.Text = Nothing
         boolDidWePerformAPreviousHash = False
-        OpenFileDialog.Title = "Select file for known hash comparison..."
-        OpenFileDialog.Multiselect = False
-        OpenFileDialog.Filter = "Show All Files|*.*"
-        OpenFileDialog.ValidateNames = True
-        OpenFileDialog.CheckFileExists = True
-        OpenFileDialog.CheckPathExists = True
-        OpenFileDialog.FileName = ""
-        OpenFileDialog.Multiselect = True
 
-        If OpenFileDialog.ShowDialog() = DialogResult.OK Then
-            txtFileForKnownHash.Text = OpenFileDialog.FileName
-            If Not String.IsNullOrWhiteSpace(txtKnownHash.Text) Then btnCompareAgainstKnownHash.Enabled = True
-            txtKnownHash.Select()
-        End If
+        Using OpenFileDialog As New OpenFileDialog
+            OpenFileDialog.Title = "Select file for known hash comparison..."
+            OpenFileDialog.Filter = "Show All Files|*.*"
+
+            If OpenFileDialog.ShowDialog() = DialogResult.OK Then
+                txtFileForKnownHash.Text = OpenFileDialog.FileName
+                If Not String.IsNullOrWhiteSpace(txtKnownHash.Text) Then btnCompareAgainstKnownHash.Enabled = True
+                txtKnownHash.Select()
+            End If
+        End Using
     End Sub
 
     Private Sub TxtKnownHash_TextChanged(sender As Object, e As EventArgs) Handles txtKnownHash.TextChanged
