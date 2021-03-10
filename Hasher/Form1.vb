@@ -214,6 +214,7 @@ Public Class Form1
         OpenFileDialog.CheckFileExists = True
         OpenFileDialog.CheckPathExists = True
         OpenFileDialog.FileName = ""
+        OpenFileDialog.Multiselect = True
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             If OpenFileDialog.FileNames.Count = 0 Then
@@ -1118,8 +1119,8 @@ Public Class Form1
             Exit Sub
         End If
 
-        OpenFileDialog.Title = "Select Files to be Hashed..."
-        OpenFileDialog.Multiselect = True
+        OpenFileDialog.Title = "Browse for folder location..."
+        OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Show All Files|*.*"
         OpenFileDialog.ValidateNames = False
         OpenFileDialog.CheckFileExists = False
@@ -1532,6 +1533,7 @@ Public Class Form1
         OpenFileDialog.CheckFileExists = True
         OpenFileDialog.CheckPathExists = True
         OpenFileDialog.FileName = ""
+        OpenFileDialog.Multiselect = True
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             ProcessExistingHashFile(OpenFileDialog.FileName)
@@ -2057,6 +2059,7 @@ Public Class Form1
         OpenFileDialog.CheckFileExists = True
         OpenFileDialog.CheckPathExists = True
         OpenFileDialog.FileName = ""
+        OpenFileDialog.Multiselect = True
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile1.Text = OpenFileDialog.FileName
     End Sub
@@ -2074,6 +2077,7 @@ Public Class Form1
         OpenFileDialog.CheckFileExists = True
         OpenFileDialog.CheckPathExists = True
         OpenFileDialog.FileName = ""
+        OpenFileDialog.Multiselect = True
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile2.Text = OpenFileDialog.FileName
     End Sub
@@ -2088,6 +2092,7 @@ Public Class Form1
         OpenFileDialog.CheckFileExists = True
         OpenFileDialog.CheckPathExists = True
         OpenFileDialog.FileName = ""
+        OpenFileDialog.Multiselect = True
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             txtFileForKnownHash.Text = OpenFileDialog.FileName
