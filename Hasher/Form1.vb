@@ -210,6 +210,10 @@ Public Class Form1
         OpenFileDialog.Title = "Select Files to be Hashed..."
         OpenFileDialog.Multiselect = True
         OpenFileDialog.Filter = "Show All Files|*.*"
+        OpenFileDialog.ValidateNames = True
+        OpenFileDialog.CheckFileExists = True
+        OpenFileDialog.CheckPathExists = True
+        OpenFileDialog.FileName = ""
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             If OpenFileDialog.FileNames.Count = 0 Then
@@ -1114,13 +1118,15 @@ Public Class Form1
             Exit Sub
         End If
 
-        Dim FolderBrowserDialog As New BetterFolderBrowser With {
-            .Title = "Browse for folder location...",
-            .Multiselect = False,
-            .RootFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-        }
+        OpenFileDialog.Title = "Select Files to be Hashed..."
+        OpenFileDialog.Multiselect = True
+        OpenFileDialog.Filter = "Show All Files|*.*"
+        OpenFileDialog.ValidateNames = False
+        OpenFileDialog.CheckFileExists = False
+        OpenFileDialog.CheckPathExists = True
+        OpenFileDialog.FileName = "Select Folder"
 
-        If FolderBrowserDialog.ShowDialog = DialogResult.OK Then AddFilesFromDirectory(FolderBrowserDialog.SelectedPath)
+        If OpenFileDialog.ShowDialog = DialogResult.OK Then AddFilesFromDirectory(IO.Path.GetDirectoryName(OpenFileDialog.FileName))
     End Sub
 
     Private Shared Function CreateListViewItemForHashFileEntry(strFileName As String, strChecksum As String, ByRef longFilesThatWereNotFound As Long, ByRef boolFileExists As Boolean) As MyListViewItem
@@ -1522,6 +1528,10 @@ Public Class Form1
         OpenFileDialog.Title = "Select a hash file to verify..."
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
+        OpenFileDialog.ValidateNames = True
+        OpenFileDialog.CheckFileExists = True
+        OpenFileDialog.CheckPathExists = True
+        OpenFileDialog.FileName = ""
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             ProcessExistingHashFile(OpenFileDialog.FileName)
@@ -2043,6 +2053,10 @@ Public Class Form1
         OpenFileDialog.Title = "Select file #1 to be compared..."
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Show All Files|*.*"
+        OpenFileDialog.ValidateNames = True
+        OpenFileDialog.CheckFileExists = True
+        OpenFileDialog.CheckPathExists = True
+        OpenFileDialog.FileName = ""
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile1.Text = OpenFileDialog.FileName
     End Sub
@@ -2056,6 +2070,10 @@ Public Class Form1
         OpenFileDialog.Title = "Select file #2 to be compared..."
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Show All Files|*.*"
+        OpenFileDialog.ValidateNames = True
+        OpenFileDialog.CheckFileExists = True
+        OpenFileDialog.CheckPathExists = True
+        OpenFileDialog.FileName = ""
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then txtFile2.Text = OpenFileDialog.FileName
     End Sub
@@ -2066,6 +2084,10 @@ Public Class Form1
         OpenFileDialog.Title = "Select file for known hash comparison..."
         OpenFileDialog.Multiselect = False
         OpenFileDialog.Filter = "Show All Files|*.*"
+        OpenFileDialog.ValidateNames = True
+        OpenFileDialog.CheckFileExists = True
+        OpenFileDialog.CheckPathExists = True
+        OpenFileDialog.FileName = ""
 
         If OpenFileDialog.ShowDialog() = DialogResult.OK Then
             txtFileForKnownHash.Text = OpenFileDialog.FileName
