@@ -1,5 +1,4 @@
 ﻿Imports System.IO.Pipes
-Imports WK.Libraries.BetterFolderBrowserNS
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
