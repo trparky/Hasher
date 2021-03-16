@@ -2414,6 +2414,7 @@ Public Class Form1
             Dim fileInfo As New IO.FileInfo(strReceivedFileName)
 
             If fileInfo.Extension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Or fileInfo.Extension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                btnTransferToHashIndividualFilesTab.Enabled = False
                 btnOpenExistingHashFile.Text = "Abort Processing"
                 verifyHashesListFiles.Items.Clear()
                 ProcessExistingHashFile(strReceivedFileName)
