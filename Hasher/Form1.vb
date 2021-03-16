@@ -1851,15 +1851,15 @@ Public Class Form1
         End If
 
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("Please select two different files.", strMessageBoxTitleText, strOK)
+            WPFCustomMessageBox.CustomMessageBox.ShowOK("Please select two different files.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
             Exit Sub
         End If
         If Not IO.File.Exists(txtFile1.Text) Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("File #1 doesn't exist.", strMessageBoxTitleText, strOK)
+            WPFCustomMessageBox.CustomMessageBox.ShowOK("File #1 doesn't exist.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
             Exit Sub
         End If
         If Not IO.File.Exists(txtFile2.Text) Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("File #2 doesn't exist.", strMessageBoxTitleText, strOK)
+            WPFCustomMessageBox.CustomMessageBox.ShowOK("File #2 doesn't exist.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
             Exit Sub
         End If
 
