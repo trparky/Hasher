@@ -1395,17 +1395,17 @@ Public Class Form1
                                                                   Dim sbMessageBoxText As New Text.StringBuilder
 
                                                                   If longFilesThatWereNotFound = 0 And longFilesThatWereNotFound = 0 Then
-                                                                      If longFilesThatPassedVerification = intFileCount Then
-                                                                          If intFileCount = 1 Then
+                                                                      If longFilesThatPassedVerification = longTotalFiles Then
+                                                                          If longTotalFiles = 1 Then
                                                                               sbMessageBoxText.AppendLine("Processing of hash file complete. The one file in the hash file has passed verification.")
                                                                           Else
-                                                                              sbMessageBoxText.AppendLine("Processing of hash file complete. All " & MyToString(intFileCount) & " files have passed verification.")
+                                                                              sbMessageBoxText.AppendLine("Processing of hash file complete. All " & MyToString(longTotalFiles) & " files have passed verification.")
                                                                           End If
                                                                       Else
                                                                           If longFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
                                                                           sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
                                                                                                                     MyToString(longFilesThatPassedVerification),
-                                                                                                                    MyToString(intFileCount),
+                                                                                                                    MyToString(longTotalFiles),
                                                                                                                     MyToString(longFilesThatDidNotPassVerification),
                                                                                                                     If(longFilesThatDidNotPassVerification = 1, "file", "files")
                                                                                                                    )
@@ -1427,15 +1427,15 @@ Public Class Form1
 
                                                                           If longFilesThatPassedVerification = 0 Then
                                                                               sbMessageBoxText.Append(String.Format("None of the files out of {0} {1} passed verification. ",
-                                                                                                                        MyToString(longFilesThatWereNotFound),
-                                                                                                                        If(longFilesThatWereNotFound = 1, "file", "files")
+                                                                                                                        MyToString(longTotalFiles),
+                                                                                                                        If(longTotalFiles = 1, "file", "files")
                                                                                                                        )
                                                                                )
                                                                           Else
                                                                               sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification.",
                                                                                                                         MyToString(longFilesThatPassedVerification),
-                                                                                                                        MyToString(longFilesThatWereNotFound),
-                                                                                                                        If(longFilesThatWereNotFound = 1, "file", "files")
+                                                                                                                        MyToString(longTotalFiles),
+                                                                                                                        If(longTotalFiles = 1, "file", "files")
                                                                                                                        )
                                                                                )
                                                                               sbMessageBoxText.AppendLine()
