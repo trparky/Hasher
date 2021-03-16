@@ -1863,12 +1863,26 @@ Public Class Form1
             Exit Sub
         End If
 
+        Dim File1FileInfo As New IO.FileInfo(txtFile1.Text)
+        Dim File2FileInfo As New IO.FileInfo(txtFile2.Text)
+
+        If File1FileInfo.Length <> File2FileInfo.Length Then
+            Dim stringBuilder As New Text.StringBuilder
+            stringBuilder.AppendLine("Both files are different file sizes, so we're going to assume that they're different. OK?")
+            stringBuilder.AppendLine()
+            stringBuilder.AppendLine("File #1 Size: " & FileSizeToHumanSize(File1FileInfo.Length))
+            stringBuilder.AppendLine("File #2 Size: " & FileSizeToHumanSize(File2FileInfo.Length))
+
+            WPFCustomMessageBox.CustomMessageBox.ShowOK(stringBuilder.ToString.Trim, strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+            Exit Sub
+        End If
+
         SyncLock threadLockingObject
             longAllBytes = 0
             longAllReadBytes = 0
 
-            longAllBytes += New IO.FileInfo(txtFile1.Text).Length
-            longAllBytes += New IO.FileInfo(txtFile2.Text).Length
+            longAllBytes += File1FileInfo.Length
+            longAllBytes += File2FileInfo.Length
         End SyncLock
 
         btnCompareFilesBrowseFile1.Enabled = False
