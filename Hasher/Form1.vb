@@ -1403,11 +1403,12 @@ Public Class Form1
                                                                           End If
                                                                       Else
                                                                           If longFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
-                                                                          sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
+                                                                          sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} {4} passed verification, {2} {3} didn't pass verification.",
                                                                                                                     MyToString(longFilesThatPassedVerification),
                                                                                                                     MyToString(longTotalFiles),
                                                                                                                     MyToString(longFilesThatDidNotPassVerification),
-                                                                                                                    If(longFilesThatDidNotPassVerification = 1, "file", "files")
+                                                                                                                    If(longFilesThatDidNotPassVerification = 1, "file", "files"),
+                                                                                                                    If(longTotalFiles = 1, "file", "files")
                                                                                                                    )
                                                                            )
                                                                       End If
@@ -3025,11 +3026,12 @@ Public Class Form1
                                                                       Else
                                                                           intFilesThatDidNotPassVerification = intFileCount - longFilesThatPassedVerification
                                                                           If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
-                                                                          sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} file(s) passed verification, {2} {3} didn't pass verification.",
+                                                                          sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} {4} passed verification, {2} {3} didn't pass verification.",
                                                                                                                     MyToString(longFilesThatPassedVerification),
                                                                                                                     MyToString(intFileCount),
                                                                                                                     MyToString(intFilesThatDidNotPassVerification),
-                                                                                                                    If(intFilesThatDidNotPassVerification = 1, "file", "files")
+                                                                                                                    If(intFilesThatDidNotPassVerification = 1, "file", "files"),
+                                                                                                                    If(intFileCount = 1, "file", "files")
                                                                                                                    )
                                                                            )
                                                                       End If
