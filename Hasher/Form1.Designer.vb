@@ -166,6 +166,7 @@ Partial Class Form1
         Me.ChkIncludeEntryCountInFileNameHeader = New System.Windows.Forms.CheckBox()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
         Me.lblDefaultHashLabel = New System.Windows.Forms.Label()
+        Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = New System.Windows.Forms.CheckBox()
         Me.defaultHashType = New System.Windows.Forms.ComboBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
@@ -204,7 +205,7 @@ Partial Class Form1
         Me.TabControl1.Location = New System.Drawing.Point(12, 12)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1048, 408)
+        Me.TabControl1.Size = New System.Drawing.Size(1048, 426)
         Me.TabControl1.TabIndex = 0
         '
         'tabWelcome
@@ -217,7 +218,7 @@ Partial Class Form1
         Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
         Me.tabWelcome.Name = "tabWelcome"
         Me.tabWelcome.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabWelcome.Size = New System.Drawing.Size(1040, 363)
+        Me.tabWelcome.Size = New System.Drawing.Size(1040, 382)
         Me.tabWelcome.TabIndex = 0
         Me.tabWelcome.Text = "Welcome"
         '
@@ -284,7 +285,7 @@ Partial Class Form1
         Me.tabHashText.Location = New System.Drawing.Point(4, 22)
         Me.tabHashText.Name = "tabHashText"
         Me.tabHashText.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabHashText.Size = New System.Drawing.Size(1040, 363)
+        Me.tabHashText.Size = New System.Drawing.Size(1040, 382)
         Me.tabHashText.TabIndex = 1
         Me.tabHashText.Text = "Hash Text"
         '
@@ -475,7 +476,7 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddIndividualFiles)
         Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabHashIndividualFiles.Name = "tabHashIndividualFiles"
-        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 363)
+        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 382)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
         '
@@ -788,7 +789,7 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Controls.Add(Me.btnTransferToHashIndividualFilesTab)
         Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
-        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 363)
+        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 382)
         Me.tabVerifySavedHashes.TabIndex = 3
         Me.tabVerifySavedHashes.Text = "Verify Saved Hashes"
         '
@@ -980,7 +981,7 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.Label4)
         Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareFiles.Name = "tabCompareFiles"
-        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 363)
+        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 382)
         Me.tabCompareFiles.TabIndex = 5
         Me.tabCompareFiles.Text = "Compare Files"
         '
@@ -1214,7 +1215,7 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.Label7)
         Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareAgainstKnownHash.Name = "tabCompareAgainstKnownHash"
-        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 363)
+        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 382)
         Me.tabCompareAgainstKnownHash.TabIndex = 6
         Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
         '
@@ -1360,9 +1361,10 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.roundFileSizes)
         Me.tabSettings.Controls.Add(Me.lblRoundFileSizesLabel)
         Me.tabSettings.Controls.Add(Me.ChkIncludeEntryCountInFileNameHeader)
+        Me.tabSettings.Controls.Add(Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
-        Me.tabSettings.Size = New System.Drawing.Size(1040, 382)
+        Me.tabSettings.Size = New System.Drawing.Size(1040, 400)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
         '
@@ -1437,7 +1439,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 337)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 360)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1446,7 +1448,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 337)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 360)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1591,7 +1593,7 @@ Partial Class Form1
         Me.chkAutoAddExtension.AutoSize = True
         Me.chkAutoAddExtension.Location = New System.Drawing.Point(15, 36)
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
-        Me.chkAutoAddExtension.Size = New System.Drawing.Size(520, 17)
+        Me.chkAutoAddExtension.Size = New System.Drawing.Size(523, 17)
         Me.chkAutoAddExtension.TabIndex = 33
         Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to file name when saving results to disk (Highly Recommended!!!)"
         Me.ToolTip.SetToolTip(Me.chkAutoAddExtension, "Enabling this option automatically tacks on the appropriate file extension when s" &
@@ -1701,6 +1703,16 @@ Partial Class Form1
         Me.ChkIncludeEntryCountInFileNameHeader.Text = "Include entry count in file name header on ""Verify Saved Hashes"" tab"
         Me.ChkIncludeEntryCountInFileNameHeader.UseVisualStyleBackColor = True
         '
+        'ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes
+        '
+        Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.AutoSize = True
+        Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Location = New System.Drawing.Point(15, 337)
+        Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Name = "ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes"
+        Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Size = New System.Drawing.Size(366, 17)
+        Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.TabIndex = 47
+        Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Text = "Compute Hashes on ""Compare Files"" Tab Even With Different File Sizes"
+        Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.UseVisualStyleBackColor = True
+        '
         'btnRetestFailedFiles
         '
         Me.btnRetestFailedFiles.Location = New System.Drawing.Point(12, 158)
@@ -1745,10 +1757,10 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1072, 433)
+        Me.ClientSize = New System.Drawing.Size(1072, 451)
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(1088, 472)
+        Me.MinimumSize = New System.Drawing.Size(1088, 490)
         Me.Name = "Form1"
         Me.Text = "Hasher"
         Me.TabControl1.ResumeLayout(False)
@@ -1928,4 +1940,5 @@ Partial Class Form1
     Friend WithEvents lblDefaultHashLabel As Label
     Friend WithEvents chkShowFileProgressInFileList As CheckBox
     Friend WithEvents ChkIncludeEntryCountInFileNameHeader As CheckBox
+    Friend WithEvents ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes As CheckBox
 End Class

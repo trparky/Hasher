@@ -924,6 +924,7 @@ Public Class Form1
         chkShowPercentageInWindowTitleBar.Checked = My.Settings.boolShowPercentageInWindowTitleBar
         chkShowFileProgressInFileList.Checked = My.Settings.boolShowFileProgressInFileList
         ChkIncludeEntryCountInFileNameHeader.Checked = My.Settings.boolIncludeEntryCountInFileNameHeader
+        ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Checked = My.Settings.boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             Check_for_Update_Stuff.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -1867,7 +1868,7 @@ Public Class Form1
         Dim File1FileInfo As New IO.FileInfo(txtFile1.Text)
         Dim File2FileInfo As New IO.FileInfo(txtFile2.Text)
 
-        If File1FileInfo.Length <> File2FileInfo.Length Then
+        If File1FileInfo.Length <> File2FileInfo.Length And Not ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Checked Then
             Dim stringBuilder As New Text.StringBuilder
             stringBuilder.AppendLine("Both files are different file sizes, so we're going to assume that they're different. OK?")
             stringBuilder.AppendLine()
@@ -3155,5 +3156,9 @@ Public Class Form1
 
     Private Sub ChkIncludeEntryCountInFileNameHeader_Click(sender As Object, e As EventArgs) Handles ChkIncludeEntryCountInFileNameHeader.Click
         My.Settings.boolIncludeEntryCountInFileNameHeader = ChkIncludeEntryCountInFileNameHeader.Checked
+    End Sub
+
+    Private Sub ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes_Click(sender As Object, e As EventArgs) Handles ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Click
+        My.Settings.boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Checked
     End Sub
 End Class

@@ -104,5 +104,8 @@
     <Setting Name="boolIncludeEntryCountInFileNameHeader" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
