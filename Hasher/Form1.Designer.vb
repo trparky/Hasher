@@ -1402,7 +1402,7 @@ Partial Class Form1
         Me.defaultHashType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.defaultHashType.FormattingEnabled = True
         Me.defaultHashType.Items.AddRange(New Object() {"MD5 (Seriously Not Recommended)", "SHA1 (Not Recommended)", "SHA256", "SHA384", "SHA512"})
-        Me.defaultHashType.Location = New System.Drawing.Point(696, 291)
+        Me.defaultHashType.Location = New System.Drawing.Point(696, 233)
         Me.defaultHashType.Name = "defaultHashType"
         Me.defaultHashType.Size = New System.Drawing.Size(203, 21)
         Me.defaultHashType.TabIndex = 41
@@ -1411,7 +1411,7 @@ Partial Class Form1
         'lblDefaultHashLabel
         '
         Me.lblDefaultHashLabel.AutoSize = True
-        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 295)
+        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 237)
         Me.lblDefaultHashLabel.Name = "lblDefaultHashLabel"
         Me.lblDefaultHashLabel.Size = New System.Drawing.Size(72, 13)
         Me.lblDefaultHashLabel.TabIndex = 40
@@ -1451,7 +1451,7 @@ Partial Class Form1
         '
         'btnSetBufferSize
         '
-        Me.btnSetBufferSize.Location = New System.Drawing.Point(868, 129)
+        Me.btnSetBufferSize.Location = New System.Drawing.Point(868, 264)
         Me.btnSetBufferSize.Name = "btnSetBufferSize"
         Me.btnSetBufferSize.Size = New System.Drawing.Size(31, 23)
         Me.btnSetBufferSize.TabIndex = 27
@@ -1460,7 +1460,7 @@ Partial Class Form1
         '
         'bufferSize
         '
-        Me.bufferSize.Location = New System.Drawing.Point(812, 132)
+        Me.bufferSize.Location = New System.Drawing.Point(812, 267)
         Me.bufferSize.Maximum = New Decimal(New Integer() {16, 0, 0, 0})
         Me.bufferSize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.bufferSize.Name = "bufferSize"
@@ -1471,7 +1471,7 @@ Partial Class Form1
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(618, 134)
+        Me.Label9.Location = New System.Drawing.Point(618, 269)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(188, 13)
         Me.Label9.TabIndex = 23
@@ -1619,7 +1619,7 @@ Partial Class Form1
         '
         'btnPerformBenchmark
         '
-        Me.btnPerformBenchmark.Location = New System.Drawing.Point(621, 158)
+        Me.btnPerformBenchmark.Location = New System.Drawing.Point(621, 293)
         Me.btnPerformBenchmark.Name = "btnPerformBenchmark"
         Me.btnPerformBenchmark.Size = New System.Drawing.Size(278, 23)
         Me.btnPerformBenchmark.TabIndex = 28
@@ -1641,7 +1641,7 @@ Partial Class Form1
         Me.taskPriority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.taskPriority.FormattingEnabled = True
         Me.taskPriority.Items.AddRange(New Object() {"Lowest", "Below Normal", "Normal", "Above Normal", "Highest"})
-        Me.taskPriority.Location = New System.Drawing.Point(774, 187)
+        Me.taskPriority.Location = New System.Drawing.Point(774, 129)
         Me.taskPriority.Name = "taskPriority"
         Me.taskPriority.Size = New System.Drawing.Size(125, 21)
         Me.taskPriority.TabIndex = 31
@@ -1651,7 +1651,7 @@ Partial Class Form1
         'lblTaskPriorityLabel
         '
         Me.lblTaskPriorityLabel.AutoSize = True
-        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(618, 190)
+        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(618, 132)
         Me.lblTaskPriorityLabel.Name = "lblTaskPriorityLabel"
         Me.lblTaskPriorityLabel.Size = New System.Drawing.Size(150, 13)
         Me.lblTaskPriorityLabel.TabIndex = 30
@@ -1684,7 +1684,7 @@ Partial Class Form1
         '
         'btnSetRoundPercentages
         '
-        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(818, 251)
+        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(818, 193)
         Me.btnSetRoundPercentages.Name = "btnSetRoundPercentages"
         Me.btnSetRoundPercentages.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundPercentages.TabIndex = 36
@@ -1693,7 +1693,7 @@ Partial Class Form1
         '
         'roundPercentages
         '
-        Me.roundPercentages.Location = New System.Drawing.Point(762, 254)
+        Me.roundPercentages.Location = New System.Drawing.Point(762, 196)
         Me.roundPercentages.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundPercentages.Name = "roundPercentages"
         Me.roundPercentages.Size = New System.Drawing.Size(50, 20)
@@ -1703,7 +1703,7 @@ Partial Class Form1
         'lblRoundPercentagesLabel
         '
         Me.lblRoundPercentagesLabel.AutoSize = True
-        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(618, 245)
+        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(618, 187)
         Me.lblRoundPercentagesLabel.Name = "lblRoundPercentagesLabel"
         Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(138, 39)
         Me.lblRoundPercentagesLabel.TabIndex = 34
@@ -1711,7 +1711,7 @@ Partial Class Form1
         '
         'btnSetRoundFileSizes
         '
-        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(868, 217)
+        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(868, 159)
         Me.btnSetRoundFileSizes.Name = "btnSetRoundFileSizes"
         Me.btnSetRoundFileSizes.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundFileSizes.TabIndex = 36
@@ -1720,7 +1720,7 @@ Partial Class Form1
         '
         'roundFileSizes
         '
-        Me.roundFileSizes.Location = New System.Drawing.Point(811, 217)
+        Me.roundFileSizes.Location = New System.Drawing.Point(811, 159)
         Me.roundFileSizes.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundFileSizes.Name = "roundFileSizes"
         Me.roundFileSizes.Size = New System.Drawing.Size(50, 20)
@@ -1730,7 +1730,7 @@ Partial Class Form1
         'lblRoundFileSizesLabel
         '
         Me.lblRoundFileSizesLabel.AutoSize = True
-        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(618, 211)
+        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(618, 153)
         Me.lblRoundFileSizesLabel.Name = "lblRoundFileSizesLabel"
         Me.lblRoundFileSizesLabel.Size = New System.Drawing.Size(187, 26)
         Me.lblRoundFileSizesLabel.TabIndex = 34
