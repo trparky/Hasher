@@ -78,14 +78,7 @@ Partial Class Form1
         Me.btnAddFilesInFolder = New System.Windows.Forms.Button()
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
-        Me.verifySavedHashesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
-        Me.VerifyHashProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.lblVerifyHashStatusProcessingFile = New System.Windows.Forms.Label()
-        Me.verifyIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
-        Me.lblVerifyHashesTotalStatus = New System.Windows.Forms.Label()
-        Me.lblVerifyHashStatus = New System.Windows.Forms.Label()
-        Me.lblProcessingFileVerify = New System.Windows.Forms.Label()
-        Me.lblVerifyFileNameLabel = New System.Windows.Forms.Label()
+        Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
         Me.verifyHashesListFiles = New System.Windows.Forms.ListView()
         Me.colFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -94,9 +87,18 @@ Partial Class Form1
         Me.colNewHash = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.verifyListFilesContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ViewChecksumDifferenceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.verifySavedHashesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
+        Me.VerifyHashProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.lblVerifyHashStatusProcessingFile = New System.Windows.Forms.Label()
+        Me.verifyIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
+        Me.lblVerifyHashesTotalStatus = New System.Windows.Forms.Label()
+        Me.lblVerifyHashStatus = New System.Windows.Forms.Label()
+        Me.lblProcessingFileVerify = New System.Windows.Forms.Label()
+        Me.lblVerifyFileNameLabel = New System.Windows.Forms.Label()
         Me.btnOpenExistingHashFile = New System.Windows.Forms.Button()
         Me.btnTransferToHashIndividualFilesTab = New System.Windows.Forms.Button()
         Me.tabCompareFiles = New System.Windows.Forms.TabPage()
+        Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
         Me.compareFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.lblCompareFilesStatus = New System.Windows.Forms.Label()
         Me.compareFilesProgressBar = New System.Windows.Forms.ProgressBar()
@@ -129,6 +131,12 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.chkShowFileProgressInFileList = New System.Windows.Forms.CheckBox()
+        Me.defaultHashType = New System.Windows.Forms.ComboBox()
+        Me.lblDefaultHashLabel = New System.Windows.Forms.Label()
+        Me.chkShowPercentageInWindowTitleBar = New System.Windows.Forms.CheckBox()
+        Me.chkOpenInExplorer = New System.Windows.Forms.CheckBox()
+        Me.chkDisplayValidChecksumString = New System.Windows.Forms.CheckBox()
         Me.btnSetBufferSize = New System.Windows.Forms.Button()
         Me.bufferSize = New System.Windows.Forms.NumericUpDown()
         Me.Label9 = New System.Windows.Forms.Label()
@@ -159,15 +167,9 @@ Partial Class Form1
         Me.btnSetRoundFileSizes = New System.Windows.Forms.Button()
         Me.roundFileSizes = New System.Windows.Forms.NumericUpDown()
         Me.lblRoundFileSizesLabel = New System.Windows.Forms.Label()
-        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.pictureBoxCompareFiles = New System.Windows.Forms.PictureBox()
-        Me.chkShowFileProgressInFileList = New System.Windows.Forms.CheckBox()
-        Me.chkShowPercentageInWindowTitleBar = New System.Windows.Forms.CheckBox()
         Me.ChkIncludeEntryCountInFileNameHeader = New System.Windows.Forms.CheckBox()
-        Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
-        Me.lblDefaultHashLabel = New System.Windows.Forms.Label()
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = New System.Windows.Forms.CheckBox()
-        Me.defaultHashType = New System.Windows.Forms.ComboBox()
+        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -175,10 +177,8 @@ Partial Class Form1
         Me.hashIndividualFilesTableLayoutControl.SuspendLayout()
         Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
-        Me.chkOpenInExplorer = New System.Windows.Forms.CheckBox()
-        Me.verifySavedHashesTableLayoutControl.SuspendLayout()
-        Me.chkDisplayValidChecksumString = New System.Windows.Forms.CheckBox()
         Me.verifyListFilesContextMenu.SuspendLayout()
+        Me.verifySavedHashesTableLayoutControl.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
         CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.compareFilesTableLayoutControl.SuspendLayout()
@@ -218,7 +218,7 @@ Partial Class Form1
         Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
         Me.tabWelcome.Name = "tabWelcome"
         Me.tabWelcome.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabWelcome.Size = New System.Drawing.Size(1040, 382)
+        Me.tabWelcome.Size = New System.Drawing.Size(1040, 400)
         Me.tabWelcome.TabIndex = 0
         Me.tabWelcome.Text = "Welcome"
         '
@@ -285,7 +285,7 @@ Partial Class Form1
         Me.tabHashText.Location = New System.Drawing.Point(4, 22)
         Me.tabHashText.Name = "tabHashText"
         Me.tabHashText.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabHashText.Size = New System.Drawing.Size(1040, 382)
+        Me.tabHashText.Size = New System.Drawing.Size(1040, 400)
         Me.tabHashText.TabIndex = 1
         Me.tabHashText.Text = "Hash Text"
         '
@@ -476,7 +476,7 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddIndividualFiles)
         Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabHashIndividualFiles.Name = "tabHashIndividualFiles"
-        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 382)
+        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 400)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
         '
@@ -789,9 +789,73 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Controls.Add(Me.btnTransferToHashIndividualFilesTab)
         Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
-        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 382)
+        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 400)
         Me.tabVerifySavedHashes.TabIndex = 3
         Me.tabVerifySavedHashes.Text = "Verify Saved Hashes"
+        '
+        'btnRetestFailedFiles
+        '
+        Me.btnRetestFailedFiles.Location = New System.Drawing.Point(12, 158)
+        Me.btnRetestFailedFiles.Name = "btnRetestFailedFiles"
+        Me.btnRetestFailedFiles.Size = New System.Drawing.Size(142, 67)
+        Me.btnRetestFailedFiles.TabIndex = 27
+        Me.btnRetestFailedFiles.Text = "Retest Failed Files"
+        Me.btnRetestFailedFiles.UseVisualStyleBackColor = True
+        Me.btnRetestFailedFiles.Visible = False
+        '
+        'verifyHashesListFiles
+        '
+        Me.verifyHashesListFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2, Me.colNewHash})
+        Me.verifyHashesListFiles.ContextMenuStrip = Me.verifyListFilesContextMenu
+        Me.verifyHashesListFiles.FullRowSelect = True
+        Me.verifyHashesListFiles.HideSelection = False
+        Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
+        Me.verifyHashesListFiles.MultiSelect = False
+        Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
+        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 332)
+        Me.verifyHashesListFiles.TabIndex = 6
+        Me.verifyHashesListFiles.UseCompatibleStateImageBehavior = False
+        Me.verifyHashesListFiles.View = System.Windows.Forms.View.Details
+        '
+        'colFile
+        '
+        Me.colFile.Text = "File Name"
+        Me.colFile.Width = 557
+        '
+        'colFileSize2
+        '
+        Me.colFileSize2.Text = "File Size"
+        Me.colFileSize2.Width = 87
+        '
+        'colResults
+        '
+        Me.colResults.Text = "Results"
+        Me.colResults.Width = 72
+        '
+        'colComputeTime2
+        '
+        Me.colComputeTime2.Text = "Compute Time"
+        Me.colComputeTime2.Width = 150
+        '
+        'colNewHash
+        '
+        Me.colNewHash.Text = "Computed Hash/Checksum (Displays the hash that was computed only if not valid)"
+        Me.colNewHash.Width = 120
+        '
+        'verifyListFilesContextMenu
+        '
+        Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem})
+        Me.verifyListFilesContextMenu.Name = "verifyListFilesContextMenu"
+        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 26)
+        '
+        'ViewChecksumDifferenceToolStripMenuItem
+        '
+        Me.ViewChecksumDifferenceToolStripMenuItem.Name = "ViewChecksumDifferenceToolStripMenuItem"
+        Me.ViewChecksumDifferenceToolStripMenuItem.Size = New System.Drawing.Size(215, 22)
+        Me.ViewChecksumDifferenceToolStripMenuItem.Text = "&View Checksum Difference"
         '
         'verifySavedHashesTableLayoutControl
         '
@@ -885,60 +949,6 @@ Partial Class Form1
         Me.lblVerifyFileNameLabel.TabIndex = 19
         Me.lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
         '
-        'verifyHashesListFiles
-        '
-        Me.verifyHashesListFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2, Me.colNewHash})
-        Me.verifyHashesListFiles.ContextMenuStrip = Me.verifyListFilesContextMenu
-        Me.verifyHashesListFiles.FullRowSelect = True
-        Me.verifyHashesListFiles.HideSelection = False
-        Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
-        Me.verifyHashesListFiles.MultiSelect = False
-        Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
-        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 332)
-        Me.verifyHashesListFiles.TabIndex = 6
-        Me.verifyHashesListFiles.UseCompatibleStateImageBehavior = False
-        Me.verifyHashesListFiles.View = System.Windows.Forms.View.Details
-        '
-        'colFile
-        '
-        Me.colFile.Text = "File Name"
-        Me.colFile.Width = 557
-        '
-        'colFileSize2
-        '
-        Me.colFileSize2.Text = "File Size"
-        Me.colFileSize2.Width = 87
-        '
-        'colResults
-        '
-        Me.colResults.Text = "Results"
-        Me.colResults.Width = 72
-        '
-        'colComputeTime2
-        '
-        Me.colComputeTime2.Text = "Compute Time"
-        Me.colComputeTime2.Width = 150
-        '
-        'colNewHash
-        '
-        Me.colNewHash.Text = "Computed Hash/Checksum (Displays the hash that was computed only if not valid)"
-        Me.colNewHash.Width = 120
-        '
-        'verifyListFilesContextMenu
-        '
-        Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem})
-        Me.verifyListFilesContextMenu.Name = "verifyListFilesContextMenu"
-        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 26)
-        '
-        'ViewChecksumDifferenceToolStripMenuItem
-        '
-        Me.ViewChecksumDifferenceToolStripMenuItem.Name = "ViewChecksumDifferenceToolStripMenuItem"
-        Me.ViewChecksumDifferenceToolStripMenuItem.Size = New System.Drawing.Size(215, 22)
-        Me.ViewChecksumDifferenceToolStripMenuItem.Text = "&View Checksum Difference"
-        '
         'btnOpenExistingHashFile
         '
         Me.btnOpenExistingHashFile.AllowDrop = True
@@ -981,15 +991,24 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.Label4)
         Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareFiles.Name = "tabCompareFiles"
-        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 382)
+        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 400)
         Me.tabCompareFiles.TabIndex = 5
         Me.tabCompareFiles.Text = "Compare Files"
         '
+        'pictureBoxCompareFiles
+        '
+        Me.pictureBoxCompareFiles.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pictureBoxCompareFiles.Location = New System.Drawing.Point(969, 14)
+        Me.pictureBoxCompareFiles.Name = "pictureBoxCompareFiles"
+        Me.pictureBoxCompareFiles.Size = New System.Drawing.Size(64, 64)
+        Me.pictureBoxCompareFiles.TabIndex = 36
+        Me.pictureBoxCompareFiles.TabStop = False
+        '
         'compareFilesTableLayoutControl
         '
-        Me.compareFilesTableLayoutControl.ColumnCount = 2
         Me.compareFilesTableLayoutControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.compareFilesTableLayoutControl.ColumnCount = 2
         Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.compareFilesTableLayoutControl.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.compareFilesTableLayoutControl.Controls.Add(Me.lblCompareFilesStatus, 0, 0)
@@ -1215,7 +1234,7 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.Label7)
         Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareAgainstKnownHash.Name = "tabCompareAgainstKnownHash"
-        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 382)
+        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 400)
         Me.tabCompareAgainstKnownHash.TabIndex = 6
         Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
         '
@@ -1367,6 +1386,68 @@ Partial Class Form1
         Me.tabSettings.Size = New System.Drawing.Size(1040, 400)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
+        '
+        'chkShowFileProgressInFileList
+        '
+        Me.chkShowFileProgressInFileList.AutoSize = True
+        Me.chkShowFileProgressInFileList.Location = New System.Drawing.Point(15, 291)
+        Me.chkShowFileProgressInFileList.Name = "chkShowFileProgressInFileList"
+        Me.chkShowFileProgressInFileList.Size = New System.Drawing.Size(165, 17)
+        Me.chkShowFileProgressInFileList.TabIndex = 42
+        Me.chkShowFileProgressInFileList.Text = "Show File Progress in File List"
+        Me.chkShowFileProgressInFileList.UseVisualStyleBackColor = True
+        '
+        'defaultHashType
+        '
+        Me.defaultHashType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.defaultHashType.FormattingEnabled = True
+        Me.defaultHashType.Items.AddRange(New Object() {"MD5 (Seriously Not Recommended)", "SHA1 (Not Recommended)", "SHA256", "SHA384", "SHA512"})
+        Me.defaultHashType.Location = New System.Drawing.Point(696, 291)
+        Me.defaultHashType.Name = "defaultHashType"
+        Me.defaultHashType.Size = New System.Drawing.Size(203, 21)
+        Me.defaultHashType.TabIndex = 41
+        Me.ToolTip.SetToolTip(Me.defaultHashType, "This sets the default hash type at program load.")
+        '
+        'lblDefaultHashLabel
+        '
+        Me.lblDefaultHashLabel.AutoSize = True
+        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 295)
+        Me.lblDefaultHashLabel.Name = "lblDefaultHashLabel"
+        Me.lblDefaultHashLabel.Size = New System.Drawing.Size(72, 13)
+        Me.lblDefaultHashLabel.TabIndex = 40
+        Me.lblDefaultHashLabel.Text = "Default Hash:"
+        '
+        'chkShowPercentageInWindowTitleBar
+        '
+        Me.chkShowPercentageInWindowTitleBar.AutoSize = True
+        Me.chkShowPercentageInWindowTitleBar.Location = New System.Drawing.Point(15, 268)
+        Me.chkShowPercentageInWindowTitleBar.Name = "chkShowPercentageInWindowTitleBar"
+        Me.chkShowPercentageInWindowTitleBar.Size = New System.Drawing.Size(206, 17)
+        Me.chkShowPercentageInWindowTitleBar.TabIndex = 39
+        Me.chkShowPercentageInWindowTitleBar.Text = "Show Percentage in Window Title Bar"
+        Me.chkShowPercentageInWindowTitleBar.UseVisualStyleBackColor = True
+        '
+        'chkOpenInExplorer
+        '
+        Me.chkOpenInExplorer.AutoSize = True
+        Me.chkOpenInExplorer.Location = New System.Drawing.Point(15, 245)
+        Me.chkOpenInExplorer.Name = "chkOpenInExplorer"
+        Me.chkOpenInExplorer.Size = New System.Drawing.Size(482, 17)
+        Me.chkOpenInExplorer.TabIndex = 38
+        Me.chkOpenInExplorer.Text = "Open Windows Explorer with checksum file selected after saving checksum file to d" &
+    "isk by default"
+        Me.chkOpenInExplorer.UseVisualStyleBackColor = True
+        '
+        'chkDisplayValidChecksumString
+        '
+        Me.chkDisplayValidChecksumString.AutoSize = True
+        Me.chkDisplayValidChecksumString.Location = New System.Drawing.Point(15, 222)
+        Me.chkDisplayValidChecksumString.Name = "chkDisplayValidChecksumString"
+        Me.chkDisplayValidChecksumString.Size = New System.Drawing.Size(485, 17)
+        Me.chkDisplayValidChecksumString.TabIndex = 37
+        Me.chkDisplayValidChecksumString.Text = "Display ""Valid Checksum"" instead of leaving it blank in fifth column on ""Verify S" &
+    "aved Hashes"" tab"
+        Me.chkDisplayValidChecksumString.UseVisualStyleBackColor = True
         '
         'btnSetBufferSize
         '
@@ -1595,7 +1676,8 @@ Partial Class Form1
         Me.chkAutoAddExtension.Name = "chkAutoAddExtension"
         Me.chkAutoAddExtension.Size = New System.Drawing.Size(523, 17)
         Me.chkAutoAddExtension.TabIndex = 33
-        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to file name when saving results to disk (Highly Recommended!!!)"
+        Me.chkAutoAddExtension.Text = "Enable adding appropriate file extension to file name when saving results to disk" &
+    " (Highly Recommended!!!)"
         Me.ToolTip.SetToolTip(Me.chkAutoAddExtension, "Enabling this option automatically tacks on the appropriate file extension when s" &
         "aving checksum data to disk.")
         Me.chkAutoAddExtension.UseVisualStyleBackColor = True
@@ -1654,50 +1736,11 @@ Partial Class Form1
         Me.lblRoundFileSizesLabel.TabIndex = 34
         Me.lblRoundFileSizesLabel.Text = "Round file sizes to how many numbers" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "after decimal point (Default: 2)"
         '
-        'pictureBoxCompareFiles
-        '
-        Me.pictureBoxCompareFiles.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pictureBoxCompareFiles.Location = New System.Drawing.Point(969, 14)
-        Me.pictureBoxCompareFiles.Name = "pictureBoxCompareFiles"
-        Me.pictureBoxCompareFiles.Size = New System.Drawing.Size(64, 64)
-        Me.pictureBoxCompareFiles.TabIndex = 36
-        Me.pictureBoxCompareFiles.TabStop = False
-        '
-        'chkDisplayValidChecksumString
-        '
-        Me.chkDisplayValidChecksumString.AutoSize = True
-        Me.chkDisplayValidChecksumString.Location = New System.Drawing.Point(15, 222)
-        Me.chkDisplayValidChecksumString.Name = "chkDisplayValidChecksumString"
-        Me.chkDisplayValidChecksumString.Size = New System.Drawing.Size(485, 17)
-        Me.chkDisplayValidChecksumString.TabIndex = 37
-        Me.chkDisplayValidChecksumString.Text = "Display ""Valid Checksum"" instead of leaving it blank in fifth column on ""Verify Saved Hashes"" tab"
-        Me.chkDisplayValidChecksumString.UseVisualStyleBackColor = True
-        '
-        'chkOpenInExplorer
-        '
-        Me.chkOpenInExplorer.AutoSize = True
-        Me.chkOpenInExplorer.Location = New System.Drawing.Point(15, 245)
-        Me.chkOpenInExplorer.Name = "chkOpenInExplorer"
-        Me.chkOpenInExplorer.Size = New System.Drawing.Size(482, 17)
-        Me.chkOpenInExplorer.TabIndex = 38
-        Me.chkOpenInExplorer.Text = "Open Windows Explorer with checksum file selected after saving checksum file to disk by default"
-        Me.chkOpenInExplorer.UseVisualStyleBackColor = True
-        '
-        'chkShowPercentageInWindowTitleBar
-        '
-        Me.chkShowPercentageInWindowTitleBar.AutoSize = True
-        Me.chkShowPercentageInWindowTitleBar.Location = New System.Drawing.Point(15, 268)
-        Me.chkShowPercentageInWindowTitleBar.Name = "chkShowPercentageInWindowTitleBar"
-        Me.chkShowPercentageInWindowTitleBar.Size = New System.Drawing.Size(206, 17)
-        Me.chkShowPercentageInWindowTitleBar.TabIndex = 39
-        Me.chkShowPercentageInWindowTitleBar.Text = "Show Percentage in Window Title Bar"
-        Me.chkShowPercentageInWindowTitleBar.UseVisualStyleBackColor = True
-        '
         'ChkIncludeEntryCountInFileNameHeader
         '
         Me.ChkIncludeEntryCountInFileNameHeader.AutoSize = True
         Me.ChkIncludeEntryCountInFileNameHeader.Location = New System.Drawing.Point(15, 314)
-        Me.ChkIncludeEntryCountInFileNameHeader.Name = "chkIncludeEntryCountInFileNameHeader"
+        Me.ChkIncludeEntryCountInFileNameHeader.Name = "ChkIncludeEntryCountInFileNameHeader"
         Me.ChkIncludeEntryCountInFileNameHeader.Size = New System.Drawing.Size(354, 17)
         Me.ChkIncludeEntryCountInFileNameHeader.TabIndex = 43
         Me.ChkIncludeEntryCountInFileNameHeader.Text = "Include entry count in file name header on ""Verify Saved Hashes"" tab"
@@ -1712,46 +1755,6 @@ Partial Class Form1
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.TabIndex = 47
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Text = "Compute Hashes on ""Compare Files"" Tab Even With Different File Sizes"
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.UseVisualStyleBackColor = True
-        '
-        'btnRetestFailedFiles
-        '
-        Me.btnRetestFailedFiles.Location = New System.Drawing.Point(12, 158)
-        Me.btnRetestFailedFiles.Name = "btnRetestFailedFiles"
-        Me.btnRetestFailedFiles.Size = New System.Drawing.Size(142, 67)
-        Me.btnRetestFailedFiles.TabIndex = 27
-        Me.btnRetestFailedFiles.Text = "Retest Failed Files"
-        Me.btnRetestFailedFiles.UseVisualStyleBackColor = True
-        Me.btnRetestFailedFiles.Visible = False
-        '
-        'lblDefaultHashLabel
-        '
-        Me.lblDefaultHashLabel.AutoSize = True
-        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 295)
-        Me.lblDefaultHashLabel.Name = "lblDefaultHashLabel"
-        Me.lblDefaultHashLabel.Size = New System.Drawing.Size(72, 13)
-        Me.lblDefaultHashLabel.TabIndex = 40
-        Me.lblDefaultHashLabel.Text = "Default Hash:"
-        '
-        'chkShowFileProgressInFileList
-        '
-        Me.chkShowFileProgressInFileList.AutoSize = True
-        Me.chkShowFileProgressInFileList.Location = New System.Drawing.Point(15, 291)
-        Me.chkShowFileProgressInFileList.Name = "chkShowFileProgressInFileList"
-        Me.chkShowFileProgressInFileList.Size = New System.Drawing.Size(165, 17)
-        Me.chkShowFileProgressInFileList.TabIndex = 42
-        Me.chkShowFileProgressInFileList.Text = "Show File Progress in File List"
-        Me.chkShowFileProgressInFileList.UseVisualStyleBackColor = True
-        '
-        'defaultHashType
-        '
-        Me.defaultHashType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.defaultHashType.FormattingEnabled = True
-        Me.defaultHashType.Items.AddRange(New Object() {"MD5 (Seriously Not Recommended)", "SHA1 (Not Recommended)", "SHA256", "SHA384", "SHA512"})
-        Me.defaultHashType.Location = New System.Drawing.Point(696, 291)
-        Me.defaultHashType.Name = "defaultHashType"
-        Me.defaultHashType.Size = New System.Drawing.Size(203, 21)
-        Me.defaultHashType.TabIndex = 41
-        Me.ToolTip.SetToolTip(Me.defaultHashType, "This sets the default hash type at program load.")
         '
         'Form1
         '
@@ -1775,11 +1778,12 @@ Partial Class Form1
         Me.listFilesContextMenu.ResumeLayout(False)
         Me.tabVerifySavedHashes.ResumeLayout(False)
         Me.tabVerifySavedHashes.PerformLayout()
+        Me.verifyListFilesContextMenu.ResumeLayout(False)
         Me.verifySavedHashesTableLayoutControl.ResumeLayout(False)
         Me.verifySavedHashesTableLayoutControl.PerformLayout()
-        Me.verifyListFilesContextMenu.ResumeLayout(False)
         Me.tabCompareFiles.ResumeLayout(False)
         Me.tabCompareFiles.PerformLayout()
+        CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.compareFilesTableLayoutControl.ResumeLayout(False)
         Me.compareFilesTableLayoutControl.PerformLayout()
         Me.tabCompareAgainstKnownHash.ResumeLayout(False)
@@ -1790,7 +1794,6 @@ Partial Class Form1
         CType(Me.bufferSize, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.roundPercentages, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.roundFileSizes, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
