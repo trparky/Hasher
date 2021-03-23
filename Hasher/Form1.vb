@@ -176,7 +176,7 @@ Public Class Form1
     End Sub
 
     Private Sub BtnRemoveSelectedFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveSelectedFiles.Click
-        If listFiles.SelectedItems.Count > 500 AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("It would be recommended to use the ""Remove All Files"" button instead, removing this many items (" & MyToString(listFiles.SelectedItems.Count) & " items) from the list is a slow process and will make the program appear locked up." & vbCrLf & vbCrLf & "Are you sure you want to remove the items this way?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.No Then
+        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox("It would be recommended to use the ""Remove All Files"" button instead, removing this many items (" & MyToString(listFiles.SelectedItems.Count) & " items) from the list is a slow process and will make the program appear locked up." & vbCrLf & vbCrLf & "Are you sure you want to remove the items this way?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
             Exit Sub
         End If
 
@@ -214,7 +214,7 @@ Public Class Form1
 
             If OpenFileDialog.ShowDialog() = DialogResult.OK Then
                 If OpenFileDialog.FileNames.Count = 0 Then
-                    WPFCustomMessageBox.CustomMessageBox.ShowOK("You must select some files.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+                    MsgBox("You must select some files.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                 ElseIf OpenFileDialog.FileNames.Count = 1 Then
                     strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
 
@@ -258,7 +258,7 @@ Public Class Form1
 
     Private Sub BtnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
         If btnComputeHash.Text = "Abort Processing" Then
-            If WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Are you sure you want to abort processing?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.Yes Then
+            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
                     workingThread.Abort()
                     boolBackgroundThreadWorking = False
@@ -414,9 +414,9 @@ Public Class Form1
                                                                   workingThread = Nothing
 
                                                                   If longErroredFiles = 0 Then
-                                                                      WPFCustomMessageBox.CustomMessageBox.ShowOK("Completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                      MsgBox("Completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   Else
-                                                                      WPFCustomMessageBox.CustomMessageBox.ShowOK("Completed in " & TimespanToHMS(stopWatch.Elapsed) & "." & vbCrLf & vbCrLf & longErroredFiles.ToString & If(longErroredFiles = 1, " file", " files") & " experienced a general I/O error while processing.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                      MsgBox("Completed in " & TimespanToHMS(stopWatch.Elapsed) & "." & vbCrLf & vbCrLf & longErroredFiles.ToString & If(longErroredFiles = 1, " file", " files") & " experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   End If
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
@@ -441,7 +441,7 @@ Public Class Form1
 
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
-                                                                  If Not boolClosingWindow Then WPFCustomMessageBox.CustomMessageBox.ShowOK("Processing aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
                                                      itemOnGUI = Nothing
@@ -525,7 +525,7 @@ Public Class Form1
     End Sub
 
     Private Sub BtnIndividualFilesCopyToClipboard_Click(sender As Object, e As EventArgs) Handles btnIndividualFilesCopyToClipboard.Click
-        If CopyTextToWindowsClipboard(StrGetIndividualHashesInStringFormat().Trim) Then WPFCustomMessageBox.CustomMessageBox.ShowOK("Your hash results have been copied to the Windows Clipboard.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+        If CopyTextToWindowsClipboard(StrGetIndividualHashesInStringFormat().Trim) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Shared Function CopyTextToWindowsClipboard(strTextToBeCopiedToClipboard As String) As Boolean
@@ -533,7 +533,7 @@ Public Class Form1
             Clipboard.SetDataObject(strTextToBeCopiedToClipboard, True, 5, 200)
             Return True
         Catch ex As Exception
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("Unable to open Windows Clipboard to copy text to it.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+            MsgBox("Unable to open Windows Clipboard to copy text to it.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             Return False
         End Try
     End Function
@@ -581,16 +581,16 @@ Public Class Form1
 
             If SaveFileDialog.ShowDialog() = DialogResult.OK Then
                 If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Or SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                    Dim msgBoxResult As Windows.MessageBoxResult
+                    Dim MsgBoxResult As MsgBoxResult
 
                     If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
-                        msgBoxResult = WPFCustomMessageBox.CustomMessageBox.ShowYesNo("MD5 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question)
+                        MsgBoxResult = MsgBox("MD5 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                     ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                        msgBoxResult = WPFCustomMessageBox.CustomMessageBox.ShowYesNo("SHA1 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question)
+                        MsgBoxResult = MsgBox("SHA1 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                     End If
 
-                    If msgBoxResult = Windows.MessageBoxResult.No Then
-                        WPFCustomMessageBox.CustomMessageBox.ShowOK("Your hash data has not been saved to disk.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                    If MsgBoxResult = MsgBoxResult.No Then
+                        MsgBox("Your hash data has not been saved to disk.", MsgBoxStyle.Information, strMessageBoxTitleText)
                         Exit Sub
                     End If
                 End If
@@ -614,8 +614,8 @@ Public Class Form1
 
                     Media.SystemSounds.Exclamation.Play()
 
-                    If IO.File.Exists(SaveFileDialog.FileName) AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("The file named """ & New IO.FileInfo(SaveFileDialog.FileName).Name & """ already exists." & vbCrLf & vbCrLf & "Are you absolutely sure you want to replace it?", "Overwrite?", strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.No Then
-                        WPFCustomMessageBox.CustomMessageBox.ShowOK("Save Results to Disk Aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                    If IO.File.Exists(SaveFileDialog.FileName) AndAlso MsgBox("The file named """ & New IO.FileInfo(SaveFileDialog.FileName).Name & """ already exists." & vbCrLf & vbCrLf & "Are you absolutely sure you want to replace it?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "Overwrite?") = MsgBoxResult.No Then
+                        MsgBox("Save Results to Disk Aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                         Exit Sub
                     End If
                 End If
@@ -642,13 +642,13 @@ Public Class Form1
                 Dim openInExplorerMsgBoxResult As Windows.MessageBoxResult
 
                 If chkOpenInExplorer.Checked Then
-                    openInExplorerMsgBoxResult = Windows.MessageBoxResult.Yes
+                    openInExplorerMsgBoxResult = MsgBoxResult.Yes
                     ShowHashFileWrittenWindow(False, SaveFileDialog.FileName, checksumType)
                 Else
                     openInExplorerMsgBoxResult = ShowHashFileWrittenWindow(True, SaveFileDialog.FileName, checksumType)
                 End If
 
-                If openInExplorerMsgBoxResult = Windows.MessageBoxResult.Yes Then SelectFileInWindowsExplorer(fileInfo.FullName)
+                If openInExplorerMsgBoxResult = MsgBoxResult.Yes Then SelectFileInWindowsExplorer(fileInfo.FullName)
             End If
         End Using
     End Sub
@@ -663,13 +663,13 @@ Public Class Form1
 
         If BoolAskUserOpenInExplorer Then
             StringBuilder.AppendLine("Do you want to open Windows Explorer to the location of the checksum file?")
-            Return WPFCustomMessageBox.CustomMessageBox.ShowYesNo(StringBuilder.ToString.Trim, strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question)
+            Return MsgBox(StringBuilder.ToString.Trim, MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
         Else
             StringBuilder.AppendLine("Windows Explorer will now open to the location of the checksum file.")
-            Return WPFCustomMessageBox.CustomMessageBox.ShowOK(StringBuilder.ToString.Trim, strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+            Return MsgBox(StringBuilder.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
         End If
 
-        Return Windows.MessageBoxResult.Yes
+        Return MsgBoxResult.Yes
     End Function
 
     Private Sub SelectFileInWindowsExplorer(ByVal strFullPath As String)
@@ -778,7 +778,7 @@ Public Class Form1
             Process.Start(url)
         Catch ex As Exception
             CopyTextToWindowsClipboard(url)
-            WPFCustomMessageBox.CustomMessageBox.ShowOK(errorMessage, strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+            MsgBox(errorMessage, MsgBoxStyle.Critical, strMessageBoxTitleText)
         End Try
     End Sub
 
@@ -794,7 +794,7 @@ Public Class Form1
                 memoryStream.CopyTo(namedPipeDataStream)
             End Using
         Catch ex As IO.IOException
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error sending data to the named pipe server used for interprocess communication, please close all Hasher instances and try again.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+            MsgBox("There was an error sending data to the named pipe server used for interprocess communication, please close all Hasher instances and try again.", MsgBoxStyle.Critical, strMessageBoxTitleText)
         End Try
     End Sub
 
@@ -983,7 +983,7 @@ Public Class Form1
         boolDoneLoading = True
 
         If Not FileAssociation.DoesCompareFilesExist() Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("Hasher has a new function! The ability to compare two files from Windows Explorer." & vbCrLf & vbCrLf & "Please go to the Setting tab and click on the ""Add Hasher to All Files"" button to add support to Windows Explorer for this new feature.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+            MsgBox("Hasher has a new function! The ability to compare two files from Windows Explorer." & vbCrLf & vbCrLf & "Please go to the Setting tab and click on the ""Add Hasher to All Files"" button to add support to Windows Explorer for this new feature.", MsgBoxStyle.Information, strMessageBoxTitleText)
         End If
     End Sub
 
@@ -1113,7 +1113,7 @@ Public Class Form1
     End Sub
 
     Private Sub BtnAddFilesInFolder_Click(sender As Object, e As EventArgs) Handles btnAddFilesInFolder.Click
-        If btnAddFilesInFolder.Text = "Abort Adding Files" AndAlso workingThread IsNot Nothing AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Are you sure you want to abort adding files?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.Yes Then
+        If btnAddFilesInFolder.Text = "Abort Adding Files" AndAlso workingThread IsNot Nothing AndAlso MsgBox("Are you sure you want to abort adding files?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
             workingThread.Abort()
             boolBackgroundThreadWorking = False
             Exit Sub
@@ -1188,7 +1188,7 @@ Public Class Form1
         ElseIf strChecksumFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
             checksumType = ChecksumType.sha512
         Else
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("Invalid Hash File Type.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+            MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             Exit Sub
         End If
 
@@ -1453,7 +1453,7 @@ Public Class Form1
                                                                   sbMessageBoxText.AppendLine()
                                                                   sbMessageBoxText.AppendLine("Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".")
 
-                                                                  WPFCustomMessageBox.CustomMessageBox.ShowOK(sbMessageBoxText.ToString.Trim, strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                  MsgBox(sbMessageBoxText.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
 
                                                      boolBackgroundThreadWorking = False
@@ -1478,7 +1478,7 @@ Public Class Form1
 
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
-                                                                  If Not boolClosingWindow Then WPFCustomMessageBox.CustomMessageBox.ShowOK("Processing aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
                                                      itemOnGUI = Nothing
@@ -1507,7 +1507,7 @@ Public Class Form1
 
     Private Sub BtnOpenExistingHashFile_Click(sender As Object, e As EventArgs) Handles btnOpenExistingHashFile.Click
         If btnOpenExistingHashFile.Text = "Abort Processing" Then
-            If WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Are you sure you want to abort processing?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.Yes Then
+            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
                     workingThread.Abort()
                     boolBackgroundThreadWorking = False
@@ -1601,7 +1601,7 @@ Public Class Form1
     End Sub
 
     Private Sub BtnCopyTextHashResultsToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyTextHashResultsToClipboard.Click
-        If CopyTextToWindowsClipboard(txtHashResults.Text) Then WPFCustomMessageBox.CustomMessageBox.ShowOK("Your hash results have been copied to the Windows Clipboard.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+        If CopyTextToWindowsClipboard(txtHashResults.Text) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub TextRadioSHA256_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA256.CheckedChanged
@@ -1642,7 +1642,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        If boolBackgroundThreadWorking AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Checksum hashes are being computed, are you sure you want to abort?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.No Then
+        If boolBackgroundThreadWorking AndAlso MsgBox("Checksum hashes are being computed, are you sure you want to abort?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
             e.Cancel = True
             Exit Sub
         Else
@@ -1654,7 +1654,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If boolBackgroundThreadWorking AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Background tasks are being processed, are you sure you want to abort and exit the program?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.No Then
+        If boolBackgroundThreadWorking AndAlso MsgBox("Background tasks are being processed, are you sure you want to abort and exit the program?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
             e.Cancel = True
             Exit Sub
         Else
@@ -1735,7 +1735,7 @@ Public Class Form1
     Private Sub CopyHashToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyHashToClipboardToolStripMenuItem.Click
         If listFiles.SelectedItems.Count = 1 Then
             Dim selectedItem As MyListViewItem = listFiles.SelectedItems(0)
-            If CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower)) Then WPFCustomMessageBox.CustomMessageBox.ShowOK("The hash result has been copied to the Windows Clipboard.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+            If CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower)) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
         Else
             Dim stringBuilder As New Text.StringBuilder
             AddHashFileHeader(stringBuilder, listFiles.SelectedItems.Count)
@@ -1744,7 +1744,7 @@ Public Class Form1
                 stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, item.Hash.ToUpper, item.Hash.ToLower) & " *" & item.FileName)
             Next
 
-            If CopyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then WPFCustomMessageBox.CustomMessageBox.ShowOK("The hash result has been copied to the Windows Clipboard.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+            If CopyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
         End If
     End Sub
 
@@ -1840,7 +1840,7 @@ Public Class Form1
     Private Sub BtnCompareFiles_Click(sender As Object, e As EventArgs) Handles btnCompareFiles.Click
         compareRadioSHA512.Checked = True
         If btnCompareFiles.Text = "Abort Processing" Then
-            If WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Are you sure you want to abort processing?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.Yes Then
+            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
                     workingThread.Abort()
                     boolBackgroundThreadWorking = False
@@ -1853,15 +1853,15 @@ Public Class Form1
         End If
 
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("Please select two different files.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+            MsgBox("Please select two different files.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             Exit Sub
         End If
         If Not IO.File.Exists(txtFile1.Text) Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("File #1 doesn't exist.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+            MsgBox("File #1 doesn't exist.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             Exit Sub
         End If
         If Not IO.File.Exists(txtFile2.Text) Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("File #2 doesn't exist.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+            MsgBox("File #2 doesn't exist.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             Exit Sub
         End If
 
@@ -1875,7 +1875,7 @@ Public Class Form1
             stringBuilder.AppendLine("File #1 Size: " & FileSizeToHumanSize(File1FileInfo.Length))
             stringBuilder.AppendLine("File #2 Size: " & FileSizeToHumanSize(File2FileInfo.Length))
 
-            WPFCustomMessageBox.CustomMessageBox.ShowOK(stringBuilder.ToString.Trim, strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+            MsgBox(stringBuilder.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
             Exit Sub
         End If
 
@@ -1999,14 +1999,14 @@ Public Class Form1
                                                                       If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
                                                                           pictureBoxCompareFiles.Image = My.Resources.good_check
                                                                           ToolTip.SetToolTip(pictureBoxCompareFiles, "Both files are the same.")
-                                                                          WPFCustomMessageBox.CustomMessageBox.ShowOK("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                          MsgBox("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                       Else
                                                                           pictureBoxCompareFiles.Image = My.Resources.bad_check
                                                                           ToolTip.SetToolTip(pictureBoxCompareFiles, "The two files don't match.")
-                                                                          WPFCustomMessageBox.CustomMessageBox.ShowOK("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+                                                                          MsgBox("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
-                                                                      WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error while calculating the checksum.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+                                                                      MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
@@ -2037,7 +2037,7 @@ Public Class Form1
 
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
-                                                                  If Not boolClosingWindow Then WPFCustomMessageBox.CustomMessageBox.ShowOK("Processing aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
                                                      intCurrentlyActiveTab = TabNumberNull
@@ -2137,7 +2137,7 @@ Public Class Form1
 
     Private Sub BtnCompareAgainstKnownHash_Click(sender As Object, e As EventArgs) Handles btnCompareAgainstKnownHash.Click
         If btnCompareAgainstKnownHash.Text = "Abort Processing" Then
-            If WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Are you sure you want to abort processing?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.Yes Then
+            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
                     workingThread.Abort()
                     boolBackgroundThreadWorking = False
@@ -2152,7 +2152,7 @@ Public Class Form1
         txtFileForKnownHash.Text = txtFileForKnownHash.Text.Trim
 
         If Not IO.File.Exists(txtFileForKnownHash.Text) Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("File doesn't exist.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+            MsgBox("File doesn't exist.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             Exit Sub
         End If
 
@@ -2217,15 +2217,15 @@ Public Class Form1
                                                                       If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.good_check
                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum Verified!")
-                                                                          WPFCustomMessageBox.CustomMessageBox.ShowOK("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                          MsgBox("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                       Else
                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum verification failed, checksum didn't match!")
-                                                                          WPFCustomMessageBox.CustomMessageBox.ShowOK("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+                                                                          MsgBox("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
                                                                       pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
-                                                                      WPFCustomMessageBox.CustomMessageBox.ShowOK("There was an error while calculating the checksum.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+                                                                      MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
@@ -2247,7 +2247,7 @@ Public Class Form1
 
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
-                                                                  If Not boolClosingWindow Then WPFCustomMessageBox.CustomMessageBox.ShowOK("Processing aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
                                                      intCurrentlyActiveTab = TabNumberNull
@@ -2390,7 +2390,7 @@ Public Class Form1
             process.WaitForExit()
         End If
 
-        WPFCustomMessageBox.CustomMessageBox.ShowOK("File association complete.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+        MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnAddHasherToAllFiles_Click(sender As Object, e As EventArgs) Handles btnAddHasherToAllFiles.Click
@@ -2406,7 +2406,7 @@ Public Class Form1
             process.WaitForExit()
         End If
 
-        WPFCustomMessageBox.CustomMessageBox.ShowOK("File association complete.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+        MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnOpenExistingHashFile_DragDrop(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragDrop
@@ -2421,7 +2421,7 @@ Public Class Form1
                 verifyHashesListFiles.Items.Clear()
                 ProcessExistingHashFile(strReceivedFileName)
             Else
-                WPFCustomMessageBox.CustomMessageBox.ShowOK("Invalid file type.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Error)
+                MsgBox("Invalid file type.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             End If
         End If
     End Sub
@@ -2513,7 +2513,7 @@ Public Class Form1
                 My.Settings.validColor = colorDialog.Color
                 lblValidColor.BackColor = colorDialog.Color
                 validColor = colorDialog.Color
-                WPFCustomMessageBox.CustomMessageBox.ShowOK("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
             End If
         End Using
     End Sub
@@ -2524,7 +2524,7 @@ Public Class Form1
                 My.Settings.notValidColor = colorDialog.Color
                 lblNotValidColor.BackColor = colorDialog.Color
                 notValidColor = colorDialog.Color
-                WPFCustomMessageBox.CustomMessageBox.ShowOK("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
             End If
         End Using
     End Sub
@@ -2535,7 +2535,7 @@ Public Class Form1
                 My.Settings.fileNotFoundColor = colorDialog.Color
                 lblFileNotFoundColor.BackColor = colorDialog.Color
                 fileNotFoundColor = colorDialog.Color
-                WPFCustomMessageBox.CustomMessageBox.ShowOK("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
             End If
         End Using
     End Sub
@@ -2553,7 +2553,7 @@ Public Class Form1
         lblFileNotFoundColor.BackColor = Color.LightGray
         fileNotFoundColor = Color.LightGray
 
-        WPFCustomMessageBox.CustomMessageBox.ShowOK("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+        MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
@@ -2561,7 +2561,7 @@ Public Class Form1
         intBufferSize = shortBufferSize * 1024 * 1024
         My.Settings.shortBufferSize = shortBufferSize
         btnSetBufferSize.Enabled = False
-        WPFCustomMessageBox.CustomMessageBox.ShowOK("Data buffer size set successfully to " & shortBufferSize & If(shortBufferSize = 1, " MB.", " MBs."), strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+        MsgBox("Data buffer size set successfully to " & shortBufferSize & If(shortBufferSize = 1, " MB.", " MBs."), MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BufferSize_ValueChanged(sender As Object, e As EventArgs) Handles bufferSize.ValueChanged
@@ -2577,7 +2577,7 @@ Public Class Form1
                 intBufferSize = benchmark.shortBufferSize * 1024 * 1024
                 My.Settings.shortBufferSize = benchmark.shortBufferSize
                 btnSetBufferSize.Enabled = False
-                WPFCustomMessageBox.CustomMessageBox.ShowOK("Data buffer size set successfully to " & benchmark.shortBufferSize & If(benchmark.shortBufferSize = 1, " MB.", " MBs."), strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                MsgBox("Data buffer size set successfully to " & benchmark.shortBufferSize & If(benchmark.shortBufferSize = 1, " MB.", " MBs."), MsgBoxStyle.Information, strMessageBoxTitleText)
             End If
         End Using
     End Sub
@@ -2607,14 +2607,14 @@ Public Class Form1
         My.Settings.roundFileSizes = roundFileSizes.Value
         byteRoundFileSizes = roundFileSizes.Value
         btnSetRoundFileSizes.Enabled = False
-        WPFCustomMessageBox.CustomMessageBox.ShowOK("Preference saved.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+        MsgBox("Preference saved.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnSetRoundPercentages_Click(sender As Object, e As EventArgs) Handles btnSetRoundPercentages.Click
         My.Settings.roundPercentages = roundPercentages.Value
         byteRoundPercentages = roundPercentages.Value
         btnSetRoundPercentages.Enabled = False
-        WPFCustomMessageBox.CustomMessageBox.ShowOK("Preference saved.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+        MsgBox("Preference saved.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub RoundFileSizes_ValueChanged(sender As Object, e As EventArgs) Handles roundFileSizes.ValueChanged
@@ -2634,7 +2634,7 @@ Public Class Form1
     End Sub
 
     Private Sub ChkAutoAddExtension_Click(sender As Object, e As EventArgs) Handles chkAutoAddExtension.Click
-        If Not chkAutoAddExtension.Checked AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("You are disabling a highly recommended option, it is HIGHLY recommended that you re-enable this option to prevent accidental data loss." & vbCrLf & vbCrLf & "Are you sure you want to do this?", strMessageBoxTitleText, strYes, strNo, Windows.MessageBoxImage.Error) = Windows.MessageBoxResult.No Then
+        If Not chkAutoAddExtension.Checked AndAlso MsgBox("You are disabling a highly recommended option, it is HIGHLY recommended that you re-enable this option to prevent accidental data loss." & vbCrLf & vbCrLf & "Are you sure you want to do this?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
             chkAutoAddExtension.Checked = True
         End If
         My.Settings.boolAutoAddExtension = chkAutoAddExtension.Checked
@@ -2758,7 +2758,7 @@ Public Class Form1
 
     Private Sub TxtFile1_TextChanged(sender As Object, e As EventArgs) Handles txtFile1.TextChanged
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("You have selected the same file. Oops.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+            MsgBox("You have selected the same file. Oops.", MsgBoxStyle.Information, strMessageBoxTitleText)
             txtFile1.Text = Nothing
         End If
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
@@ -2769,7 +2769,7 @@ Public Class Form1
 
     Private Sub TxtFile2_TextChanged(sender As Object, e As EventArgs) Handles txtFile2.TextChanged
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
-            WPFCustomMessageBox.CustomMessageBox.ShowOK("You have selected the same file. Oops.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+            MsgBox("You have selected the same file. Oops.", MsgBoxStyle.Information, strMessageBoxTitleText)
             txtFile2.Text = Nothing
         End If
         btnCompareFiles.Enabled = Not String.IsNullOrEmpty(txtFile1.Text) And Not String.IsNullOrEmpty(txtFile2.Text)
@@ -3067,7 +3067,7 @@ Public Class Form1
                                                                   sbMessageBoxText.AppendLine()
                                                                   sbMessageBoxText.AppendLine("Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".")
 
-                                                                  WPFCustomMessageBox.CustomMessageBox.ShowOK(sbMessageBoxText.ToString.Trim, strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                  MsgBox(sbMessageBoxText.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
 
                                                      boolBackgroundThreadWorking = False
@@ -3092,7 +3092,7 @@ Public Class Form1
 
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
-                                                                  If Not boolClosingWindow Then WPFCustomMessageBox.CustomMessageBox.ShowOK("Processing aborted.", strMessageBoxTitleText, strOK, Windows.MessageBoxImage.Information)
+                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
                                                      itemOnGUI = Nothing

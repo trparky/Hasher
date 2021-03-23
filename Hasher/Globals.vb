@@ -8,10 +8,6 @@ Public Module Globals
     ''' <summary>Stores the value of the setting for roundNumbers locally.</summary>
     Public byteRoundFileSizes, byteRoundPercentages As Byte
 
-    Public Const strNo As String = "No"
-    Public Const strYes As String = "Yes"
-    Public Const strOK As String = "OK"
-
     Public Function MyRoundingFunction(value As Double, digits As Integer) As String
         If digits = 0 Then
             Return Math.Round(value, digits).ToString

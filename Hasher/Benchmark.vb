@@ -61,7 +61,7 @@
 
                                                      Invoke(Sub()
                                                                 Text = "Hasher"
-                                                                WPFCustomMessageBox.CustomMessageBox.ShowOK("Benchmark completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", "Hasher Benchmark", "OK", Windows.MessageBoxImage.Information)
+                                                                MsgBox("Benchmark completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, "Hasher Benchmark")
                                                             End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                  Finally
@@ -85,7 +85,7 @@
     End Sub
 
     Private Sub Benchmark_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If boolBackgroundThreadWorking AndAlso WPFCustomMessageBox.CustomMessageBox.ShowYesNo("Benchmarks are being processed, do you want to abort?", "Hasher Benchmark", "Yes", "No", Windows.MessageBoxImage.Question) = Windows.MessageBoxResult.No Then
+        If boolBackgroundThreadWorking AndAlso MsgBox("Benchmarks are being processed, do you want to abort?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "Hasher Benchmark") = MsgBoxResult.No Then
             e.Cancel = True
             Exit Sub
         Else
