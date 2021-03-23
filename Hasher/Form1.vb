@@ -581,15 +581,15 @@ Public Class Form1
 
             If SaveFileDialog.ShowDialog() = DialogResult.OK Then
                 If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Or SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                    Dim MsgBoxResult As MsgBoxResult
+                    Dim MsgBoxQuestionResult As MsgBoxResult
 
                     If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
-                        MsgBoxResult = MsgBox("MD5 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+                        MsgBoxQuestionResult = MsgBox("MD5 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                     ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                        MsgBoxResult = MsgBox("SHA1 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+                        MsgBoxQuestionResult = MsgBox("SHA1 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                     End If
 
-                    If MsgBoxResult = MsgBoxResult.No Then
+                    If MsgBoxQuestionResult = MsgBoxResult.No Then
                         MsgBox("Your hash data has not been saved to disk.", MsgBoxStyle.Information, strMessageBoxTitleText)
                         Exit Sub
                     End If
