@@ -639,7 +639,7 @@ Public Class Form1
                     streamWriter.Write(StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
                 End Using
 
-                Dim openInExplorerMsgBoxResult As Windows.MessageBoxResult
+                Dim openInExplorerMsgBoxResult As MsgBoxResult
 
                 If chkOpenInExplorer.Checked Then
                     openInExplorerMsgBoxResult = MsgBoxResult.Yes
@@ -653,7 +653,7 @@ Public Class Form1
         End Using
     End Sub
 
-    Private Function ShowHashFileWrittenWindow(BoolAskUserOpenInExplorer As Boolean, fileName As String, checksumtype As ChecksumType) As Windows.MessageBoxResult
+    Private Function ShowHashFileWrittenWindow(BoolAskUserOpenInExplorer As Boolean, fileName As String, checksumtype As ChecksumType) As MsgBoxResult
         Dim StringBuilder As New Text.StringBuilder()
         StringBuilder.AppendLine("Your hash results have been written to disk.")
         StringBuilder.AppendLine()
