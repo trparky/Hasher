@@ -1481,7 +1481,7 @@ Partial Class Form1
         'chkUseMilliseconds
         '
         Me.chkUseMilliseconds.AutoSize = True
-        Me.chkUseMilliseconds.Location = New System.Drawing.Point(15, 105)
+        Me.chkUseMilliseconds.Location = New System.Drawing.Point(15, 128)
         Me.chkUseMilliseconds.Name = "chkUseMilliseconds"
         Me.chkUseMilliseconds.Size = New System.Drawing.Size(332, 17)
         Me.chkUseMilliseconds.TabIndex = 7
@@ -1501,7 +1501,7 @@ Partial Class Form1
         'chkSaveChecksumFilesWithRelativePaths
         '
         Me.chkSaveChecksumFilesWithRelativePaths.AutoSize = True
-        Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 82)
+        Me.chkSaveChecksumFilesWithRelativePaths.Location = New System.Drawing.Point(15, 106)
         Me.chkSaveChecksumFilesWithRelativePaths.Name = "chkSaveChecksumFilesWithRelativePaths"
         Me.chkSaveChecksumFilesWithRelativePaths.Size = New System.Drawing.Size(212, 17)
         Me.chkSaveChecksumFilesWithRelativePaths.TabIndex = 5
@@ -1511,7 +1511,7 @@ Partial Class Form1
         'chkSortByFileSizeAfterLoadingHashFile
         '
         Me.chkSortByFileSizeAfterLoadingHashFile.AutoSize = True
-        Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 198)
+        Me.chkSortByFileSizeAfterLoadingHashFile.Location = New System.Drawing.Point(15, 82)
         Me.chkSortByFileSizeAfterLoadingHashFile.Name = "chkSortByFileSizeAfterLoadingHashFile"
         Me.chkSortByFileSizeAfterLoadingHashFile.Size = New System.Drawing.Size(244, 17)
         Me.chkSortByFileSizeAfterLoadingHashFile.TabIndex = 4
@@ -1539,7 +1539,7 @@ Partial Class Form1
         'chkRecurrsiveDirectorySearch
         '
         Me.chkRecurrsiveDirectorySearch.AutoSize = True
-        Me.chkRecurrsiveDirectorySearch.Location = New System.Drawing.Point(15, 175)
+        Me.chkRecurrsiveDirectorySearch.Location = New System.Drawing.Point(15, 197)
         Me.chkRecurrsiveDirectorySearch.Name = "chkRecurrsiveDirectorySearch"
         Me.chkRecurrsiveDirectorySearch.Size = New System.Drawing.Size(434, 17)
         Me.chkRecurrsiveDirectorySearch.TabIndex = 0
@@ -1550,7 +1550,7 @@ Partial Class Form1
         'chkDisplayHashesInUpperCase
         '
         Me.chkDisplayHashesInUpperCase.AutoSize = True
-        Me.chkDisplayHashesInUpperCase.Location = New System.Drawing.Point(15, 129)
+        Me.chkDisplayHashesInUpperCase.Location = New System.Drawing.Point(15, 151)
         Me.chkDisplayHashesInUpperCase.Name = "chkDisplayHashesInUpperCase"
         Me.chkDisplayHashesInUpperCase.Size = New System.Drawing.Size(207, 17)
         Me.chkDisplayHashesInUpperCase.TabIndex = 8
@@ -1629,7 +1629,7 @@ Partial Class Form1
         'chkUseCommasInNumbers
         '
         Me.chkUseCommasInNumbers.AutoSize = True
-        Me.chkUseCommasInNumbers.Location = New System.Drawing.Point(15, 152)
+        Me.chkUseCommasInNumbers.Location = New System.Drawing.Point(15, 174)
         Me.chkUseCommasInNumbers.Name = "chkUseCommasInNumbers"
         Me.chkUseCommasInNumbers.Size = New System.Drawing.Size(194, 17)
         Me.chkUseCommasInNumbers.TabIndex = 29
