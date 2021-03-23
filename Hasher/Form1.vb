@@ -3152,6 +3152,7 @@ Public Class Form1
 
     Private Sub ChkShowFileProgressInFileList_Click(sender As Object, e As EventArgs) Handles chkShowFileProgressInFileList.Click
         My.Settings.boolShowFileProgressInFileList = chkShowFileProgressInFileList.Checked
+        If Not chkShowFileProgressInFileList.Checked Then Me.Text = strWindowTitle
     End Sub
 
     Private Sub ChkIncludeEntryCountInFileNameHeader_Click(sender As Object, e As EventArgs) Handles ChkIncludeEntryCountInFileNameHeader.Click
