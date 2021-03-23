@@ -1493,9 +1493,9 @@ Partial Class Form1
         Me.chkSortFileListingAfterAddingFilesToHash.AutoSize = True
         Me.chkSortFileListingAfterAddingFilesToHash.Location = New System.Drawing.Point(15, 59)
         Me.chkSortFileListingAfterAddingFilesToHash.Name = "chkSortFileListingAfterAddingFilesToHash"
-        Me.chkSortFileListingAfterAddingFilesToHash.Size = New System.Drawing.Size(262, 17)
+        Me.chkSortFileListingAfterAddingFilesToHash.Size = New System.Drawing.Size(313, 17)
         Me.chkSortFileListingAfterAddingFilesToHash.TabIndex = 6
-        Me.chkSortFileListingAfterAddingFilesToHash.Text = "Sort file listing after adding files to hash/checksum"
+        Me.chkSortFileListingAfterAddingFilesToHash.Text = "Sort file listing by file size after adding files to hash/checksum"
         Me.chkSortFileListingAfterAddingFilesToHash.UseVisualStyleBackColor = True
         '
         'chkSaveChecksumFilesWithRelativePaths
