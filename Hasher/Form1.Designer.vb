@@ -131,6 +131,8 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.BtnLoadSettingsFromFile = New System.Windows.Forms.Button()
+        Me.BtnSaveSettingsToFile = New System.Windows.Forms.Button()
         Me.chkShowFileProgressInFileList = New System.Windows.Forms.CheckBox()
         Me.defaultHashType = New System.Windows.Forms.ComboBox()
         Me.lblDefaultHashLabel = New System.Windows.Forms.Label()
@@ -1343,6 +1345,8 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.BtnLoadSettingsFromFile)
+        Me.tabSettings.Controls.Add(Me.BtnSaveSettingsToFile)
         Me.tabSettings.Controls.Add(Me.chkShowFileProgressInFileList)
         Me.tabSettings.Controls.Add(Me.defaultHashType)
         Me.tabSettings.Controls.Add(Me.lblDefaultHashLabel)
@@ -1386,6 +1390,24 @@ Partial Class Form1
         Me.tabSettings.Size = New System.Drawing.Size(1040, 400)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
+        '
+        'BtnLoadSettingsFromFile
+        '
+        Me.BtnLoadSettingsFromFile.Location = New System.Drawing.Point(762, 360)
+        Me.BtnLoadSettingsFromFile.Name = "BtnLoadSettingsFromFile"
+        Me.BtnLoadSettingsFromFile.Size = New System.Drawing.Size(137, 27)
+        Me.BtnLoadSettingsFromFile.TabIndex = 49
+        Me.BtnLoadSettingsFromFile.Text = "Load Settings from File"
+        Me.BtnLoadSettingsFromFile.UseVisualStyleBackColor = True
+        '
+        'BtnSaveSettingsToFile
+        '
+        Me.BtnSaveSettingsToFile.Location = New System.Drawing.Point(621, 360)
+        Me.BtnSaveSettingsToFile.Name = "BtnSaveSettingsToFile"
+        Me.BtnSaveSettingsToFile.Size = New System.Drawing.Size(135, 27)
+        Me.BtnSaveSettingsToFile.TabIndex = 48
+        Me.BtnSaveSettingsToFile.Text = "Save Settings to File"
+        Me.BtnSaveSettingsToFile.UseVisualStyleBackColor = True
         '
         'chkShowFileProgressInFileList
         '
@@ -1944,4 +1966,6 @@ Partial Class Form1
     Friend WithEvents chkShowFileProgressInFileList As CheckBox
     Friend WithEvents ChkIncludeEntryCountInFileNameHeader As CheckBox
     Friend WithEvents ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes As CheckBox
+    Friend WithEvents BtnSaveSettingsToFile As Button
+    Friend WithEvents BtnLoadSettingsFromFile As Button
 End Class

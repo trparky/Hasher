@@ -3162,4 +3162,30 @@ Public Class Form1
     Private Sub ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes_Click(sender As Object, e As EventArgs) Handles ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Click
         My.Settings.boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Checked
     End Sub
+
+    Private Sub BtnSaveSettingsToFile_Click(sender As Object, e As EventArgs) Handles BtnSaveSettingsToFile.Click
+        Using SaveFileDialogBox As New SaveFileDialog()
+            SaveFileDialogBox.Title = "Save Settings to JSON File"
+            SaveFileDialogBox.Filter = "JSON File|*.json"
+
+            If SaveFileDialogBox.ShowDialog = DialogResult.OK Then
+                SaveApplicationSettingsToFile(SaveFileDialogBox.FileName)
+                If MsgBox("Application settings have been saved to disk. Do you want to open Windows Explorer to the location of the file?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then SelectFileInWindowsExplorer(SaveFileDialogBox.FileName)
+            End If
+        End Using
+    End Sub
+
+    Private Sub BtnLoadSettingsFromFile_Click(sender As Object, e As EventArgs) Handles BtnLoadSettingsFromFile.Click
+        Using OpenFileDialogBox As New OpenFileDialog()
+            OpenFileDialogBox.Title = "Open Settings JSON File"
+            OpenFileDialogBox.Filter = "JSON File|*.json"
+
+            If OpenFileDialogBox.ShowDialog = DialogResult.OK Then
+                LoadApplicationSettingsFromFile(OpenFileDialogBox.FileName)
+                My.Settings.Save()
+                MsgBox("Hasher will now close, you will have to manually relaunch the program for the imported settings to take effect.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                Process.GetCurrentProcess.Kill()
+            End If
+        End Using
+    End Sub
 End Class
