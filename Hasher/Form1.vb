@@ -3169,8 +3169,12 @@ Public Class Form1
             SaveFileDialogBox.Filter = "JSON File|*.json"
 
             If SaveFileDialogBox.ShowDialog = DialogResult.OK Then
-                SaveApplicationSettingsToFile(SaveFileDialogBox.FileName)
-                If MsgBox("Application settings have been saved to disk. Do you want to open Windows Explorer to the location of the file?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then SelectFileInWindowsExplorer(SaveFileDialogBox.FileName)
+                Try
+                    SaveApplicationSettingsToFile(SaveFileDialogBox.FileName)
+                    If MsgBox("Application settings have been saved to disk. Do you want to open Windows Explorer to the location of the file?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then SelectFileInWindowsExplorer(SaveFileDialogBox.FileName)
+                Catch ex As Exception
+                    MsgBox("There was an issue saving your exported settings to disk, export failed.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                End Try
             End If
         End Using
     End Sub
@@ -3181,10 +3185,14 @@ Public Class Form1
             OpenFileDialogBox.Filter = "JSON File|*.json"
 
             If OpenFileDialogBox.ShowDialog = DialogResult.OK Then
-                LoadApplicationSettingsFromFile(OpenFileDialogBox.FileName)
-                My.Settings.Save()
-                MsgBox("Hasher will now close, you will have to manually relaunch the program for the imported settings to take effect.", MsgBoxStyle.Information, strMessageBoxTitleText)
-                Process.GetCurrentProcess.Kill()
+                Try
+                    LoadApplicationSettingsFromFile(OpenFileDialogBox.FileName)
+                    My.Settings.Save()
+                    MsgBox("Hasher will now close, you will have to manually relaunch the program for the imported settings to take effect.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                    Process.GetCurrentProcess.Kill()
+                Catch ex As Exception
+                    MsgBox("There was an issue decoding your chosen JSON settings file, import failed.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                End Try
             End If
         End Using
     End Sub
