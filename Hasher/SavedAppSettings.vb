@@ -53,11 +53,9 @@ Public Module SavedAppSettingsModule
         End Using
 
         For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
-            Dim IEnumerableObject As IEnumerable(Of ExportedSettings) = exportedSettingsArray.Where(Function(item As ExportedSettings) item.strName.Equals(settingProperty.Name, StringComparison.OrdinalIgnoreCase))
+            ExportedSettingsObject = exportedSettingsArray.ToList.Find(Function(item As ExportedSettings) item.strName.Equals(settingProperty.Name, StringComparison.OrdinalIgnoreCase))
 
-            If IEnumerableObject.Count <> 0 AndAlso IEnumerableObject(0) IsNot Nothing Then
-                ExportedSettingsObject = IEnumerableObject(0)
-
+            If ExportedSettingsObject IsNot Nothing Then
                 If ExportedSettingsObject.type.CaseInsensitiveContains("Drawing.Color") Then
                     My.Settings(ExportedSettingsObject.strName) = Color.FromArgb(ExportedSettingsObject.value)
                 ElseIf ExportedSettingsObject.type.CaseInsensitiveContains("Drawing.Point") Then
