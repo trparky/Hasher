@@ -44,7 +44,7 @@ Public Module SavedAppSettingsModule
 
     Public Sub LoadApplicationSettingsFromFile(strFileName As String)
         Dim exportedSettingsArray As New List(Of ExportedSettings)
-        Dim ExportedSettingsObject As ExportedSettings
+        Dim exportedSettingsObject As ExportedSettings
         Dim boolResult As Boolean, byteResult As Byte, intResult As Integer, longResult As Long, shortResult As Short, splitArray As String()
 
         Using streamReader As New IO.StreamReader(strFileName)
@@ -53,31 +53,31 @@ Public Module SavedAppSettingsModule
         End Using
 
         For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
-            ExportedSettingsObject = exportedSettingsArray.ToList.Find(Function(item As ExportedSettings) item.strName.Equals(settingProperty.Name, StringComparison.OrdinalIgnoreCase))
+            exportedSettingsObject = exportedSettingsArray.ToList.Find(Function(item As ExportedSettings) item.strName.Equals(settingProperty.Name, StringComparison.OrdinalIgnoreCase))
 
-            If ExportedSettingsObject IsNot Nothing Then
-                If ExportedSettingsObject.type.CaseInsensitiveContains("Drawing.Color") Then
-                    My.Settings(ExportedSettingsObject.strName) = Color.FromArgb(ExportedSettingsObject.value)
-                ElseIf ExportedSettingsObject.type.CaseInsensitiveContains("Drawing.Point") Then
-                    splitArray = ExportedSettingsObject.value.split("|")
-                    My.Settings(ExportedSettingsObject.strName) = New Point() With {.X = splitArray(0), .Y = splitArray(1)}
+            If exportedSettingsObject IsNot Nothing Then
+                If exportedSettingsObject.type.CaseInsensitiveContains("Drawing.Color") Then
+                    My.Settings(exportedSettingsObject.strName) = Color.FromArgb(exportedSettingsObject.value)
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Drawing.Point") Then
+                    splitArray = exportedSettingsObject.value.split("|")
+                    My.Settings(exportedSettingsObject.strName) = New Point() With {.X = splitArray(0), .Y = splitArray(1)}
                     splitArray = Nothing
-                ElseIf ExportedSettingsObject.type.CaseInsensitiveContains("Drawing.Size") Then
-                    splitArray = ExportedSettingsObject.value.split("|")
-                    My.Settings(ExportedSettingsObject.strName) = New Size() With {.Height = splitArray(0), .Width = splitArray(1)}
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Drawing.Size") Then
+                    splitArray = exportedSettingsObject.value.split("|")
+                    My.Settings(exportedSettingsObject.strName) = New Size() With {.Height = splitArray(0), .Width = splitArray(1)}
                     splitArray = Nothing
-                ElseIf ExportedSettingsObject.type.CaseInsensitiveContains("Boolean") Then
-                    If Boolean.TryParse(ExportedSettingsObject.value, boolResult) Then My.Settings(ExportedSettingsObject.strName) = boolResult
-                ElseIf ExportedSettingsObject.type.CaseInsensitiveContains("Byte") Then
-                    If Byte.TryParse(ExportedSettingsObject.value, byteResult) Then My.Settings(ExportedSettingsObject.strName) = byteResult
-                ElseIf ExportedSettingsObject.type.CaseInsensitiveContains("Int16") Then
-                    If Short.TryParse(ExportedSettingsObject.value, shortResult) Then My.Settings(ExportedSettingsObject.strName) = shortResult
-                ElseIf ExportedSettingsObject.type.CaseInsensitiveContains("Int32") Then
-                    If Integer.TryParse(ExportedSettingsObject.value, intResult) Then My.Settings(ExportedSettingsObject.strName) = intResult
-                ElseIf ExportedSettingsObject.type.CaseInsensitiveContains("Int64") Then
-                    If Long.TryParse(ExportedSettingsObject.value, longResult) Then My.Settings(ExportedSettingsObject.strName) = longResult
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Boolean") Then
+                    If Boolean.TryParse(exportedSettingsObject.value, boolResult) Then My.Settings(exportedSettingsObject.strName) = boolResult
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Byte") Then
+                    If Byte.TryParse(exportedSettingsObject.value, byteResult) Then My.Settings(exportedSettingsObject.strName) = byteResult
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Int16") Then
+                    If Short.TryParse(exportedSettingsObject.value, shortResult) Then My.Settings(exportedSettingsObject.strName) = shortResult
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Int32") Then
+                    If Integer.TryParse(exportedSettingsObject.value, intResult) Then My.Settings(exportedSettingsObject.strName) = intResult
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Int64") Then
+                    If Long.TryParse(exportedSettingsObject.value, longResult) Then My.Settings(exportedSettingsObject.strName) = longResult
                 Else
-                    My.Settings(ExportedSettingsObject.strName) = ExportedSettingsObject.value
+                    My.Settings(exportedSettingsObject.strName) = exportedSettingsObject.value
                 End If
             End If
         Next
