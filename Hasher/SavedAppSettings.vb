@@ -70,11 +70,11 @@ Public Module SavedAppSettingsModule
                     If Boolean.TryParse(exportedSettingsObject.value, boolResult) Then My.Settings(exportedSettingsObject.strName) = boolResult
                 ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Byte") Then
                     If Byte.TryParse(exportedSettingsObject.value, byteResult) Then My.Settings(exportedSettingsObject.strName) = byteResult
-                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Int16") Then
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Int16") Or exportedSettingsObject.type.CaseInsensitiveContains("Short") Then
                     If Short.TryParse(exportedSettingsObject.value, shortResult) Then My.Settings(exportedSettingsObject.strName) = shortResult
-                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Int32") Then
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Int32") Or exportedSettingsObject.type.CaseInsensitiveContains("Integer") Then
                     If Integer.TryParse(exportedSettingsObject.value, intResult) Then My.Settings(exportedSettingsObject.strName) = intResult
-                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Int64") Then
+                ElseIf exportedSettingsObject.type.CaseInsensitiveContains("Int64") Or exportedSettingsObject.type.CaseInsensitiveContains("Long") Then
                     If Long.TryParse(exportedSettingsObject.value, longResult) Then My.Settings(exportedSettingsObject.strName) = longResult
                 Else
                     My.Settings(exportedSettingsObject.strName) = exportedSettingsObject.value
