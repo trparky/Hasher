@@ -25,7 +25,7 @@ Public Module SavedAppSettingsModule
                     value = settingProperty.PropertyValue
                 End If
 
-                exportedSettingsArray.Add(settingProperty.Name, value)
+                exportedSettingsArray.Add(settingProperty.Name.Trim.ToLower, value)
             End If
         Next
 
@@ -46,7 +46,7 @@ Public Module SavedAppSettingsModule
         End Using
 
         For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
-            If exportedSettingsArray.TryGetValue(settingProperty.Name, value) Then
+            If exportedSettingsArray.TryGetValue(settingProperty.Name.Trim.ToLower, value) Then
                 settingType = settingProperty.PropertyValue.GetType
 
                 If settingType = GetType(Color) Then
