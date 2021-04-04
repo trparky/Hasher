@@ -37,7 +37,8 @@ Public Module SavedAppSettingsModule
 
     Public Sub LoadApplicationSettingsFromFile(strFileName As String)
         Dim exportedSettingsArray As New Dictionary(Of String, Object)
-        Dim boolResult As Boolean, byteResult As Byte, intResult As Integer, longResult As Long, settingType As Type, shortResult As Short, splitArray As String(), value As Object
+        Dim boolResult As Boolean, byteResult As Byte, intResult As Integer, longResult As Long, settingType As Type, shortResult As Short, splitArray As String()
+        Dim value As Object = Nothing
 
         Using streamReader As New IO.StreamReader(strFileName)
             Dim json As JavaScriptSerializer = New JavaScriptSerializer()
@@ -45,9 +46,8 @@ Public Module SavedAppSettingsModule
         End Using
 
         For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
-            If exportedSettingsArray.ContainsKey(settingProperty.Name) Then
+            If exportedSettingsArray.TryGetValue(settingProperty.Name, value) Then
                 settingType = settingProperty.PropertyValue.GetType
-                value = exportedSettingsArray.Item(settingProperty.Name)
 
                 If settingType = GetType(Color) Then
                     My.Settings(settingProperty.Name) = Color.FromArgb(value)
