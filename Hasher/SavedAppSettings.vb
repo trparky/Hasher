@@ -46,7 +46,6 @@ Public Module SavedAppSettingsModule
 
         For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
             If exportedSettingsArray.ContainsKey(settingProperty.Name) Then
-                Debug.WriteLine("importing data for " & settingProperty.Name)
                 settingType = settingProperty.PropertyValue.GetType
                 value = exportedSettingsArray.Item(settingProperty.Name)
 
