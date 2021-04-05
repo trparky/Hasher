@@ -948,7 +948,7 @@ Public Class Form1
         btnSetRoundPercentages.Enabled = False
         Location = My.Settings.windowLocation
 
-        If My.Settings.defaultHash < 0 Or My.Settings.defaultHash > 4 Then My.Settings.defaultHash = 2
+        If My.Settings.defaultHash < 0 Or My.Settings.defaultHash > 4 Then My.Settings.defaultHash = Byte.Parse(2)
         defaultHashType.SelectedIndex = My.Settings.defaultHash
         SetDefaultHashTypeGUIElementOptions()
 
