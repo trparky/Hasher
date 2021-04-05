@@ -970,7 +970,7 @@ Public Class Form1
         colFileSize2.Width = My.Settings.verifyHashFileSizeColumnSize
         colResults.Width = My.Settings.verifyHashFileResults
         colComputeTime2.Width = My.Settings.verifyHashComputeTimeColumnSize
-        If My.Settings.taskPriority > 4 Then My.Settings.taskPriority = Byte.Parse(4)
+        If My.Settings.taskPriority < 0 Or My.Settings.taskPriority > 4 Then My.Settings.taskPriority = Byte.Parse(4)
         taskPriority.SelectedIndex = My.Settings.taskPriority
 
         If My.Settings.boolCheckForUpdates Then
