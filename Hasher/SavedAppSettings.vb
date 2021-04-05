@@ -50,7 +50,7 @@ Public Module SavedAppSettingsModule
                 settingType = settingProperty.PropertyValue.GetType
 
                 If settingType = GetType(Color) Then
-                    My.Settings(settingProperty.Name) = Color.FromArgb(value)
+                    If Integer.TryParse(value, intResult) Then My.Settings(settingProperty.Name) = Color.FromArgb(intResult)
                 ElseIf settingType = GetType(Point) Then
                     splitArray = value.split("|")
                     My.Settings(settingProperty.Name) = New Point() With {.X = splitArray(0), .Y = splitArray(1)}
