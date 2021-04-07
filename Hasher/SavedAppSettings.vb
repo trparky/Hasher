@@ -49,8 +49,8 @@ Public Module SavedAppSettingsModule
             If exportedSettingsArray.TryGetValue(settingProperty.Name.Trim.ToLower, rawValue) Then
                 settingType = settingProperty.PropertyValue.GetType
 
-                If settingType = GetType(Color) Then
-                    If Integer.TryParse(rawValue, intResult) Then My.Settings(settingProperty.Name) = Color.FromArgb(intResult)
+                If settingType = GetType(Color) AndAlso Integer.TryParse(rawValue, intResult) Then
+                    My.Settings(settingProperty.Name) = Color.FromArgb(intResult)
                 ElseIf settingType = GetType(Point) Then
                     splitArray = rawValue.split("|")
                     My.Settings(settingProperty.Name) = New Point() With {.X = splitArray(0), .Y = splitArray(1)}
@@ -59,16 +59,16 @@ Public Module SavedAppSettingsModule
                     splitArray = rawValue.split("|")
                     My.Settings(settingProperty.Name) = New Size() With {.Height = splitArray(0), .Width = splitArray(1)}
                     splitArray = Nothing
-                ElseIf settingType = GetType(Boolean) Then
-                    If Boolean.TryParse(rawValue, boolResult) Then My.Settings(settingProperty.Name) = boolResult
-                ElseIf settingType = GetType(Byte) Then
-                    If Byte.TryParse(rawValue, byteResult) Then My.Settings(settingProperty.Name) = byteResult
-                ElseIf settingType = GetType(Short) Then
-                    If Short.TryParse(rawValue, shortResult) Then My.Settings(settingProperty.Name) = shortResult
-                ElseIf settingType = GetType(Integer) Then
-                    If Integer.TryParse(rawValue, intResult) Then My.Settings(settingProperty.Name) = intResult
-                ElseIf settingType = GetType(Long) Then
-                    If Long.TryParse(rawValue, longResult) Then My.Settings(settingProperty.Name) = longResult
+                ElseIf settingType = GetType(Boolean) AndAlso Boolean.TryParse(rawValue, boolResult) Then
+                    My.Settings(settingProperty.Name) = boolResult
+                ElseIf settingType = GetType(Byte) AndAlso Byte.TryParse(rawValue, byteResult) Then
+                    My.Settings(settingProperty.Name) = byteResult
+                ElseIf settingType = GetType(Short) AndAlso Short.TryParse(rawValue, shortResult) Then
+                    My.Settings(settingProperty.Name) = shortResult
+                ElseIf settingType = GetType(Integer) AndAlso Integer.TryParse(rawValue, intResult) Then
+                    My.Settings(settingProperty.Name) = intResult
+                ElseIf settingType = GetType(Long) AndAlso Long.TryParse(rawValue, longResult) Then
+                    My.Settings(settingProperty.Name) = longResult
                 Else
                     My.Settings(settingProperty.Name) = rawValue
                 End If
