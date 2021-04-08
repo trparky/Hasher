@@ -1,6 +1,6 @@
 ﻿Imports System.Web.Script.Serialization
 
-Public Module SavedAppSettingsModule
+Public Module SaveAppSettings
     Public Sub SaveApplicationSettingsToFile(strFileName As String)
         Dim exportedSettingsArray As New Dictionary(Of String, Object)
         Dim settingType As Type
