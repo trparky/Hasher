@@ -1244,7 +1244,7 @@ Partial Class Form1
         'pictureBoxVerifyAgainstResults
         '
         Me.pictureBoxVerifyAgainstResults.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pictureBoxVerifyAgainstResults.Location = New System.Drawing.Point(955, 10)
+        Me.pictureBoxVerifyAgainstResults.Location = New System.Drawing.Point(973, 10)
         Me.pictureBoxVerifyAgainstResults.Name = "pictureBoxVerifyAgainstResults"
         Me.pictureBoxVerifyAgainstResults.Size = New System.Drawing.Size(64, 64)
         Me.pictureBoxVerifyAgainstResults.TabIndex = 35
@@ -1266,7 +1266,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.compareAgainstKnownHashProgressBar.Location = New System.Drawing.Point(158, 83)
         Me.compareAgainstKnownHashProgressBar.Name = "compareAgainstKnownHashProgressBar"
-        Me.compareAgainstKnownHashProgressBar.Size = New System.Drawing.Size(861, 23)
+        Me.compareAgainstKnownHashProgressBar.Size = New System.Drawing.Size(879, 23)
         Me.compareAgainstKnownHashProgressBar.TabIndex = 33
         Me.compareAgainstKnownHashProgressBar.Visible = False
         '
