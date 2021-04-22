@@ -131,6 +131,7 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.chkClearBeforeTransferringFromVerifyToHash = New System.Windows.Forms.CheckBox()
         Me.BtnLoadSettingsFromFile = New System.Windows.Forms.Button()
         Me.BtnSaveSettingsToFile = New System.Windows.Forms.Button()
         Me.chkShowFileProgressInFileList = New System.Windows.Forms.CheckBox()
@@ -172,7 +173,6 @@ Partial Class Form1
         Me.ChkIncludeEntryCountInFileNameHeader = New System.Windows.Forms.CheckBox()
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = New System.Windows.Forms.CheckBox()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
-        Me.chkClearBeforeTransferringFromVerifyToHash = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -221,7 +221,7 @@ Partial Class Form1
         Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
         Me.tabWelcome.Name = "tabWelcome"
         Me.tabWelcome.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabWelcome.Size = New System.Drawing.Size(1040, 400)
+        Me.tabWelcome.Size = New System.Drawing.Size(1040, 420)
         Me.tabWelcome.TabIndex = 0
         Me.tabWelcome.Text = "Welcome"
         '
@@ -288,7 +288,7 @@ Partial Class Form1
         Me.tabHashText.Location = New System.Drawing.Point(4, 22)
         Me.tabHashText.Name = "tabHashText"
         Me.tabHashText.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabHashText.Size = New System.Drawing.Size(1040, 400)
+        Me.tabHashText.Size = New System.Drawing.Size(1040, 420)
         Me.tabHashText.TabIndex = 1
         Me.tabHashText.Text = "Hash Text"
         '
@@ -479,7 +479,7 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddIndividualFiles)
         Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabHashIndividualFiles.Name = "tabHashIndividualFiles"
-        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 400)
+        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 420)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
         '
@@ -792,7 +792,7 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Controls.Add(Me.btnTransferToHashIndividualFilesTab)
         Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
-        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 400)
+        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 420)
         Me.tabVerifySavedHashes.TabIndex = 3
         Me.tabVerifySavedHashes.Text = "Verify Saved Hashes"
         '
@@ -994,7 +994,7 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.Label4)
         Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareFiles.Name = "tabCompareFiles"
-        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 400)
+        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 420)
         Me.tabCompareFiles.TabIndex = 5
         Me.tabCompareFiles.Text = "Compare Files"
         '
@@ -1237,7 +1237,7 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.Label7)
         Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareAgainstKnownHash.Name = "tabCompareAgainstKnownHash"
-        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 400)
+        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 420)
         Me.tabCompareAgainstKnownHash.TabIndex = 6
         Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
         '
@@ -1392,6 +1392,16 @@ Partial Class Form1
         Me.tabSettings.Size = New System.Drawing.Size(1040, 420)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
+        '
+        'chkClearBeforeTransferringFromVerifyToHash
+        '
+        Me.chkClearBeforeTransferringFromVerifyToHash.AutoSize = True
+        Me.chkClearBeforeTransferringFromVerifyToHash.Location = New System.Drawing.Point(15, 360)
+        Me.chkClearBeforeTransferringFromVerifyToHash.Name = "chkClearBeforeTransferringFromVerifyToHash"
+        Me.chkClearBeforeTransferringFromVerifyToHash.Size = New System.Drawing.Size(349, 17)
+        Me.chkClearBeforeTransferringFromVerifyToHash.TabIndex = 50
+        Me.chkClearBeforeTransferringFromVerifyToHash.Text = "Clear list of files on ""Hash Individual Files"" tab before transferring to it"
+        Me.chkClearBeforeTransferringFromVerifyToHash.UseVisualStyleBackColor = True
         '
         'BtnLoadSettingsFromFile
         '
@@ -1780,16 +1790,6 @@ Partial Class Form1
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Text = "Compute Hashes on ""Compare Files"" Tab Even With Different File Sizes"
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.UseVisualStyleBackColor = True
         '
-        'chkClearBeforeTransferringFromVerifyToHash
-        '
-        Me.chkClearBeforeTransferringFromVerifyToHash.AutoSize = True
-        Me.chkClearBeforeTransferringFromVerifyToHash.Location = New System.Drawing.Point(15, 360)
-        Me.chkClearBeforeTransferringFromVerifyToHash.Name = "chkClearBeforeTransferringFromVerifyToHash"
-        Me.chkClearBeforeTransferringFromVerifyToHash.Size = New System.Drawing.Size(349, 17)
-        Me.chkClearBeforeTransferringFromVerifyToHash.TabIndex = 50
-        Me.chkClearBeforeTransferringFromVerifyToHash.Text = "Clear list of files on ""Hash Individual Files"" tab before transferring to it"
-        Me.chkClearBeforeTransferringFromVerifyToHash.UseVisualStyleBackColor = True
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1797,7 +1797,7 @@ Partial Class Form1
         Me.ClientSize = New System.Drawing.Size(1072, 471)
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(1088, 490)
+        Me.MinimumSize = New System.Drawing.Size(1088, 510)
         Me.Name = "Form1"
         Me.Text = "Hasher"
         Me.TabControl1.ResumeLayout(False)
