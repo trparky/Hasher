@@ -1244,7 +1244,7 @@ Public Class Form1
                                                      strLineInFile = Nothing
                                                      dataInFileArray = Nothing
 
-                                                     If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= " (" & newDataInFileArray.Count & " " & If(newDataInFileArray.Count = 1, "entry", "entries") & " in hash file)")
+                                                     If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= " (" & MyToString(newDataInFileArray.Count) & " " & If(newDataInFileArray.Count = 1, "entry", "entries") & " in hash file)")
 
                                                      For Each strLineInFile In newDataInFileArray
                                                          intLineCounter += 1
