@@ -1181,7 +1181,7 @@ Public Class Form1
             checksumType = ChecksumType.md5
         ElseIf strChecksumFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
             checksumType = ChecksumType.sha160
-        ElseIf strChecksumFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
+        ElseIf strChecksumFileExtension.Equals(".sha2", StringComparison.OrdinalIgnoreCase) Or strChecksumFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
             checksumType = ChecksumType.sha256
         ElseIf strChecksumFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
             checksumType = ChecksumType.sha384
