@@ -2381,13 +2381,17 @@ Public Class Form1
             FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
             FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
         Else
-            Dim startInfo As New ProcessStartInfo With {
-                .FileName = Application.ExecutablePath,
-                .Arguments = "-associatefiletype",
-                .Verb = "runas"
-            }
-            Dim process As Process = Process.Start(startInfo)
-            process.WaitForExit()
+            Try
+                Dim startInfo As New ProcessStartInfo With {
+                    .FileName = Application.ExecutablePath,
+                    .Arguments = "-associatefiletype",
+                    .Verb = "runas"
+                }
+                Dim process As Process = Process.Start(startInfo)
+                process.WaitForExit()
+            Catch ex As System.ComponentModel.Win32Exception
+                MsgBox("Failed to elevate process." & vbCrLf & vbCrLf & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+            End Try
         End If
 
         MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
@@ -2397,13 +2401,17 @@ Public Class Form1
         If AreWeAnAdministrator() Then
             FileAssociation.AddAssociationWithAllFiles()
         Else
-            Dim startInfo As New ProcessStartInfo With {
-                .FileName = Application.ExecutablePath,
-                .Arguments = "-associateallfiles",
-                .Verb = "runas"
-            }
-            Dim process As Process = Process.Start(startInfo)
-            process.WaitForExit()
+            Try
+                Dim startInfo As New ProcessStartInfo With {
+                    .FileName = Application.ExecutablePath,
+                    .Arguments = "-associateallfiles",
+                    .Verb = "runas"
+                }
+                Dim process As Process = Process.Start(startInfo)
+                process.WaitForExit()
+            Catch ex As System.ComponentModel.Win32Exception
+                MsgBox("Failed to elevate process." & vbCrLf & vbCrLf & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+            End Try
         End If
 
         MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
