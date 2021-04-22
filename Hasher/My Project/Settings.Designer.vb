@@ -473,6 +473,18 @@ Namespace My
                 Me("boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property boolClearBeforeTransferringFromVerifyToHash() As Boolean
+            Get
+                Return CType(Me("boolClearBeforeTransferringFromVerifyToHash"),Boolean)
+            End Get
+            Set
+                Me("boolClearBeforeTransferringFromVerifyToHash") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

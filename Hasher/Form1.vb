@@ -925,6 +925,7 @@ Public Class Form1
         chkShowFileProgressInFileList.Checked = My.Settings.boolShowFileProgressInFileList
         ChkIncludeEntryCountInFileNameHeader.Checked = My.Settings.boolIncludeEntryCountInFileNameHeader
         ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Checked = My.Settings.boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes
+        chkClearBeforeTransferringFromVerifyToHash.Checked = My.Settings.boolClearBeforeTransferringFromVerifyToHash
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             Check_for_Update_Stuff.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -2693,8 +2694,10 @@ Public Class Form1
                                                                 lblVerifyHashStatus.Visible = True
                                                                 verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height - 72)
 
-                                                                listFiles.Items.Clear()
-                                                                filesInListFiles.Clear()
+                                                                If chkClearBeforeTransferringFromVerifyToHash.Checked Then
+                                                                    listFiles.Items.Clear()
+                                                                    filesInListFiles.Clear()
+                                                                End If
                                                                 listFiles.BeginUpdate()
                                                             End Sub)
 
@@ -3212,5 +3215,9 @@ Public Class Form1
                 End Try
             End If
         End Using
+    End Sub
+
+    Private Sub ChkClearBeforeTransferringFromVerifyToHash_Click(sender As Object, e As EventArgs) Handles chkClearBeforeTransferringFromVerifyToHash.Click
+        My.Settings.boolClearBeforeTransferringFromVerifyToHash = chkClearBeforeTransferringFromVerifyToHash.Checked
     End Sub
 End Class
