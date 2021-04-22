@@ -1405,7 +1405,7 @@ Partial Class Form1
         '
         'BtnLoadSettingsFromFile
         '
-        Me.BtnLoadSettingsFromFile.Location = New System.Drawing.Point(762, 360)
+        Me.BtnLoadSettingsFromFile.Location = New System.Drawing.Point(762, 383)
         Me.BtnLoadSettingsFromFile.Name = "BtnLoadSettingsFromFile"
         Me.BtnLoadSettingsFromFile.Size = New System.Drawing.Size(137, 27)
         Me.BtnLoadSettingsFromFile.TabIndex = 49
@@ -1414,7 +1414,7 @@ Partial Class Form1
         '
         'BtnSaveSettingsToFile
         '
-        Me.BtnSaveSettingsToFile.Location = New System.Drawing.Point(621, 360)
+        Me.BtnSaveSettingsToFile.Location = New System.Drawing.Point(621, 383)
         Me.BtnSaveSettingsToFile.Name = "BtnSaveSettingsToFile"
         Me.BtnSaveSettingsToFile.Size = New System.Drawing.Size(135, 27)
         Me.BtnSaveSettingsToFile.TabIndex = 48
