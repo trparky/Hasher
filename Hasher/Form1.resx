@@ -123,7 +123,7 @@
   <data name="Label9.ToolTip" xml:space="preserve">
     <value>This setting controls the size of the data buffer that's used to read data from disk.
 
-If processing large files, a large buffer may be beneficial. However if you're
+If processing large files, a large buffer may be beneficial. However, if you're
 processing a lot of small files, a small data buffer may be better.
 
 Depending upon your specific hardware, this setting may vary. The default
