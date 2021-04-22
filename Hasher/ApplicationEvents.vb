@@ -17,6 +17,7 @@ Namespace My
                 ElseIf commandLineArgument.Equals("-associatefiletype", StringComparison.OrdinalIgnoreCase) Then
                     FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
                     FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
+                    FileAssociation.SelfCreateAssociation(".sha2", "Checksum File")
                     FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
                     FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
                     FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
