@@ -1722,12 +1722,6 @@ Public Class Form1
         Else
             If String.IsNullOrWhiteSpace(DirectCast(listFiles.SelectedItems(0), MyListViewItem).Hash) Then e.Cancel = True
 
-            If listFiles.SelectedItems.Count = 1 Then
-                CopyHashToClipboardToolStripMenuItem.Text = " Copy Selected Hash to Clipboard"
-            ElseIf listFiles.SelectedItems.Count > 1 Then
-                CopyHashToClipboardToolStripMenuItem.Text = " Copy Selected Hashes to Clipboard"
-            End If
-
             listFilesContextMenuMD5.Visible = True
             listFilesContextMenuSHA160.Visible = True
             listFilesContextMenuSHA256.Visible = True
@@ -1756,7 +1750,7 @@ Public Class Form1
         stringBuilder.AppendLine("'")
     End Sub
 
-    Private Sub CopyHashToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyHashToClipboardToolStripMenuItem.Click
+    Private Sub CopyHashToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs)
         If listFiles.SelectedItems.Count = 1 Then
             Dim selectedItem As MyListViewItem = listFiles.SelectedItems(0)
             If CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower)) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
