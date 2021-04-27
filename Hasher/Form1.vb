@@ -28,7 +28,7 @@ Public Class Form1
     Private compareFilesAllTheHashes1 As AllTheHashes = Nothing
     Private compareFilesAllTheHashes2 As AllTheHashes = Nothing
     Private hashTextAllTheHashes As AllTheHashes = Nothing
-    Private globalAllTheHashes As AllTheHashes
+    Private globalAllTheHashes As AllTheHashes = Nothing
     Private checksumTypeForChecksumCompareWindow As ChecksumType
     Private strLastHashFileLoaded As String = Nothing
 
@@ -3261,51 +3261,61 @@ Public Class Form1
 
     Private Sub ListFilesContextMenuMD5_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuMD5.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Md5.ToUpper, globalAllTheHashes.Md5.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub ListFilesContextMenuSHA160_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuSHA160.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha160.ToUpper, globalAllTheHashes.Sha160.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub ListFilesContextMenuSHA256_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuSHA256.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha256.ToUpper, globalAllTheHashes.Sha256.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub ListFilesContextMenuSHA384_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuSHA384.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha384.ToUpper, globalAllTheHashes.Sha384.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub ListFilesContextMenuSHA512_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuSHA512.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha512.ToUpper, globalAllTheHashes.Sha512.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub VerifyListFilesContextMenuMD5_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuMD5.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Md5.ToUpper, globalAllTheHashes.Md5.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub VerifyListFilesContextMenuSHA160_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuSHA160.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha160.ToUpper, globalAllTheHashes.Sha160.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub VerifyListFilesContextMenuSHA256_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuSHA256.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha256.ToUpper, globalAllTheHashes.Sha256.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub VerifyListFilesContextMenuSHA384_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuSHA384.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha384.ToUpper, globalAllTheHashes.Sha384.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub VerifyListFilesContextMenuSHA512_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuSHA512.Click
         Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha512.ToUpper, globalAllTheHashes.Sha512.ToLower))
+        globalAllTheHashes = Nothing
         MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 End Class
