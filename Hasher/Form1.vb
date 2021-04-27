@@ -1750,22 +1750,6 @@ Public Class Form1
         stringBuilder.AppendLine("'")
     End Sub
 
-    Private Sub CopyHashToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        If listFiles.SelectedItems.Count = 1 Then
-            Dim selectedItem As MyListViewItem = listFiles.SelectedItems(0)
-            If CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower)) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
-        Else
-            Dim stringBuilder As New Text.StringBuilder
-            AddHashFileHeader(stringBuilder, listFiles.SelectedItems.Count)
-
-            For Each item As MyListViewItem In listFiles.SelectedItems
-                stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, item.Hash.ToUpper, item.Hash.ToLower) & " *" & item.FileName)
-            Next
-
-            If CopyTextToWindowsClipboard(stringBuilder.ToString.Trim) Then MsgBox("The hash result has been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
-        End If
-    End Sub
-
     Private Sub ApplyFileSizeSortingToHashList()
         MyInvoke(Sub()
                      colFileName.Text = "File Name"
