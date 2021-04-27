@@ -54,7 +54,7 @@ Public Class Form1
     Private Const TabNumberSettingsTab As Integer = 6
 
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([0-9a-f]+) \*?(.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
-    Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[A-Za-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled)
+    Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[a-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
     Private Function GenerateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
         Return String.Format("Processing file {0} of {1} {2}.",
