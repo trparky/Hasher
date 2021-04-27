@@ -3261,21 +3261,23 @@ Public Class Form1
 
     Private Sub SetClipboardDataFromGlobalAllTheHashes(checksum As ChecksumType)
         Try
+            Dim boolResult As Boolean = False
+
             Select Case checksum
                 Case ChecksumType.md5
-                    Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Md5.ToUpper, globalAllTheHashes.Md5.ToLower))
+                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Md5.ToUpper, globalAllTheHashes.Md5.ToLower))
                 Case ChecksumType.sha160
-                    Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha160.ToUpper, globalAllTheHashes.Sha160.ToLower))
+                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha160.ToUpper, globalAllTheHashes.Sha160.ToLower))
                 Case ChecksumType.sha256
-                    Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha256.ToUpper, globalAllTheHashes.Sha256.ToLower))
+                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha256.ToUpper, globalAllTheHashes.Sha256.ToLower))
                 Case ChecksumType.sha384
-                    Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha384.ToUpper, globalAllTheHashes.Sha384.ToLower))
+                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha384.ToUpper, globalAllTheHashes.Sha384.ToLower))
                 Case ChecksumType.sha512
-                    Clipboard.SetText(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha512.ToUpper, globalAllTheHashes.Sha512.ToLower))
+                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha512.ToUpper, globalAllTheHashes.Sha512.ToLower))
             End Select
 
             globalAllTheHashes = Nothing
-            MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
+            If boolResult Then MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
         Catch ex As Exception
             MsgBox("Unable to copy the checksum to the Windows Clipboard.", MsgBoxStyle.Critical, strMessageBoxTitleText)
         End Try
