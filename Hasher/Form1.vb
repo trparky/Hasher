@@ -1719,7 +1719,7 @@ Public Class Form1
 
         If listFiles.SelectedItems.Count = 0 Then
             e.Cancel = True
-        Else
+        ElseIf listFiles.SelectedItems.Count = 1 Then
             If String.IsNullOrWhiteSpace(DirectCast(listFiles.SelectedItems(0), MyListViewItem).Hash) Then e.Cancel = True
 
             listFilesContextMenuMD5.Visible = True
@@ -2817,21 +2817,23 @@ Public Class Form1
                 ViewChecksumDifferenceToolStripMenuItem.Visible = False
             End If
 
-            verifyListFilesContextMenuMD5.Visible = True
-            verifyListFilesContextMenuSHA160.Visible = True
-            verifyListFilesContextMenuSHA256.Visible = True
-            verifyListFilesContextMenuSHA384.Visible = True
-            verifyListFilesContextMenuSHA512.Visible = True
+            If verifyHashesListFiles.Items.Count = 1 Then
+                verifyListFilesContextMenuMD5.Visible = True
+                verifyListFilesContextMenuSHA160.Visible = True
+                verifyListFilesContextMenuSHA256.Visible = True
+                verifyListFilesContextMenuSHA384.Visible = True
+                verifyListFilesContextMenuSHA512.Visible = True
 
-            Dim MyListViewItem As MyListViewItem = DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem)
-            globalAllTheHashes = MyListViewItem.AllTheHashes
-            With MyListViewItem.AllTheHashes
-                verifyListFilesContextMenuMD5.Text = "MD5: " & If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)
-                verifyListFilesContextMenuSHA160.Text = "SHA160: " & If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)
-                verifyListFilesContextMenuSHA256.Text = "SHA256: " & If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)
-                verifyListFilesContextMenuSHA384.Text = "SHA384: " & If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)
-                verifyListFilesContextMenuSHA512.Text = "SHA512: " & If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)
-            End With
+                Dim MyListViewItem As MyListViewItem = DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem)
+                globalAllTheHashes = MyListViewItem.AllTheHashes
+                With MyListViewItem.AllTheHashes
+                    verifyListFilesContextMenuMD5.Text = "MD5: " & If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)
+                    verifyListFilesContextMenuSHA160.Text = "SHA160: " & If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)
+                    verifyListFilesContextMenuSHA256.Text = "SHA256: " & If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)
+                    verifyListFilesContextMenuSHA384.Text = "SHA384: " & If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)
+                    verifyListFilesContextMenuSHA512.Text = "SHA512: " & If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)
+                End With
+            End If
         End If
     End Sub
 
