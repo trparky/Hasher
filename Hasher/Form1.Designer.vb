@@ -182,6 +182,8 @@ Partial Class Form1
         Me.ChkIncludeEntryCountInFileNameHeader = New System.Windows.Forms.CheckBox()
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = New System.Windows.Forms.CheckBox()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.listFilesContextMenuFileName = New System.Windows.Forms.ToolStripMenuItem()
+        Me.verifyListFilesContextMenuFileName = New System.Windows.Forms.ToolStripMenuItem()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -744,42 +746,42 @@ Partial Class Form1
         '
         'listFilesContextMenu
         '
-        Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.listFilesContextMenuMD5, Me.listFilesContextMenuSHA160, Me.listFilesContextMenuSHA256, Me.listFilesContextMenuSHA384, Me.listFilesContextMenuSHA512})
+        Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.listFilesContextMenuFileName, Me.listFilesContextMenuMD5, Me.listFilesContextMenuSHA160, Me.listFilesContextMenuSHA256, Me.listFilesContextMenuSHA384, Me.listFilesContextMenuSHA512})
         Me.listFilesContextMenu.Name = "ContextMenuStrip1"
-        Me.listFilesContextMenu.Size = New System.Drawing.Size(119, 114)
+        Me.listFilesContextMenu.Size = New System.Drawing.Size(131, 136)
         '
         'listFilesContextMenuMD5
         '
         Me.listFilesContextMenuMD5.Name = "listFilesContextMenuMD5"
-        Me.listFilesContextMenuMD5.Size = New System.Drawing.Size(118, 22)
+        Me.listFilesContextMenuMD5.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuMD5.Text = "MD5:"
         Me.listFilesContextMenuMD5.Visible = False
         '
         'listFilesContextMenuSHA160
         '
         Me.listFilesContextMenuSHA160.Name = "listFilesContextMenuSHA160"
-        Me.listFilesContextMenuSHA160.Size = New System.Drawing.Size(118, 22)
+        Me.listFilesContextMenuSHA160.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuSHA160.Text = "SHA160:"
         Me.listFilesContextMenuSHA160.Visible = False
         '
         'listFilesContextMenuSHA256
         '
         Me.listFilesContextMenuSHA256.Name = "listFilesContextMenuSHA256"
-        Me.listFilesContextMenuSHA256.Size = New System.Drawing.Size(118, 22)
+        Me.listFilesContextMenuSHA256.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuSHA256.Text = "SHA256:"
         Me.listFilesContextMenuSHA256.Visible = False
         '
         'listFilesContextMenuSHA384
         '
         Me.listFilesContextMenuSHA384.Name = "listFilesContextMenuSHA384"
-        Me.listFilesContextMenuSHA384.Size = New System.Drawing.Size(118, 22)
+        Me.listFilesContextMenuSHA384.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuSHA384.Text = "SHA384:"
         Me.listFilesContextMenuSHA384.Visible = False
         '
         'listFilesContextMenuSHA512
         '
         Me.listFilesContextMenuSHA512.Name = "listFilesContextMenuSHA512"
-        Me.listFilesContextMenuSHA512.Size = New System.Drawing.Size(118, 22)
+        Me.listFilesContextMenuSHA512.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuSHA512.Text = "SHA512:"
         Me.listFilesContextMenuSHA512.Visible = False
         '
@@ -888,9 +890,9 @@ Partial Class Form1
         '
         'verifyListFilesContextMenu
         '
-        Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem, Me.verifyListFilesContextMenuMD5, Me.verifyListFilesContextMenuSHA160, Me.verifyListFilesContextMenuSHA256, Me.verifyListFilesContextMenuSHA384, Me.verifyListFilesContextMenuSHA512})
+        Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem, Me.verifyListFilesContextMenuFileName, Me.verifyListFilesContextMenuMD5, Me.verifyListFilesContextMenuSHA160, Me.verifyListFilesContextMenuSHA256, Me.verifyListFilesContextMenuSHA384, Me.verifyListFilesContextMenuSHA512})
         Me.verifyListFilesContextMenu.Name = "verifyListFilesContextMenu"
-        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 136)
+        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 180)
         '
         'ViewChecksumDifferenceToolStripMenuItem
         '
@@ -1863,6 +1865,20 @@ Partial Class Form1
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Text = "Compute Hashes on ""Compare Files"" Tab Even With Different File Sizes"
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.UseVisualStyleBackColor = True
         '
+        'listFilesContextMenuFileName
+        '
+        Me.listFilesContextMenuFileName.Name = "listFilesContextMenuFileName"
+        Me.listFilesContextMenuFileName.Size = New System.Drawing.Size(130, 22)
+        Me.listFilesContextMenuFileName.Text = "File Name:"
+        Me.listFilesContextMenuFileName.Visible = False
+        '
+        'verifyListFilesContextMenuFileName
+        '
+        Me.verifyListFilesContextMenuFileName.Name = "verifyListFilesContextMenuFileName"
+        Me.verifyListFilesContextMenuFileName.Size = New System.Drawing.Size(215, 22)
+        Me.verifyListFilesContextMenuFileName.Text = "File Name:"
+        Me.verifyListFilesContextMenuFileName.Visible = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2063,4 +2079,6 @@ Partial Class Form1
     Friend WithEvents verifyListFilesContextMenuSHA256 As ToolStripMenuItem
     Friend WithEvents verifyListFilesContextMenuSHA384 As ToolStripMenuItem
     Friend WithEvents verifyListFilesContextMenuSHA512 As ToolStripMenuItem
+    Friend WithEvents listFilesContextMenuFileName As ToolStripMenuItem
+    Friend WithEvents verifyListFilesContextMenuFileName As ToolStripMenuItem
 End Class

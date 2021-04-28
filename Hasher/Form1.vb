@@ -1711,6 +1711,7 @@ Public Class Form1
     End Sub
 
     Private Sub ContextMenuStrip1_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles listFilesContextMenu.Opening
+        listFilesContextMenuFileName.Visible = False
         listFilesContextMenuMD5.Visible = False
         listFilesContextMenuSHA160.Visible = False
         listFilesContextMenuSHA256.Visible = False
@@ -1722,6 +1723,7 @@ Public Class Form1
         ElseIf listFiles.SelectedItems.Count = 1 Then
             If String.IsNullOrWhiteSpace(DirectCast(listFiles.SelectedItems(0), MyListViewItem).Hash) Then e.Cancel = True
 
+            listFilesContextMenuFileName.Visible = True
             listFilesContextMenuMD5.Visible = True
             listFilesContextMenuSHA160.Visible = True
             listFilesContextMenuSHA256.Visible = True
@@ -1730,6 +1732,7 @@ Public Class Form1
 
             Dim MyListViewItem As MyListViewItem = DirectCast(listFiles.SelectedItems(0), MyListViewItem)
             globalAllTheHashes = MyListViewItem.AllTheHashes
+            listFilesContextMenuFileName.Text = "File Name: " & MyListViewItem.FileName
             With MyListViewItem.AllTheHashes
                 listFilesContextMenuMD5.Text = "MD5: " & If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)
                 listFilesContextMenuSHA160.Text = "SHA160: " & If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)
@@ -2800,6 +2803,7 @@ Public Class Form1
     End Sub
 
     Private Sub VerifyListFilesContextMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles verifyListFilesContextMenu.Opening
+        verifyListFilesContextMenuFileName.Visible = False
         verifyListFilesContextMenuMD5.Visible = False
         verifyListFilesContextMenuSHA160.Visible = False
         verifyListFilesContextMenuSHA256.Visible = False
@@ -2818,6 +2822,7 @@ Public Class Form1
             End If
 
             If verifyHashesListFiles.Items.Count = 1 Then
+                verifyListFilesContextMenuFileName.Visible = True
                 verifyListFilesContextMenuMD5.Visible = True
                 verifyListFilesContextMenuSHA160.Visible = True
                 verifyListFilesContextMenuSHA256.Visible = True
@@ -2826,6 +2831,7 @@ Public Class Form1
 
                 Dim MyListViewItem As MyListViewItem = DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem)
                 globalAllTheHashes = MyListViewItem.AllTheHashes
+                verifyListFilesContextMenuFileName.Text = "File Name: " & MyListViewItem.FileName
                 With MyListViewItem.AllTheHashes
                     verifyListFilesContextMenuMD5.Text = "MD5: " & If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)
                     verifyListFilesContextMenuSHA160.Text = "SHA160: " & If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)
