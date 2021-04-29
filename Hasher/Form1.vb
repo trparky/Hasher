@@ -677,7 +677,7 @@ Public Class Form1
         If Not String.IsNullOrEmpty(strFullPath) AndAlso IO.File.Exists(strFullPath) Then
             Dim pidlList As IntPtr = NativeMethod.NativeMethods.ILCreateFromPathW(strFullPath)
 
-            If pidlList <> IntPtr.Zero Then
+            If Not pidlList.Equals(IntPtr.Zero) Then
                 Try
                     NativeMethod.NativeMethods.SHOpenFolderAndSelectItems(pidlList, 0, IntPtr.Zero, 0)
                 Finally
