@@ -2793,6 +2793,7 @@ Public Class Form1
 
     Private Sub VerifyListFilesContextMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles verifyListFilesContextMenu.Opening
         ViewChecksumDifferenceToolStripMenuItem.Visible = True
+        verifyListFilesContextMenuLine1.Visible = True
 
         If verifyHashesListFiles.Items.Count = 0 Or verifyHashesListFiles.SelectedItems.Count = 0 Then
             e.Cancel = True
@@ -2800,8 +2801,10 @@ Public Class Form1
         Else
             If String.IsNullOrEmpty(verifyHashesListFiles.SelectedItems(0).SubItems(4).Text) Or workingThread IsNot Nothing Then
                 ViewChecksumDifferenceToolStripMenuItem.Visible = False
+                verifyListFilesContextMenuLine1.Visible = False
             ElseIf Not DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem).BoolFileExists Or DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem).BoolValidHash Then
                 ViewChecksumDifferenceToolStripMenuItem.Visible = False
+                verifyListFilesContextMenuLine1.Visible = False
             End If
 
             If verifyHashesListFiles.SelectedItems.Count = 1 Then

@@ -184,6 +184,9 @@ Partial Class Form1
         Me.ChkIncludeEntryCountInFileNameHeader = New System.Windows.Forms.CheckBox()
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = New System.Windows.Forms.CheckBox()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.listFilesContextMenuLine = New System.Windows.Forms.ToolStripSeparator()
+        Me.verifyListFilesContextMenuLine1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.verifyListFilesContextMenuLine2 = New System.Windows.Forms.ToolStripSeparator()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -746,44 +749,44 @@ Partial Class Form1
         '
         'listFilesContextMenu
         '
-        Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.listFilesContextMenuFileName, Me.listFilesContextMenuMD5, Me.listFilesContextMenuSHA160, Me.listFilesContextMenuSHA256, Me.listFilesContextMenuSHA384, Me.listFilesContextMenuSHA512})
+        Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.listFilesContextMenuFileName, Me.listFilesContextMenuLine, Me.listFilesContextMenuMD5, Me.listFilesContextMenuSHA160, Me.listFilesContextMenuSHA256, Me.listFilesContextMenuSHA384, Me.listFilesContextMenuSHA512})
         Me.listFilesContextMenu.Name = "ContextMenuStrip1"
-        Me.listFilesContextMenu.Size = New System.Drawing.Size(131, 136)
+        Me.listFilesContextMenu.Size = New System.Drawing.Size(131, 142)
         '
         'listFilesContextMenuFileName
         '
         Me.listFilesContextMenuFileName.Name = "listFilesContextMenuFileName"
-        Me.listFilesContextMenuFileName.Size = New System.Drawing.Size(180, 22)
+        Me.listFilesContextMenuFileName.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuFileName.Text = "File Name:"
         '
         'listFilesContextMenuMD5
         '
         Me.listFilesContextMenuMD5.Name = "listFilesContextMenuMD5"
-        Me.listFilesContextMenuMD5.Size = New System.Drawing.Size(180, 22)
+        Me.listFilesContextMenuMD5.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuMD5.Text = "MD5:"
         '
         'listFilesContextMenuSHA160
         '
         Me.listFilesContextMenuSHA160.Name = "listFilesContextMenuSHA160"
-        Me.listFilesContextMenuSHA160.Size = New System.Drawing.Size(180, 22)
+        Me.listFilesContextMenuSHA160.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuSHA160.Text = "SHA160:"
         '
         'listFilesContextMenuSHA256
         '
         Me.listFilesContextMenuSHA256.Name = "listFilesContextMenuSHA256"
-        Me.listFilesContextMenuSHA256.Size = New System.Drawing.Size(180, 22)
+        Me.listFilesContextMenuSHA256.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuSHA256.Text = "SHA256:"
         '
         'listFilesContextMenuSHA384
         '
         Me.listFilesContextMenuSHA384.Name = "listFilesContextMenuSHA384"
-        Me.listFilesContextMenuSHA384.Size = New System.Drawing.Size(180, 22)
+        Me.listFilesContextMenuSHA384.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuSHA384.Text = "SHA384:"
         '
         'listFilesContextMenuSHA512
         '
         Me.listFilesContextMenuSHA512.Name = "listFilesContextMenuSHA512"
-        Me.listFilesContextMenuSHA512.Size = New System.Drawing.Size(180, 22)
+        Me.listFilesContextMenuSHA512.Size = New System.Drawing.Size(130, 22)
         Me.listFilesContextMenuSHA512.Text = "SHA512:"
         '
         'btnRemoveSelectedFiles
@@ -891,9 +894,9 @@ Partial Class Form1
         '
         'verifyListFilesContextMenu
         '
-        Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem, Me.verifyListFilesContextMenuFileName, Me.verifyListFilesContextMenuMD5, Me.verifyListFilesContextMenuSHA160, Me.verifyListFilesContextMenuSHA256, Me.verifyListFilesContextMenuSHA384, Me.verifyListFilesContextMenuSHA512})
+        Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem, Me.verifyListFilesContextMenuLine1, Me.verifyListFilesContextMenuFileName, Me.verifyListFilesContextMenuLine2, Me.verifyListFilesContextMenuMD5, Me.verifyListFilesContextMenuSHA160, Me.verifyListFilesContextMenuSHA256, Me.verifyListFilesContextMenuSHA384, Me.verifyListFilesContextMenuSHA512})
         Me.verifyListFilesContextMenu.Name = "verifyListFilesContextMenu"
-        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 180)
+        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 192)
         '
         'ViewChecksumDifferenceToolStripMenuItem
         '
@@ -1867,6 +1870,21 @@ Partial Class Form1
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Text = "Compute Hashes on ""Compare Files"" Tab Even With Different File Sizes"
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.UseVisualStyleBackColor = True
         '
+        'listFilesContextMenuLine
+        '
+        Me.listFilesContextMenuLine.Name = "listFilesContextMenuLine"
+        Me.listFilesContextMenuLine.Size = New System.Drawing.Size(127, 6)
+        '
+        'verifyListFilesContextMenuLine1
+        '
+        Me.verifyListFilesContextMenuLine1.Name = "verifyListFilesContextMenuLine1"
+        Me.verifyListFilesContextMenuLine1.Size = New System.Drawing.Size(212, 6)
+        '
+        'verifyListFilesContextMenuLine2
+        '
+        Me.verifyListFilesContextMenuLine2.Name = "verifyListFilesContextMenuLine2"
+        Me.verifyListFilesContextMenuLine2.Size = New System.Drawing.Size(212, 6)
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2069,4 +2087,7 @@ Partial Class Form1
     Friend WithEvents verifyListFilesContextMenuSHA512 As ToolStripMenuItem
     Friend WithEvents listFilesContextMenuFileName As ToolStripMenuItem
     Friend WithEvents verifyListFilesContextMenuFileName As ToolStripMenuItem
+    Friend WithEvents listFilesContextMenuLine As ToolStripSeparator
+    Friend WithEvents verifyListFilesContextMenuLine1 As ToolStripSeparator
+    Friend WithEvents verifyListFilesContextMenuLine2 As ToolStripSeparator
 End Class
