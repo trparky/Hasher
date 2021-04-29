@@ -664,7 +664,7 @@ Public Class Form1
 
         If BoolAskUserOpenInExplorer Then
             StringBuilder.AppendLine("Do you want to open Windows Explorer to the location of the checksum file?")
-            Return MsgBox(StringBuilder.ToString.Trim, MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+            Return MsgBox(StringBuilder.ToString.Trim, MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText)
         Else
             StringBuilder.AppendLine("Windows Explorer will now open to the location of the checksum file.")
             Return MsgBox(StringBuilder.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
@@ -3200,7 +3200,7 @@ Public Class Form1
             If SaveFileDialogBox.ShowDialog = DialogResult.OK Then
                 Try
                     SaveApplicationSettingsToFile(SaveFileDialogBox.FileName)
-                    If MsgBox("Application settings have been saved to disk. Do you want to open Windows Explorer to the location of the file?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then SelectFileInWindowsExplorer(SaveFileDialogBox.FileName)
+                    If MsgBox("Application settings have been saved to disk. Do you want to open Windows Explorer to the location of the file?", MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText) = MsgBoxResult.Yes Then SelectFileInWindowsExplorer(SaveFileDialogBox.FileName)
                 Catch ex As Exception
                     MsgBox("There was an issue saving your exported settings to disk, export failed.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                 End Try
