@@ -953,13 +953,13 @@ Partial Class Form1
         Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashesTotalStatus, 1, 2)
         Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashStatus, 0, 0)
         Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblProcessingFileVerify, 0, 2)
-        Me.verifySavedHashesTableLayoutControl.Location = New System.Drawing.Point(160, 351)
+        Me.verifySavedHashesTableLayoutControl.Location = New System.Drawing.Point(12, 351)
         Me.verifySavedHashesTableLayoutControl.Name = "verifySavedHashesTableLayoutControl"
         Me.verifySavedHashesTableLayoutControl.RowCount = 3
         Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.verifySavedHashesTableLayoutControl.Size = New System.Drawing.Size(877, 66)
+        Me.verifySavedHashesTableLayoutControl.Size = New System.Drawing.Size(1025, 66)
         Me.verifySavedHashesTableLayoutControl.TabIndex = 25
         '
         'VerifyHashProgressBar
@@ -969,14 +969,14 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.VerifyHashProgressBar.Location = New System.Drawing.Point(3, 19)
         Me.VerifyHashProgressBar.Name = "VerifyHashProgressBar"
-        Me.VerifyHashProgressBar.Size = New System.Drawing.Size(432, 27)
+        Me.VerifyHashProgressBar.Size = New System.Drawing.Size(506, 27)
         Me.VerifyHashProgressBar.TabIndex = 16
         Me.VerifyHashProgressBar.Visible = False
         '
         'lblVerifyHashStatusProcessingFile
         '
         Me.lblVerifyHashStatusProcessingFile.AutoSize = True
-        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(441, 0)
+        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(515, 0)
         Me.lblVerifyHashStatusProcessingFile.Name = "lblVerifyHashStatusProcessingFile"
         Me.lblVerifyHashStatusProcessingFile.Size = New System.Drawing.Size(166, 13)
         Me.lblVerifyHashStatusProcessingFile.TabIndex = 18
@@ -987,16 +987,16 @@ Partial Class Form1
         Me.verifyIndividualFilesAllFilesProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.verifyIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(441, 19)
+        Me.verifyIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(515, 19)
         Me.verifyIndividualFilesAllFilesProgressBar.Name = "verifyIndividualFilesAllFilesProgressBar"
-        Me.verifyIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(433, 27)
+        Me.verifyIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(507, 27)
         Me.verifyIndividualFilesAllFilesProgressBar.TabIndex = 24
         '
         'lblVerifyHashesTotalStatus
         '
         Me.lblVerifyHashesTotalStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblVerifyHashesTotalStatus.AutoSize = True
-        Me.lblVerifyHashesTotalStatus.Location = New System.Drawing.Point(441, 53)
+        Me.lblVerifyHashesTotalStatus.Location = New System.Drawing.Point(515, 53)
         Me.lblVerifyHashesTotalStatus.Name = "lblVerifyHashesTotalStatus"
         Me.lblVerifyHashesTotalStatus.Size = New System.Drawing.Size(133, 13)
         Me.lblVerifyHashesTotalStatus.TabIndex = 25
