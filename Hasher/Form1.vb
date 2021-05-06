@@ -3230,7 +3230,7 @@ Public Class Form1
                     Dim strExceptionError As New Text.StringBuilder
                     strExceptionError.AppendLine("There was an issue decoding your chosen JSON settings file, import failed.")
                     strExceptionError.AppendLine()
-                    strExceptionError.AppendLine(ex.Message & ex.StackTrace)
+                    strExceptionError.AppendLine(ex.InnerException.Message & ex.InnerException.StackTrace)
 
                     MsgBox(strExceptionError.ToString.Trim, MsgBoxStyle.Critical, strMessageBoxTitleText)
                 End Try
