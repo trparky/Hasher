@@ -36,46 +36,55 @@ Public Module SaveAppSettings
     End Sub
 
     Public Sub LoadApplicationSettingsFromFile(strFileName As String)
-        Dim exportedSettingsArray As New Dictionary(Of String, Object)
-        Dim boolResult As Boolean, byteResult As Byte, intResult As Integer, longResult As Long, settingType As Type, shortResult As Short, splitArray As String()
-        Dim rawValue As Object = Nothing
+        Try
+            Dim exportedSettingsArray As New Dictionary(Of String, Object)
+            Dim boolResult As Boolean, byteResult As Byte, intResult As Integer, longResult As Long, settingType As Type, shortResult As Short, splitArray As String()
+            Dim rawValue As Object = Nothing
 
-        Using streamReader As New IO.StreamReader(strFileName)
-            Dim json As JavaScriptSerializer = New JavaScriptSerializer()
-            exportedSettingsArray = json.Deserialize(Of Dictionary(Of String, Object))(streamReader.ReadToEnd.Trim)
-        End Using
+            Using streamReader As New IO.StreamReader(strFileName)
+                Dim json As JavaScriptSerializer = New JavaScriptSerializer()
+                exportedSettingsArray = json.Deserialize(Of Dictionary(Of String, Object))(streamReader.ReadToEnd.Trim)
+            End Using
 
-        For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
-            If exportedSettingsArray.TryGetValue(settingProperty.Name.Trim.ToLower, rawValue) Then
-                settingType = settingProperty.PropertyValue.GetType
+            For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
+                If exportedSettingsArray.TryGetValue(settingProperty.Name.Trim.ToLower, rawValue) Then
+                    settingType = settingProperty.PropertyValue.GetType
 
-                If settingType = GetType(Color) AndAlso Integer.TryParse(rawValue, intResult) Then
-                    My.Settings(settingProperty.Name) = Color.FromArgb(intResult)
-                ElseIf settingType = GetType(Point) Then
-                    splitArray = rawValue.split("|")
-                    My.Settings(settingProperty.Name) = New Point() With {.X = splitArray(0), .Y = splitArray(1)}
-                    splitArray = Nothing
-                ElseIf settingType = GetType(Size) Then
-                    splitArray = rawValue.split("|")
-                    My.Settings(settingProperty.Name) = New Size() With {.Height = splitArray(0), .Width = splitArray(1)}
-                    splitArray = Nothing
-                ElseIf settingType = GetType(Boolean) AndAlso Boolean.TryParse(rawValue, boolResult) Then
-                    My.Settings(settingProperty.Name) = boolResult
-                ElseIf settingType = GetType(Byte) AndAlso Byte.TryParse(rawValue, byteResult) Then
-                    My.Settings(settingProperty.Name) = byteResult
-                ElseIf settingType = GetType(Short) AndAlso Short.TryParse(rawValue, shortResult) Then
-                    My.Settings(settingProperty.Name) = shortResult
-                ElseIf settingType = GetType(Integer) AndAlso Integer.TryParse(rawValue, intResult) Then
-                    My.Settings(settingProperty.Name) = intResult
-                ElseIf settingType = GetType(Long) AndAlso Long.TryParse(rawValue, longResult) Then
-                    My.Settings(settingProperty.Name) = longResult
-                ElseIf settingType = GetType(Specialized.StringCollection) Then
-                    My.Settings(settingProperty.Name) = ConvertArrayListToSpecializedStringCollection(rawValue)
-                Else
-                    My.Settings(settingProperty.Name) = rawValue
+                    If settingType = GetType(Color) AndAlso Integer.TryParse(rawValue, intResult) Then
+                        My.Settings(settingProperty.Name) = Color.FromArgb(intResult)
+                    ElseIf settingType = GetType(Point) Then
+                        splitArray = rawValue.split("|")
+                        My.Settings(settingProperty.Name) = New Point() With {.X = splitArray(0), .Y = splitArray(1)}
+                        splitArray = Nothing
+                    ElseIf settingType = GetType(Size) Then
+                        splitArray = rawValue.split("|")
+                        My.Settings(settingProperty.Name) = New Size() With {.Height = splitArray(0), .Width = splitArray(1)}
+                        splitArray = Nothing
+                    ElseIf settingType = GetType(Boolean) AndAlso Boolean.TryParse(rawValue, boolResult) Then
+                        My.Settings(settingProperty.Name) = boolResult
+                    ElseIf settingType = GetType(Byte) AndAlso Byte.TryParse(rawValue, byteResult) Then
+                        My.Settings(settingProperty.Name) = byteResult
+                    ElseIf settingType = GetType(Short) AndAlso Short.TryParse(rawValue, shortResult) Then
+                        My.Settings(settingProperty.Name) = shortResult
+                    ElseIf settingType = GetType(Integer) AndAlso Integer.TryParse(rawValue, intResult) Then
+                        My.Settings(settingProperty.Name) = intResult
+                    ElseIf settingType = GetType(Long) AndAlso Long.TryParse(rawValue, longResult) Then
+                        My.Settings(settingProperty.Name) = longResult
+                    ElseIf settingType = GetType(Specialized.StringCollection) Then
+                        My.Settings(settingProperty.Name) = ConvertArrayListToSpecializedStringCollection(rawValue)
+                    Else
+                        My.Settings(settingProperty.Name) = rawValue
+                    End If
                 End If
-            End If
-        Next
+            Next
+        Catch ex As Exception
+            Dim strExceptionError As New Text.StringBuilder
+            strExceptionError.AppendLine("There was an issue decoding your chosen JSON settings file, import failed.")
+            strExceptionError.AppendLine()
+            strExceptionError.AppendLine(ex.Message & ex.StackTrace)
+
+            MsgBox(strExceptionError.ToString.Trim, MsgBoxStyle.Critical, strMessageBoxTitleText)
+        End Try
     End Sub
 
     Private Function ConvertArrayListToSpecializedStringCollection(input As ArrayList) As Specialized.StringCollection

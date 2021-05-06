@@ -3220,20 +3220,11 @@ Public Class Form1
             OpenFileDialogBox.Filter = "JSON File|*.json"
 
             If OpenFileDialogBox.ShowDialog = DialogResult.OK Then
-                Try
-                    LoadApplicationSettingsFromFile(OpenFileDialogBox.FileName)
-                    My.Settings.Save()
-                    MsgBox("Hasher will now close and restart itself for the imported settings to take effect.", MsgBoxStyle.Information, strMessageBoxTitleText)
-                    Process.Start(Application.ExecutablePath)
-                    Process.GetCurrentProcess.Kill()
-                Catch ex As Exception
-                    Dim strExceptionError As New Text.StringBuilder
-                    strExceptionError.AppendLine("There was an issue decoding your chosen JSON settings file, import failed.")
-                    strExceptionError.AppendLine()
-                    strExceptionError.AppendLine(ex.Message & ex.StackTrace)
-
-                    MsgBox(strExceptionError.ToString.Trim, MsgBoxStyle.Critical, strMessageBoxTitleText)
-                End Try
+                LoadApplicationSettingsFromFile(OpenFileDialogBox.FileName)
+                My.Settings.Save()
+                MsgBox("Hasher will now close and restart itself for the imported settings to take effect.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                Process.Start(Application.ExecutablePath)
+                Process.GetCurrentProcess.Kill()
             End If
         End Using
     End Sub
