@@ -3305,7 +3305,7 @@ Public Class Form1
 
         Try
             For Each column As ColumnHeader In listFiles.Columns
-                columnIndexes.Add(column.DisplayIndex)
+                columnIndexes.Add(column.DisplayIndex.ToString)
             Next
             My.Settings.listFilesColumnOrder = (New Web.Script.Serialization.JavaScriptSerializer).Serialize(columnIndexes)
         Catch ex As Exception
@@ -3315,7 +3315,7 @@ Public Class Form1
 
         Try
             For Each column As ColumnHeader In verifyHashesListFiles.Columns
-                columnIndexes.Add(column.DisplayIndex)
+                columnIndexes.Add(column.DisplayIndex.ToString)
             Next
             My.Settings.verifyListFilesColumnOrder = (New Web.Script.Serialization.JavaScriptSerializer).Serialize(columnIndexes)
         Catch ex As Exception
