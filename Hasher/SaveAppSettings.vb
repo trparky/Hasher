@@ -69,10 +69,20 @@ Public Module SaveAppSettings
                     My.Settings(settingProperty.Name) = intResult
                 ElseIf settingType = GetType(Long) AndAlso Long.TryParse(rawValue, longResult) Then
                     My.Settings(settingProperty.Name) = longResult
+                ElseIf settingType = GetType(Specialized.StringCollection) Then
+                    My.Settings(settingProperty.Name) = ConvertArrayListToSpecializedStringCollection(rawValue)
                 Else
                     My.Settings(settingProperty.Name) = rawValue
                 End If
             End If
         Next
     End Sub
+
+    Private Function ConvertArrayListToSpecializedStringCollection(input As ArrayList) As Specialized.StringCollection
+        Dim stringCollection As New Specialized.StringCollection
+        For Each item As String In input
+            stringCollection.Add(item)
+        Next
+        Return stringCollection
+    End Function
 End Module

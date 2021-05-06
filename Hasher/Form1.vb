@@ -3301,38 +3301,32 @@ Public Class Form1
     End Sub
 
     Private Sub SaveColumnOrders()
-        Dim columnIndexes As New Specialized.StringCollection
-
         Try
+            My.Settings.listFilesColumnOrder = New Specialized.StringCollection
             For Each column As ColumnHeader In listFiles.Columns
-                columnIndexes.Add(column.DisplayIndex.ToString)
+                My.Settings.listFilesColumnOrder.Add(column.DisplayIndex.ToString)
             Next
-            My.Settings.listFilesColumnOrder = (New Web.Script.Serialization.JavaScriptSerializer).Serialize(columnIndexes)
         Catch ex As Exception
         End Try
 
-        columnIndexes.Clear()
-
         Try
+            My.Settings.verifyListFilesColumnOrder = New Specialized.StringCollection
             For Each column As ColumnHeader In verifyHashesListFiles.Columns
-                columnIndexes.Add(column.DisplayIndex.ToString)
+                My.Settings.verifyListFilesColumnOrder.Add(column.DisplayIndex.ToString)
             Next
-            My.Settings.verifyListFilesColumnOrder = (New Web.Script.Serialization.JavaScriptSerializer).Serialize(columnIndexes)
         Catch ex As Exception
         End Try
     End Sub
 
     Private Sub LoadColumnOrders()
-        Dim columnIndexes As Specialized.StringCollection
         Dim intParsedDisplayIndex As Integer
 
         Try
-            If Not String.IsNullOrEmpty(My.Settings.listFilesColumnOrder) Then
+            If My.Settings.listFilesColumnOrder IsNot Nothing AndAlso My.Settings.listFilesColumnOrder.Count <> 0 Then
                 listFiles.BeginUpdate()
-                columnIndexes = (New Web.Script.Serialization.JavaScriptSerializer).Deserialize(Of Specialized.StringCollection)(My.Settings.listFilesColumnOrder)
 
                 For Each column As ColumnHeader In listFiles.Columns
-                    If Integer.TryParse(columnIndexes(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < listFiles.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
+                    If Integer.TryParse(My.Settings.listFilesColumnOrder(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < listFiles.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
                 Next
 
                 listFiles.EndUpdate()
@@ -3342,12 +3336,11 @@ Public Class Form1
         End Try
 
         Try
-            If Not String.IsNullOrEmpty(My.Settings.verifyListFilesColumnOrder) Then
+            If My.Settings.verifyListFilesColumnOrder IsNot Nothing AndAlso My.Settings.verifyListFilesColumnOrder.Count <> 0 Then
                 verifyHashesListFiles.BeginUpdate()
-                columnIndexes = (New Web.Script.Serialization.JavaScriptSerializer).Deserialize(Of Specialized.StringCollection)(My.Settings.verifyListFilesColumnOrder)
 
                 For Each column As ColumnHeader In verifyHashesListFiles.Columns
-                    If Integer.TryParse(columnIndexes(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < verifyHashesListFiles.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
+                    If Integer.TryParse(My.Settings.verifyListFilesColumnOrder(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < verifyHashesListFiles.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
                 Next
 
                 verifyHashesListFiles.EndUpdate()

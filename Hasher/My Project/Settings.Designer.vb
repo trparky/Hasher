@@ -487,11 +487,10 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property listFilesColumnOrder() As String
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+        Public Property listFilesColumnOrder() As Global.System.Collections.Specialized.StringCollection
             Get
-                Return CType(Me("listFilesColumnOrder"),String)
+                Return CType(Me("listFilesColumnOrder"),Global.System.Collections.Specialized.StringCollection)
             End Get
             Set
                 Me("listFilesColumnOrder") = value
@@ -499,11 +498,10 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property verifyListFilesColumnOrder() As String
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+        Public Property verifyListFilesColumnOrder() As Global.System.Collections.Specialized.StringCollection
             Get
-                Return CType(Me("verifyListFilesColumnOrder"),String)
+                Return CType(Me("verifyListFilesColumnOrder"),Global.System.Collections.Specialized.StringCollection)
             End Get
             Set
                 Me("verifyListFilesColumnOrder") = value
