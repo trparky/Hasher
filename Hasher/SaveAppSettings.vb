@@ -79,10 +79,14 @@ Public Module SaveAppSettings
     End Sub
 
     Private Function ConvertArrayListToSpecializedStringCollection(input As ArrayList) As Specialized.StringCollection
-        Dim stringCollection As New Specialized.StringCollection
-        For Each item As String In input
-            stringCollection.Add(item)
-        Next
-        Return stringCollection
+        Try
+            Dim stringCollection As New Specialized.StringCollection
+            For Each item As String In input
+                stringCollection.Add(item)
+            Next
+            Return stringCollection
+        Catch ex As Exception
+            Return New Specialized.StringCollection
+        End Try
     End Function
 End Module
