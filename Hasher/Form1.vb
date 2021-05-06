@@ -3324,6 +3324,7 @@ Public Class Form1
 
     Private Sub LoadColumnOrders()
         Dim columnIndexes As Specialized.StringCollection
+        Dim intParsedDisplayIndex As Integer
 
         Try
             If Not String.IsNullOrEmpty(My.Settings.listFilesColumnOrder) Then
@@ -3331,7 +3332,7 @@ Public Class Form1
                 columnIndexes = (New Web.Script.Serialization.JavaScriptSerializer).Deserialize(Of Specialized.StringCollection)(My.Settings.listFilesColumnOrder)
 
                 For Each column As ColumnHeader In listFiles.Columns
-                    column.DisplayIndex = columnIndexes(column.Index)
+                    If Integer.TryParse(columnIndexes(column.Index), intParsedDisplayIndex) Then column.DisplayIndex = intParsedDisplayIndex
                 Next
 
                 listFiles.EndUpdate()
@@ -3346,7 +3347,7 @@ Public Class Form1
                 columnIndexes = (New Web.Script.Serialization.JavaScriptSerializer).Deserialize(Of Specialized.StringCollection)(My.Settings.verifyListFilesColumnOrder)
 
                 For Each column As ColumnHeader In verifyHashesListFiles.Columns
-                    column.DisplayIndex = columnIndexes(column.Index)
+                    If Integer.TryParse(columnIndexes(column.Index), intParsedDisplayIndex) Then column.DisplayIndex = intParsedDisplayIndex
                 Next
 
                 verifyHashesListFiles.EndUpdate()
