@@ -3223,7 +3223,8 @@ Public Class Form1
                 Try
                     LoadApplicationSettingsFromFile(OpenFileDialogBox.FileName)
                     My.Settings.Save()
-                    MsgBox("Hasher will now close, you will have to manually relaunch the program for the imported settings to take effect.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                    MsgBox("Hasher will now close and restart itself for the imported settings to take effect.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                    Process.Start(Application.ExecutablePath)
                     Process.GetCurrentProcess.Kill()
                 Catch ex As Exception
                     Dim strExceptionError As New Text.StringBuilder
