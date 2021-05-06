@@ -1,4 +1,5 @@
-﻿Imports System.IO.Pipes
+﻿Imports System.ComponentModel
+Imports System.IO.Pipes
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -841,6 +842,10 @@ Public Class Form1
         End Try
     End Sub
 
+    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        SaveColumnOrders()
+    End Sub
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This function returns a Boolean value indicating if the name pipe server was started or not.
         Dim boolNamedPipeServerStarted As Boolean = StartNamedPipeServer()
@@ -961,6 +966,7 @@ Public Class Form1
         End If
 
         DeleteTemporaryNewEXEFile()
+        LoadColumnOrders()
 
         colFileName.Width = My.Settings.hashIndividualFilesFileNameColumnSize
         colFileSize.Width = My.Settings.hashIndividualFilesFileSizeColumnSize
@@ -3292,5 +3298,61 @@ Public Class Form1
 
     Private Sub VerifyListFilesContextMenuSHA512_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuSHA512.Click
         SetClipboardDataFromGlobalAllTheHashes(ChecksumType.sha512)
+    End Sub
+
+    Private Sub SaveColumnOrders()
+        Dim columnIndexes As New Specialized.StringCollection
+
+        Try
+            For Each column As ColumnHeader In listFiles.Columns
+                columnIndexes.Add(column.DisplayIndex)
+            Next
+            My.Settings.listFilesColumnOrder = (New Web.Script.Serialization.JavaScriptSerializer).Serialize(columnIndexes)
+        Catch ex As Exception
+        End Try
+
+        columnIndexes.Clear()
+
+        Try
+            For Each column As ColumnHeader In verifyHashesListFiles.Columns
+                columnIndexes.Add(column.DisplayIndex)
+            Next
+            My.Settings.verifyListFilesColumnOrder = (New Web.Script.Serialization.JavaScriptSerializer).Serialize(columnIndexes)
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub LoadColumnOrders()
+        Dim columnIndexes As Specialized.StringCollection
+
+        Try
+            If Not String.IsNullOrEmpty(My.Settings.listFilesColumnOrder) Then
+                listFiles.BeginUpdate()
+                columnIndexes = (New Web.Script.Serialization.JavaScriptSerializer).Deserialize(Of Specialized.StringCollection)(My.Settings.listFilesColumnOrder)
+
+                For Each column As ColumnHeader In listFiles.Columns
+                    column.DisplayIndex = columnIndexes(column.Index)
+                Next
+
+                listFiles.EndUpdate()
+            End If
+        Catch ex As Exception
+            My.Settings.listFilesColumnOrder = Nothing
+        End Try
+
+        Try
+            If Not String.IsNullOrEmpty(My.Settings.verifyListFilesColumnOrder) Then
+                verifyHashesListFiles.BeginUpdate()
+                columnIndexes = (New Web.Script.Serialization.JavaScriptSerializer).Deserialize(Of Specialized.StringCollection)(My.Settings.verifyListFilesColumnOrder)
+
+                For Each column As ColumnHeader In verifyHashesListFiles.Columns
+                    column.DisplayIndex = columnIndexes(column.Index)
+                Next
+
+                verifyHashesListFiles.EndUpdate()
+            End If
+        Catch ex As Exception
+            My.Settings.verifyListFilesColumnOrder = Nothing
+        End Try
     End Sub
 End Class

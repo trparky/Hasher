@@ -485,6 +485,30 @@ Namespace My
                 Me("boolClearBeforeTransferringFromVerifyToHash") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property listFilesColumnOrder() As String
+            Get
+                Return CType(Me("listFilesColumnOrder"),String)
+            End Get
+            Set
+                Me("listFilesColumnOrder") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property verifyListFilesColumnOrder() As String
+            Get
+                Return CType(Me("verifyListFilesColumnOrder"),String)
+            End Get
+            Set
+                Me("verifyListFilesColumnOrder") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

@@ -712,6 +712,7 @@ Partial Class Form1
         '
         'listFiles
         '
+        Me.listFiles.AllowColumnReorder = True
         Me.listFiles.AllowDrop = True
         Me.listFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
@@ -852,6 +853,7 @@ Partial Class Form1
         '
         'verifyHashesListFiles
         '
+        Me.verifyHashesListFiles.AllowColumnReorder = True
         Me.verifyHashesListFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
