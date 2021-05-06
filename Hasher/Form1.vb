@@ -3332,7 +3332,7 @@ Public Class Form1
                 columnIndexes = (New Web.Script.Serialization.JavaScriptSerializer).Deserialize(Of Specialized.StringCollection)(My.Settings.listFilesColumnOrder)
 
                 For Each column As ColumnHeader In listFiles.Columns
-                    If Integer.TryParse(columnIndexes(column.Index), intParsedDisplayIndex) Then column.DisplayIndex = intParsedDisplayIndex
+                    If Integer.TryParse(columnIndexes(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < listFiles.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
                 Next
 
                 listFiles.EndUpdate()
@@ -3347,7 +3347,7 @@ Public Class Form1
                 columnIndexes = (New Web.Script.Serialization.JavaScriptSerializer).Deserialize(Of Specialized.StringCollection)(My.Settings.verifyListFilesColumnOrder)
 
                 For Each column As ColumnHeader In verifyHashesListFiles.Columns
-                    If Integer.TryParse(columnIndexes(column.Index), intParsedDisplayIndex) Then column.DisplayIndex = intParsedDisplayIndex
+                    If Integer.TryParse(columnIndexes(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < verifyHashesListFiles.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
                 Next
 
                 verifyHashesListFiles.EndUpdate()
