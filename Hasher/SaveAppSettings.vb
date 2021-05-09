@@ -35,7 +35,7 @@ Public Module SaveAppSettings
         End Using
     End Sub
 
-    Public Sub LoadApplicationSettingsFromFile(strFileName As String)
+    Public Function LoadApplicationSettingsFromFile(strFileName As String) As Boolean
         Try
             Dim exportedSettingsArray As New Dictionary(Of String, Object)
             Dim boolResult As Boolean, byteResult As Byte, intResult As Integer, longResult As Long, settingType As Type, shortResult As Short, splitArray As String()
@@ -77,6 +77,8 @@ Public Module SaveAppSettings
                     End If
                 End If
             Next
+
+            Return True
         Catch ex As Exception
             Dim strExceptionError As New Text.StringBuilder
             strExceptionError.AppendLine("There was an issue decoding your chosen JSON settings file, import failed.")
@@ -84,8 +86,10 @@ Public Module SaveAppSettings
             strExceptionError.AppendLine(ex.Message & ex.StackTrace)
 
             MsgBox(strExceptionError.ToString.Trim, MsgBoxStyle.Critical, strMessageBoxTitleText)
+
+            Return False
         End Try
-    End Sub
+    End Function
 
     Private Function ConvertArrayListToSpecializedStringCollection(input As ArrayList) As Specialized.StringCollection
         Try
