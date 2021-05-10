@@ -967,7 +967,8 @@ Public Class Form1
         End If
 
         DeleteTemporaryNewEXEFile()
-        LoadColumnOrders()
+        LoadColumnOrders(listFiles, My.Settings.listFilesColumnOrder)
+        LoadColumnOrders(verifyHashesListFiles, My.Settings.verifyListFilesColumnOrder)
 
         colFileName.Width = My.Settings.hashIndividualFilesFileNameColumnSize
         colFileSize.Width = My.Settings.hashIndividualFilesFileSizeColumnSize
@@ -3309,35 +3310,18 @@ Public Class Form1
         End Try
     End Function
 
-    Private Sub LoadColumnOrders()
-        Dim intParsedDisplayIndex As Integer
-
+    Private Sub LoadColumnOrders(ByRef ListViewObject As ListView, ByRef specializedStringCollection As Specialized.StringCollection)
         Try
-            If My.Settings.listFilesColumnOrder IsNot Nothing AndAlso My.Settings.listFilesColumnOrder.Count <> 0 Then
-                listFiles.BeginUpdate()
-
-                For Each column As ColumnHeader In listFiles.Columns
-                    If Integer.TryParse(My.Settings.listFilesColumnOrder(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < listFiles.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
+            Dim intParsedDisplayIndex As Integer
+            If specializedStringCollection IsNot Nothing AndAlso specializedStringCollection.Count <> 0 Then
+                ListViewObject.BeginUpdate()
+                For Each column As ColumnHeader In ListViewObject.Columns
+                    If Integer.TryParse(specializedStringCollection(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < ListViewObject.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
                 Next
-
-                listFiles.EndUpdate()
+                ListViewObject.EndUpdate()
             End If
         Catch ex As Exception
-            My.Settings.listFilesColumnOrder = Nothing
-        End Try
-
-        Try
-            If My.Settings.verifyListFilesColumnOrder IsNot Nothing AndAlso My.Settings.verifyListFilesColumnOrder.Count <> 0 Then
-                verifyHashesListFiles.BeginUpdate()
-
-                For Each column As ColumnHeader In verifyHashesListFiles.Columns
-                    If Integer.TryParse(My.Settings.verifyListFilesColumnOrder(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < verifyHashesListFiles.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
-                Next
-
-                verifyHashesListFiles.EndUpdate()
-            End If
-        Catch ex As Exception
-            My.Settings.verifyListFilesColumnOrder = Nothing
+            specializedStringCollection = Nothing
         End Try
     End Sub
 End Class
