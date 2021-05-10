@@ -843,7 +843,8 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
-        SaveColumnOrders()
+        My.Settings.listFilesColumnOrder = SaveColumnOrders(listFiles.Columns)
+        My.Settings.verifyListFilesColumnOrder = SaveColumnOrders(verifyHashesListFiles.Columns)
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -3296,23 +3297,17 @@ Public Class Form1
         SetClipboardDataFromGlobalAllTheHashes(ChecksumType.sha512)
     End Sub
 
-    Private Sub SaveColumnOrders()
+    Private Function SaveColumnOrders(columns As ListView.ColumnHeaderCollection) As Specialized.StringCollection
         Try
-            My.Settings.listFilesColumnOrder = New Specialized.StringCollection
-            For Each column As ColumnHeader In listFiles.Columns
-                My.Settings.listFilesColumnOrder.Add(column.DisplayIndex.ToString)
+            Dim SpecializedStringCollection As New Specialized.StringCollection
+            For Each column As ColumnHeader In columns
+                SpecializedStringCollection.Add(column.DisplayIndex.ToString)
             Next
+            Return SpecializedStringCollection
         Catch ex As Exception
+            Return New Specialized.StringCollection
         End Try
-
-        Try
-            My.Settings.verifyListFilesColumnOrder = New Specialized.StringCollection
-            For Each column As ColumnHeader In verifyHashesListFiles.Columns
-                My.Settings.verifyListFilesColumnOrder.Add(column.DisplayIndex.ToString)
-            Next
-        Catch ex As Exception
-        End Try
-    End Sub
+    End Function
 
     Private Sub LoadColumnOrders()
         Dim intParsedDisplayIndex As Integer
