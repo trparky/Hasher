@@ -10,6 +10,11 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Hasher", "Hasher\Hasher.vbp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharp", "CSharp\CSharp.csproj", "{14795806-6B6E-4767-A245-3E9BE01897AF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA591549-F34A-468C-93BB-89093482CD1A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
