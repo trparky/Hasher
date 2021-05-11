@@ -47,7 +47,7 @@ Namespace FastDirectoryEnumerator
             LastWriteTimeUtc = ConvertDateTime(findData.ftLastWriteTime_dwHighDateTime, findData.ftLastWriteTime_dwLowDateTime)
             Size = CombineHighLowInts(findData.nFileSizeHigh, findData.nFileSizeLow)
             Name = findData.cFileName
-            Path = System.IO.Path.Combine(dir, findData.cFileName)
+            Path = IO.Path.Combine(dir, findData.cFileName)
         End Sub
 
         Private Shared Function CombineHighLowInts(high As UInteger, low As UInteger) As Long
@@ -115,7 +115,7 @@ Namespace FastDirectoryEnumerator
             Private ReadOnly m_filter As String
             Private ReadOnly m_searchOption As SearchOption
 
-            Public Sub New(path As String, filter As String, searchOption As System.IO.SearchOption)
+            Public Sub New(path As String, filter As String, searchOption As SearchOption)
                 MyBase.New()
                 m_path = path
                 m_filter = filter
@@ -171,7 +171,7 @@ Namespace FastDirectoryEnumerator
                 End Get
             End Property
 
-            Public Sub New(path As String, filter As String, searchOption As System.IO.SearchOption)
+            Public Sub New(path As String, filter As String, searchOption As SearchOption)
                 MyBase.New()
                 m_path = path
                 m_filter = filter
