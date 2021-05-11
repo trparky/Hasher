@@ -80,13 +80,7 @@ Public Module SaveAppSettings
 
             Return True
         Catch ex As Exception
-            Dim strExceptionError As New Text.StringBuilder
-            strExceptionError.AppendLine("There was an issue decoding your chosen JSON settings file, import failed.")
-            strExceptionError.AppendLine()
-            strExceptionError.AppendLine(ex.Message & ex.StackTrace)
-
-            MsgBox(strExceptionError.ToString.Trim, MsgBoxStyle.Critical, strMessageBoxTitleText)
-
+            MsgBox("There was an issue decoding your chosen JSON settings file, import failed." & vbCrLf & vbCrLf & ex.Message & ex.StackTrace.Trim, MsgBoxStyle.Critical, strMessageBoxTitleText)
             Return False
         End Try
     End Function
