@@ -95,7 +95,7 @@ Namespace FastDirectoryEnumerator
         Function EnumerateFiles(ByVal path As String, ByVal searchPattern As String, ByVal searchOption As SearchOption) As IEnumerable(Of FileData)
             If path Is Nothing Then Throw New ArgumentNullException("path")
             If searchPattern Is Nothing Then Throw New ArgumentNullException("searchPattern")
-            If (searchOption <> SearchOption.TopDirectoryOnly) AndAlso (searchOption <> SearchOption.AllDirectories) Then Throw New ArgumentOutOfRangeException("searchOption")
+            If searchOption <> SearchOption.TopDirectoryOnly AndAlso searchOption <> SearchOption.AllDirectories Then Throw New ArgumentOutOfRangeException("searchOption")
 
             Dim fullPath As String = IO.Path.GetFullPath(path)
             Return New FileEnumerable(fullPath, searchPattern, searchOption)
