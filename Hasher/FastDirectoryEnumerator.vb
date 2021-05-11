@@ -40,7 +40,7 @@ Namespace FastDirectoryEnumerator
             Return Name
         End Function
 
-        Friend Sub New(ByVal dir As String, ByVal findData As WIN32_FIND_DATA)
+        Friend Sub New(dir As String, findData As WIN32_FIND_DATA)
             Attributes = findData.dwFileAttributes
             CreationTimeUtc = ConvertDateTime(findData.ftCreationTime_dwHighDateTime, findData.ftCreationTime_dwLowDateTime)
             LastAccessTimeUtc = ConvertDateTime(findData.ftLastAccessTime_dwHighDateTime, findData.ftLastAccessTime_dwLowDateTime)
@@ -50,11 +50,11 @@ Namespace FastDirectoryEnumerator
             Path = System.IO.Path.Combine(dir, findData.cFileName)
         End Sub
 
-        Private Shared Function CombineHighLowInts(ByVal high As UInteger, ByVal low As UInteger) As Long
+        Private Shared Function CombineHighLowInts(high As UInteger, low As UInteger) As Long
             Return CULng(high) << 32 Or low
         End Function
 
-        Private Shared Function ConvertDateTime(ByVal high As UInteger, ByVal low As UInteger) As Date
+        Private Shared Function ConvertDateTime(high As UInteger, low As UInteger) As Date
             Dim fileTime As Long = CombineHighLowInts(high, low)
             Return Date.FromFileTimeUtc(fileTime)
         End Function
@@ -84,15 +84,15 @@ Namespace FastDirectoryEnumerator
     End Class
 
     Module FastDirectoryEnumerator
-        Function EnumerateFiles(ByVal path As String) As IEnumerable(Of FileData)
+        Function EnumerateFiles(path As String) As IEnumerable(Of FileData)
             Return EnumerateFiles(path, "*")
         End Function
 
-        Function EnumerateFiles(ByVal path As String, ByVal searchPattern As String) As IEnumerable(Of FileData)
+        Function EnumerateFiles(path As String, searchPattern As String) As IEnumerable(Of FileData)
             Return EnumerateFiles(path, searchPattern, SearchOption.TopDirectoryOnly)
         End Function
 
-        Function EnumerateFiles(ByVal path As String, ByVal searchPattern As String, ByVal searchOption As SearchOption) As IEnumerable(Of FileData)
+        Function EnumerateFiles(path As String, searchPattern As String, searchOption As SearchOption) As IEnumerable(Of FileData)
             If path Is Nothing Then Throw New ArgumentNullException("path")
             If searchPattern Is Nothing Then Throw New ArgumentNullException("searchPattern")
             If searchOption <> SearchOption.TopDirectoryOnly AndAlso searchOption <> SearchOption.AllDirectories Then Throw New ArgumentOutOfRangeException("searchOption")
@@ -101,7 +101,7 @@ Namespace FastDirectoryEnumerator
             Return New FileEnumerable(fullPath, searchPattern, searchOption)
         End Function
 
-        Function GetFiles(ByVal path As String, ByVal searchPattern As String, ByVal searchOption As SearchOption) As FileData()
+        Function GetFiles(path As String, searchPattern As String, searchOption As SearchOption) As FileData()
             Dim e As IEnumerable(Of FileData) = EnumerateFiles(path, searchPattern, searchOption)
             Dim list As List(Of FileData) = New List(Of FileData)(e)
             Dim retval As FileData() = New FileData(list.Count - 1) {}
@@ -115,7 +115,7 @@ Namespace FastDirectoryEnumerator
             Private ReadOnly m_filter As String
             Private ReadOnly m_searchOption As SearchOption
 
-            Public Sub New(ByVal path As String, ByVal filter As String, ByVal searchOption As System.IO.SearchOption)
+            Public Sub New(path As String, filter As String, searchOption As System.IO.SearchOption)
                 MyBase.New()
                 m_path = path
                 m_filter = filter
@@ -140,7 +140,7 @@ Namespace FastDirectoryEnumerator
 
             <DllImport("kernel32.dll", CharSet:=CharSet.None, ExactSpelling:=False)>
             <ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)>
-            Private Shared Function FindClose(ByVal handle As IntPtr) As Boolean
+            Private Shared Function FindClose(handle As IntPtr) As Boolean
             End Function
 
             Protected Overrides Function ReleaseHandle() As Boolean
@@ -171,7 +171,7 @@ Namespace FastDirectoryEnumerator
                 End Get
             End Property
 
-            Public Sub New(ByVal path As String, ByVal filter As String, ByVal searchOption As System.IO.SearchOption)
+            Public Sub New(path As String, filter As String, searchOption As System.IO.SearchOption)
                 MyBase.New()
                 m_path = path
                 m_filter = filter
@@ -185,11 +185,11 @@ Namespace FastDirectoryEnumerator
             End Sub
 
             <DllImport("kernel32.dll", CharSet:=CharSet.Auto, ExactSpelling:=False, SetLastError:=True)>
-            Private Shared Function FindFirstFile(ByVal fileName As String, <InAttribute> <Out> ByVal data As WIN32_FIND_DATA) As SafeFindHandle
+            Private Shared Function FindFirstFile(fileName As String, <InAttribute> <Out> data As WIN32_FIND_DATA) As SafeFindHandle
             End Function
 
             <DllImport("kernel32.dll", CharSet:=CharSet.Auto, ExactSpelling:=False, SetLastError:=True)>
-            Private Shared Function FindNextFile(ByVal hndFindFile As SafeFindHandle, <InAttribute> <Out> ByVal lpFindFileData As WIN32_FIND_DATA) As Boolean
+            Private Shared Function FindNextFile(hndFindFile As SafeFindHandle, <InAttribute> <Out> lpFindFileData As WIN32_FIND_DATA) As Boolean
             End Function
 
             Public Function MoveNext() As Boolean Implements IEnumerator.MoveNext
@@ -250,7 +250,7 @@ Namespace FastDirectoryEnumerator
                 Public ReadOnly Path As String
                 Public SubdirectoriesToProcess As Stack(Of String)
 
-                Public Sub New(ByVal path As String)
+                Public Sub New(path As String)
                     MyBase.New()
                     Me.Path = path
                 End Sub
