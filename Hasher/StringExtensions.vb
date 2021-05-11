@@ -8,8 +8,7 @@ Module StringExtensions
     <Extension()>
     Public Function CaseInsensitiveContains(haystack As String, needle As String) As Boolean
         If String.IsNullOrWhiteSpace(haystack) Or String.IsNullOrWhiteSpace(needle) Then Return False
-        Dim index As Integer = haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase)
-        Return index <> -1
+        Return haystack.IndexOf(needle, StringComparison.OrdinalIgnoreCase) <> -1
     End Function
 
     ''' <summary>This function operates a lot like Replace() but is case-InSeNsItIvE.</summary>
