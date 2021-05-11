@@ -51,7 +51,7 @@ Namespace FastDirectoryEnumerator
         End Sub
 
         Private Shared Function CombineHighLowInts(ByVal high As UInteger, ByVal low As UInteger) As Long
-            Return CLng(CULng(high) << 32 Or CULng(low))
+            Return CULng(high) << 32 Or low
         End Function
 
         Private Shared Function ConvertDateTime(ByVal high As UInteger, ByVal low As UInteger) As Date
