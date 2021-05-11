@@ -2832,7 +2832,7 @@ Public Class Form1
 
     Private Sub ViewChecksumDifferenceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ViewChecksumDifferenceToolStripMenuItem.Click
         Dim selectedItem As MyListViewItem = verifyHashesListFiles.SelectedItems(0)
-        Dim stringBuilder As New System.Text.StringBuilder()
+        Dim stringBuilder As New Text.StringBuilder()
 
         stringBuilder.AppendLine("Hash/Checksum Contained in Checksum File")
         With selectedItem.Hash
