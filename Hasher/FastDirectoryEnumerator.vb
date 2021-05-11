@@ -20,34 +20,34 @@ Namespace FastDirectoryEnumerator
 
         Public ReadOnly Property CreationTime As Date
             Get
-                Return Me.CreationTimeUtc.ToLocalTime()
+                Return CreationTimeUtc.ToLocalTime()
             End Get
         End Property
 
         Public ReadOnly Property LastAccesTime As Date
             Get
-                Return Me.LastAccessTimeUtc.ToLocalTime()
+                Return LastAccessTimeUtc.ToLocalTime()
             End Get
         End Property
 
         Public ReadOnly Property LastWriteTime As Date
             Get
-                Return Me.LastWriteTimeUtc.ToLocalTime()
+                Return LastWriteTimeUtc.ToLocalTime()
             End Get
         End Property
 
         Public Overrides Function ToString() As String
-            Return Me.Name
+            Return Name
         End Function
 
         Friend Sub New(ByVal dir As String, ByVal findData As WIN32_FIND_DATA)
-            Me.Attributes = findData.dwFileAttributes
-            Me.CreationTimeUtc = ConvertDateTime(findData.ftCreationTime_dwHighDateTime, findData.ftCreationTime_dwLowDateTime)
-            Me.LastAccessTimeUtc = ConvertDateTime(findData.ftLastAccessTime_dwHighDateTime, findData.ftLastAccessTime_dwLowDateTime)
-            Me.LastWriteTimeUtc = ConvertDateTime(findData.ftLastWriteTime_dwHighDateTime, findData.ftLastWriteTime_dwLowDateTime)
-            Me.Size = CombineHighLowInts(findData.nFileSizeHigh, findData.nFileSizeLow)
-            Me.Name = findData.cFileName
-            Me.Path = System.IO.Path.Combine(dir, findData.cFileName)
+            Attributes = findData.dwFileAttributes
+            CreationTimeUtc = ConvertDateTime(findData.ftCreationTime_dwHighDateTime, findData.ftCreationTime_dwLowDateTime)
+            LastAccessTimeUtc = ConvertDateTime(findData.ftLastAccessTime_dwHighDateTime, findData.ftLastAccessTime_dwLowDateTime)
+            LastWriteTimeUtc = ConvertDateTime(findData.ftLastWriteTime_dwHighDateTime, findData.ftLastWriteTime_dwLowDateTime)
+            Size = CombineHighLowInts(findData.nFileSizeHigh, findData.nFileSizeLow)
+            Name = findData.cFileName
+            Path = System.IO.Path.Combine(dir, findData.cFileName)
         End Sub
 
         Private Shared Function CombineHighLowInts(ByVal high As UInteger, ByVal low As UInteger) As Long
@@ -125,17 +125,17 @@ Namespace FastDirectoryEnumerator
 
             Public Sub New(ByVal path As String, ByVal filter As String, ByVal searchOption As System.IO.SearchOption)
                 MyBase.New()
-                Me.m_path = path
-                Me.m_filter = filter
-                Me.m_searchOption = searchOption
+                m_path = path
+                m_filter = filter
+                m_searchOption = searchOption
             End Sub
 
             Public Function GetEnumerator() As IEnumerator(Of FileData) Implements IEnumerable(Of FileData).GetEnumerator
-                Return New FileEnumerator(Me.m_path, Me.m_filter, Me.m_searchOption)
+                Return New FileEnumerator(m_path, m_filter, m_searchOption)
             End Function
 
             Private Function ExplicitGetEnumerator() As IEnumerator Implements IEnumerable.GetEnumerator
-                Return New FileEnumerator(Me.m_path, Me.m_filter, Me.m_searchOption)
+                Return New FileEnumerator(m_path, m_filter, m_searchOption)
             End Function
         End Class
 
@@ -152,7 +152,7 @@ Namespace FastDirectoryEnumerator
             End Function
 
             Protected Overrides Function ReleaseHandle() As Boolean
-                Return FindClose(Me.handle)
+                Return FindClose(handle)
             End Function
         End Class
 
@@ -169,30 +169,30 @@ Namespace FastDirectoryEnumerator
 
             Public ReadOnly Property Current As FileData Implements IEnumerator(Of FileData).Current
                 Get
-                    Return New FileData(Me.m_path, Me.m_win_find_data)
+                    Return New FileData(m_path, m_win_find_data)
                 End Get
             End Property
 
             ReadOnly Property ExplicitCurrent As Object Implements IEnumerator.Current
                 Get
-                    Return New FileData(Me.m_path, Me.m_win_find_data)
+                    Return New FileData(m_path, m_win_find_data)
                 End Get
             End Property
 
             Public Sub New(ByVal path As String, ByVal filter As String, ByVal searchOption As System.IO.SearchOption)
                 MyBase.New()
-                Me.m_path = path
-                Me.m_filter = filter
-                Me.m_searchOption = searchOption
-                Me.m_currentContext = New SearchContext(path)
+                m_path = path
+                m_filter = filter
+                m_searchOption = searchOption
+                m_currentContext = New SearchContext(path)
                 If Me.m_searchOption = System.IO.SearchOption.AllDirectories Then
-                    Me.m_contextStack = New Stack(Of SearchContext)()
+                    m_contextStack = New Stack(Of SearchContext)()
                 End If
             End Sub
 
             Public Sub Dispose() Implements IDisposable.Dispose
-                If Me.m_hndFindFile IsNot Nothing Then
-                    Me.m_hndFindFile.Dispose()
+                If m_hndFindFile IsNot Nothing Then
+                    m_hndFindFile.Dispose()
                 End If
             End Sub
 
@@ -207,46 +207,46 @@ Namespace FastDirectoryEnumerator
             Public Function MoveNext() As Boolean Implements IEnumerator.MoveNext
                 Dim flag As Boolean
                 Dim retval As Boolean = False
-                If Me.m_currentContext.SubdirectoriesToProcess Is Nothing Then
-                    If Me.m_hndFindFile IsNot Nothing Then
-                        retval = FindNextFile(Me.m_hndFindFile, Me.m_win_find_data)
+                If m_currentContext.SubdirectoriesToProcess Is Nothing Then
+                    If m_hndFindFile IsNot Nothing Then
+                        retval = FindNextFile(m_hndFindFile, m_win_find_data)
                     Else
-                        Dim fileIOPermission As FileIOPermission = New FileIOPermission(FileIOPermissionAccess.PathDiscovery, Me.m_path)
+                        Dim fileIOPermission As FileIOPermission = New FileIOPermission(FileIOPermissionAccess.PathDiscovery, m_path)
                         fileIOPermission.Demand()
-                        Dim searchPath As String = Path.Combine(Me.m_path, Me.m_filter)
-                        Me.m_hndFindFile = FindFirstFile(searchPath, Me.m_win_find_data)
-                        retval = Not Me.m_hndFindFile.IsInvalid
+                        Dim searchPath As String = Path.Combine(m_path, m_filter)
+                        m_hndFindFile = FindFirstFile(searchPath, m_win_find_data)
+                        retval = Not m_hndFindFile.IsInvalid
                     End If
                 End If
                 If retval Then
                     If (Me.m_win_find_data.dwFileAttributes And FileAttributes.Directory) = FileAttributes.Directory Then
-                        flag = Me.MoveNext()
+                        flag = MoveNext()
                         Return flag
                     End If
                 ElseIf Me.m_searchOption = SearchOption.AllDirectories Then
-                    If Me.m_currentContext.SubdirectoriesToProcess Is Nothing Then
+                    If m_currentContext.SubdirectoriesToProcess Is Nothing Then
                         Try
-                            Dim subDirectories As String() = Directory.GetDirectories(Me.m_path)
-                            Me.m_currentContext.SubdirectoriesToProcess = New Stack(Of String)(subDirectories)
+                            Dim subDirectories As String() = Directory.GetDirectories(m_path)
+                            m_currentContext.SubdirectoriesToProcess = New Stack(Of String)(subDirectories)
                         Catch
                         End Try
                     End If
-                    If Me.m_currentContext.SubdirectoriesToProcess IsNot Nothing AndAlso Me.m_currentContext.SubdirectoriesToProcess.Count > 0 Then
-                        Dim subDir As String = Me.m_currentContext.SubdirectoriesToProcess.Pop()
-                        Me.m_contextStack.Push(Me.m_currentContext)
-                        Me.m_path = subDir
-                        Me.m_hndFindFile = Nothing
-                        Me.m_currentContext = New SearchContext(Me.m_path)
-                        flag = Me.MoveNext()
+                    If m_currentContext.SubdirectoriesToProcess IsNot Nothing AndAlso m_currentContext.SubdirectoriesToProcess.Count > 0 Then
+                        Dim subDir As String = m_currentContext.SubdirectoriesToProcess.Pop()
+                        m_contextStack.Push(m_currentContext)
+                        m_path = subDir
+                        m_hndFindFile = Nothing
+                        m_currentContext = New SearchContext(m_path)
+                        flag = MoveNext()
                         Return flag
-                    ElseIf Me.m_contextStack.Count > 0 Then
-                        Me.m_currentContext = Me.m_contextStack.Pop()
-                        Me.m_path = Me.m_currentContext.Path
-                        If Me.m_hndFindFile IsNot Nothing Then
-                            Me.m_hndFindFile.Close()
-                            Me.m_hndFindFile = Nothing
+                    ElseIf m_contextStack.Count > 0 Then
+                        m_currentContext = m_contextStack.Pop()
+                        m_path = m_currentContext.Path
+                        If m_hndFindFile IsNot Nothing Then
+                            m_hndFindFile.Close()
+                            m_hndFindFile = Nothing
                         End If
-                        flag = Me.MoveNext()
+                        flag = MoveNext()
                         Return flag
                     End If
                 End If
@@ -255,7 +255,7 @@ Namespace FastDirectoryEnumerator
             End Function
 
             Public Sub Reset() Implements IEnumerator.Reset
-                Me.m_hndFindFile = Nothing
+                m_hndFindFile = Nothing
             End Sub
 
             Private Class SearchContext
