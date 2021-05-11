@@ -185,11 +185,11 @@ Namespace FastDirectoryEnumerator
             End Sub
 
             <DllImport("kernel32.dll", CharSet:=CharSet.Auto, ExactSpelling:=False, SetLastError:=True)>
-            Private Shared Function FindFirstFile(fileName As String, <InAttribute> <Out> data As WIN32_FIND_DATA) As SafeFindHandle
+            Private Shared Function FindFirstFile(fileName As String, <[In]> <Out> data As WIN32_FIND_DATA) As SafeFindHandle
             End Function
 
             <DllImport("kernel32.dll", CharSet:=CharSet.Auto, ExactSpelling:=False, SetLastError:=True)>
-            Private Shared Function FindNextFile(hndFindFile As SafeFindHandle, <InAttribute> <Out> lpFindFileData As WIN32_FIND_DATA) As Boolean
+            Private Shared Function FindNextFile(hndFindFile As SafeFindHandle, <[In]> <Out> lpFindFileData As WIN32_FIND_DATA) As Boolean
             End Function
 
             Public Function MoveNext() As Boolean Implements IEnumerator.MoveNext
