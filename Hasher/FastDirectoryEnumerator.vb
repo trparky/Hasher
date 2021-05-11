@@ -93,17 +93,9 @@ Namespace FastDirectoryEnumerator
         End Function
 
         Function EnumerateFiles(ByVal path As String, ByVal searchPattern As String, ByVal searchOption As SearchOption) As IEnumerable(Of FileData)
-            If path Is Nothing Then
-                Throw New ArgumentNullException("path")
-            End If
-
-            If searchPattern Is Nothing Then
-                Throw New ArgumentNullException("searchPattern")
-            End If
-
-            If (searchOption <> SearchOption.TopDirectoryOnly) AndAlso (searchOption <> SearchOption.AllDirectories) Then
-                Throw New ArgumentOutOfRangeException("searchOption")
-            End If
+            If path Is Nothing Then Throw New ArgumentNullException("path")
+            If searchPattern Is Nothing Then Throw New ArgumentNullException("searchPattern")
+            If (searchOption <> SearchOption.TopDirectoryOnly) AndAlso (searchOption <> SearchOption.AllDirectories) Then Throw New ArgumentOutOfRangeException("searchOption")
 
             Dim fullPath As String = IO.Path.GetFullPath(path)
             Return New FileEnumerable(fullPath, searchPattern, searchOption)
@@ -185,15 +177,11 @@ Namespace FastDirectoryEnumerator
                 m_filter = filter
                 m_searchOption = searchOption
                 m_currentContext = New SearchContext(path)
-                If Me.m_searchOption = System.IO.SearchOption.AllDirectories Then
-                    m_contextStack = New Stack(Of SearchContext)()
-                End If
+                If Me.m_searchOption = System.IO.SearchOption.AllDirectories Then m_contextStack = New Stack(Of SearchContext)()
             End Sub
 
             Public Sub Dispose() Implements IDisposable.Dispose
-                If m_hndFindFile IsNot Nothing Then
-                    m_hndFindFile.Dispose()
-                End If
+                If m_hndFindFile IsNot Nothing Then m_hndFindFile.Dispose()
             End Sub
 
             <DllImport("kernel32.dll", CharSet:=CharSet.Auto, ExactSpelling:=False, SetLastError:=True)>
