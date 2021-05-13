@@ -71,6 +71,8 @@ Namespace FastDirectoryEnumerator
         Public nFileSizeLow As UInteger
         Public dwReserved0 As Integer
         Public dwReserved1 As Integer
+
+        ' Don't remove the special "MarshalAs" lines, it's the secret sauce that allows this class to function without corrupting the program stack which results in a FatalExecutionEngineError exception.
         <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=260)>
         Public cFileName As String
         <MarshalAs(UnmanagedType.ByValTStr, SizeConst:=14)>
