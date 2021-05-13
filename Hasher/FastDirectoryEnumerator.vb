@@ -207,7 +207,7 @@ Namespace FastDirectoryEnumerator
                     End If
                 End If
                 If retval Then
-                    If (Me.m_win_find_data.dwFileAttributes And FileAttributes.Directory) = FileAttributes.Directory Then
+                    If Me.m_win_find_data.dwFileAttributes = FileAttributes.Directory Then
                         flag = MoveNext()
                         Return flag
                     End If
