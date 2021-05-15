@@ -13,7 +13,7 @@ Namespace My
                 Dim commandLineArgument As String = Application.CommandLineArgs(0).Trim
 
                 If commandLineArgument.Equals("-update", StringComparison.OrdinalIgnoreCase) Then
-                    DoUpdateAtStartup()
+                    checkForUpdates.DoUpdateAtStartup()
                 ElseIf commandLineArgument.Equals("-associatefiletype", StringComparison.OrdinalIgnoreCase) Then
                     FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
                     FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
