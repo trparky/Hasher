@@ -11,6 +11,25 @@ Module Check_for_Update_Stuff_Module
     Private Const strZipFileName As String = "Hasher.zip"
     ' Change these variables whenever you import this module into a program's code to handle software updates.
 
+    Public versionString As String
+    Public versionInfo As String() = Application.ProductVersion.Split(".")
+
+    Sub New()
+        If IsDebugBuild() And Integer.Parse(versionInfo(3)) <> 0 Then
+            versionString = String.Format("{0}.{1} Build {2} (Debug Build {3})", versionInfo(0), versionInfo(1), versionInfo(2), versionInfo(3))
+        Else
+            versionString = String.Format("{0}.{1} Build {2}", versionInfo(0), versionInfo(1), versionInfo(2))
+        End If
+    End Sub
+
+    Private Function IsDebugBuild() As Boolean
+#If DEBUG Then
+        Return True
+#Else
+        return False
+#End If
+    End Function
+
     ''' <summary>Checks to see if a Process ID or PID exists on the system.</summary>
     ''' <param name="PID">The PID of the process you are checking the existance of.</param>
     ''' <param name="processObject">If the PID does exist, the function writes back to this argument in a ByRef way a Process Object that can be interacted with outside of this function.</param>
@@ -133,13 +152,7 @@ Class Check_for_Update_Stuff
     ' Change these variables whenever you import this module into a program's code to handle software updates.
 
     Public windowObject As Form1
-    Public Shared versionInfo As String() = Application.ProductVersion.Split(".")
     Private ReadOnly shortBuild As Short = Short.Parse(versionInfo(VersionPieces.build).Trim)
-#If DEBUG Then
-    Public Shared versionString As String = String.Format("{0}.{1} Build {2} (Debug Build {3})", versionInfo(0), versionInfo(1), versionInfo(2), versionInfo(3))
-#Else
-    Public Shared versionString As String = String.Format("{0}.{1} Build {2}", versionInfo(0), versionInfo(1), versionInfo(2))
-#End If
     Private ReadOnly versionStringWithoutBuild As String = String.Format("{0}.{1}", versionInfo(VersionPieces.major), versionInfo(VersionPieces.minor))
 
     Public Sub New(inputWindowObject As Form1)
