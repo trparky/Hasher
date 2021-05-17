@@ -154,7 +154,7 @@ Namespace checkForUpdates
 
         Public windowObject As Form1
         Private ReadOnly shortBuild As Short = Short.Parse(versionInfo(VersionPieces.build).Trim)
-        Private ReadOnly versionStringWithoutBuild As String = String.Format("{0}.{1}", versionInfo(VersionPieces.major), versionInfo(VersionPieces.minor))
+        Private ReadOnly versionStringWithoutBuild As Double = Double.Parse(String.Format("{0}.{1}", versionInfo(VersionPieces.major), versionInfo(VersionPieces.minor)))
 
         Public Sub New(inputWindowObject As Form1)
             windowObject = inputWindowObject
