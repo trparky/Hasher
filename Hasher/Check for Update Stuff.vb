@@ -27,7 +27,7 @@ Namespace checkForUpdates
 #If DEBUG Then
             Return True
 #Else
-        return False
+            Return False
 #End If
         End Function
 
