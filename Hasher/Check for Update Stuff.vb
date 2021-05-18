@@ -67,7 +67,7 @@ Namespace checkForUpdates
             Dim memoryBuffer As New Text.StringBuilder(1024)
             Dim processHandle As IntPtr = NativeMethod.NativeMethods.OpenProcess(NativeMethod.ProcessAccessFlags.PROCESS_QUERY_LIMITED_INFORMATION, False, processID)
 
-            If processHandle <> IntPtr.Zero Then
+            If Not processHandle.Equals(IntPtr.Zero) Then
                 Try
                     Dim memoryBufferSize As Integer = memoryBuffer.Capacity
 
