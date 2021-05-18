@@ -1001,7 +1001,7 @@ Public Class Form1
         Try
             Dim newExecutableName As String = New IO.FileInfo(Application.ExecutablePath).Name & ".new.exe"
             If IO.File.Exists(newExecutableName) Then
-                checkForUpdates.SearchForProcessAndKillIt(newExecutableName, False)
+                SearchForProcessAndKillIt(newExecutableName, False)
                 IO.File.Delete(newExecutableName)
             End If
         Catch ex As Exception
