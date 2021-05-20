@@ -3324,4 +3324,9 @@ Public Class Form1
             specializedStringCollection = Nothing
         End Try
     End Sub
+
+    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        NativeMethod.NativeMethods.keybd_event(NativeMethod.NativeMethods.ESC, 0, 0, 0)
+        NativeMethod.NativeMethods.keybd_event(NativeMethod.NativeMethods.ESC, 0, NativeMethod.NativeMethods.UP, 0)
+    End Sub
 End Class

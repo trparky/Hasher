@@ -2,6 +2,12 @@
 
 Namespace NativeMethod
     Friend Class NativeMethods
+        <DllImport("User32.dll", EntryPoint:="keybd_event")>
+        Public Shared Function keybd_event(ByVal bVk As Byte, ByVal bScan As Byte, ByVal dwFlags As Long, ByVal dwExtraInfo As Long) As Integer
+        End Function
+        Public Const UP As Byte = 2
+        Public Const ESC As Byte = 27
+
         <DllImport("User32.dll", EntryPoint:="SetForegroundWindow")>
         Public Shared Function SetForegroundWindow(ByVal hWnd As Integer) As Int32
         End Function
