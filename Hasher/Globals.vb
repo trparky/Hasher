@@ -7,6 +7,7 @@ Public Module Globals
     Public ReadOnly threadLockingObject As New Object()
     ''' <summary>Stores the value of the setting for roundNumbers locally.</summary>
     Public byteRoundFileSizes, byteRoundPercentages As Byte
+    Public Const DoubleCRLF As String = vbCrLf & vbCrLf
 
     Public Function MyRoundingFunction(value As Double, digits As Integer) As String
         If digits = 0 Then

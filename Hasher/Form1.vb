@@ -178,7 +178,7 @@ Public Class Form1
     End Sub
 
     Private Sub BtnRemoveSelectedFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveSelectedFiles.Click
-        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox("It would be recommended to use the ""Remove All Files"" button instead, removing this many items (" & MyToString(listFiles.SelectedItems.Count) & " items) from the list is a slow process and will make the program appear locked up." & vbCrLf & vbCrLf & "Are you sure you want to remove the items this way?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
+        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox("It would be recommended to use the ""Remove All Files"" button instead, removing this many items (" & MyToString(listFiles.SelectedItems.Count) & " items) from the list is a slow process and will make the program appear locked up." & DoubleCRLF & "Are you sure you want to remove the items this way?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
             Exit Sub
         End If
 
@@ -418,7 +418,7 @@ Public Class Form1
                                                                   If longErroredFiles = 0 Then
                                                                       MsgBox("Completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   Else
-                                                                      MsgBox("Completed in " & TimespanToHMS(stopWatch.Elapsed) & "." & vbCrLf & vbCrLf & longErroredFiles.ToString & If(longErroredFiles = 1, " file", " files") & " experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                      MsgBox("Completed in " & TimespanToHMS(stopWatch.Elapsed) & "." & DoubleCRLF & longErroredFiles.ToString & If(longErroredFiles = 1, " file", " files") & " experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   End If
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
@@ -586,9 +586,9 @@ Public Class Form1
                     Dim MsgBoxQuestionResult As MsgBoxResult
 
                     If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
-                        MsgBoxQuestionResult = MsgBox("MD5 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+                        MsgBoxQuestionResult = MsgBox("MD5 is not recommended for hashing files." & DoubleCRLF & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                     ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                        MsgBoxQuestionResult = MsgBox("SHA1 is not recommended for hashing files." & vbCrLf & vbCrLf & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+                        MsgBoxQuestionResult = MsgBox("SHA1 is not recommended for hashing files." & DoubleCRLF & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                     End If
 
                     If MsgBoxQuestionResult = MsgBoxResult.No Then
@@ -616,7 +616,7 @@ Public Class Form1
 
                     Media.SystemSounds.Exclamation.Play()
 
-                    If IO.File.Exists(SaveFileDialog.FileName) AndAlso MsgBox("The file named """ & New IO.FileInfo(SaveFileDialog.FileName).Name & """ already exists." & vbCrLf & vbCrLf & "Are you absolutely sure you want to replace it?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "Overwrite?") = MsgBoxResult.No Then
+                    If IO.File.Exists(SaveFileDialog.FileName) AndAlso MsgBox("The file named """ & New IO.FileInfo(SaveFileDialog.FileName).Name & """ already exists." & DoubleCRLF & "Are you absolutely sure you want to replace it?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "Overwrite?") = MsgBoxResult.No Then
                         MsgBox("Save Results to Disk Aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                         Exit Sub
                     End If
@@ -993,7 +993,7 @@ Public Class Form1
         boolDoneLoading = True
 
         If Not FileAssociation.DoesCompareFilesExist() Then
-            MsgBox("Hasher has a new function! The ability to compare two files from Windows Explorer." & vbCrLf & vbCrLf & "Please go to the Setting tab and click on the ""Add Hasher to All Files"" button to add support to Windows Explorer for this new feature.", MsgBoxStyle.Information, strMessageBoxTitleText)
+            MsgBox("Hasher has a new function! The ability to compare two files from Windows Explorer." & DoubleCRLF & "Please go to the Setting tab and click on the ""Add Hasher to All Files"" button to add support to Windows Explorer for this new feature.", MsgBoxStyle.Information, strMessageBoxTitleText)
         End If
     End Sub
 
@@ -2001,11 +2001,11 @@ Public Class Form1
                                                                       If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
                                                                           pictureBoxCompareFiles.Image = My.Resources.good_check
                                                                           ToolTip.SetToolTip(pictureBoxCompareFiles, "Both files are the same.")
-                                                                          MsgBox("Both files are the same." & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                          MsgBox("Both files are the same." & DoubleCRLF & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                       Else
                                                                           pictureBoxCompareFiles.Image = My.Resources.bad_check
                                                                           ToolTip.SetToolTip(pictureBoxCompareFiles, "The two files don't match.")
-                                                                          MsgBox("The two files don't match." & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                          MsgBox("The two files don't match." & DoubleCRLF & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
                                                                       MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strMessageBoxTitleText)
@@ -2219,11 +2219,11 @@ Public Class Form1
                                                                       If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.good_check
                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum Verified!")
-                                                                          MsgBox("The checksums match!" & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                          MsgBox("The checksums match!" & DoubleCRLF & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                       Else
                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum verification failed, checksum didn't match!")
-                                                                          MsgBox("The checksums DON'T match!" & vbCrLf & vbCrLf & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                          MsgBox("The checksums DON'T match!" & DoubleCRLF & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
                                                                       pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
@@ -2397,7 +2397,7 @@ Public Class Form1
                 process.WaitForExit()
                 boolSuccessful = True
             Catch ex As System.ComponentModel.Win32Exception
-                MsgBox("Failed to elevate process." & vbCrLf & vbCrLf & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                MsgBox("Failed to elevate process." & DoubleCRLF & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             End Try
         End If
 
@@ -2421,7 +2421,7 @@ Public Class Form1
                 process.WaitForExit()
                 boolSuccessful = True
             Catch ex As System.ComponentModel.Win32Exception
-                MsgBox("Failed to elevate process." & vbCrLf & vbCrLf & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                MsgBox("Failed to elevate process." & DoubleCRLF & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             End Try
         End If
 
@@ -2653,7 +2653,7 @@ Public Class Form1
     End Sub
 
     Private Sub ChkAutoAddExtension_Click(sender As Object, e As EventArgs) Handles chkAutoAddExtension.Click
-        If Not chkAutoAddExtension.Checked AndAlso MsgBox("You are disabling a highly recommended option, it is HIGHLY recommended that you re-enable this option to prevent accidental data loss." & vbCrLf & vbCrLf & "Are you sure you want to do this?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
+        If Not chkAutoAddExtension.Checked AndAlso MsgBox("You are disabling a highly recommended option, it is HIGHLY recommended that you re-enable this option to prevent accidental data loss." & DoubleCRLF & "Are you sure you want to do this?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
             chkAutoAddExtension.Checked = True
         End If
         My.Settings.boolAutoAddExtension = chkAutoAddExtension.Checked

@@ -80,7 +80,7 @@ Public Module SaveAppSettings
 
             Return True
         Catch ex As Exception
-            MsgBox("There was an issue decoding your chosen JSON settings file, import failed." & vbCrLf & vbCrLf & ex.Message & ex.StackTrace.Trim, MsgBoxStyle.Critical, checkForUpdates.strMessageBoxTitleText)
+            MsgBox("There was an issue decoding your chosen JSON settings file, import failed." & DoubleCRLF & ex.Message & ex.StackTrace.Trim, MsgBoxStyle.Critical, checkForUpdates.strMessageBoxTitleText)
             Return False
         End Try
     End Function
