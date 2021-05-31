@@ -2879,6 +2879,7 @@ Public Class Form1
 
     Private Sub BtnRetestFailedFiles_Click(sender As Object, e As EventArgs) Handles btnRetestFailedFiles.Click
         verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height - 72)
+        btnTransferToHashIndividualFilesTab.Enabled = False
 
         workingThread = New Threading.Thread(Sub()
                                                  Dim itemOnGUI As MyListViewItem = Nothing
@@ -3044,6 +3045,7 @@ Public Class Form1
                                                                       If item.BoolFileExists Then item.BackColor = item.Color
                                                                   Next
 
+                                                                  btnTransferToHashIndividualFilesTab.Enabled = True
                                                                   lblVerifyHashStatusProcessingFile.Visible = False
                                                                   lblVerifyHashesTotalStatus.Visible = False
                                                                   verifyIndividualFilesAllFilesProgressBar.Visible = False
