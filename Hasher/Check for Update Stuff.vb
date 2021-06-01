@@ -150,6 +150,9 @@ Namespace checkForUpdates
                 ' Something went wrong so we return a exceptionError value.
                 Return ProcessUpdateXMLResponse.exceptionError
             End Try
+
+            ' We return a noUpdateNeeded flag.
+            Return ProcessUpdateXMLResponse.noUpdateNeeded
         End Function
 
         Private Shared Function CheckFolderPermissionsByACLs(folderPath As String) As Boolean
