@@ -985,7 +985,7 @@ Public Class Form1
 
         If My.Settings.boolCheckForUpdates Then
             Threading.ThreadPool.QueueUserWorkItem(Sub()
-                                                       Dim checkForUpdatesClassObject As New checkForUpdates.checkForUpdatesClass(Me)
+                                                       Dim checkForUpdatesClassObject As New checkForUpdates.CheckForUpdatesClass(Me)
                                                        checkForUpdatesClassObject.CheckForUpdates(False)
                                                    End Sub)
         End If
@@ -1834,7 +1834,7 @@ Public Class Form1
 
     Private Sub BtnCheckForUpdates_Click(sender As Object, e As EventArgs) Handles btnCheckForUpdates.Click
         Threading.ThreadPool.QueueUserWorkItem(Sub()
-                                                   Dim checkForUpdatesClassObject As New checkForUpdates.checkForUpdatesClass(Me)
+                                                   Dim checkForUpdatesClassObject As New checkForUpdates.CheckForUpdatesClass(Me)
                                                    checkForUpdatesClassObject.CheckForUpdates()
                                                End Sub)
     End Sub

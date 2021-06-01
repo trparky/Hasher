@@ -57,7 +57,7 @@ Namespace checkForUpdates
         End Sub
     End Module
 
-    Class checkForUpdatesClass
+    Class CheckForUpdatesClass
         ' Change these variables whenever you import this module into a program's code to handle software updates.
         Private Const programZipFileURL = "www.toms-world.org/download/Hasher.zip"
         Private Const programZipFileSHA256URL = "www.toms-world.org/download/Hasher.zip.sha2"
