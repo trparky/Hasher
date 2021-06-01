@@ -84,7 +84,7 @@ Public Class Form1
     End Sub
 
     Private Function GetListViewItems(ByVal lstview As ListView) As ListView.ListViewItemCollection
-        Dim tempListViewItemCollection As ListView.ListViewItemCollection = New ListView.ListViewItemCollection(New ListView())
+        Dim tempListViewItemCollection As New ListView.ListViewItemCollection(New ListView())
 
         If Not lstview.InvokeRequired() Then
             For Each item As MyListViewItem In lstview.Items
@@ -804,7 +804,7 @@ Public Class Form1
     ''' <returns>Returns a Boolean value indicating if the function was able to create a named pipe server.</returns>
     Private Function StartNamedPipeServer() As Boolean
         Try
-            Dim pipeServer As NamedPipeServerStream = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
+            Dim pipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
             pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
             Return True ' We were able to create a named pipe server. Yay!
         Catch oEX As Exception

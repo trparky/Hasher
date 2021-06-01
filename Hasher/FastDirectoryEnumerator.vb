@@ -103,7 +103,7 @@ Namespace FastDirectoryEnumerator
 
         Function GetFiles(path As String, searchPattern As String, searchOption As SearchOption) As FileData()
             Dim e As IEnumerable(Of FileData) = EnumerateFiles(path, searchPattern, searchOption)
-            Dim list As List(Of FileData) = New List(Of FileData)(e)
+            Dim list As New List(Of FileData)(e)
             Dim retval As FileData() = New FileData(list.Count - 1) {}
             list.CopyTo(retval)
             Return retval
@@ -157,7 +157,7 @@ Namespace FastDirectoryEnumerator
             Private ReadOnly m_contextStack As Stack(Of SearchContext)
             Private m_currentContext As SearchContext
             Private m_hndFindFile As SafeFindHandle
-            Private ReadOnly m_win_find_data As WIN32_FIND_DATA = New WIN32_FIND_DATA()
+            Private ReadOnly m_win_find_data As New WIN32_FIND_DATA()
 
             Public ReadOnly Property Current As FileData Implements IEnumerator(Of FileData).Current
                 Get
@@ -199,7 +199,7 @@ Namespace FastDirectoryEnumerator
                     If m_hndFindFile IsNot Nothing Then
                         retval = FindNextFile(m_hndFindFile, m_win_find_data)
                     Else
-                        Dim fileIOPermission As FileIOPermission = New FileIOPermission(FileIOPermissionAccess.PathDiscovery, m_path)
+                        Dim fileIOPermission As New FileIOPermission(FileIOPermissionAccess.PathDiscovery, m_path)
                         fileIOPermission.Demand()
                         Dim searchPath As String = Path.Combine(m_path, m_filter)
                         m_hndFindFile = FindFirstFile(searchPath, m_win_find_data)

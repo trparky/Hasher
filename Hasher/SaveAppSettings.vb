@@ -30,7 +30,7 @@ Public Module SaveAppSettings
         Next
 
         Using streamWriter As New IO.StreamWriter(strFileName)
-            Dim json As JavaScriptSerializer = New JavaScriptSerializer()
+            Dim json As New JavaScriptSerializer()
             streamWriter.Write(json.Serialize(exportedSettingsArray))
         End Using
     End Sub
@@ -42,7 +42,7 @@ Public Module SaveAppSettings
             Dim rawValue As Object = Nothing
 
             Using streamReader As New IO.StreamReader(strFileName)
-                Dim json As JavaScriptSerializer = New JavaScriptSerializer()
+                Dim json As New JavaScriptSerializer()
                 exportedSettingsArray = json.Deserialize(Of Dictionary(Of String, Object))(streamReader.ReadToEnd.Trim)
             End Using
 
