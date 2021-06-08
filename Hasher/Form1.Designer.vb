@@ -343,7 +343,7 @@ Partial Class Form1
         '
         Me.btnPasteTextFromWindowsClipboard.Location = New System.Drawing.Point(18, 107)
         Me.btnPasteTextFromWindowsClipboard.Name = "btnPasteTextFromWindowsClipboard"
-        Me.btnPasteTextFromWindowsClipboard.Size = New System.Drawing.Size(156, 23)
+        Me.btnPasteTextFromWindowsClipboard.Size = New System.Drawing.Size(156, 27)
         Me.btnPasteTextFromWindowsClipboard.TabIndex = 27
         Me.btnPasteTextFromWindowsClipboard.Text = "Paste Text"
         Me.btnPasteTextFromWindowsClipboard.UseVisualStyleBackColor = True
@@ -583,7 +583,7 @@ Partial Class Form1
         'lblLine
         '
         Me.lblLine.BackColor = System.Drawing.Color.Black
-        Me.lblLine.Location = New System.Drawing.Point(15, 80)
+        Me.lblLine.Location = New System.Drawing.Point(15, 87)
         Me.lblLine.Name = "lblLine"
         Me.lblLine.Size = New System.Drawing.Size(139, 1)
         Me.lblLine.TabIndex = 20
@@ -616,7 +616,7 @@ Partial Class Form1
         Me.btnIndividualFilesSaveResultsToDisk.Enabled = False
         Me.btnIndividualFilesSaveResultsToDisk.Location = New System.Drawing.Point(237, 386)
         Me.btnIndividualFilesSaveResultsToDisk.Name = "btnIndividualFilesSaveResultsToDisk"
-        Me.btnIndividualFilesSaveResultsToDisk.Size = New System.Drawing.Size(216, 23)
+        Me.btnIndividualFilesSaveResultsToDisk.Size = New System.Drawing.Size(216, 27)
         Me.btnIndividualFilesSaveResultsToDisk.TabIndex = 16
         Me.btnIndividualFilesSaveResultsToDisk.Text = "&Save Results to Disk ..."
         Me.btnIndividualFilesSaveResultsToDisk.UseVisualStyleBackColor = True
@@ -627,7 +627,7 @@ Partial Class Form1
         Me.btnIndividualFilesCopyToClipboard.Enabled = False
         Me.btnIndividualFilesCopyToClipboard.Location = New System.Drawing.Point(15, 386)
         Me.btnIndividualFilesCopyToClipboard.Name = "btnIndividualFilesCopyToClipboard"
-        Me.btnIndividualFilesCopyToClipboard.Size = New System.Drawing.Size(216, 23)
+        Me.btnIndividualFilesCopyToClipboard.Size = New System.Drawing.Size(216, 27)
         Me.btnIndividualFilesCopyToClipboard.TabIndex = 15
         Me.btnIndividualFilesCopyToClipboard.Text = "Copy Results to Clipboard"
         Me.btnIndividualFilesCopyToClipboard.UseVisualStyleBackColor = True
@@ -792,27 +792,27 @@ Partial Class Form1
         '
         'btnRemoveSelectedFiles
         '
-        Me.btnRemoveSelectedFiles.Location = New System.Drawing.Point(15, 90)
+        Me.btnRemoveSelectedFiles.Location = New System.Drawing.Point(15, 97)
         Me.btnRemoveSelectedFiles.Name = "btnRemoveSelectedFiles"
-        Me.btnRemoveSelectedFiles.Size = New System.Drawing.Size(139, 23)
+        Me.btnRemoveSelectedFiles.Size = New System.Drawing.Size(139, 27)
         Me.btnRemoveSelectedFiles.TabIndex = 4
         Me.btnRemoveSelectedFiles.Text = "Remove &Selected Files"
         Me.btnRemoveSelectedFiles.UseVisualStyleBackColor = True
         '
         'btnRemoveAllFiles
         '
-        Me.btnRemoveAllFiles.Location = New System.Drawing.Point(15, 119)
+        Me.btnRemoveAllFiles.Location = New System.Drawing.Point(15, 130)
         Me.btnRemoveAllFiles.Name = "btnRemoveAllFiles"
-        Me.btnRemoveAllFiles.Size = New System.Drawing.Size(139, 23)
+        Me.btnRemoveAllFiles.Size = New System.Drawing.Size(139, 27)
         Me.btnRemoveAllFiles.TabIndex = 3
         Me.btnRemoveAllFiles.Text = "&Remove All Files"
         Me.btnRemoveAllFiles.UseVisualStyleBackColor = True
         '
         'btnAddFilesInFolder
         '
-        Me.btnAddFilesInFolder.Location = New System.Drawing.Point(15, 49)
+        Me.btnAddFilesInFolder.Location = New System.Drawing.Point(15, 53)
         Me.btnAddFilesInFolder.Name = "btnAddFilesInFolder"
-        Me.btnAddFilesInFolder.Size = New System.Drawing.Size(139, 23)
+        Me.btnAddFilesInFolder.Size = New System.Drawing.Size(139, 27)
         Me.btnAddFilesInFolder.TabIndex = 1
         Me.btnAddFilesInFolder.Text = "&Add File(s) in Folder ..."
         Me.btnAddFilesInFolder.UseVisualStyleBackColor = True
@@ -821,7 +821,7 @@ Partial Class Form1
         '
         Me.btnAddIndividualFiles.Location = New System.Drawing.Point(15, 20)
         Me.btnAddIndividualFiles.Name = "btnAddIndividualFiles"
-        Me.btnAddIndividualFiles.Size = New System.Drawing.Size(139, 23)
+        Me.btnAddIndividualFiles.Size = New System.Drawing.Size(139, 27)
         Me.btnAddIndividualFiles.TabIndex = 0
         Me.btnAddIndividualFiles.Text = "Add &File(s) ..."
         Me.btnAddIndividualFiles.UseVisualStyleBackColor = True
@@ -1524,7 +1524,7 @@ Partial Class Form1
         Me.defaultHashType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.defaultHashType.FormattingEnabled = True
         Me.defaultHashType.Items.AddRange(New Object() {"MD5 (Seriously Not Recommended)", "SHA1 (Not Recommended)", "SHA256", "SHA384", "SHA512"})
-        Me.defaultHashType.Location = New System.Drawing.Point(696, 233)
+        Me.defaultHashType.Location = New System.Drawing.Point(696, 249)
         Me.defaultHashType.Name = "defaultHashType"
         Me.defaultHashType.Size = New System.Drawing.Size(203, 21)
         Me.defaultHashType.TabIndex = 41
@@ -1533,7 +1533,7 @@ Partial Class Form1
         'lblDefaultHashLabel
         '
         Me.lblDefaultHashLabel.AutoSize = True
-        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 237)
+        Me.lblDefaultHashLabel.Location = New System.Drawing.Point(618, 253)
         Me.lblDefaultHashLabel.Name = "lblDefaultHashLabel"
         Me.lblDefaultHashLabel.Size = New System.Drawing.Size(72, 13)
         Me.lblDefaultHashLabel.TabIndex = 40
@@ -1573,7 +1573,7 @@ Partial Class Form1
         '
         'btnSetBufferSize
         '
-        Me.btnSetBufferSize.Location = New System.Drawing.Point(868, 264)
+        Me.btnSetBufferSize.Location = New System.Drawing.Point(868, 280)
         Me.btnSetBufferSize.Name = "btnSetBufferSize"
         Me.btnSetBufferSize.Size = New System.Drawing.Size(31, 23)
         Me.btnSetBufferSize.TabIndex = 27
@@ -1582,7 +1582,7 @@ Partial Class Form1
         '
         'bufferSize
         '
-        Me.bufferSize.Location = New System.Drawing.Point(812, 267)
+        Me.bufferSize.Location = New System.Drawing.Point(812, 283)
         Me.bufferSize.Maximum = New Decimal(New Integer() {16, 0, 0, 0})
         Me.bufferSize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.bufferSize.Name = "bufferSize"
@@ -1593,7 +1593,7 @@ Partial Class Form1
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(618, 269)
+        Me.Label9.Location = New System.Drawing.Point(618, 285)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(188, 13)
         Me.Label9.TabIndex = 23
@@ -1681,27 +1681,27 @@ Partial Class Form1
         '
         'btnFileNotFoundColor
         '
-        Me.btnFileNotFoundColor.Location = New System.Drawing.Point(718, 71)
+        Me.btnFileNotFoundColor.Location = New System.Drawing.Point(718, 79)
         Me.btnFileNotFoundColor.Name = "btnFileNotFoundColor"
-        Me.btnFileNotFoundColor.Size = New System.Drawing.Size(181, 23)
+        Me.btnFileNotFoundColor.Size = New System.Drawing.Size(181, 27)
         Me.btnFileNotFoundColor.TabIndex = 15
         Me.btnFileNotFoundColor.Text = "Set File Not Found Color"
         Me.btnFileNotFoundColor.UseVisualStyleBackColor = True
         '
         'btnSetColorsBackToDefaults
         '
-        Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(718, 100)
+        Me.btnSetColorsBackToDefaults.Location = New System.Drawing.Point(718, 112)
         Me.btnSetColorsBackToDefaults.Name = "btnSetColorsBackToDefaults"
-        Me.btnSetColorsBackToDefaults.Size = New System.Drawing.Size(181, 23)
+        Me.btnSetColorsBackToDefaults.Size = New System.Drawing.Size(181, 27)
         Me.btnSetColorsBackToDefaults.TabIndex = 15
         Me.btnSetColorsBackToDefaults.Text = "Set Colors Back to Defaults"
         Me.btnSetColorsBackToDefaults.UseVisualStyleBackColor = True
         '
         'btnSetNotValidColor
         '
-        Me.btnSetNotValidColor.Location = New System.Drawing.Point(718, 42)
+        Me.btnSetNotValidColor.Location = New System.Drawing.Point(718, 46)
         Me.btnSetNotValidColor.Name = "btnSetNotValidColor"
-        Me.btnSetNotValidColor.Size = New System.Drawing.Size(181, 23)
+        Me.btnSetNotValidColor.Size = New System.Drawing.Size(181, 27)
         Me.btnSetNotValidColor.TabIndex = 14
         Me.btnSetNotValidColor.Text = "Set Not Valid Checksum Color"
         Me.btnSetNotValidColor.UseVisualStyleBackColor = True
@@ -1710,7 +1710,7 @@ Partial Class Form1
         '
         Me.btnSetValidColor.Location = New System.Drawing.Point(718, 13)
         Me.btnSetValidColor.Name = "btnSetValidColor"
-        Me.btnSetValidColor.Size = New System.Drawing.Size(181, 23)
+        Me.btnSetValidColor.Size = New System.Drawing.Size(181, 27)
         Me.btnSetValidColor.TabIndex = 13
         Me.btnSetValidColor.Text = "Set Valid Checksum Color"
         Me.btnSetValidColor.UseVisualStyleBackColor = True
@@ -1718,17 +1718,17 @@ Partial Class Form1
         'lblFileNotFoundColor
         '
         Me.lblFileNotFoundColor.BackColor = System.Drawing.Color.LightGray
-        Me.lblFileNotFoundColor.Location = New System.Drawing.Point(621, 71)
+        Me.lblFileNotFoundColor.Location = New System.Drawing.Point(621, 79)
         Me.lblFileNotFoundColor.Name = "lblFileNotFoundColor"
-        Me.lblFileNotFoundColor.Size = New System.Drawing.Size(91, 23)
+        Me.lblFileNotFoundColor.Size = New System.Drawing.Size(91, 27)
         Me.lblFileNotFoundColor.TabIndex = 12
         '
         'lblNotValidColor
         '
         Me.lblNotValidColor.BackColor = System.Drawing.Color.Pink
-        Me.lblNotValidColor.Location = New System.Drawing.Point(621, 42)
+        Me.lblNotValidColor.Location = New System.Drawing.Point(621, 46)
         Me.lblNotValidColor.Name = "lblNotValidColor"
-        Me.lblNotValidColor.Size = New System.Drawing.Size(91, 23)
+        Me.lblNotValidColor.Size = New System.Drawing.Size(91, 27)
         Me.lblNotValidColor.TabIndex = 11
         '
         'lblValidColor
@@ -1736,14 +1736,14 @@ Partial Class Form1
         Me.lblValidColor.BackColor = System.Drawing.Color.LightGreen
         Me.lblValidColor.Location = New System.Drawing.Point(621, 13)
         Me.lblValidColor.Name = "lblValidColor"
-        Me.lblValidColor.Size = New System.Drawing.Size(91, 23)
+        Me.lblValidColor.Size = New System.Drawing.Size(91, 27)
         Me.lblValidColor.TabIndex = 10
         '
         'btnPerformBenchmark
         '
-        Me.btnPerformBenchmark.Location = New System.Drawing.Point(621, 293)
+        Me.btnPerformBenchmark.Location = New System.Drawing.Point(621, 309)
         Me.btnPerformBenchmark.Name = "btnPerformBenchmark"
-        Me.btnPerformBenchmark.Size = New System.Drawing.Size(278, 23)
+        Me.btnPerformBenchmark.Size = New System.Drawing.Size(278, 27)
         Me.btnPerformBenchmark.TabIndex = 28
         Me.btnPerformBenchmark.Text = "Perform Benchmark to Determine Optimal Buffer Size"
         Me.btnPerformBenchmark.UseVisualStyleBackColor = True
@@ -1763,7 +1763,7 @@ Partial Class Form1
         Me.taskPriority.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.taskPriority.FormattingEnabled = True
         Me.taskPriority.Items.AddRange(New Object() {"Lowest", "Below Normal", "Normal", "Above Normal", "Highest"})
-        Me.taskPriority.Location = New System.Drawing.Point(774, 129)
+        Me.taskPriority.Location = New System.Drawing.Point(774, 145)
         Me.taskPriority.Name = "taskPriority"
         Me.taskPriority.Size = New System.Drawing.Size(125, 21)
         Me.taskPriority.TabIndex = 31
@@ -1773,7 +1773,7 @@ Partial Class Form1
         'lblTaskPriorityLabel
         '
         Me.lblTaskPriorityLabel.AutoSize = True
-        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(618, 132)
+        Me.lblTaskPriorityLabel.Location = New System.Drawing.Point(618, 148)
         Me.lblTaskPriorityLabel.Name = "lblTaskPriorityLabel"
         Me.lblTaskPriorityLabel.Size = New System.Drawing.Size(150, 13)
         Me.lblTaskPriorityLabel.TabIndex = 30
@@ -1806,7 +1806,7 @@ Partial Class Form1
         '
         'btnSetRoundPercentages
         '
-        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(818, 193)
+        Me.btnSetRoundPercentages.Location = New System.Drawing.Point(818, 209)
         Me.btnSetRoundPercentages.Name = "btnSetRoundPercentages"
         Me.btnSetRoundPercentages.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundPercentages.TabIndex = 36
@@ -1815,7 +1815,7 @@ Partial Class Form1
         '
         'roundPercentages
         '
-        Me.roundPercentages.Location = New System.Drawing.Point(762, 196)
+        Me.roundPercentages.Location = New System.Drawing.Point(762, 212)
         Me.roundPercentages.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundPercentages.Name = "roundPercentages"
         Me.roundPercentages.Size = New System.Drawing.Size(50, 20)
@@ -1825,7 +1825,7 @@ Partial Class Form1
         'lblRoundPercentagesLabel
         '
         Me.lblRoundPercentagesLabel.AutoSize = True
-        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(618, 187)
+        Me.lblRoundPercentagesLabel.Location = New System.Drawing.Point(618, 203)
         Me.lblRoundPercentagesLabel.Name = "lblRoundPercentagesLabel"
         Me.lblRoundPercentagesLabel.Size = New System.Drawing.Size(138, 39)
         Me.lblRoundPercentagesLabel.TabIndex = 34
@@ -1833,7 +1833,7 @@ Partial Class Form1
         '
         'btnSetRoundFileSizes
         '
-        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(868, 159)
+        Me.btnSetRoundFileSizes.Location = New System.Drawing.Point(868, 175)
         Me.btnSetRoundFileSizes.Name = "btnSetRoundFileSizes"
         Me.btnSetRoundFileSizes.Size = New System.Drawing.Size(31, 23)
         Me.btnSetRoundFileSizes.TabIndex = 36
@@ -1842,7 +1842,7 @@ Partial Class Form1
         '
         'roundFileSizes
         '
-        Me.roundFileSizes.Location = New System.Drawing.Point(811, 159)
+        Me.roundFileSizes.Location = New System.Drawing.Point(811, 175)
         Me.roundFileSizes.Maximum = New Decimal(New Integer() {4, 0, 0, 0})
         Me.roundFileSizes.Name = "roundFileSizes"
         Me.roundFileSizes.Size = New System.Drawing.Size(50, 20)
@@ -1852,7 +1852,7 @@ Partial Class Form1
         'lblRoundFileSizesLabel
         '
         Me.lblRoundFileSizesLabel.AutoSize = True
-        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(618, 153)
+        Me.lblRoundFileSizesLabel.Location = New System.Drawing.Point(618, 169)
         Me.lblRoundFileSizesLabel.Name = "lblRoundFileSizesLabel"
         Me.lblRoundFileSizesLabel.Size = New System.Drawing.Size(187, 26)
         Me.lblRoundFileSizesLabel.TabIndex = 34
