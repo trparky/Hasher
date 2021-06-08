@@ -54,7 +54,6 @@ Partial Class Form1
         Me.hashIndividualFilesAllFilesProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblHashIndividualFilesTotalStatus = New System.Windows.Forms.Label()
         Me.lblIndividualFilesStatus = New System.Windows.Forms.Label()
-        Me.lblLine = New System.Windows.Forms.Label()
         Me.lblHashIndividualFilesStep3 = New System.Windows.Forms.Label()
         Me.lblHashIndividualFilesStep2 = New System.Windows.Forms.Label()
         Me.btnIndividualFilesSaveResultsToDisk = New System.Windows.Forms.Button()
@@ -474,7 +473,6 @@ Partial Class Form1
         '
         Me.tabHashIndividualFiles.BackColor = System.Drawing.SystemColors.Control
         Me.tabHashIndividualFiles.Controls.Add(Me.hashIndividualFilesTableLayoutControl)
-        Me.tabHashIndividualFiles.Controls.Add(Me.lblLine)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep3)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep2)
         Me.tabHashIndividualFiles.Controls.Add(Me.btnIndividualFilesSaveResultsToDisk)
@@ -579,14 +577,6 @@ Partial Class Form1
         Me.lblIndividualFilesStatus.TabIndex = 13
         Me.lblIndividualFilesStatus.Text = "(No Background Processes)"
         Me.lblIndividualFilesStatus.Visible = False
-        '
-        'lblLine
-        '
-        Me.lblLine.BackColor = System.Drawing.Color.Black
-        Me.lblLine.Location = New System.Drawing.Point(15, 87)
-        Me.lblLine.Name = "lblLine"
-        Me.lblLine.Size = New System.Drawing.Size(139, 1)
-        Me.lblLine.TabIndex = 20
         '
         'lblHashIndividualFilesStep3
         '
@@ -1970,7 +1960,6 @@ Partial Class Form1
     Friend WithEvents lblVerifyHashStatusProcessingFile As Label
     Friend WithEvents tabSettings As TabPage
     Friend WithEvents chkRecurrsiveDirectorySearch As CheckBox
-    Friend WithEvents lblLine As Label
     Friend WithEvents txtTextToHash As TextBox
     Friend WithEvents lblTextToHash As Label
     Friend WithEvents lblHashTextStep1 As Label
