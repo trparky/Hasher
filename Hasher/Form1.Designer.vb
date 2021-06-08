@@ -782,7 +782,7 @@ Partial Class Form1
         '
         'btnRemoveSelectedFiles
         '
-        Me.btnRemoveSelectedFiles.Location = New System.Drawing.Point(15, 97)
+        Me.btnRemoveSelectedFiles.Location = New System.Drawing.Point(15, 107)
         Me.btnRemoveSelectedFiles.Name = "btnRemoveSelectedFiles"
         Me.btnRemoveSelectedFiles.Size = New System.Drawing.Size(139, 27)
         Me.btnRemoveSelectedFiles.TabIndex = 4
@@ -791,7 +791,7 @@ Partial Class Form1
         '
         'btnRemoveAllFiles
         '
-        Me.btnRemoveAllFiles.Location = New System.Drawing.Point(15, 130)
+        Me.btnRemoveAllFiles.Location = New System.Drawing.Point(15, 140)
         Me.btnRemoveAllFiles.Name = "btnRemoveAllFiles"
         Me.btnRemoveAllFiles.Size = New System.Drawing.Size(139, 27)
         Me.btnRemoveAllFiles.TabIndex = 3
