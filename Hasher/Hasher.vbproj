@@ -105,6 +105,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="checksums.vb" />
+    <Compile Include="ListViewNF.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FastDirectoryEnumerator.vb" />
     <Compile Include="FileAssociation.vb" />
     <Compile Include="Form1.vb">

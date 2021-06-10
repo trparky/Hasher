@@ -84,7 +84,7 @@ Partial Class Form1
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
-        Me.verifyHashesListFiles = New System.Windows.Forms.ListView()
+        Me.verifyHashesListFiles = New ListViewNF()
         Me.colFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colResults = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -1951,7 +1951,7 @@ Partial Class Form1
     Friend WithEvents lblHashIndividualFilesStep2 As Label
     Friend WithEvents lblWelcomeText As Label
     Friend WithEvents tabVerifySavedHashes As TabPage
-    Friend WithEvents verifyHashesListFiles As ListView
+    Friend WithEvents verifyHashesListFiles As ListViewNF
     Friend WithEvents colFile As ColumnHeader
     Friend WithEvents colResults As ColumnHeader
     Friend WithEvents btnOpenExistingHashFile As Button

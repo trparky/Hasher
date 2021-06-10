@@ -97,7 +97,7 @@ Public Class Form1
         End If
     End Function
 
-    Private Sub UpdateListViewItem(ByRef itemOnGUI As MyListViewItem, ByRef item As MyListViewItem, Optional boolForceUpdateColor As Boolean = False)
+    Private Sub UpdateListViewItem(ByRef itemOnGUI As MyListViewItem, ByRef item As MyListViewItem)
         With itemOnGUI
             For i As Short = 1 To item.SubItems.Count - 1
                 .SubItems(i) = item.SubItems(i)
@@ -111,7 +111,7 @@ Public Class Form1
             .ComputeTime = item.ComputeTime
             .AllTheHashes = item.AllTheHashes
             .BoolValidHash = item.BoolValidHash
-            If boolForceUpdateColor Then .BackColor = item.Color
+            .BackColor = item.Color
         End With
     End Sub
 
@@ -1463,6 +1463,7 @@ Public Class Form1
                                                                   sbMessageBoxText.AppendLine()
                                                                   sbMessageBoxText.AppendLine("Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".")
 
+                                                                  MyInvoke(Sub() verifyHashesListFiles.RedrawItems(0, verifyHashesListFiles.Items.Count - 1, False))
                                                                   MsgBox(sbMessageBoxText.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
 
@@ -2940,7 +2941,7 @@ Public Class Form1
                                                                  item.SubItems(4).Text = strWaitingToBeProcessed
                                                                  item.Color = Color.FromKnownColor(KnownColor.Window)
 
-                                                                 MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item, True))
+                                                                 MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item))
 
                                                                  longAllBytes += item.FileSize
                                                                  intFileCount += 1
