@@ -1487,10 +1487,10 @@ Partial Class Form1
         Me.chkUpdateColorInRealTime.AutoSize = True
         Me.chkUpdateColorInRealTime.Location = New System.Drawing.Point(15, 383)
         Me.chkUpdateColorInRealTime.Name = "chkUpdateColorInRealTime"
-        Me.chkUpdateColorInRealTime.Size = New System.Drawing.Size(461, 17)
+        Me.chkUpdateColorInRealTime.Size = New System.Drawing.Size(497, 17)
         Me.chkUpdateColorInRealTime.TabIndex = 51
-        Me.chkUpdateColorInRealTime.Text = "Update colors in the listview on ""Verify Saved Hashes"" in real time while process" &
-    "ing hash file"
+        Me.chkUpdateColorInRealTime.Text = "Update colors in the listview on the ""Verify Saved Hashes"" tab in real time while" &
+    " processing hash file"
         Me.ToolTip.SetToolTip(Me.chkUpdateColorInRealTime, "Looks fancy, however, it can affect performance." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Turn off if you want maximum ap" &
         "plication performance.")
         Me.chkUpdateColorInRealTime.UseVisualStyleBackColor = True
