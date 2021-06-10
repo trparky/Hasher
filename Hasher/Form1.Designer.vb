@@ -84,7 +84,7 @@ Partial Class Form1
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
-        Me.verifyHashesListFiles = New ListViewDoubleBuffered()
+        Me.verifyHashesListFiles = New Hasher.ListViewDoubleBuffered()
         Me.colFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colResults = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
