@@ -84,7 +84,7 @@ Partial Class Form1
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
-        Me.verifyHashesListFiles = New ListViewNF()
+        Me.verifyHashesListFiles = New Hasher.ListViewNF()
         Me.colFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colResults = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -144,6 +144,7 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.chkUpdateColorInRealTime = New System.Windows.Forms.CheckBox()
         Me.chkClearBeforeTransferringFromVerifyToHash = New System.Windows.Forms.CheckBox()
         Me.BtnLoadSettingsFromFile = New System.Windows.Forms.Button()
         Me.BtnSaveSettingsToFile = New System.Windows.Forms.Button()
@@ -221,7 +222,7 @@ Partial Class Form1
         Me.TabControl1.Location = New System.Drawing.Point(12, 12)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1048, 446)
+        Me.TabControl1.Size = New System.Drawing.Size(1048, 470)
         Me.TabControl1.TabIndex = 0
         '
         'tabWelcome
@@ -234,7 +235,7 @@ Partial Class Form1
         Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
         Me.tabWelcome.Name = "tabWelcome"
         Me.tabWelcome.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabWelcome.Size = New System.Drawing.Size(1040, 420)
+        Me.tabWelcome.Size = New System.Drawing.Size(1040, 444)
         Me.tabWelcome.TabIndex = 0
         Me.tabWelcome.Text = "Welcome"
         '
@@ -301,7 +302,7 @@ Partial Class Form1
         Me.tabHashText.Location = New System.Drawing.Point(4, 22)
         Me.tabHashText.Name = "tabHashText"
         Me.tabHashText.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabHashText.Size = New System.Drawing.Size(1040, 420)
+        Me.tabHashText.Size = New System.Drawing.Size(1040, 444)
         Me.tabHashText.TabIndex = 1
         Me.tabHashText.Text = "Hash Text"
         '
@@ -491,7 +492,7 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddIndividualFiles)
         Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabHashIndividualFiles.Name = "tabHashIndividualFiles"
-        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 420)
+        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 444)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
         '
@@ -508,7 +509,7 @@ Partial Class Form1
         Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.hashIndividualFilesAllFilesProgressBar, 1, 1)
         Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblHashIndividualFilesTotalStatus, 1, 2)
         Me.hashIndividualFilesTableLayoutControl.Controls.Add(Me.lblIndividualFilesStatus, 0, 2)
-        Me.hashIndividualFilesTableLayoutControl.Location = New System.Drawing.Point(237, 254)
+        Me.hashIndividualFilesTableLayoutControl.Location = New System.Drawing.Point(237, 278)
         Me.hashIndividualFilesTableLayoutControl.Name = "hashIndividualFilesTableLayoutControl"
         Me.hashIndividualFilesTableLayoutControl.RowCount = 3
         Me.hashIndividualFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
@@ -583,7 +584,7 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblHashIndividualFilesStep3.AutoSize = True
         Me.lblHashIndividualFilesStep3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblHashIndividualFilesStep3.Location = New System.Drawing.Point(15, 233)
+        Me.lblHashIndividualFilesStep3.Location = New System.Drawing.Point(15, 257)
         Me.lblHashIndividualFilesStep3.Name = "lblHashIndividualFilesStep3"
         Me.lblHashIndividualFilesStep3.Size = New System.Drawing.Size(459, 13)
         Me.lblHashIndividualFilesStep3.TabIndex = 19
@@ -594,7 +595,7 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblHashIndividualFilesStep2.AutoSize = True
         Me.lblHashIndividualFilesStep2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblHashIndividualFilesStep2.Location = New System.Drawing.Point(15, 335)
+        Me.lblHashIndividualFilesStep2.Location = New System.Drawing.Point(15, 359)
         Me.lblHashIndividualFilesStep2.Name = "lblHashIndividualFilesStep2"
         Me.lblHashIndividualFilesStep2.Size = New System.Drawing.Size(459, 13)
         Me.lblHashIndividualFilesStep2.TabIndex = 18
@@ -604,7 +605,7 @@ Partial Class Form1
         '
         Me.btnIndividualFilesSaveResultsToDisk.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnIndividualFilesSaveResultsToDisk.Enabled = False
-        Me.btnIndividualFilesSaveResultsToDisk.Location = New System.Drawing.Point(237, 386)
+        Me.btnIndividualFilesSaveResultsToDisk.Location = New System.Drawing.Point(237, 410)
         Me.btnIndividualFilesSaveResultsToDisk.Name = "btnIndividualFilesSaveResultsToDisk"
         Me.btnIndividualFilesSaveResultsToDisk.Size = New System.Drawing.Size(216, 27)
         Me.btnIndividualFilesSaveResultsToDisk.TabIndex = 16
@@ -615,7 +616,7 @@ Partial Class Form1
         '
         Me.btnIndividualFilesCopyToClipboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnIndividualFilesCopyToClipboard.Enabled = False
-        Me.btnIndividualFilesCopyToClipboard.Location = New System.Drawing.Point(15, 386)
+        Me.btnIndividualFilesCopyToClipboard.Location = New System.Drawing.Point(15, 410)
         Me.btnIndividualFilesCopyToClipboard.Name = "btnIndividualFilesCopyToClipboard"
         Me.btnIndividualFilesCopyToClipboard.Size = New System.Drawing.Size(216, 27)
         Me.btnIndividualFilesCopyToClipboard.TabIndex = 15
@@ -626,7 +627,7 @@ Partial Class Form1
         '
         Me.btnComputeHash.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnComputeHash.Enabled = False
-        Me.btnComputeHash.Location = New System.Drawing.Point(15, 249)
+        Me.btnComputeHash.Location = New System.Drawing.Point(15, 273)
         Me.btnComputeHash.Name = "btnComputeHash"
         Me.btnComputeHash.Size = New System.Drawing.Size(216, 71)
         Me.btnComputeHash.TabIndex = 12
@@ -637,7 +638,7 @@ Partial Class Form1
         '
         Me.radioMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioMD5.AutoSize = True
-        Me.radioMD5.Location = New System.Drawing.Point(503, 351)
+        Me.radioMD5.Location = New System.Drawing.Point(503, 375)
         Me.radioMD5.Name = "radioMD5"
         Me.radioMD5.Size = New System.Drawing.Size(296, 17)
         Me.radioMD5.TabIndex = 11
@@ -648,7 +649,7 @@ Partial Class Form1
         '
         Me.radioSHA512.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA512.AutoSize = True
-        Me.radioSHA512.Location = New System.Drawing.Point(164, 351)
+        Me.radioSHA512.Location = New System.Drawing.Point(164, 375)
         Me.radioSHA512.Name = "radioSHA512"
         Me.radioSHA512.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA512.TabIndex = 10
@@ -659,7 +660,7 @@ Partial Class Form1
         '
         Me.radioSHA384.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA384.AutoSize = True
-        Me.radioSHA384.Location = New System.Drawing.Point(90, 351)
+        Me.radioSHA384.Location = New System.Drawing.Point(90, 375)
         Me.radioSHA384.Name = "radioSHA384"
         Me.radioSHA384.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA384.TabIndex = 9
@@ -671,7 +672,7 @@ Partial Class Form1
         Me.radioSHA256.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA256.AutoSize = True
         Me.radioSHA256.Checked = True
-        Me.radioSHA256.Location = New System.Drawing.Point(16, 351)
+        Me.radioSHA256.Location = New System.Drawing.Point(16, 375)
         Me.radioSHA256.Name = "radioSHA256"
         Me.radioSHA256.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA256.TabIndex = 8
@@ -683,7 +684,7 @@ Partial Class Form1
         '
         Me.radioSHA1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA1.AutoSize = True
-        Me.radioSHA1.Location = New System.Drawing.Point(238, 351)
+        Me.radioSHA1.Location = New System.Drawing.Point(238, 375)
         Me.radioSHA1.Name = "radioSHA1"
         Me.radioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.radioSHA1.TabIndex = 7
@@ -713,7 +714,7 @@ Partial Class Form1
         Me.listFiles.HideSelection = False
         Me.listFiles.Location = New System.Drawing.Point(160, 20)
         Me.listFiles.Name = "listFiles"
-        Me.listFiles.Size = New System.Drawing.Size(877, 199)
+        Me.listFiles.Size = New System.Drawing.Size(877, 223)
         Me.listFiles.TabIndex = 5
         Me.listFiles.UseCompatibleStateImageBehavior = False
         Me.listFiles.View = System.Windows.Forms.View.Details
@@ -832,7 +833,7 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Controls.Add(Me.btnTransferToHashIndividualFilesTab)
         Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
-        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 420)
+        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 444)
         Me.tabVerifySavedHashes.TabIndex = 3
         Me.tabVerifySavedHashes.Text = "Verify Saved Hashes"
         '
@@ -859,7 +860,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
         Me.verifyHashesListFiles.MultiSelect = False
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
-        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 389)
+        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 413)
         Me.verifyHashesListFiles.TabIndex = 6
         Me.verifyHashesListFiles.UseCompatibleStateImageBehavior = False
         Me.verifyHashesListFiles.View = System.Windows.Forms.View.Details
@@ -960,7 +961,7 @@ Partial Class Form1
         Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashesTotalStatus, 1, 2)
         Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblVerifyHashStatus, 0, 0)
         Me.verifySavedHashesTableLayoutControl.Controls.Add(Me.lblProcessingFileVerify, 0, 2)
-        Me.verifySavedHashesTableLayoutControl.Location = New System.Drawing.Point(12, 351)
+        Me.verifySavedHashesTableLayoutControl.Location = New System.Drawing.Point(12, 375)
         Me.verifySavedHashesTableLayoutControl.Name = "verifySavedHashesTableLayoutControl"
         Me.verifySavedHashesTableLayoutControl.RowCount = 3
         Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
@@ -1081,7 +1082,7 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.Label4)
         Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareFiles.Name = "tabCompareFiles"
-        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 420)
+        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 444)
         Me.tabCompareFiles.TabIndex = 5
         Me.tabCompareFiles.Text = "Compare Files"
         '
@@ -1324,7 +1325,7 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.Label7)
         Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareAgainstKnownHash.Name = "tabCompareAgainstKnownHash"
-        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 420)
+        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 444)
         Me.tabCompareAgainstKnownHash.TabIndex = 6
         Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
         '
@@ -1433,6 +1434,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.chkUpdateColorInRealTime)
         Me.tabSettings.Controls.Add(Me.chkClearBeforeTransferringFromVerifyToHash)
         Me.tabSettings.Controls.Add(Me.BtnLoadSettingsFromFile)
         Me.tabSettings.Controls.Add(Me.BtnSaveSettingsToFile)
@@ -1476,9 +1478,21 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
-        Me.tabSettings.Size = New System.Drawing.Size(1040, 420)
+        Me.tabSettings.Size = New System.Drawing.Size(1040, 444)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
+        '
+        'chkUpdateColorInRealTime
+        '
+        Me.chkUpdateColorInRealTime.AutoSize = True
+        Me.chkUpdateColorInRealTime.Location = New System.Drawing.Point(15, 383)
+        Me.chkUpdateColorInRealTime.Name = "chkUpdateColorInRealTime"
+        Me.chkUpdateColorInRealTime.Size = New System.Drawing.Size(272, 17)
+        Me.chkUpdateColorInRealTime.TabIndex = 51
+        Me.chkUpdateColorInRealTime.Text = "Update colors on ""Verify Saved Hashes"" in real time"
+        Me.ToolTip.SetToolTip(Me.chkUpdateColorInRealTime, "Looks fancy, however, it can affect performance." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Turn off if you want maximum ap" &
+        "plication performance.")
+        Me.chkUpdateColorInRealTime.UseVisualStyleBackColor = True
         '
         'chkClearBeforeTransferringFromVerifyToHash
         '
@@ -1647,7 +1661,7 @@ Partial Class Form1
         '
         'btnAddHasherToAllFiles
         '
-        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 383)
+        Me.btnAddHasherToAllFiles.Location = New System.Drawing.Point(258, 406)
         Me.btnAddHasherToAllFiles.Name = "btnAddHasherToAllFiles"
         Me.btnAddHasherToAllFiles.Size = New System.Drawing.Size(175, 27)
         Me.btnAddHasherToAllFiles.TabIndex = 3
@@ -1656,7 +1670,7 @@ Partial Class Form1
         '
         'btnAssociate
         '
-        Me.btnAssociate.Location = New System.Drawing.Point(15, 383)
+        Me.btnAssociate.Location = New System.Drawing.Point(15, 406)
         Me.btnAssociate.Name = "btnAssociate"
         Me.btnAssociate.Size = New System.Drawing.Size(237, 27)
         Me.btnAssociate.TabIndex = 2
@@ -1887,7 +1901,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1072, 471)
+        Me.ClientSize = New System.Drawing.Size(1072, 495)
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.MinimumSize = New System.Drawing.Size(1088, 510)
@@ -2087,4 +2101,5 @@ Partial Class Form1
     Friend WithEvents listFilesContextMenuLine As ToolStripSeparator
     Friend WithEvents verifyListFilesContextMenuLine1 As ToolStripSeparator
     Friend WithEvents verifyListFilesContextMenuLine2 As ToolStripSeparator
+    Friend WithEvents chkUpdateColorInRealTime As CheckBox
 End Class

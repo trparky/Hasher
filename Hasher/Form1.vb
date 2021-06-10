@@ -20,6 +20,7 @@ Public Class Form1
     Private boolClosingWindow As Boolean = False
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
     Private boolDoneLoading As Boolean = False
+    Private boolUpdateColorInRealTime As Boolean
     Private Property PipeServer As NamedPipeServerStream = Nothing
     Private ReadOnly strNamedPipeServerName As String = "hasher_" & GetHashOfString(Environment.UserName, ChecksumType.sha256).Substring(0, 10)
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
@@ -97,7 +98,7 @@ Public Class Form1
         End If
     End Function
 
-    Private Sub UpdateListViewItem(ByRef itemOnGUI As MyListViewItem, ByRef item As MyListViewItem)
+    Private Sub UpdateListViewItem(ByRef itemOnGUI As MyListViewItem, ByRef item As MyListViewItem, boolForceUpdateColor As Boolean)
         With itemOnGUI
             For i As Short = 1 To item.SubItems.Count - 1
                 .SubItems(i) = item.SubItems(i)
@@ -111,7 +112,7 @@ Public Class Form1
             .ComputeTime = item.ComputeTime
             .AllTheHashes = item.AllTheHashes
             .BoolValidHash = item.BoolValidHash
-            .BackColor = item.Color
+            If boolForceUpdateColor Then .BackColor = item.Color
         End With
     End Sub
 
@@ -376,7 +377,7 @@ Public Class Form1
                                                                           lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.FileName).Name & "."
                                                                           lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Items.Count)
 
-                                                                          UpdateListViewItem(itemOnGUI, item)
+                                                                          UpdateListViewItem(itemOnGUI, item, False)
                                                                       End Sub)
 
                                                              computeStopwatch = Stopwatch.StartNew
@@ -395,7 +396,7 @@ Public Class Form1
                                                                  longErroredFiles += 1
                                                              End If
 
-                                                             MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item))
+                                                             MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item, False))
                                                          End If
 
                                                          index += 1
@@ -435,7 +436,7 @@ Public Class Form1
                                                                       Text = strWindowTitle
 
                                                                       currentItem.SubItems(2).Text = strWaitingToBeProcessed
-                                                                      UpdateListViewItem(itemOnGUI, currentItem)
+                                                                      UpdateListViewItem(itemOnGUI, currentItem, False)
 
                                                                       Dim intNumberOfItemsWithoutHash As Integer = listFiles.Items.Cast(Of MyListViewItem).Where(Function(item As MyListViewItem) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count
                                                                       btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
@@ -933,6 +934,8 @@ Public Class Form1
         ChkIncludeEntryCountInFileNameHeader.Checked = My.Settings.boolIncludeEntryCountInFileNameHeader
         ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Checked = My.Settings.boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes
         chkClearBeforeTransferringFromVerifyToHash.Checked = My.Settings.boolClearBeforeTransferringFromVerifyToHash
+        chkUpdateColorInRealTime.Checked = My.Settings.boolUpdateColorInRealTime
+        boolUpdateColorInRealTime = My.Settings.boolUpdateColorInRealTime
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
                                             checkForUpdates.versionString,
                                             If(Environment.Is64BitProcess, "64", "32"),
@@ -1345,7 +1348,7 @@ Public Class Form1
 
                                                              MyInvoke(Sub()
                                                                           lblVerifyHashStatus.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & "."
-                                                                          UpdateListViewItem(itemOnGUI, item)
+                                                                          UpdateListViewItem(itemOnGUI, item, False)
                                                                       End Sub)
 
                                                              computeStopwatch = Stopwatch.StartNew
@@ -1377,7 +1380,7 @@ Public Class Form1
                                                                  longFilesThatWereNotFound += 1
                                                              End If
 
-                                                             MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item))
+                                                             MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item, boolUpdateColorInRealTime))
 
                                                              index += 1
                                                          Else
@@ -2941,7 +2944,7 @@ Public Class Form1
                                                                  item.SubItems(4).Text = strWaitingToBeProcessed
                                                                  item.Color = Color.FromKnownColor(KnownColor.Window)
 
-                                                                 MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item))
+                                                                 MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item, False))
 
                                                                  longAllBytes += item.FileSize
                                                                  intFileCount += 1
@@ -2994,7 +2997,7 @@ Public Class Form1
 
                                                                  MyInvoke(Sub()
                                                                               lblVerifyHashStatus.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & "."
-                                                                              UpdateListViewItem(itemOnGUI, item)
+                                                                              UpdateListViewItem(itemOnGUI, item, False)
                                                                           End Sub)
 
                                                                  computeStopwatch = Stopwatch.StartNew
@@ -3032,7 +3035,7 @@ Public Class Form1
 
                                                                  subRoutine = Nothing
 
-                                                                 MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item))
+                                                                 MyInvoke(Sub() UpdateListViewItem(itemOnGUI, item, False))
 
                                                                  index += 1
                                                              End If
@@ -3334,5 +3337,10 @@ Public Class Form1
             NativeMethod.NativeMethods.keybd_event(NativeMethod.NativeMethods.ESC, 0, 0, 0)
             NativeMethod.NativeMethods.keybd_event(NativeMethod.NativeMethods.ESC, 0, NativeMethod.NativeMethods.UP, 0)
         End If
+    End Sub
+
+    Private Sub ChkUpdateColorInRealTime_Click(sender As Object, e As EventArgs) Handles chkUpdateColorInRealTime.Click
+        My.Settings.boolUpdateColorInRealTime = chkUpdateColorInRealTime.Checked
+        boolUpdateColorInRealTime = chkUpdateColorInRealTime.Checked
     End Sub
 End Class
