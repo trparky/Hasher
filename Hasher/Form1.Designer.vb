@@ -1904,7 +1904,7 @@ Partial Class Form1
         Me.ClientSize = New System.Drawing.Size(1072, 495)
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(1088, 510)
+        Me.MinimumSize = New System.Drawing.Size(1088, 534)
         Me.Name = "Form1"
         Me.Text = "Hasher"
         Me.TabControl1.ResumeLayout(False)
