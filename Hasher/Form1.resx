@@ -129,6 +129,10 @@ processing a lot of small files, a small data buffer may be better.
 Depending upon your specific hardware, this setting may vary. The default
 setting is 2 MBs.</value>
   </data>
+  <data name="ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.ToolTip" xml:space="preserve">
+    <value>Normally if the program knows that the two files you selected are two different sizes, it's going to assume
+that the two files are different. However, if you want to compute the hashes anyways, enable this option.</value>
+  </data>
   <metadata name="listFilesContextMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>

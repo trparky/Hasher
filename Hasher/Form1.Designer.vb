@@ -1539,6 +1539,7 @@ Partial Class Form1
         Me.chkShowFileProgressInFileList.Size = New System.Drawing.Size(165, 17)
         Me.chkShowFileProgressInFileList.TabIndex = 42
         Me.chkShowFileProgressInFileList.Text = "Show File Progress in File List"
+        Me.ToolTip.SetToolTip(Me.chkShowFileProgressInFileList, "Enables the option to show the progress of reading a file in the file list.")
         Me.chkShowFileProgressInFileList.UseVisualStyleBackColor = True
         '
         'defaultHashType
@@ -1650,6 +1651,8 @@ Partial Class Form1
         Me.chkSaveChecksumFilesWithRelativePaths.Size = New System.Drawing.Size(212, 17)
         Me.chkSaveChecksumFilesWithRelativePaths.TabIndex = 5
         Me.chkSaveChecksumFilesWithRelativePaths.Text = "Save checksum files with relative paths"
+        Me.ToolTip.SetToolTip(Me.chkSaveChecksumFilesWithRelativePaths, "A relative path is like this..." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "folder\my.file" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "as versus a full file path like " &
+        "this..." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "C:\Users\MyUser\folder\my.file")
         Me.chkSaveChecksumFilesWithRelativePaths.UseVisualStyleBackColor = True
         '
         'chkSortByFileSizeAfterLoadingHashFile
@@ -1900,6 +1903,7 @@ Partial Class Form1
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Size = New System.Drawing.Size(366, 17)
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.TabIndex = 47
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Text = "Compute Hashes on ""Compare Files"" Tab Even With Different File Sizes"
+        Me.ToolTip.SetToolTip(Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes, resources.GetString("ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.ToolTip"))
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.UseVisualStyleBackColor = True
         '
         'Form1
