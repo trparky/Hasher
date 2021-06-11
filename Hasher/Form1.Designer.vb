@@ -268,6 +268,8 @@ Partial Class Form1
         Me.btnCheckForUpdates.Size = New System.Drawing.Size(163, 39)
         Me.btnCheckForUpdates.TabIndex = 7
         Me.btnCheckForUpdates.Text = "Check for Updates"
+        Me.ToolTip.SetToolTip(Me.btnCheckForUpdates, "Downloads an XML file from my web site to check for updates." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "No personal informa" &
+        "tion is ever sent to my web site.")
         Me.btnCheckForUpdates.UseVisualStyleBackColor = True
         '
         'lblWelcomeText
@@ -1809,6 +1811,8 @@ Partial Class Form1
         Me.chkCheckForUpdates.Size = New System.Drawing.Size(261, 17)
         Me.chkCheckForUpdates.TabIndex = 32
         Me.chkCheckForUpdates.Text = "Automatically Check for Updates (Recommended)"
+        Me.ToolTip.SetToolTip(Me.chkCheckForUpdates, "Downloads an XML file from my web site to check for updates." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "No personal informa" &
+        "tion is ever sent to my web site.")
         Me.chkCheckForUpdates.UseVisualStyleBackColor = True
         '
         'chkAutoAddExtension
