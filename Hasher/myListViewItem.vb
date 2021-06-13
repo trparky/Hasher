@@ -10,6 +10,7 @@ Public Class MyListViewItem
     Public Property ComputeTime As TimeSpan
     Public Property AllTheHashes As AllTheHashes
     Public Property BoolValidHash As Boolean
+    Public Property ColorType As ColorType
 
     Public Sub New(strInput As String)
         Me.Text = strInput
@@ -32,6 +33,7 @@ Public Class MyListViewItem
             .BackColor = Me.BackColor
             .AllTheHashes = Me.AllTheHashes
             .BoolValidHash = Me.BoolValidHash
+            .ColorType = Me.ColorType
         End With
 
         Return newListViewItem
@@ -46,3 +48,9 @@ Public Class BenchmarkListViewItem
         Me.Text = strInput
     End Sub
 End Class
+
+Public Enum ColorType As Byte
+    Valid
+    NotValid
+    NotFound
+End Enum

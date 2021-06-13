@@ -1159,6 +1159,7 @@ Public Class Form1
                 .BoolFileExists = True
                 boolFileExists = True
             Else
+                .ColorType = ColorType.NotFound
                 .FileSize = -1
                 .ComputeTime = Nothing
                 .SubItems.Add("")
@@ -1358,6 +1359,7 @@ Public Class Form1
                                                                  item.AllTheHashes = allTheHashes
 
                                                                  If strChecksum.Equals(item.Hash, StringComparison.OrdinalIgnoreCase) Then
+                                                                     item.ColorType = ColorType.Valid
                                                                      item.Color = validColor
                                                                      item.SubItems(2).Text = "Valid Checksum"
                                                                      item.ComputeTime = computeStopwatch.Elapsed
@@ -1366,6 +1368,7 @@ Public Class Form1
                                                                      longFilesThatPassedVerification += 1
                                                                      item.BoolValidHash = True
                                                                  Else
+                                                                     item.ColorType = ColorType.NotValid
                                                                      item.Color = notValidColor
                                                                      item.SubItems(2).Text = "Incorrect Checksum"
                                                                      item.ComputeTime = computeStopwatch.Elapsed
@@ -1375,6 +1378,7 @@ Public Class Form1
                                                                      item.BoolValidHash = False
                                                                  End If
                                                              Else
+                                                                 item.ColorType = ColorType.NotFound
                                                                  item.Color = fileNotFoundColor
                                                                  item.SubItems(2).Text = "(Error while calculating checksum)"
                                                                  longFilesThatWereNotFound += 1
@@ -2536,7 +2540,7 @@ Public Class Form1
                 My.Settings.validColor = colorDialog.Color
                 lblValidColor.BackColor = colorDialog.Color
                 validColor = colorDialog.Color
-                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                UpdateColorsInList(ColorType.Valid, colorDialog.Color)
             End If
         End Using
     End Sub
@@ -2547,7 +2551,7 @@ Public Class Form1
                 My.Settings.notValidColor = colorDialog.Color
                 lblNotValidColor.BackColor = colorDialog.Color
                 notValidColor = colorDialog.Color
-                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                UpdateColorsInList(ColorType.NotValid, colorDialog.Color)
             End If
         End Using
     End Sub
@@ -2558,7 +2562,7 @@ Public Class Form1
                 My.Settings.fileNotFoundColor = colorDialog.Color
                 lblFileNotFoundColor.BackColor = colorDialog.Color
                 fileNotFoundColor = colorDialog.Color
-                MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                UpdateColorsInList(ColorType.NotFound, colorDialog.Color)
             End If
         End Using
     End Sub
@@ -2576,7 +2580,25 @@ Public Class Form1
         lblFileNotFoundColor.BackColor = Color.LightGray
         fileNotFoundColor = Color.LightGray
 
-        MsgBox("Color preferences will not be used until the next time a checksum file is processed in the ""Verify Saved Hashes"" tab.", MsgBoxStyle.Information, strMessageBoxTitleText)
+        If verifyHashesListFiles.Items.Count <> 0 Then
+            For Each item As MyListViewItem In verifyHashesListFiles.Items
+                If item.ColorType = ColorType.NotFound Then
+                    item.BackColor = Color.LightGray
+                ElseIf item.ColorType = ColorType.NotValid Then
+                    item.BackColor = Color.Pink
+                ElseIf item.ColorType = ColorType.Valid Then
+                    item.BackColor = Color.LightGreen
+                End If
+            Next
+        End If
+    End Sub
+
+    Private Sub UpdateColorsInList(ColorType As ColorType, NewColor As Color)
+        If verifyHashesListFiles.Items.Count <> 0 Then
+            For Each item As MyListViewItem In verifyHashesListFiles.Items
+                If item.ColorType = ColorType Then item.BackColor = NewColor
+            Next
+        End If
     End Sub
 
     Private Sub BtnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
