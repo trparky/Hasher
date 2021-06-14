@@ -2540,7 +2540,7 @@ Public Class Form1
                 My.Settings.validColor = colorDialog.Color
                 lblValidColor.BackColor = colorDialog.Color
                 validColor = colorDialog.Color
-                UpdateColorsInList(ColorType.Valid, colorDialog.Color)
+                If verifyHashesListFiles.Items.Count <> 0 Then UpdateColorsInList(ColorType.Valid, colorDialog.Color)
             End If
         End Using
     End Sub
@@ -2551,7 +2551,7 @@ Public Class Form1
                 My.Settings.notValidColor = colorDialog.Color
                 lblNotValidColor.BackColor = colorDialog.Color
                 notValidColor = colorDialog.Color
-                UpdateColorsInList(ColorType.NotValid, colorDialog.Color)
+                If verifyHashesListFiles.Items.Count <> 0 Then UpdateColorsInList(ColorType.NotValid, colorDialog.Color)
             End If
         End Using
     End Sub
@@ -2562,7 +2562,7 @@ Public Class Form1
                 My.Settings.fileNotFoundColor = colorDialog.Color
                 lblFileNotFoundColor.BackColor = colorDialog.Color
                 fileNotFoundColor = colorDialog.Color
-                UpdateColorsInList(ColorType.NotFound, colorDialog.Color)
+                If verifyHashesListFiles.Items.Count <> 0 Then UpdateColorsInList(ColorType.NotFound, colorDialog.Color)
             End If
         End Using
     End Sub
@@ -2594,11 +2594,9 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateColorsInList(ColorType As ColorType, NewColor As Color)
-        If verifyHashesListFiles.Items.Count <> 0 Then
-            For Each item As MyListViewItem In verifyHashesListFiles.Items
-                If item.ColorType = ColorType Then item.BackColor = NewColor
-            Next
-        End If
+        For Each item As MyListViewItem In verifyHashesListFiles.Items
+            If item.ColorType = ColorType Then item.BackColor = NewColor
+        Next
     End Sub
 
     Private Sub BtnSetBufferSize_Click(sender As Object, e As EventArgs) Handles btnSetBufferSize.Click
