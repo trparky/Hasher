@@ -47,6 +47,9 @@ Public Module SaveAppSettings
             End Using
 
             For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
+                ' We use the TryGetValue() function to get the save setting from the dictionary because there might be a possibility that the user will
+                ' be loading an older version of a saved settings file that may be missing new settings. Using the TryGetValue() True if the setting
+                ' exists in the loaded function will return settings file thus making the program not crash while loading an older settings file.
                 If exportedSettingsArray.TryGetValue(settingProperty.Name.Trim.ToLower, rawValue) Then
                     settingType = settingProperty.PropertyValue.GetType
 
