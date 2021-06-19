@@ -699,9 +699,9 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblHashIndividualFilesStep1.Location = New System.Drawing.Point(15, 4)
         Me.lblHashIndividualFilesStep1.Name = "lblHashIndividualFilesStep1"
-        Me.lblHashIndividualFilesStep1.Size = New System.Drawing.Size(302, 13)
+        Me.lblHashIndividualFilesStep1.Size = New System.Drawing.Size(306, 13)
         Me.lblHashIndividualFilesStep1.TabIndex = 6
-        Me.lblHashIndividualFilesStep1.Text = "Step 1: Select Individual Files to be Hashed: 0 Files"
+        Me.lblHashIndividualFilesStep1.Text = "Step 1: Select Individual Files to be Hashed (0 Files)"
         '
         'listFiles
         '

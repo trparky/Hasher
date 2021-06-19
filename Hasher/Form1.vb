@@ -143,14 +143,16 @@ Public Class Form1
     Private Sub UpdateFilesListCountHeader(Optional boolIncludeSelectedItemCount As Boolean = False)
         MyInvoke(Sub()
                      If boolIncludeSelectedItemCount Then
-                         lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files ({1} {2} are selected)",
+                         lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed ({0} {3}, {1} {2} are selected)",
                                                                           MyToString(listFiles.Items.Count),
                                                                           MyToString(listFiles.SelectedItems.Count),
-                                                                          If(listFiles.SelectedItems.Count = 1, "item", "items")
+                                                                          If(listFiles.SelectedItems.Count = 1, "file", "files"),
+                                                                          If(listFiles.Items.Count = 1, "file", "files")
                                                                          )
                      Else
-                         lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed: {0} Files",
-                                                                          MyToString(listFiles.Items.Count)
+                         lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed ({0} {1})",
+                                                                          MyToString(listFiles.Items.Count),
+                                                                          If(listFiles.Items.Count = 1, "file", "files")
                                                                          )
                      End If
 
