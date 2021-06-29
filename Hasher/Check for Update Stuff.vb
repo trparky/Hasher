@@ -332,6 +332,8 @@ Namespace checkForUpdates
                     strOSName = "Windows 8.1"
                 ElseIf intOSMajorVersion = 10 Then
                     strOSName = "Windows 10"
+                ElseIf intOSMajorVersion = 11 Then
+                    strOSName = "Windows 11"
                 Else
                     strOSName = String.Format("Windows NT {0}.{1}", intOSMajorVersion, intOSMinorVersion)
                 End If
