@@ -1414,7 +1414,7 @@ Public Class Form1
 
                                                                   Dim sbMessageBoxText As New Text.StringBuilder
 
-                                                                  If longFilesThatWereNotFound = 0 And longFilesThatWereNotFound = 0 Then
+                                                                  If longFilesThatWereNotFound = 0 And longFilesThatDidNotPassVerification = 0 Then
                                                                       If longFilesThatPassedVerification = longTotalFiles Then
                                                                           If longTotalFiles = 1 Then
                                                                               sbMessageBoxText.AppendLine("Processing of hash file complete. The one file in the hash file has passed verification.")
