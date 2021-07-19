@@ -1453,17 +1453,17 @@ Public Class Form1
                                                                                                                        )
                                                                                )
                                                                           Else
-                                                                              sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification.",
+                                                                              longTotalFiles -= longFilesThatWereNotFound
+                                                                              sbMessageBoxText.Append(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification.",
                                                                                                                         MyToString(longFilesThatPassedVerification),
                                                                                                                         MyToString(longTotalFiles),
                                                                                                                         If(longTotalFiles = 1, "file", "files")
                                                                                                                        )
                                                                                )
-                                                                              sbMessageBoxText.AppendLine()
                                                                           End If
-                                                                          sbMessageBoxText.AppendLine(String.Format("{0} {1} were not found.",
+                                                                          sbMessageBoxText.AppendLine(String.Format(" Unfortunately, {0} {1} not found.",
                                                                                                                     MyToString(longFilesThatWereNotFound),
-                                                                                                                    If(longFilesThatWereNotFound = 1, "file", "files")
+                                                                                                                    If(longFilesThatWereNotFound = 1, "file was", "files were")
                                                                                                                    )
                                                                            )
                                                                       End If
