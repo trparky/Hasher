@@ -51,34 +51,36 @@ Public Module SaveAppSettings
                 ' be loading an older version of a saved settings file that may be missing new settings. Using the TryGetValue() True if the setting
                 ' exists in the loaded function will return settings file thus making the program not crash while loading an older settings file.
                 If exportedSettingsArray.TryGetValue(settingProperty.Name.Trim.ToLower, rawValue) Then
-                    If settingProperty.PropertyValue IsNot Nothing Then
+                    If settingProperty.Name.Equals("listFilesColumnOrder", StringComparison.OrdinalIgnoreCase) Or settingProperty.Name.Equals("verifyListFilesColumnOrder", StringComparison.OrdinalIgnoreCase) Then
+                        settingType = GetType(Specialized.StringCollection)
+                    Else
                         settingType = settingProperty.PropertyValue.GetType
+                    End If
 
-                        If settingType = GetType(Color) AndAlso Integer.TryParse(rawValue, intResult) Then
-                            My.Settings(settingProperty.Name) = Color.FromArgb(intResult)
-                        ElseIf settingType = GetType(Point) Then
-                            splitArray = rawValue.split("|")
-                            My.Settings(settingProperty.Name) = New Point() With {.X = splitArray(0), .Y = splitArray(1)}
-                            splitArray = Nothing
-                        ElseIf settingType = GetType(Size) Then
-                            splitArray = rawValue.split("|")
-                            My.Settings(settingProperty.Name) = New Size() With {.Height = splitArray(0), .Width = splitArray(1)}
-                            splitArray = Nothing
-                        ElseIf settingType = GetType(Boolean) AndAlso Boolean.TryParse(rawValue, boolResult) Then
-                            My.Settings(settingProperty.Name) = boolResult
-                        ElseIf settingType = GetType(Byte) AndAlso Byte.TryParse(rawValue, byteResult) Then
-                            My.Settings(settingProperty.Name) = byteResult
-                        ElseIf settingType = GetType(Short) AndAlso Short.TryParse(rawValue, shortResult) Then
-                            My.Settings(settingProperty.Name) = shortResult
-                        ElseIf settingType = GetType(Integer) AndAlso Integer.TryParse(rawValue, intResult) Then
-                            My.Settings(settingProperty.Name) = intResult
-                        ElseIf settingType = GetType(Long) AndAlso Long.TryParse(rawValue, longResult) Then
-                            My.Settings(settingProperty.Name) = longResult
-                        ElseIf settingType = GetType(Specialized.StringCollection) Then
-                            My.Settings(settingProperty.Name) = ConvertArrayListToSpecializedStringCollection(rawValue)
-                        Else
-                            My.Settings(settingProperty.Name) = rawValue
-                        End If
+                    If settingType = GetType(Color) AndAlso Integer.TryParse(rawValue, intResult) Then
+                        My.Settings(settingProperty.Name) = Color.FromArgb(intResult)
+                    ElseIf settingType = GetType(Point) Then
+                        splitArray = rawValue.split("|")
+                        My.Settings(settingProperty.Name) = New Point() With {.X = splitArray(0), .Y = splitArray(1)}
+                        splitArray = Nothing
+                    ElseIf settingType = GetType(Size) Then
+                        splitArray = rawValue.split("|")
+                        My.Settings(settingProperty.Name) = New Size() With {.Height = splitArray(0), .Width = splitArray(1)}
+                        splitArray = Nothing
+                    ElseIf settingType = GetType(Boolean) AndAlso Boolean.TryParse(rawValue, boolResult) Then
+                        My.Settings(settingProperty.Name) = boolResult
+                    ElseIf settingType = GetType(Byte) AndAlso Byte.TryParse(rawValue, byteResult) Then
+                        My.Settings(settingProperty.Name) = byteResult
+                    ElseIf settingType = GetType(Short) AndAlso Short.TryParse(rawValue, shortResult) Then
+                        My.Settings(settingProperty.Name) = shortResult
+                    ElseIf settingType = GetType(Integer) AndAlso Integer.TryParse(rawValue, intResult) Then
+                        My.Settings(settingProperty.Name) = intResult
+                    ElseIf settingType = GetType(Long) AndAlso Long.TryParse(rawValue, longResult) Then
+                        My.Settings(settingProperty.Name) = longResult
+                    ElseIf settingType = GetType(Specialized.StringCollection) Then
+                        My.Settings(settingProperty.Name) = ConvertArrayListToSpecializedStringCollection(rawValue)
+                    Else
+                        My.Settings(settingProperty.Name) = rawValue
                     End If
                 End If
             Next
