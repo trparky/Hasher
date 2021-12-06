@@ -1586,34 +1586,36 @@ Public Class Form1
         lblHashTextStep1.Text = "Step 1: Input some text: " & MyToString(txtTextToHash.Text.Length) & " " & If(txtTextToHash.Text.Length = 1, "Character", "Characters")
         btnComputeTextHash.Enabled = txtTextToHash.Text.Length <> 0
         btnCopyTextHashResultsToClipboard.Enabled = False
-        txtHashResults.Text = Nothing
+        txtHashResults.Items.Clear()
         hashTextAllTheHashes = Nothing
     End Sub
 
-    Private Sub FillInNewHash(checksumType As ChecksumType)
-        Dim strHash As String = GetDataFromAllTheHashes(checksumType, hashTextAllTheHashes)
-        If Not String.IsNullOrEmpty(strHash) Then txtHashResults.Text = If(chkDisplayHashesInUpperCase.Checked, strHash.ToUpper, strHash.ToLower)
-    End Sub
+    Private Function makeTextHashListViewItem(strHashType As String, strHash As String) As ListViewItem
+        Dim itemToBeAdded As New ListViewItem(strHashType)
+        With itemToBeAdded
+            .SubItems.Add(strHash)
+        End With
+        Return itemToBeAdded
+    End Function
 
     Private Sub BtnComputeTextHash_Click(sender As Object, e As EventArgs) Handles btnComputeTextHash.Click
         hashTextAllTheHashes = GetHashOfString(txtTextToHash.Text)
-        Dim strHash As String = Nothing
 
-        If textRadioMD5.Checked Then
-            strHash = GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes)
-        ElseIf textRadioSHA1.Checked Then
-            strHash = GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes)
-        ElseIf textRadioSHA256.Checked Then
-            strHash = GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes)
-        ElseIf textRadioSHA384.Checked Then
-            strHash = GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes)
-        ElseIf textRadioSHA512.Checked Then
-            strHash = GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes)
-        End If
+        txtHashResults.Items.Clear()
 
-        txtHashResults.Text = If(chkDisplayHashesInUpperCase.Checked, strHash.ToUpper, strHash.ToLower)
+        txtHashResults.Items.Add(makeTextHashListViewItem("MD5", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(makeTextHashListViewItem("SHA1/SHA160", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(makeTextHashListViewItem("SHA256", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(makeTextHashListViewItem("SHA384", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(makeTextHashListViewItem("SHA512", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+
         btnCopyTextHashResultsToClipboard.Enabled = True
         btnComputeTextHash.Enabled = False
+    End Sub
+
+    Private Sub CopyHashToWindowsClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyHashToWindowsClipboardToolStripMenuItem.Click
+        Dim listViewItem As ListViewItem = txtHashResults.SelectedItems(0)
+        If CopyTextToWindowsClipboard(listViewItem.SubItems(1).Text) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnPasteTextFromWindowsClipboard_Click(sender As Object, e As EventArgs) Handles btnPasteTextFromWindowsClipboard.Click
@@ -1621,27 +1623,14 @@ Public Class Form1
     End Sub
 
     Private Sub BtnCopyTextHashResultsToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyTextHashResultsToClipboard.Click
-        If CopyTextToWindowsClipboard(txtHashResults.Text) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
-    End Sub
+        Dim strHash As New Text.StringBuilder
+        strHash.AppendLine("MD5: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
+        strHash.AppendLine("SHA1/SHA160: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
+        strHash.AppendLine("SHA256: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
+        strHash.AppendLine("SHA384: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
+        strHash.AppendLine("SHA512: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
 
-    Private Sub TextRadioSHA256_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA256.CheckedChanged
-        FillInNewHash(ChecksumType.sha256)
-    End Sub
-
-    Private Sub TextRadioSHA384_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA384.CheckedChanged
-        FillInNewHash(ChecksumType.sha384)
-    End Sub
-
-    Private Sub TextRadioSHA512_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA512.CheckedChanged
-        FillInNewHash(ChecksumType.sha512)
-    End Sub
-
-    Private Sub TextRadioSHA1_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioSHA1.CheckedChanged
-        FillInNewHash(ChecksumType.sha160)
-    End Sub
-
-    Private Sub TextRadioMD5_CheckedChanged(sender As Object, e As EventArgs) Handles textRadioMD5.CheckedChanged
-        FillInNewHash(ChecksumType.md5)
+        If CopyTextToWindowsClipboard(strHash.ToString.Trim) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
@@ -3194,23 +3183,18 @@ Public Class Form1
     Private Sub SetDefaultHashTypeGUIElementOptions()
         If defaultHashType.SelectedIndex = 0 Then
             radioMD5.Checked = True
-            textRadioMD5.Checked = True
             colChecksum.Text = strColumnTitleChecksumMD5
         ElseIf defaultHashType.SelectedIndex = 1 Then
             radioSHA1.Checked = True
-            textRadioSHA1.Checked = True
             colChecksum.Text = strColumnTitleChecksumSHA160
         ElseIf defaultHashType.SelectedIndex = 2 Then
             radioSHA256.Checked = True
-            textRadioSHA256.Checked = True
             colChecksum.Text = strColumnTitleChecksumSHA256
         ElseIf defaultHashType.SelectedIndex = 3 Then
             radioSHA384.Checked = True
-            textRadioSHA384.Checked = True
             colChecksum.Text = strColumnTitleChecksumSHA384
         ElseIf defaultHashType.SelectedIndex = 4 Then
             radioSHA512.Checked = True
-            textRadioSHA512.Checked = True
             colChecksum.Text = strColumnTitleChecksumSHA512
         End If
     End Sub

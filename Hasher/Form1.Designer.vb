@@ -32,18 +32,16 @@ Partial Class Form1
         Me.lblWelcomeText = New System.Windows.Forms.Label()
         Me.tabHashText = New System.Windows.Forms.TabPage()
         Me.btnCopyTextHashResultsToClipboard = New System.Windows.Forms.Button()
-        Me.txtHashResults = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.btnPasteTextFromWindowsClipboard = New System.Windows.Forms.Button()
         Me.btnComputeTextHash = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.textRadioMD5 = New System.Windows.Forms.RadioButton()
-        Me.textRadioSHA512 = New System.Windows.Forms.RadioButton()
-        Me.textRadioSHA384 = New System.Windows.Forms.RadioButton()
-        Me.textRadioSHA256 = New System.Windows.Forms.RadioButton()
-        Me.textRadioSHA1 = New System.Windows.Forms.RadioButton()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.lblHashTextStep1 = New System.Windows.Forms.Label()
+        Me.txtHashResults = New System.Windows.Forms.ListView()
+        Me.txtHashTypeColumn = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.txtHashColumn = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.textHashContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.CopyHashToWindowsClipboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.txtTextToHash = New System.Windows.Forms.TextBox()
         Me.lblTextToHash = New System.Windows.Forms.Label()
         Me.tabHashIndividualFiles = New System.Windows.Forms.TabPage()
@@ -190,6 +188,7 @@ Partial Class Form1
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
+        Me.textHashContextMenu.SuspendLayout()
         Me.tabHashIndividualFiles.SuspendLayout()
         Me.hashIndividualFilesTableLayoutControl.SuspendLayout()
         Me.listFilesContextMenu.SuspendLayout()
@@ -292,12 +291,6 @@ Partial Class Form1
         Me.tabHashText.Controls.Add(Me.btnPasteTextFromWindowsClipboard)
         Me.tabHashText.Controls.Add(Me.btnComputeTextHash)
         Me.tabHashText.Controls.Add(Me.Label2)
-        Me.tabHashText.Controls.Add(Me.textRadioMD5)
-        Me.tabHashText.Controls.Add(Me.textRadioSHA512)
-        Me.tabHashText.Controls.Add(Me.textRadioSHA384)
-        Me.tabHashText.Controls.Add(Me.textRadioSHA256)
-        Me.tabHashText.Controls.Add(Me.textRadioSHA1)
-        Me.tabHashText.Controls.Add(Me.Label1)
         Me.tabHashText.Controls.Add(Me.lblHashTextStep1)
         Me.tabHashText.Controls.Add(Me.txtTextToHash)
         Me.tabHashText.Controls.Add(Me.lblTextToHash)
@@ -308,38 +301,65 @@ Partial Class Form1
         Me.tabHashText.TabIndex = 1
         Me.tabHashText.Text = "Hash Text"
         '
+        'txtHashTypeColumn
+        '
+        Me.txtHashTypeColumn.Text = "Type"
+        Me.txtHashTypeColumn.Width = 104
+        '
+        'txtHashColumn
+        '
+        Me.txtHashColumn.Text = "Hash"
+        Me.txtHashColumn.Width = 854
+        '
+        'textHashContextMenu
+        '
+        Me.textHashContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyHashToWindowsClipboardToolStripMenuItem})
+        Me.textHashContextMenu.Name = "textHashContextMenu"
+        Me.textHashContextMenu.Size = New System.Drawing.Size(254, 26)
+        '
+        'CopyHashToWindowsClipboardToolStripMenuItem
+        '
+        Me.CopyHashToWindowsClipboardToolStripMenuItem.Name = "CopyHashToWindowsClipboardToolStripMenuItem"
+        Me.CopyHashToWindowsClipboardToolStripMenuItem.Size = New System.Drawing.Size(253, 22)
+        Me.CopyHashToWindowsClipboardToolStripMenuItem.Text = "&Copy Hash to Windows Clipboard"
+        '
         'btnCopyTextHashResultsToClipboard
         '
         Me.btnCopyTextHashResultsToClipboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnCopyTextHashResultsToClipboard.Enabled = False
-        Me.btnCopyTextHashResultsToClipboard.Location = New System.Drawing.Point(239, 366)
+        Me.btnCopyTextHashResultsToClipboard.Location = New System.Drawing.Point(17, 415)
         Me.btnCopyTextHashResultsToClipboard.Name = "btnCopyTextHashResultsToClipboard"
         Me.btnCopyTextHashResultsToClipboard.Size = New System.Drawing.Size(156, 23)
         Me.btnCopyTextHashResultsToClipboard.TabIndex = 31
         Me.btnCopyTextHashResultsToClipboard.Text = "&Copy Results to Clipboard"
         Me.btnCopyTextHashResultsToClipboard.UseVisualStyleBackColor = True
         '
-        'txtHashResults
-        '
-        Me.txtHashResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtHashResults.BackColor = System.Drawing.SystemColors.Window
-        Me.txtHashResults.Location = New System.Drawing.Point(239, 340)
-        Me.txtHashResults.Name = "txtHashResults"
-        Me.txtHashResults.ReadOnly = True
-        Me.txtHashResults.Size = New System.Drawing.Size(791, 20)
-        Me.txtHashResults.TabIndex = 29
-        '
         'Label3
         '
         Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(237, 324)
+        Me.Label3.Location = New System.Drawing.Point(15, 272)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
         Me.Label3.TabIndex = 28
         Me.Label3.Text = "Your Hash Results"
+        '
+        'txtHashResults
+        '
+        Me.txtHashResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtHashResults.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.txtHashTypeColumn, Me.txtHashColumn})
+        Me.txtHashResults.ContextMenuStrip = Me.textHashContextMenu
+        Me.txtHashResults.FullRowSelect = True
+        Me.txtHashResults.HideSelection = False
+        Me.txtHashResults.Location = New System.Drawing.Point(18, 288)
+        Me.txtHashResults.MultiSelect = False
+        Me.txtHashResults.Name = "txtHashResults"
+        Me.txtHashResults.Size = New System.Drawing.Size(1016, 121)
+        Me.txtHashResults.TabIndex = 32
+        Me.txtHashResults.UseCompatibleStateImageBehavior = False
+        Me.txtHashResults.View = System.Windows.Forms.View.Details
         '
         'btnPasteTextFromWindowsClipboard
         '
@@ -354,7 +374,7 @@ Partial Class Form1
         '
         Me.btnComputeTextHash.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnComputeTextHash.Enabled = False
-        Me.btnComputeTextHash.Location = New System.Drawing.Point(17, 318)
+        Me.btnComputeTextHash.Location = New System.Drawing.Point(18, 198)
         Me.btnComputeTextHash.Name = "btnComputeTextHash"
         Me.btnComputeTextHash.Size = New System.Drawing.Size(216, 71)
         Me.btnComputeTextHash.TabIndex = 26
@@ -366,79 +386,11 @@ Partial Class Form1
         Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(15, 302)
+        Me.Label2.Location = New System.Drawing.Point(15, 182)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(459, 13)
         Me.Label2.TabIndex = 25
         Me.Label2.Text = "Step 2: Compute the hashes. (Now computes all five hash types simultaneously)"
-        '
-        'textRadioMD5
-        '
-        Me.textRadioMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.textRadioMD5.AutoSize = True
-        Me.textRadioMD5.Location = New System.Drawing.Point(505, 421)
-        Me.textRadioMD5.Name = "textRadioMD5"
-        Me.textRadioMD5.Size = New System.Drawing.Size(296, 17)
-        Me.textRadioMD5.TabIndex = 24
-        Me.textRadioMD5.Text = "MD5 (Seriously Not Recommended, Insecure Hash Type)"
-        Me.textRadioMD5.UseVisualStyleBackColor = True
-        '
-        'textRadioSHA512
-        '
-        Me.textRadioSHA512.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.textRadioSHA512.AutoSize = True
-        Me.textRadioSHA512.Location = New System.Drawing.Point(166, 421)
-        Me.textRadioSHA512.Name = "textRadioSHA512"
-        Me.textRadioSHA512.Size = New System.Drawing.Size(68, 17)
-        Me.textRadioSHA512.TabIndex = 23
-        Me.textRadioSHA512.Text = "SHA-512"
-        Me.textRadioSHA512.UseVisualStyleBackColor = True
-        '
-        'textRadioSHA384
-        '
-        Me.textRadioSHA384.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.textRadioSHA384.AutoSize = True
-        Me.textRadioSHA384.Location = New System.Drawing.Point(92, 421)
-        Me.textRadioSHA384.Name = "textRadioSHA384"
-        Me.textRadioSHA384.Size = New System.Drawing.Size(68, 17)
-        Me.textRadioSHA384.TabIndex = 22
-        Me.textRadioSHA384.Text = "SHA-384"
-        Me.textRadioSHA384.UseVisualStyleBackColor = True
-        '
-        'textRadioSHA256
-        '
-        Me.textRadioSHA256.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.textRadioSHA256.AutoSize = True
-        Me.textRadioSHA256.Checked = True
-        Me.textRadioSHA256.Location = New System.Drawing.Point(18, 421)
-        Me.textRadioSHA256.Name = "textRadioSHA256"
-        Me.textRadioSHA256.Size = New System.Drawing.Size(68, 17)
-        Me.textRadioSHA256.TabIndex = 21
-        Me.textRadioSHA256.TabStop = True
-        Me.textRadioSHA256.Text = "SHA-256"
-        Me.textRadioSHA256.UseVisualStyleBackColor = True
-        '
-        'textRadioSHA1
-        '
-        Me.textRadioSHA1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.textRadioSHA1.AutoSize = True
-        Me.textRadioSHA1.Location = New System.Drawing.Point(240, 421)
-        Me.textRadioSHA1.Name = "textRadioSHA1"
-        Me.textRadioSHA1.Size = New System.Drawing.Size(259, 17)
-        Me.textRadioSHA1.TabIndex = 20
-        Me.textRadioSHA1.Text = "SHA-1 (Not Recommended, Insecure Hash Type)"
-        Me.textRadioSHA1.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(14, 405)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(459, 13)
-        Me.Label1.TabIndex = 19
-        Me.Label1.Text = "Step 3: Select your hash type for display and copying to the Windows Clipboard"
         '
         'lblHashTextStep1
         '
@@ -459,7 +411,7 @@ Partial Class Form1
         Me.txtTextToHash.Multiline = True
         Me.txtTextToHash.Name = "txtTextToHash"
         Me.txtTextToHash.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtTextToHash.Size = New System.Drawing.Size(854, 270)
+        Me.txtTextToHash.Size = New System.Drawing.Size(854, 150)
         Me.txtTextToHash.TabIndex = 1
         '
         'lblTextToHash
@@ -1921,6 +1873,7 @@ Partial Class Form1
         Me.tabWelcome.PerformLayout()
         Me.tabHashText.ResumeLayout(False)
         Me.tabHashText.PerformLayout()
+        Me.textHashContextMenu.ResumeLayout(False)
         Me.tabHashIndividualFiles.ResumeLayout(False)
         Me.tabHashIndividualFiles.PerformLayout()
         Me.hashIndividualFilesTableLayoutControl.ResumeLayout(False)
@@ -1986,16 +1939,14 @@ Partial Class Form1
     Friend WithEvents txtTextToHash As TextBox
     Friend WithEvents lblTextToHash As Label
     Friend WithEvents lblHashTextStep1 As Label
-    Friend WithEvents Label1 As Label
     Friend WithEvents btnComputeTextHash As Button
     Friend WithEvents Label2 As Label
-    Friend WithEvents textRadioMD5 As RadioButton
-    Friend WithEvents textRadioSHA512 As RadioButton
-    Friend WithEvents textRadioSHA384 As RadioButton
-    Friend WithEvents textRadioSHA256 As RadioButton
-    Friend WithEvents textRadioSHA1 As RadioButton
     Friend WithEvents btnPasteTextFromWindowsClipboard As Button
-    Friend WithEvents txtHashResults As TextBox
+    Friend WithEvents txtHashResults As ListView
+    Friend WithEvents txtHashTypeColumn As ColumnHeader
+    Friend WithEvents txtHashColumn As ColumnHeader
+    Friend WithEvents textHashContextMenu As ContextMenuStrip
+    Friend WithEvents CopyHashToWindowsClipboardToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Label3 As Label
     Friend WithEvents btnCopyTextHashResultsToClipboard As Button
     Friend WithEvents colChecksum As ColumnHeader
