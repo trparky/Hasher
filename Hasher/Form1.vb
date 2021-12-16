@@ -1478,7 +1478,7 @@ Public Class Form1
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                 Catch ex As Threading.ThreadAbortException
+                                                 Catch ex As Exception
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       verifyHashesListFiles.EndUpdate()
@@ -1498,7 +1498,12 @@ Public Class Form1
 
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
-                                                                  If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
+
+                                                                  If ex.GetType = GetType(Threading.ThreadAbortException) And Not boolClosingWindow Then
+                                                                      MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                  ElseIf ex.GetType = GetType(UnauthorizedAccessException) Then
+                                                                      MsgBox("Unable to access data, an Unauthorized Access Exception has occurred." & vbCrLf & vbCrLf & "Check to see if you have access to the data in question." & vbCrLf & vbCrLf & ex.Message, MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                  End If
                                                               End Sub)
                                                  Finally
                                                      itemOnGUI = Nothing
