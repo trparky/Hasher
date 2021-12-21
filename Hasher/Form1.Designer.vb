@@ -811,7 +811,7 @@ Partial Class Form1
         Me.btnCheckHaveIBeenPwned.Name = "btnCheckHaveIBeenPwned"
         Me.btnCheckHaveIBeenPwned.Size = New System.Drawing.Size(291, 71)
         Me.btnCheckHaveIBeenPwned.TabIndex = 33
-        Me.btnCheckHaveIBeenPwned.Text = "Check haveibeenpwned.com for hashed string" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Used to check if a password has been" &
+        Me.btnCheckHaveIBeenPwned.Text = "Check HaveIBeenPwned.com for hashed string" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Used to check if a password has been" &
     " compromised)"
         Me.ToolTip.SetToolTip(Me.btnCheckHaveIBeenPwned, "Note: This tool only sends the first five characters of a SHA1 hashed string to h" &
         "aveibeenpwned.com's API.")
