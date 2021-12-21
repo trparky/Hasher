@@ -3361,7 +3361,7 @@ Public Class Form1
                                                            ' Try to parse the Integer that's a String into an actual Integer.
                                                            If Integer.TryParse(regexMatchResults.Item(0).Groups(1).ToString, intTimes) Then
                                                                ' Parsing worked, let's plug it into the message box text.
-                                                               MyInvoke(Sub() MsgBox("OH NO!" & vbCrLf & vbCrLf & "Your password has been found " & intTimes & " " & If(intTimes = 1, "time", "times") & " in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                                                               MyInvoke(Sub() MsgBox("OH NO!" & vbCrLf & vbCrLf & "Your password has been found " & MyToString(intTimes) & " " & If(intTimes = 1, "time", "times") & " in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText))
                                                            Else
                                                                ' Oops, parsing failed; let's just use a generic message instead of a custom one.
                                                                MyInvoke(Sub() MsgBox("OH NO!" & vbCrLf & vbCrLf & "Your password has been found in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText))
