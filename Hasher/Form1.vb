@@ -1597,7 +1597,7 @@ Public Class Form1
         hashTextAllTheHashes = Nothing
     End Sub
 
-    Private Function makeTextHashListViewItem(strHashType As String, strHash As String) As ListViewItem
+    Private Function MakeTextHashListViewItem(strHashType As String, strHash As String) As ListViewItem
         Dim itemToBeAdded As New ListViewItem(strHashType)
         With itemToBeAdded
             .SubItems.Add(strHash)
@@ -1610,11 +1610,11 @@ Public Class Form1
 
         txtHashResults.Items.Clear()
 
-        txtHashResults.Items.Add(makeTextHashListViewItem("MD5", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
-        txtHashResults.Items.Add(makeTextHashListViewItem("SHA1/SHA160", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
-        txtHashResults.Items.Add(makeTextHashListViewItem("SHA256", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
-        txtHashResults.Items.Add(makeTextHashListViewItem("SHA384", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
-        txtHashResults.Items.Add(makeTextHashListViewItem("SHA512", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("MD5", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA1/SHA160", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA256", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA384", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA512", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
 
         btnCopyTextHashResultsToClipboard.Enabled = True
         btnComputeTextHash.Enabled = False
@@ -3329,7 +3329,7 @@ Public Class Form1
         End Try
     End Function
 
-    Private Sub btnCheckHaveIBeenPwned_Click(sender As Object, e As EventArgs) Handles btnCheckHaveIBeenPwned.Click
+    Private Sub BtnCheckHaveIBeenPwned_Click(sender As Object, e As EventArgs) Handles btnCheckHaveIBeenPwned.Click
         ' This whole routine has been documented so that users who aren't even programers can see that there's nothing nefarious going on in this routine.
 
         btnCheckHaveIBeenPwned.Enabled = False ' Disable the button on the GUI.
