@@ -3349,7 +3349,7 @@ Public Class Form1
 
                                                        ' We do some parsing of the incoming data, we do that by searching for the full SHA1 String in the web
                                                        ' data but this is all being done client-side; again none of this is happening on the server side.
-                                                       Dim regexObject As New Text.RegularExpressions.Regex("(?:" & strFullSHA1String & ")+:([0-9]+)")
+                                                       Dim regexObject As New Text.RegularExpressions.Regex("(?:" & strFullSHA1String.Substring(5) & ")+:([0-9]+)")
                                                        Dim regexMatchResults As Text.RegularExpressions.MatchCollection = regexObject.Matches(strWebData) ' Use the above Regex object to do some searching.
 
                                                        ' Do we have some results?
