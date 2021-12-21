@@ -176,7 +176,7 @@ Namespace checkForUpdates
             End Try
         End Function
 
-        Private Shared Function CreateNewHTTPHelperObject() As HttpHelper
+        Public Shared Function CreateNewHTTPHelperObject() As HttpHelper
             Dim httpHelper As New HttpHelper With {
                 .SetUserAgent = CreateHTTPUserAgentHeaderString(),
                 .UseHTTPCompression = True,

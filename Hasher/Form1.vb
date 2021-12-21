@@ -1589,7 +1589,9 @@ Public Class Form1
 
     Private Sub TxtTextToHash_TextChanged(sender As Object, e As EventArgs) Handles txtTextToHash.TextChanged
         lblHashTextStep1.Text = "Step 1: Input some text: " & MyToString(txtTextToHash.Text.Length) & " " & If(txtTextToHash.Text.Length = 1, "Character", "Characters")
-        btnComputeTextHash.Enabled = txtTextToHash.Text.Length <> 0
+        Dim boolEnableButtons As Boolean = txtTextToHash.Text.Length <> 0
+        btnComputeTextHash.Enabled = boolEnableButtons
+        btnCheckHaveIBeenPwned.Enabled = boolEnableButtons
         btnCopyTextHashResultsToClipboard.Enabled = False
         txtHashResults.Items.Clear()
         hashTextAllTheHashes = Nothing
@@ -3326,6 +3328,58 @@ Public Class Form1
             Return New Specialized.StringCollection
         End Try
     End Function
+
+    Private Sub btnCheckHaveIBeenPwned_Click(sender As Object, e As EventArgs) Handles btnCheckHaveIBeenPwned.Click
+        ' This whole routine has been documented so that users who aren't even programers can see that there's nothing nefarious going on in this routine.
+
+        btnCheckHaveIBeenPwned.Enabled = False ' Disable the button on the GUI.
+
+        ' Do all of this work in a background thread so as to keep the GUI active even while work is being done in this routine.
+        Threading.ThreadPool.QueueUserWorkItem(Sub()
+                                                   Dim strFullSHA1String As String = GetHashOfString(txtTextToHash.Text).Sha160.ToUpper ' First hash the String.
+                                                   Dim strSHA1ToSearchWith As String = strFullSHA1String.Substring(0, 5) ' Take out only what we want, the first five characters. That's all we send to the server.
+                                                   Dim strWebData As String = Nothing ' Prepare a variable to get data from the web.
+
+                                                   Dim httpHelper As HttpHelper = checkForUpdates.CheckForUpdatesClass.CreateNewHTTPHelperObject() ' Create an HTTPHelper Class instance.
+
+                                                   ' Call HaveIBeenPwned.com's Password Checking API. Note how we only send the first five characters
+                                                   ' to the server, you can see that by our use of the strSHA1ToSearchWith variable created above.
+                                                   If httpHelper.GetWebData("https://api.pwnedpasswords.com/range/" & strSHA1ToSearchWith, strWebData, False) Then
+                                                       ' OK, we have a valid HTTP response, now let's do something with it.
+
+                                                       ' We do some parsing of the incoming data, we do that by searching for the full SHA1 String in the web
+                                                       ' data but this is all being done client-side; again none of this is happening on the server side.
+                                                       Dim regexObject As New Text.RegularExpressions.Regex("(?:" & strFullSHA1String & ")+:([0-9]+)")
+                                                       Dim regexMatchResults As Text.RegularExpressions.MatchCollection = regexObject.Matches(strWebData) ' Use the above Regex object to do some searching.
+
+                                                       ' Do we have some results?
+                                                       If regexMatchResults.Count > 0 Then
+                                                           ' Yes, that's not good.
+
+                                                           Dim intTimes As Integer = 0 ' Create a variable to use to store the parsed Integer.
+
+                                                           ' Try to parse the Integer that's a String into an actual Integer.
+                                                           If Integer.TryParse(regexMatchResults.Item(0).Groups(1).ToString, intTimes) Then
+                                                               ' Parsing worked, let's plug it into the message box text.
+                                                               MyInvoke(Sub() MsgBox("OH NO!" & vbCrLf & vbCrLf & "Your password has been found " & intTimes & " " & If(intTimes = 1, "time", "times") & " in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                                                           Else
+                                                               ' Oops, parsing failed; let's just use a generic message instead of a custom one.
+                                                               MyInvoke(Sub() MsgBox("OH NO!" & vbCrLf & vbCrLf & "Your password has been found in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                                                           End If
+                                                       Else
+                                                           ' Nope, the password hasn't been breached.
+                                                           MyInvoke(Sub() MsgBox("Your password has not been found in the HaveIBeenPwned.com database." & vbCrLf & vbCrLf & "Congratulations!", MsgBoxStyle.Information, strMessageBoxTitleText))
+                                                       End If
+                                                   Else
+                                                       ' Something happened during our API call, give the user an error message.
+                                                       MyInvoke(Sub() MsgBox("There was an error calling the HaveIBeenPwned.com API. Please try again later.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                                                   End If
+
+                                                   MyInvoke(Sub() btnCheckHaveIBeenPwned.Enabled = True) ' Re-enable the button on the GUI.
+                                               End Sub)
+
+        ' End of routine.
+    End Sub
 
     Private Sub LoadColumnOrders(ByRef ListViewObject As ListView, ByRef specializedStringCollection As Specialized.StringCollection)
         Try

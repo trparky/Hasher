@@ -82,6 +82,7 @@ Partial Class Form1
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
+        Me.btnCheckHaveIBeenPwned = New System.Windows.Forms.Button()
         Me.verifyHashesListFiles = New Hasher.ListViewDoubleBuffered()
         Me.colFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -294,6 +295,7 @@ Partial Class Form1
         Me.tabHashText.Controls.Add(Me.lblHashTextStep1)
         Me.tabHashText.Controls.Add(Me.txtTextToHash)
         Me.tabHashText.Controls.Add(Me.lblTextToHash)
+        Me.tabHashText.Controls.Add(Me.btnCheckHaveIBeenPwned)
         Me.tabHashText.Location = New System.Drawing.Point(4, 22)
         Me.tabHashText.Name = "tabHashText"
         Me.tabHashText.Padding = New System.Windows.Forms.Padding(3)
@@ -800,6 +802,20 @@ Partial Class Form1
         Me.btnRetestFailedFiles.Text = "Retest Failed Files"
         Me.btnRetestFailedFiles.UseVisualStyleBackColor = True
         Me.btnRetestFailedFiles.Visible = False
+        '
+        'btnCheckHaveIBeenPwned
+        '
+        Me.btnCheckHaveIBeenPwned.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnCheckHaveIBeenPwned.Enabled = False
+        Me.btnCheckHaveIBeenPwned.Location = New System.Drawing.Point(240, 198)
+        Me.btnCheckHaveIBeenPwned.Name = "btnCheckHaveIBeenPwned"
+        Me.btnCheckHaveIBeenPwned.Size = New System.Drawing.Size(291, 71)
+        Me.btnCheckHaveIBeenPwned.TabIndex = 33
+        Me.btnCheckHaveIBeenPwned.Text = "Check haveibeenpwned.com for hashed string" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Used to check if a password has been" &
+    " compromised)"
+        Me.ToolTip.SetToolTip(Me.btnCheckHaveIBeenPwned, "Note: This tool only sends the first five characters of a SHA1 hashed string to h" &
+        "aveibeenpwned.com's API.")
+        Me.btnCheckHaveIBeenPwned.UseVisualStyleBackColor = True
         '
         'verifyHashesListFiles
         '
@@ -2062,4 +2078,5 @@ Partial Class Form1
     Friend WithEvents verifyListFilesContextMenuLine1 As ToolStripSeparator
     Friend WithEvents verifyListFilesContextMenuLine2 As ToolStripSeparator
     Friend WithEvents chkUpdateColorInRealTime As CheckBox
+    Friend WithEvents btnCheckHaveIBeenPwned As Button
 End Class
