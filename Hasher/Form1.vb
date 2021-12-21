@@ -3372,10 +3372,11 @@ Public Class Form1
                                                        End If
                                                    Else
                                                        ' Something happened during our API call, give the user an error message.
-                                                       MyInvoke(Sub() MsgBox("There was an error calling the HaveIBeenPwned.com API. Please try again later.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                                                       MyInvoke(Sub()
+                                                                    btnCheckHaveIBeenPwned.Enabled = True ' Re-enable the button on the GUI.
+                                                                    MsgBox("There was an error calling the HaveIBeenPwned.com API. Please try again later.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                End Sub)
                                                    End If
-
-                                                   MyInvoke(Sub() btnCheckHaveIBeenPwned.Enabled = True) ' Re-enable the button on the GUI.
                                                End Sub)
 
         ' End of routine.
