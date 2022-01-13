@@ -845,9 +845,13 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+    Private Sub CallSaveColumnOrders()
         My.Settings.listFilesColumnOrder = SaveColumnOrders(listFiles.Columns)
         My.Settings.verifyListFilesColumnOrder = SaveColumnOrders(verifyHashesListFiles.Columns)
+    End Sub
+
+    Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+        CallSaveColumnOrders()
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -3221,6 +3225,8 @@ Public Class Form1
 
     Private Sub BtnSaveSettingsToFile_Click(sender As Object, e As EventArgs) Handles BtnSaveSettingsToFile.Click
         Using SaveFileDialogBox As New SaveFileDialog()
+            CallSaveColumnOrders()
+
             SaveFileDialogBox.Title = "Save Settings to JSON File"
             SaveFileDialogBox.Filter = "JSON File|*.json"
 
