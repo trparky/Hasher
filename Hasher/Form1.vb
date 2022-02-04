@@ -1604,7 +1604,7 @@ Public Class Form1
     Private Function MakeTextHashListViewItem(strHashType As String, strHash As String) As ListViewItem
         Dim itemToBeAdded As New ListViewItem(strHashType)
         With itemToBeAdded
-            .SubItems.Add(strHash)
+            .SubItems.Add(If(chkDisplayHashesInUpperCase.Checked, strHash.ToUpper, strHash.ToLower))
         End With
         Return itemToBeAdded
     End Function
@@ -1614,11 +1614,11 @@ Public Class Form1
 
         txtHashResults.Items.Clear()
 
-        txtHashResults.Items.Add(MakeTextHashListViewItem("MD5", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
-        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA1/SHA160", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
-        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA256", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
-        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA384", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
-        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA512", If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("MD5", GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA1/SHA160", GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA256", GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA384", GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes)))
+        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA512", GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes)))
 
         btnCopyTextHashResultsToClipboard.Enabled = True
         btnComputeTextHash.Enabled = False
