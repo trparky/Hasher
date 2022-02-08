@@ -2524,6 +2524,11 @@ Public Class Form1
                 item.SubItems(2).Text = If(boolDisplayHashesInUpperCase, item.Hash.ToUpper, item.Hash.ToLower)
             Next
         End If
+        If txtHashResults.Items.Count <> 0 Then
+            For Each item As ListViewItem In txtHashResults.Items
+                item.SubItems(1).Text = If(boolDisplayHashesInUpperCase, item.SubItems(1).Text.ToUpper, item.SubItems(1).Text.ToLower)
+            Next
+        End If
 
         If Not String.IsNullOrWhiteSpace(txtHashResults.Text) Then
             txtHashResults.Text = If(boolDisplayHashesInUpperCase, txtHashResults.Text.ToUpper, txtHashResults.Text.ToLower)
