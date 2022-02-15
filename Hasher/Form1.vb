@@ -959,8 +959,6 @@ Public Class Form1
         btnSetBufferSize.Enabled = False
         roundFileSizes.Value = My.Settings.roundFileSizes
         roundPercentages.Value = My.Settings.roundPercentages
-        byteRoundFileSizes = My.Settings.roundFileSizes
-        byteRoundPercentages = My.Settings.roundPercentages
         btnSetRoundFileSizes.Enabled = False
         btnSetRoundPercentages.Enabled = False
         Location = My.Settings.windowLocation
