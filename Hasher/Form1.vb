@@ -2904,6 +2904,7 @@ Public Class Form1
 
     Private Sub ChkShowPercentageInWindowTitleBar_Click(sender As Object, e As EventArgs) Handles chkShowPercentageInWindowTitleBar.Click
         My.Settings.boolShowPercentageInWindowTitleBar = chkShowPercentageInWindowTitleBar.Checked
+        If Not chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle
     End Sub
 
     Private Sub BtnRetestFailedFiles_Click(sender As Object, e As EventArgs) Handles btnRetestFailedFiles.Click
