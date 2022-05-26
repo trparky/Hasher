@@ -1634,10 +1634,10 @@ Public Class Form1
     Private Sub BtnCopyTextHashResultsToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyTextHashResultsToClipboard.Click
         Dim strHash As New Text.StringBuilder
         strHash.AppendLine("MD5: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
-        strHash.AppendLine("SHA1/SHA160: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
-        strHash.AppendLine("SHA256: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
-        strHash.AppendLine("SHA384: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
-        strHash.AppendLine("SHA512: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.md5, hashTextAllTheHashes).ToLower))
+        strHash.AppendLine("SHA1/SHA160: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.sha160, hashTextAllTheHashes).ToLower))
+        strHash.AppendLine("SHA256: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.sha256, hashTextAllTheHashes).ToLower))
+        strHash.AppendLine("SHA384: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.sha384, hashTextAllTheHashes).ToLower))
+        strHash.AppendLine("SHA512: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(ChecksumType.sha512, hashTextAllTheHashes).ToLower))
 
         If CopyTextToWindowsClipboard(strHash.ToString.Trim) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
