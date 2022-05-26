@@ -2717,6 +2717,10 @@ Public Class Form1
         FillInChecksumLabelsOnCompareFilesTab(HashAlgorithmName.SHA384)
     End Sub
 
+    Private Sub CompareRadioSHA512_Click(sender As Object, e As EventArgs) Handles compareRadioSHA512.Click
+        FillInChecksumLabelsOnCompareFilesTab(HashAlgorithmName.SHA512)
+    End Sub
+
     Private Sub BtnTransferToHashIndividualFilesTab_Click(sender As Object, e As EventArgs) Handles btnTransferToHashIndividualFilesTab.Click
         Threading.ThreadPool.QueueUserWorkItem(Sub()
                                                    MyInvoke(Sub()
@@ -2801,10 +2805,6 @@ Public Class Form1
                                                                 verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
                                                             End Sub)
                                                End Sub)
-    End Sub
-
-    Private Sub CompareRadioSHA512_Click(sender As Object, e As EventArgs) Handles compareRadioSHA512.Click
-        FillInChecksumLabelsOnCompareFilesTab(HashAlgorithmName.SHA512)
     End Sub
 
     Private Sub TxtFile1_TextChanged(sender As Object, e As EventArgs) Handles txtFile1.TextChanged
