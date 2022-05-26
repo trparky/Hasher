@@ -302,7 +302,7 @@ Public Class Form1
                                                      Dim strChecksum As String = Nothing
                                                      Dim checksumType As HashAlgorithmName
                                                      Dim index As Integer = 1
-                                                     Dim stopWatch As Stopwatch = stopWatch.StartNew
+                                                     Dim myStopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim computeStopwatch As Stopwatch
                                                      Dim items As ListView.ListViewItemCollection = GetListViewItems(listFiles)
                                                      Dim allTheHashes As AllTheHashes = Nothing
@@ -383,7 +383,7 @@ Public Class Form1
                                                                           UpdateListViewItem(itemOnGUI, item, False)
                                                                       End Sub)
 
-                                                             computeStopwatch = stopWatch.StartNew
+                                                             computeStopwatch = Stopwatch.StartNew
 
                                                              If DoChecksumWithAttachedSubRoutine(item.FileName, allTheHashes, subRoutine) Then
                                                                  item.AllTheHashes = allTheHashes
@@ -420,9 +420,9 @@ Public Class Form1
                                                                   workingThread = Nothing
 
                                                                   If longErroredFiles = 0 Then
-                                                                      MsgBox("Completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                      MsgBox("Completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   Else
-                                                                      MsgBox("Completed in " & TimespanToHMS(stopWatch.Elapsed) & "." & DoubleCRLF & longErroredFiles.ToString & If(longErroredFiles = 1, " file", " files") & " experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                      MsgBox("Completed in " & TimespanToHMS(myStopWatch.Elapsed) & "." & DoubleCRLF & longErroredFiles.ToString & If(longErroredFiles = 1, " file", " files") & " experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   End If
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
@@ -1227,7 +1227,7 @@ Public Class Form1
                                                      Dim regExMatchObject As Text.RegularExpressions.Match
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim intLineCounter As Integer = 0
-                                                     Dim stopWatch As Stopwatch = stopWatch.StartNew
+                                                     Dim myStopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim strReadingHashFileMessage As String = "Reading hash file and creating ListView item objects... Please wait."
                                                      Dim boolFileExists As Boolean
                                                      Dim intFileCount As Integer = 0
@@ -1357,7 +1357,7 @@ Public Class Form1
                                                                           UpdateListViewItem(itemOnGUI, item, False)
                                                                       End Sub)
 
-                                                             computeStopwatch = stopWatch.StartNew
+                                                             computeStopwatch = Stopwatch.StartNew
 
                                                              If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine) Then
                                                                  strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
@@ -1473,7 +1473,7 @@ Public Class Form1
                                                                   End If
 
                                                                   sbMessageBoxText.AppendLine()
-                                                                  sbMessageBoxText.AppendLine("Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".")
+                                                                  sbMessageBoxText.AppendLine("Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".")
 
                                                                   MyInvoke(Sub() verifyHashesListFiles.RedrawItems(0, verifyHashesListFiles.Items.Count - 1, False))
                                                                   MsgBox(sbMessageBoxText.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
@@ -1954,7 +1954,7 @@ Public Class Form1
                                                                                         End Try
                                                                                     End Sub
 
-                                                     Dim stopWatch As Stopwatch = stopWatch.StartNew
+                                                     Dim myStopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      If DoChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine) AndAlso DoChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine) Then
                                                          boolSuccessful = True
@@ -2010,11 +2010,11 @@ Public Class Form1
                                                                       If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
                                                                           pictureBoxCompareFiles.Image = My.Resources.good_check
                                                                           ToolTip.SetToolTip(pictureBoxCompareFiles, "Both files are the same.")
-                                                                          MsgBox("Both files are the same." & DoubleCRLF & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                          MsgBox("Both files are the same." & DoubleCRLF & "Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                       Else
                                                                           pictureBoxCompareFiles.Image = My.Resources.bad_check
                                                                           ToolTip.SetToolTip(pictureBoxCompareFiles, "The two files don't match.")
-                                                                          MsgBox("The two files don't match." & DoubleCRLF & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                          MsgBox("The two files don't match." & DoubleCRLF & "Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
                                                                       MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strMessageBoxTitleText)
@@ -2207,7 +2207,7 @@ Public Class Form1
                                                                                         End Try
                                                                                     End Sub
 
-                                                     Dim stopWatch As Stopwatch = stopWatch.StartNew
+                                                     Dim myStopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim boolSuccessful As Boolean = DoChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, allTheHashes, subRoutine)
                                                      strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
@@ -2228,11 +2228,11 @@ Public Class Form1
                                                                       If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.good_check
                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum Verified!")
-                                                                          MsgBox("The checksums match!" & DoubleCRLF & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                          MsgBox("The checksums match!" & DoubleCRLF & "Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                       Else
                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum verification failed, checksum didn't match!")
-                                                                          MsgBox("The checksums DON'T match!" & DoubleCRLF & "Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                          MsgBox("The checksums DON'T match!" & DoubleCRLF & "Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
                                                                       pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
@@ -2402,7 +2402,7 @@ Public Class Form1
                     .Arguments = "-associatefiletype",
                     .Verb = "runas"
                 }
-                Dim process As Process = process.Start(startInfo)
+                Dim process As Process = Process.Start(startInfo)
                 process.WaitForExit()
                 boolSuccessful = True
             Catch ex As System.ComponentModel.Win32Exception
@@ -2426,7 +2426,7 @@ Public Class Form1
                     .Arguments = "-associateallfiles",
                     .Verb = "runas"
                 }
-                Dim process As Process = process.Start(startInfo)
+                Dim process As Process = Process.Start(startInfo)
                 process.WaitForExit()
                 boolSuccessful = True
             Catch ex As System.ComponentModel.Win32Exception
@@ -2923,7 +2923,7 @@ Public Class Form1
                                                      Dim longFilesThatPassedVerification As Long = 0
                                                      Dim intFilesNotFound As Integer = 0
                                                      Dim intLineCounter As Integer = 0
-                                                     Dim stopWatch As Stopwatch = stopWatch.StartNew
+                                                     Dim myStopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      MyInvoke(Sub()
                                                                   btnRetestFailedFiles.Visible = False
@@ -3027,7 +3027,7 @@ Public Class Form1
                                                                               UpdateListViewItem(itemOnGUI, item, False)
                                                                           End Sub)
 
-                                                                 computeStopwatch = stopWatch.StartNew
+                                                                 computeStopwatch = Stopwatch.StartNew
 
                                                                  If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine) Then
                                                                      strChecksum = GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes)
@@ -3135,7 +3135,7 @@ Public Class Form1
                                                                   End If
 
                                                                   sbMessageBoxText.AppendLine()
-                                                                  sbMessageBoxText.AppendLine("Processing completed in " & TimespanToHMS(stopWatch.Elapsed) & ".")
+                                                                  sbMessageBoxText.AppendLine("Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".")
 
                                                                   MsgBox(sbMessageBoxText.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
