@@ -27,7 +27,7 @@ Public Class Checksums
         ElseIf hashType = HashAlgorithmName.SHA512 Then
             Return New SHA512CryptoServiceProvider
         Else
-            Return New SHA256CryptoServiceProvider
+            Return New SHA512CryptoServiceProvider
         End If
     End Function
 
