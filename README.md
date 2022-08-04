@@ -9,5 +9,6 @@ I encourage you to look at the source code, read, and understand it. If you want
 
 All active development occurs in the dev branch, that's where changes to the code happen and testing takes place. Only after the changes are proven to be stable does the code from the dev branch get merged into the main branch for public deployment.
 
-Thursday, August 4th, 2022 Update
+**Thursday, August 4th, 2022 Update**
+
 This program is now in maintenence mode. Active development has ceased, only bug fixes will be introduced from this point on but since it's quite a stable program so I figure that even that won't happen. The dev branch for testing new code has been removed as well.
