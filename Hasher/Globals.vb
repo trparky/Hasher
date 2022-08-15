@@ -19,7 +19,7 @@ Public Module Globals
         End If
     End Function
 
-    Public Function FileSizeToHumanSize(ByVal size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
+    Public Function FileSizeToHumanSize(size As Long, Optional roundToNearestWholeNumber As Boolean = False) As String
         Dim result As String
         Dim shortRoundNumber As Short = If(roundToNearestWholeNumber, 0, byteRoundFileSizes)
 

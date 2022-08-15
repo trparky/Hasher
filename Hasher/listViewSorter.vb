@@ -5,14 +5,14 @@ Class ListViewComparer
     Private ReadOnly intColumnNumber As Integer
     Private ReadOnly soSortOrder As SortOrder
 
-    Public Sub New(ByVal intInputColumnNumber As Integer, ByVal soInputSortOrder As SortOrder)
+    Public Sub New(intInputColumnNumber As Integer, soInputSortOrder As SortOrder)
         intColumnNumber = intInputColumnNumber
         soSortOrder = soInputSortOrder
     End Sub
 
     ' Compare the items in the appropriate column
     ' for objects x and y.
-    Public Function Compare(ByVal lvInputFirstListView As Object, ByVal lvInputSecondListView As Object) As Integer Implements IComparer.Compare
+    Public Function Compare(lvInputFirstListView As Object, lvInputSecondListView As Object) As Integer Implements IComparer.Compare
         Dim long1, long2 As Long
         Dim timespan1, timespan2 As TimeSpan
         Dim strFirstString, strSecondString As String

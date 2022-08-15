@@ -85,7 +85,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Function GetListViewItems(ByVal lstview As ListView) As ListView.ListViewItemCollection
+    Private Function GetListViewItems(lstview As ListView) As ListView.ListViewItemCollection
         Dim tempListViewItemCollection As New ListView.ListViewItemCollection(New ListView())
 
         If Not lstview.InvokeRequired() Then
@@ -678,7 +678,7 @@ Public Class Form1
         Return MsgBoxResult.Yes
     End Function
 
-    Private Sub SelectFileInWindowsExplorer(ByVal strFullPath As String)
+    Private Sub SelectFileInWindowsExplorer(strFullPath As String)
         If Not String.IsNullOrEmpty(strFullPath) AndAlso IO.File.Exists(strFullPath) Then
             Dim pidlList As IntPtr = NativeMethod.NativeMethods.ILCreateFromPathW(strFullPath)
 
@@ -2474,7 +2474,7 @@ Public Class Form1
         My.Settings.boolSortFileListingAfterAddingFilesToHash = chkSortFileListingAfterAddingFilesToHash.Checked
     End Sub
 
-    Private Sub WaitForConnectionCallBack(ByVal iar As IAsyncResult)
+    Private Sub WaitForConnectionCallBack(iar As IAsyncResult)
         Try
             Dim namedPipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
             namedPipeServer.EndWaitForConnection(iar)

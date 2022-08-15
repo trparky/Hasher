@@ -2,7 +2,7 @@
 
 Namespace FileAssociation
     Module FileAssociation
-        Private Sub CreateAssociationSubRoutine(ByRef selectedKey As RegistryKey, ByVal description As String, ByVal application As String, ByVal icon As String)
+        Private Sub CreateAssociationSubRoutine(ByRef selectedKey As RegistryKey, description As String, application As String, icon As String)
             If selectedKey.OpenSubKey("Shell\Verify with Hasher") Is Nothing Then
                 If description IsNot Nothing Then selectedKey.SetValue(vbNullString, description)
 
@@ -25,7 +25,7 @@ Namespace FileAssociation
             selectedKey.Dispose()
         End Sub
 
-        Public Sub CreateAssociation(ByVal extension As String, ByVal description As String, ByVal application As String, ByVal icon As String)
+        Public Sub CreateAssociation(extension As String, description As String, application As String, icon As String)
             Dim selectedKey As RegistryKey
 
             If Registry.ClassesRoot.OpenSubKey(extension) Is Nothing Then
@@ -49,7 +49,7 @@ Namespace FileAssociation
             End If
         End Sub
 
-        Public Sub SelfCreateAssociation(ByVal extension As String, ByVal Optional description As String = "")
+        Public Sub SelfCreateAssociation(extension As String, Optional description As String = "")
             Dim FileLocation As String = Reflection.Assembly.GetExecutingAssembly().Location
             CreateAssociation(extension, description, FileLocation, FileLocation & ",0")
         End Sub
