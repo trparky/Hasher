@@ -97,19 +97,19 @@
     <Compile Include="Benchmark.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Check for Update Stuff.vb" />
+    <Compile Include="Program Modules\Check for Update Stuff.vb" />
     <Compile Include="Checksum Difference.Designer.vb">
       <DependentUpon>Checksum Difference.vb</DependentUpon>
     </Compile>
     <Compile Include="Checksum Difference.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="checksums.vb" />
+    <Compile Include="Program Modules\checksums.vb" />
     <Compile Include="ListViewDoubleBuffered.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="FastDirectoryEnumerator.vb" />
-    <Compile Include="FileAssociation.vb" />
+    <Compile Include="Program Modules\FastDirectoryEnumerator.vb" />
+    <Compile Include="Program Modules\FileAssociation.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -123,9 +123,9 @@
     <Compile Include="progressForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Globals.vb" />
-    <Compile Include="HTTPHelper.vb" />
-    <Compile Include="listViewSorter.vb" />
+    <Compile Include="Program Modules\Globals.vb" />
+    <Compile Include="Program Modules\HTTPHelper.vb" />
+    <Compile Include="Program Modules\listViewSorter.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -141,11 +141,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="myListViewItem.vb" />
-    <Compile Include="NativeMethod.vb" />
-    <Compile Include="SaveAppSettings.vb" />
-    <Compile Include="Search for Process and Kill it.vb" />
-    <Compile Include="StringExtensions.vb" />
+    <Compile Include="Program Modules\myListViewItem.vb" />
+    <Compile Include="Program Modules\NativeMethod.vb" />
+    <Compile Include="Program Modules\SaveAppSettings.vb" />
+    <Compile Include="Program Modules\Search for Process and Kill it.vb" />
+    <Compile Include="Program Modules\StringExtensions.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Benchmark.resx">
