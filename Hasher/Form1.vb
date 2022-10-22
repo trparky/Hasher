@@ -2385,56 +2385,19 @@ Public Class Form1
     End Sub
 
     Private Sub BtnAssociate_Click(sender As Object, e As EventArgs) Handles btnAssociate.Click
-        Dim boolSuccessful As Boolean = False
+        FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha2", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
 
-        If AreWeAnAdministrator() Then
-            FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha2", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
-            boolSuccessful = True
-        Else
-            Try
-                Dim startInfo As New ProcessStartInfo With {
-                    .FileName = Application.ExecutablePath,
-                    .Arguments = "-associatefiletype",
-                    .Verb = "runas"
-                }
-                Dim process As Process = Process.Start(startInfo)
-                process.WaitForExit()
-                boolSuccessful = True
-            Catch ex As System.ComponentModel.Win32Exception
-                MsgBox("Failed to elevate process." & DoubleCRLF & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
-            End Try
-        End If
-
-        If boolSuccessful Then MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
+        MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnAddHasherToAllFiles_Click(sender As Object, e As EventArgs) Handles btnAddHasherToAllFiles.Click
-        Dim boolSuccessful As Boolean = False
-
-        If AreWeAnAdministrator() Then
-            FileAssociation.AddAssociationWithAllFiles()
-            boolSuccessful = True
-        Else
-            Try
-                Dim startInfo As New ProcessStartInfo With {
-                    .FileName = Application.ExecutablePath,
-                    .Arguments = "-associateallfiles",
-                    .Verb = "runas"
-                }
-                Dim process As Process = Process.Start(startInfo)
-                process.WaitForExit()
-                boolSuccessful = True
-            Catch ex As System.ComponentModel.Win32Exception
-                MsgBox("Failed to elevate process." & DoubleCRLF & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
-            End Try
-        End If
-
-        If boolSuccessful Then MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
+        FileAssociation.AddAssociationWithAllFiles()
+        MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnOpenExistingHashFile_DragDrop(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragDrop

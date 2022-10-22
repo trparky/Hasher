@@ -3,6 +3,10 @@
 Namespace FileAssociation
     Module FileAssociation
         Private Sub CreateAssociationSubRoutine(ByRef selectedKey As RegistryKey, description As String, application As String, icon As String)
+            If selectedKey.OpenSubKey("Shell") Is Nothing Then
+                selectedKey.CreateSubKey("Shell")
+            End If
+
             If selectedKey.OpenSubKey("Shell\Verify with Hasher") Is Nothing Then
                 If description IsNot Nothing Then selectedKey.SetValue(vbNullString, description)
 
@@ -25,24 +29,26 @@ Namespace FileAssociation
             selectedKey.Dispose()
         End Sub
 
+        ' Registry.CurrentUser.OpenSubKey("Software\Classes\" & 
+
         Public Sub CreateAssociation(extension As String, description As String, application As String, icon As String)
             Dim selectedKey As RegistryKey
 
-            If Registry.ClassesRoot.OpenSubKey(extension) Is Nothing Then
-                selectedKey = Registry.ClassesRoot.CreateSubKey(extension)
+            If Registry.CurrentUser.OpenSubKey("Software\Classes\" & extension) Is Nothing Then
+                selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\", True).CreateSubKey(extension)
 
                 If selectedKey IsNot Nothing Then
                     CreateAssociationSubRoutine(selectedKey, description, application, icon)
                 End If
             Else
-                Dim strDefaultValue As String = Registry.ClassesRoot.OpenSubKey(extension).GetValue(vbNullString, Nothing)
+                Dim strDefaultValue As String = Registry.CurrentUser.OpenSubKey("Software\Classes\" & extension).GetValue(vbNullString, Nothing)
 
                 If String.IsNullOrWhiteSpace(strDefaultValue) Then
-                    CreateAssociationSubRoutine(Registry.ClassesRoot.OpenSubKey(extension), description, application, icon)
+                    CreateAssociationSubRoutine(Registry.CurrentUser.OpenSubKey("Software\Classes\" & extension), description, application, icon)
                 Else
-                    selectedKey = Registry.ClassesRoot.OpenSubKey(strDefaultValue, True)
+                    selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\" & extension & "\" & strDefaultValue, True)
                     If selectedKey Is Nothing Then
-                        selectedKey = Registry.ClassesRoot.CreateSubKey(strDefaultValue)
+                        selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes", True).CreateSubKey(strDefaultValue)
                     End If
                     CreateAssociationSubRoutine(selectedKey, description, application, icon)
                 End If
@@ -55,7 +61,11 @@ Namespace FileAssociation
         End Sub
 
         Public Sub AddAssociationWithAllFiles()
-            Dim selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey("*\Shell", True)
+            If Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell") Is Nothing Then
+                Registry.CurrentUser.OpenSubKey("Software\Classes\*", True).CreateSubKey("Shell")
+            End If
+
+            Dim selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes", True).OpenSubKey("*\Shell", True)
             Dim FileLocation As String = Reflection.Assembly.GetExecutingAssembly().Location
 
             If selectedKey IsNot Nothing Then
@@ -64,7 +74,7 @@ Namespace FileAssociation
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --addfile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
 
-            selectedKey = Registry.ClassesRoot.OpenSubKey("*\Shell", True)
+            selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes", True).OpenSubKey("*\Shell", True)
 
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Verify against known hash with Hasher")
@@ -72,7 +82,7 @@ Namespace FileAssociation
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --knownhashfile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
 
-            selectedKey = Registry.ClassesRoot.OpenSubKey("*\Shell", True)
+            selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell", True)
 
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Compare Two Files")
@@ -80,7 +90,7 @@ Namespace FileAssociation
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --comparefile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
 
-            selectedKey = Registry.ClassesRoot.OpenSubKey("Folder\Shell", True)
+            selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\Folder\Shell", True)
 
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Hash with Hasher")
@@ -90,7 +100,7 @@ Namespace FileAssociation
         End Sub
 
         Public Function DoesCompareFilesExist() As Boolean
-            Return Registry.ClassesRoot.OpenSubKey("*\Shell\Compare Two Files", False) IsNot Nothing
+            Return Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell\Compare Two Files", False) IsNot Nothing
         End Function
     End Module
 End Namespace
