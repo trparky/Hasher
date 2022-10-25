@@ -3356,6 +3356,16 @@ Public Class Form1
         ' End of routine.
     End Sub
 
+    Private Sub btnRemoveFileAssociations_Click(sender As Object, e As EventArgs) Handles btnRemoveFileAssociations.Click
+        Try
+            FileAssociation.DeleteFileAssociation()
+            FileAssociation.DeleteAssociationWithAllFiles()
+            MsgBox("File associations have been removed successfully.", MsgBoxStyle.Information, strMessageBoxTitleText)
+        Catch ex As Exception
+            MsgBox("Something went wrong while removing file associations." & vbCrLf & vbCrLf & ex.Message & " -- " & ex.StackTrace, MsgBoxStyle.Critical, strMessageBoxTitleText)
+        End Try
+    End Sub
+
     Private Sub LoadColumnOrders(ByRef ListViewObject As ListView, ByRef specializedStringCollection As Specialized.StringCollection)
         Try
             Dim intParsedDisplayIndex As Integer

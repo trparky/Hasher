@@ -58,6 +58,39 @@ Namespace FileAssociation
             CreateAssociation(extension, description, FileLocation, FileLocation & ",0")
         End Sub
 
+        Public Sub DeleteFileAssociation()
+            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.md5\Shell", True)
+                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+            End Using
+            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha1\Shell", True)
+                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+            End Using
+            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha2\Shell", True)
+                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+            End Using
+            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell", True)
+                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+            End Using
+            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha384\Shell", True)
+                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+            End Using
+            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha512\Shell", True)
+                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+            End Using
+        End Sub
+
+        Public Sub DeleteAssociationWithAllFiles() '
+            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell", True)
+                selectedKey.DeleteSubKeyTree("Compare Two Files")
+                selectedKey.DeleteSubKeyTree("Hash with Hasher")
+                selectedKey.DeleteSubKeyTree("Verify against known hash with Hasher")
+            End Using
+
+            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\Folder\Shell", True)
+                selectedKey.DeleteSubKeyTree("Hash with Hasher")
+            End Using
+        End Sub
+
         Public Sub AddAssociationWithAllFiles()
             If Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell") Is Nothing Then
                 Registry.CurrentUser.OpenSubKey("Software\Classes\*", True).CreateSubKey("Shell")

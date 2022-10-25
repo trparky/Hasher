@@ -186,6 +186,7 @@ Partial Class Form1
         Me.ChkIncludeEntryCountInFileNameHeader = New System.Windows.Forms.CheckBox()
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = New System.Windows.Forms.CheckBox()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
+        Me.btnRemoveFileAssociations = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1446,6 +1447,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.lblRoundFileSizesLabel)
         Me.tabSettings.Controls.Add(Me.ChkIncludeEntryCountInFileNameHeader)
         Me.tabSettings.Controls.Add(Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes)
+        Me.tabSettings.Controls.Add(Me.btnRemoveFileAssociations)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
         Me.tabSettings.Size = New System.Drawing.Size(1040, 444)
@@ -1874,6 +1876,15 @@ Partial Class Form1
         Me.ToolTip.SetToolTip(Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes, resources.GetString("ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.ToolTip"))
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.UseVisualStyleBackColor = True
         '
+        'btnRemoveFileAssociations
+        '
+        Me.btnRemoveFileAssociations.Location = New System.Drawing.Point(439, 406)
+        Me.btnRemoveFileAssociations.Name = "btnRemoveFileAssociations"
+        Me.btnRemoveFileAssociations.Size = New System.Drawing.Size(155, 27)
+        Me.btnRemoveFileAssociations.TabIndex = 52
+        Me.btnRemoveFileAssociations.Text = "Remove File Associations"
+        Me.btnRemoveFileAssociations.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2079,4 +2090,5 @@ Partial Class Form1
     Friend WithEvents verifyListFilesContextMenuLine2 As ToolStripSeparator
     Friend WithEvents chkUpdateColorInRealTime As CheckBox
     Friend WithEvents btnCheckHaveIBeenPwned As Button
+    Friend WithEvents btnRemoveFileAssociations As Button
 End Class
