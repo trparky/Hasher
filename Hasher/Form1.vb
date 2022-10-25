@@ -972,6 +972,7 @@ Public Class Form1
             Text &= " (Debugger Attached)"
             btnAddHasherToAllFiles.Visible = False
             btnAssociate.Visible = False
+            btnRemoveFileAssociations.Visible = False
         End If
 
         DeleteTemporaryNewEXEFile()
