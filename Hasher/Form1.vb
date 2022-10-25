@@ -963,7 +963,7 @@ Public Class Form1
         btnSetRoundPercentages.Enabled = False
         Location = My.Settings.windowLocation
 
-        If Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(".md5\Shell\Verify with Hasher") Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
+        If Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\Classes\.md5\Shell\Verify with Hasher") Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
         If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher") IsNot Nothing Then btnAssociate.Enabled = False
         If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell\Compare Two Files") IsNot Nothing Then btnAddHasherToAllFiles.Enabled = False
         If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher") Is Nothing Then btnRemoveFileAssociations.Enabled = False

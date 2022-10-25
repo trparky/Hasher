@@ -135,34 +135,34 @@ Namespace FileAssociation
         End Function
 
         Public Sub DeleteSystemLevelFileAssociation()
-            Using selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey(".md5\Shell", True)
+            Using selectedKey As RegistryKey = Registry.LocalMachine.OpenSubKey("Software\Classes\.md5\Shell", True)
                 selectedKey.DeleteSubKeyTree("Verify with Hasher")
             End Using
-            Using selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey(".sha1\Shell", True)
+            Using selectedKey As RegistryKey = Registry.LocalMachine.OpenSubKey("Software\Classes\.sha1\Shell", True)
                 selectedKey.DeleteSubKeyTree("Verify with Hasher")
             End Using
-            Using selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey(".sha2\Shell", True)
+            Using selectedKey As RegistryKey = Registry.LocalMachine.OpenSubKey("Software\Classes\.sha2\Shell", True)
                 selectedKey.DeleteSubKeyTree("Verify with Hasher")
             End Using
-            Using selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey(".sha256\Shell", True)
+            Using selectedKey As RegistryKey = Registry.LocalMachine.OpenSubKey("Software\Classes\.sha256\Shell", True)
                 selectedKey.DeleteSubKeyTree("Verify with Hasher")
             End Using
-            Using selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey(".sha384\Shell", True)
+            Using selectedKey As RegistryKey = Registry.LocalMachine.OpenSubKey("Software\Classes\.sha384\Shell", True)
                 selectedKey.DeleteSubKeyTree("Verify with Hasher")
             End Using
-            Using selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey(".sha512\Shell", True)
+            Using selectedKey As RegistryKey = Registry.LocalMachine.OpenSubKey("Software\Classes\.sha512\Shell", True)
                 selectedKey.DeleteSubKeyTree("Verify with Hasher")
             End Using
         End Sub
 
         Public Sub DeleteSystemLevelAssociationWithAllFiles()
-            Using selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey("*\Shell", True)
+            Using selectedKey As RegistryKey = Registry.LocalMachine.OpenSubKey("Software\Classes\*\Shell", True)
                 selectedKey.DeleteSubKeyTree("Compare Two Files")
                 selectedKey.DeleteSubKeyTree("Hash with Hasher")
                 selectedKey.DeleteSubKeyTree("Verify against known hash with Hasher")
             End Using
 
-            Using selectedKey As RegistryKey = Registry.ClassesRoot.OpenSubKey("Folder\Shell", True)
+            Using selectedKey As RegistryKey = Registry.LocalMachine.OpenSubKey("Software\Classes\Folder\Shell", True)
                 selectedKey.DeleteSubKeyTree("Hash with Hasher")
             End Using
         End Sub
