@@ -964,6 +964,8 @@ Public Class Form1
         btnSetRoundPercentages.Enabled = False
         Location = My.Settings.windowLocation
 
+        If Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(".md5\Shell\Verify with Hasher") Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
+
         If My.Settings.defaultHash < 0 Or My.Settings.defaultHash > 4 Then My.Settings.defaultHash = Byte.Parse(2)
         defaultHashType.SelectedIndex = My.Settings.defaultHash
         SetDefaultHashTypeGUIElementOptions()
@@ -973,6 +975,7 @@ Public Class Form1
             btnAddHasherToAllFiles.Visible = False
             btnAssociate.Visible = False
             btnRemoveFileAssociations.Visible = False
+            btnRemoveSystemLevelFileAssociations.Visible = False
         End If
 
         DeleteTemporaryNewEXEFile()
@@ -3365,6 +3368,31 @@ Public Class Form1
         Catch ex As Exception
             MsgBox("Something went wrong while removing file associations." & vbCrLf & vbCrLf & ex.Message & " -- " & ex.StackTrace, MsgBoxStyle.Critical, strMessageBoxTitleText)
         End Try
+    End Sub
+
+    Private Sub btnRemoveSystemLevelFileAssociations_Click(sender As Object, e As EventArgs) Handles btnRemoveSystemLevelFileAssociations.Click
+        Dim boolSuccessful As Boolean = False
+
+        If AreWeAnAdministrator() Then
+            FileAssociation.DeleteSystemLevelFileAssociation()
+            FileAssociation.DeleteSystemLevelAssociationWithAllFiles()
+            boolSuccessful = True
+        Else
+            Try
+                Dim startInfo As New ProcessStartInfo With {
+                    .FileName = Application.ExecutablePath,
+                    .Arguments = "-removesystemlevelassociations",
+                    .Verb = "runas"
+                }
+                Dim process As Process = Process.Start(startInfo)
+                process.WaitForExit()
+                boolSuccessful = True
+            Catch ex As Win32Exception
+                MsgBox("Failed to elevate process." & DoubleCRLF & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+            End Try
+        End If
+
+        If boolSuccessful Then MsgBox("System-level file associations have been removed successfully.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub LoadColumnOrders(ByRef ListViewObject As ListView, ByRef specializedStringCollection As Specialized.StringCollection)

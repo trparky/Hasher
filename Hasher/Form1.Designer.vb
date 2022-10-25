@@ -185,6 +185,7 @@ Partial Class Form1
         Me.lblRoundFileSizesLabel = New System.Windows.Forms.Label()
         Me.ChkIncludeEntryCountInFileNameHeader = New System.Windows.Forms.CheckBox()
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = New System.Windows.Forms.CheckBox()
+        Me.btnRemoveSystemLevelFileAssociations = New System.Windows.Forms.Button()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnRemoveFileAssociations = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
@@ -1405,6 +1406,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.btnRemoveSystemLevelFileAssociations)
         Me.tabSettings.Controls.Add(Me.chkUpdateColorInRealTime)
         Me.tabSettings.Controls.Add(Me.chkClearBeforeTransferringFromVerifyToHash)
         Me.tabSettings.Controls.Add(Me.BtnLoadSettingsFromFile)
@@ -1454,6 +1456,18 @@ Partial Class Form1
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
         '
+        'btnRemoveSystemLevelFileAssociations
+        '
+        Me.btnRemoveSystemLevelFileAssociations.Image = Global.Hasher.My.Resources.Resources.UAC
+        Me.btnRemoveSystemLevelFileAssociations.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnRemoveSystemLevelFileAssociations.Location = New System.Drawing.Point(601, 406)
+        Me.btnRemoveSystemLevelFileAssociations.Name = "btnRemoveSystemLevelFileAssociations"
+        Me.btnRemoveSystemLevelFileAssociations.Size = New System.Drawing.Size(220, 27)
+        Me.btnRemoveSystemLevelFileAssociations.TabIndex = 53
+        Me.btnRemoveSystemLevelFileAssociations.Text = "Remove System-Level File Associations"
+        Me.btnRemoveSystemLevelFileAssociations.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnRemoveSystemLevelFileAssociations.UseVisualStyleBackColor = True
+        '
         'chkUpdateColorInRealTime
         '
         Me.chkUpdateColorInRealTime.AutoSize = True
@@ -1481,7 +1495,7 @@ Partial Class Form1
         '
         Me.BtnLoadSettingsFromFile.Image = Global.Hasher.My.Resources.Resources.load
         Me.BtnLoadSettingsFromFile.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnLoadSettingsFromFile.Location = New System.Drawing.Point(762, 406)
+        Me.BtnLoadSettingsFromFile.Location = New System.Drawing.Point(762, 360)
         Me.BtnLoadSettingsFromFile.Name = "BtnLoadSettingsFromFile"
         Me.BtnLoadSettingsFromFile.Size = New System.Drawing.Size(137, 27)
         Me.BtnLoadSettingsFromFile.TabIndex = 49
@@ -1493,7 +1507,7 @@ Partial Class Form1
         '
         Me.BtnSaveSettingsToFile.Image = Global.Hasher.My.Resources.Resources.save
         Me.BtnSaveSettingsToFile.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.BtnSaveSettingsToFile.Location = New System.Drawing.Point(621, 406)
+        Me.BtnSaveSettingsToFile.Location = New System.Drawing.Point(621, 360)
         Me.BtnSaveSettingsToFile.Name = "BtnSaveSettingsToFile"
         Me.BtnSaveSettingsToFile.Size = New System.Drawing.Size(135, 27)
         Me.BtnSaveSettingsToFile.TabIndex = 48
@@ -2091,4 +2105,5 @@ Partial Class Form1
     Friend WithEvents chkUpdateColorInRealTime As CheckBox
     Friend WithEvents btnCheckHaveIBeenPwned As Button
     Friend WithEvents btnRemoveFileAssociations As Button
+    Friend WithEvents btnRemoveSystemLevelFileAssociations As Button
 End Class

@@ -9,7 +9,17 @@ Namespace My
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     Partial Friend Class MyApplication
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
-            If Application.CommandLineArgs.Count = 1 AndAlso Application.CommandLineArgs(0).Trim.Equals("-update", StringComparison.OrdinalIgnoreCase) Then checkForUpdates.DoUpdateAtStartup()
+            If Application.CommandLineArgs.Count = 1 Then
+                Dim commandLineArgument As String = Application.CommandLineArgs(0).Trim
+
+                If commandLineArgument.Equals("-update", StringComparison.OrdinalIgnoreCase) Then
+                    checkForUpdates.DoUpdateAtStartup()
+                ElseIf commandLineArgument.Equals("-removesystemlevelassociations", StringComparison.OrdinalIgnoreCase) Then
+                    FileAssociation.DeleteSystemLevelFileAssociation()
+                    FileAssociation.DeleteSystemLevelAssociationWithAllFiles()
+                    Process.GetCurrentProcess.Kill()
+                End If
+            End If
         End Sub
     End Class
 End Namespace
