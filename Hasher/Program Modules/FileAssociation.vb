@@ -29,8 +29,6 @@ Namespace FileAssociation
             selectedKey.Dispose()
         End Sub
 
-        ' Registry.CurrentUser.OpenSubKey("Software\Classes\" & 
-
         Public Sub CreateAssociation(extension As String, description As String, application As String, icon As String)
             Dim selectedKey As RegistryKey
 
