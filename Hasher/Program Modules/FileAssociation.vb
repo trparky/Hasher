@@ -35,7 +35,7 @@ Namespace FileAssociation
             Dim selectedKey As RegistryKey
 
             If Registry.CurrentUser.OpenSubKey("Software\Classes\" & extension) Is Nothing Then
-                selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\", True).CreateSubKey(extension)
+                selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes", True).CreateSubKey(extension)
 
                 If selectedKey IsNot Nothing Then
                     CreateAssociationSubRoutine(selectedKey, description, application, icon)
