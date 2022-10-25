@@ -964,6 +964,9 @@ Public Class Form1
         Location = My.Settings.windowLocation
 
         If Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(".md5\Shell\Verify with Hasher") Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
+        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher") IsNot Nothing Then btnAssociate.Enabled = False
+        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell\Compare Two Files") IsNot Nothing Then btnAddHasherToAllFiles.Enabled = False
+        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher") Is Nothing Then btnRemoveFileAssociations.Enabled = False
 
         If My.Settings.defaultHash < 0 Or My.Settings.defaultHash > 4 Then My.Settings.defaultHash = Byte.Parse(2)
         defaultHashType.SelectedIndex = My.Settings.defaultHash
@@ -3363,6 +3366,9 @@ Public Class Form1
         Try
             FileAssociation.DeleteFileAssociation()
             FileAssociation.DeleteAssociationWithAllFiles()
+            btnAssociate.Enabled = True
+            btnAddHasherToAllFiles.Enabled = True
+            btnRemoveFileAssociations.Enabled = False
             MsgBox("File associations have been removed successfully.", MsgBoxStyle.Information, strMessageBoxTitleText)
         Catch ex As Exception
             MsgBox("Something went wrong while removing file associations." & vbCrLf & vbCrLf & ex.Message & " -- " & ex.StackTrace, MsgBoxStyle.Critical, strMessageBoxTitleText)
