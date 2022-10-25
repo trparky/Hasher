@@ -65,7 +65,7 @@ Namespace FileAssociation
                 Registry.CurrentUser.OpenSubKey("Software\Classes\*", True).CreateSubKey("Shell")
             End If
 
-            Dim selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes", True).OpenSubKey("*\Shell", True)
+            Dim selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell", True)
             Dim FileLocation As String = Reflection.Assembly.GetExecutingAssembly().Location
 
             If selectedKey IsNot Nothing Then
@@ -74,7 +74,7 @@ Namespace FileAssociation
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --addfile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
 
-            selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes", True).OpenSubKey("*\Shell", True)
+            selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell", True)
 
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Verify against known hash with Hasher")
