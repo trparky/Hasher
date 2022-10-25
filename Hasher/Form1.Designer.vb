@@ -1458,14 +1458,11 @@ Partial Class Form1
         '
         'btnRemoveSystemLevelFileAssociations
         '
-        Me.btnRemoveSystemLevelFileAssociations.Image = Global.Hasher.My.Resources.Resources.UAC
-        Me.btnRemoveSystemLevelFileAssociations.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.btnRemoveSystemLevelFileAssociations.Location = New System.Drawing.Point(601, 406)
         Me.btnRemoveSystemLevelFileAssociations.Name = "btnRemoveSystemLevelFileAssociations"
         Me.btnRemoveSystemLevelFileAssociations.Size = New System.Drawing.Size(220, 27)
         Me.btnRemoveSystemLevelFileAssociations.TabIndex = 53
         Me.btnRemoveSystemLevelFileAssociations.Text = "Remove System-Level File Associations"
-        Me.btnRemoveSystemLevelFileAssociations.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnRemoveSystemLevelFileAssociations.UseVisualStyleBackColor = True
         '
         'chkUpdateColorInRealTime

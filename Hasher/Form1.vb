@@ -908,10 +908,9 @@ Public Class Form1
         If AreWeAnAdministrator() Then
             Text &= " (WARNING!!! Running as Administrator)"
         Else
-            btnAssociate.ImageAlign = ContentAlignment.MiddleLeft
-            btnAssociate.Image = My.Resources.UAC
-            btnAddHasherToAllFiles.ImageAlign = ContentAlignment.MiddleLeft
-            btnAddHasherToAllFiles.Image = My.Resources.UAC
+            btnRemoveSystemLevelFileAssociations.Image = My.Resources.UAC
+            btnRemoveSystemLevelFileAssociations.ImageAlign = ContentAlignment.MiddleLeft
+            btnRemoveSystemLevelFileAssociations.TextAlign = ContentAlignment.MiddleRight
         End If
 
         lblIndividualFilesStatusProcessingFile.Visible = False
