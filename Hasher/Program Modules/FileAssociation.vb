@@ -60,22 +60,22 @@ Namespace FileAssociation
 
         Public Sub DeleteFileAssociation()
             Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.md5\Shell", True)
-                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+                If selectedKey IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify with Hasher", False)
             End Using
             Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha1\Shell", True)
-                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+                If selectedKey IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify with Hasher", False)
             End Using
             Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha2\Shell", True)
-                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+                If selectedKey IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify with Hasher", False)
             End Using
             Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell", True)
-                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+                If selectedKey IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify with Hasher", False)
             End Using
             Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha384\Shell", True)
-                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+                If selectedKey IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify with Hasher", False)
             End Using
             Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha512\Shell", True)
-                selectedKey.DeleteSubKeyTree("Verify with Hasher")
+                If selectedKey IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify with Hasher", False)
             End Using
         End Sub
 
