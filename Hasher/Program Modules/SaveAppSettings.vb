@@ -2,7 +2,7 @@
 
 Public Module SaveAppSettings
     Public Sub SaveApplicationSettingsToFile(strFileName As String)
-        Dim exportedSettingsArray As New Dictionary(Of String, Object)
+        Dim exportedSettingsArray As New Dictionary(Of String, Object)(StringComparison.OrdinalIgnoreCase)
         Dim settingType As Type
         Dim point As Point, size As Size
         Dim rawValue As Object
@@ -25,7 +25,7 @@ Public Module SaveAppSettings
                     rawValue = settingProperty.PropertyValue
                 End If
 
-                exportedSettingsArray.Add(settingProperty.Name.Trim.ToLower, rawValue)
+                exportedSettingsArray.Add(settingProperty.Name.Trim, rawValue)
             End If
         Next
 
@@ -37,8 +37,9 @@ Public Module SaveAppSettings
 
     Public Function LoadApplicationSettingsFromFile(strFileName As String) As Boolean
         Try
-            Dim exportedSettingsArray As New Dictionary(Of String, Object)
+            Dim exportedSettingsArray As New Dictionary(Of String, Object)(StringComparison.OrdinalIgnoreCase)
             Dim boolResult As Boolean, byteResult As Byte, intResult As Integer, longResult As Long, settingType As Type, shortResult As Short, splitArray As String()
+            Dim keyValuePair As KeyValuePair(Of String, Object)
             Dim rawValue As Object = Nothing
 
             Using streamReader As New IO.StreamReader(strFileName)
@@ -47,10 +48,11 @@ Public Module SaveAppSettings
             End Using
 
             For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
-                ' We use the TryGetValue() function to get the save setting from the dictionary because there might be a possibility that the user will
-                ' be loading an older version of a saved settings file that may be missing new settings. Using the TryGetValue() True if the setting
-                ' exists in the loaded function will return settings file thus making the program not crash while loading an older settings file.
-                If exportedSettingsArray.TryGetValue(settingProperty.Name.Trim.ToLower, rawValue) Then
+                keyValuePair = exportedSettingsArray.FirstOrDefault(Function(item As KeyValuePair(Of String, Object)) item.Key.Trim.Equals(settingProperty.Name, StringComparison.OrdinalIgnoreCase))
+
+                If keyValuePair.Value IsNot Nothing Then
+                    rawValue = keyValuePair.Value
+
                     If settingProperty.Name.Equals("listFilesColumnOrder", StringComparison.OrdinalIgnoreCase) Or settingProperty.Name.Equals("verifyListFilesColumnOrder", StringComparison.OrdinalIgnoreCase) Then
                         settingType = GetType(Specialized.StringCollection)
                     Else
