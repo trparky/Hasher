@@ -3362,7 +3362,7 @@ Public Class Form1
         ' End of routine.
     End Sub
 
-    Private Sub btnRemoveFileAssociations_Click(sender As Object, e As EventArgs) Handles btnRemoveFileAssociations.Click
+    Private Sub BtnRemoveFileAssociations_Click(sender As Object, e As EventArgs) Handles btnRemoveFileAssociations.Click
         Try
             FileAssociation.DeleteFileAssociation()
             FileAssociation.DeleteAssociationWithAllFiles()
@@ -3375,7 +3375,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub btnRemoveSystemLevelFileAssociations_Click(sender As Object, e As EventArgs) Handles btnRemoveSystemLevelFileAssociations.Click
+    Private Sub BtnRemoveSystemLevelFileAssociations_Click(sender As Object, e As EventArgs) Handles btnRemoveSystemLevelFileAssociations.Click
         Dim boolSuccessful As Boolean = False
 
         If AreWeAnAdministrator() Then
