@@ -14,16 +14,9 @@ Namespace My
 
                 If commandLineArgument.Equals("-update", StringComparison.OrdinalIgnoreCase) Then
                     checkForUpdates.DoUpdateAtStartup()
-                ElseIf commandLineArgument.Equals("-associatefiletype", StringComparison.OrdinalIgnoreCase) Then
-                    FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
-                    FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
-                    FileAssociation.SelfCreateAssociation(".sha2", "Checksum File")
-                    FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
-                    FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
-                    FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
-                    Process.GetCurrentProcess.Kill()
-                ElseIf commandLineArgument.Equals("-associateallfiles", StringComparison.OrdinalIgnoreCase) Then
-                    FileAssociation.AddAssociationWithAllFiles()
+                ElseIf commandLineArgument.Equals("-removesystemlevelassociations", StringComparison.OrdinalIgnoreCase) Then
+                    FileAssociation.DeleteSystemLevelFileAssociation()
+                    FileAssociation.DeleteSystemLevelAssociationWithAllFiles()
                     Process.GetCurrentProcess.Kill()
                 End If
             End If

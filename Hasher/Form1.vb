@@ -908,10 +908,9 @@ Public Class Form1
         If AreWeAnAdministrator() Then
             Text &= " (WARNING!!! Running as Administrator)"
         Else
-            btnAssociate.ImageAlign = ContentAlignment.MiddleLeft
-            btnAssociate.Image = My.Resources.UAC
-            btnAddHasherToAllFiles.ImageAlign = ContentAlignment.MiddleLeft
-            btnAddHasherToAllFiles.Image = My.Resources.UAC
+            btnRemoveSystemLevelFileAssociations.Image = My.Resources.UAC
+            btnRemoveSystemLevelFileAssociations.ImageAlign = ContentAlignment.MiddleLeft
+            btnRemoveSystemLevelFileAssociations.TextAlign = ContentAlignment.MiddleRight
         End If
 
         lblIndividualFilesStatusProcessingFile.Visible = False
@@ -964,6 +963,11 @@ Public Class Form1
         btnSetRoundPercentages.Enabled = False
         Location = My.Settings.windowLocation
 
+        If Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\Classes\.md5\Shell\Verify with Hasher") Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
+        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher") IsNot Nothing Then btnAssociate.Enabled = False
+        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell\Compare Two Files") IsNot Nothing Then btnAddHasherToAllFiles.Enabled = False
+        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher") Is Nothing Then btnRemoveFileAssociations.Enabled = False
+
         If My.Settings.defaultHash < 0 Or My.Settings.defaultHash > 4 Then My.Settings.defaultHash = Byte.Parse(2)
         defaultHashType.SelectedIndex = My.Settings.defaultHash
         SetDefaultHashTypeGUIElementOptions()
@@ -972,6 +976,8 @@ Public Class Form1
             Text &= " (Debugger Attached)"
             btnAddHasherToAllFiles.Visible = False
             btnAssociate.Visible = False
+            btnRemoveFileAssociations.Visible = False
+            btnRemoveSystemLevelFileAssociations.Visible = False
         End If
 
         DeleteTemporaryNewEXEFile()
@@ -2385,56 +2391,19 @@ Public Class Form1
     End Sub
 
     Private Sub BtnAssociate_Click(sender As Object, e As EventArgs) Handles btnAssociate.Click
-        Dim boolSuccessful As Boolean = False
+        FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha2", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
 
-        If AreWeAnAdministrator() Then
-            FileAssociation.SelfCreateAssociation(".md5", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha1", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha2", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
-            FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
-            boolSuccessful = True
-        Else
-            Try
-                Dim startInfo As New ProcessStartInfo With {
-                    .FileName = Application.ExecutablePath,
-                    .Arguments = "-associatefiletype",
-                    .Verb = "runas"
-                }
-                Dim process As Process = Process.Start(startInfo)
-                process.WaitForExit()
-                boolSuccessful = True
-            Catch ex As System.ComponentModel.Win32Exception
-                MsgBox("Failed to elevate process." & DoubleCRLF & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
-            End Try
-        End If
-
-        If boolSuccessful Then MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
+        MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnAddHasherToAllFiles_Click(sender As Object, e As EventArgs) Handles btnAddHasherToAllFiles.Click
-        Dim boolSuccessful As Boolean = False
-
-        If AreWeAnAdministrator() Then
-            FileAssociation.AddAssociationWithAllFiles()
-            boolSuccessful = True
-        Else
-            Try
-                Dim startInfo As New ProcessStartInfo With {
-                    .FileName = Application.ExecutablePath,
-                    .Arguments = "-associateallfiles",
-                    .Verb = "runas"
-                }
-                Dim process As Process = Process.Start(startInfo)
-                process.WaitForExit()
-                boolSuccessful = True
-            Catch ex As System.ComponentModel.Win32Exception
-                MsgBox("Failed to elevate process." & DoubleCRLF & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
-            End Try
-        End If
-
-        If boolSuccessful Then MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
+        FileAssociation.AddAssociationWithAllFiles()
+        MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnOpenExistingHashFile_DragDrop(sender As Object, e As DragEventArgs) Handles btnOpenExistingHashFile.DragDrop
@@ -3391,6 +3360,44 @@ Public Class Form1
                                                End Sub)
 
         ' End of routine.
+    End Sub
+
+    Private Sub BtnRemoveFileAssociations_Click(sender As Object, e As EventArgs) Handles btnRemoveFileAssociations.Click
+        Try
+            FileAssociation.DeleteFileAssociation()
+            FileAssociation.DeleteAssociationWithAllFiles()
+            btnAssociate.Enabled = True
+            btnAddHasherToAllFiles.Enabled = True
+            btnRemoveFileAssociations.Enabled = False
+            MsgBox("File associations have been removed successfully.", MsgBoxStyle.Information, strMessageBoxTitleText)
+        Catch ex As Exception
+            MsgBox("Something went wrong while removing file associations." & vbCrLf & vbCrLf & ex.Message & " -- " & ex.StackTrace, MsgBoxStyle.Critical, strMessageBoxTitleText)
+        End Try
+    End Sub
+
+    Private Sub BtnRemoveSystemLevelFileAssociations_Click(sender As Object, e As EventArgs) Handles btnRemoveSystemLevelFileAssociations.Click
+        Dim boolSuccessful As Boolean = False
+
+        If AreWeAnAdministrator() Then
+            FileAssociation.DeleteSystemLevelFileAssociation()
+            FileAssociation.DeleteSystemLevelAssociationWithAllFiles()
+            boolSuccessful = True
+        Else
+            Try
+                Dim startInfo As New ProcessStartInfo With {
+                    .FileName = Application.ExecutablePath,
+                    .Arguments = "-removesystemlevelassociations",
+                    .Verb = "runas"
+                }
+                Dim process As Process = Process.Start(startInfo)
+                process.WaitForExit()
+                boolSuccessful = True
+            Catch ex As Win32Exception
+                MsgBox("Failed to elevate process." & DoubleCRLF & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+            End Try
+        End If
+
+        If boolSuccessful Then MsgBox("System-level file associations have been removed successfully.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub LoadColumnOrders(ByRef ListViewObject As ListView, ByRef specializedStringCollection As Specialized.StringCollection)

@@ -31,17 +31,12 @@ Namespace checkForUpdates
 #End If
         End Function
 
-        Private Function CaseInsensitiveReplace(source As String, replace As String, replaceWith As String, Optional boolEscape As Boolean = True) As String
-            If boolEscape Then replace = Regex.Escape(replace)
-            Return Regex.Replace(source, replace, replaceWith, RegexOptions.IgnoreCase)
-        End Function
-
         Public Sub DoUpdateAtStartup()
             If File.Exists(strZipFileName) Then File.Delete(strZipFileName)
             Dim currentProcessFileName As String = New FileInfo(Application.ExecutablePath).Name
 
             If currentProcessFileName.CaseInsensitiveContains(".new.exe") Then
-                Dim mainEXEName As String = CaseInsensitiveReplace(currentProcessFileName, ".new.exe", "")
+                Dim mainEXEName As String = currentProcessFileName.CaseInsensitiveReplace(".new.exe", "")
 
                 SearchForProcessAndKillIt(mainEXEName, False)
 

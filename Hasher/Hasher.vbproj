@@ -97,7 +97,7 @@
     <Compile Include="Benchmark.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Program Modules\Check for Update Stuff.vb" />
+    <Compile Include="Program Modules\Check for Update.vb" />
     <Compile Include="Checksum Difference.Designer.vb">
       <DependentUpon>Checksum Difference.vb</DependentUpon>
     </Compile>
