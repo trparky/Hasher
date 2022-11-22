@@ -102,7 +102,7 @@ Public Module SaveAppSettings
         End Try
     End Function
 
-    ''' <summary>This function operates a lot like ContainsKey() but is case-InSeNsItIvE and it returns the value of key/value pair if the function returns True.</summary>
+    ''' <summary>This function operates a lot like ContainsKey() but is case-InSeNsItIvE and it returns the value of the key/value pair if the function returns True.</summary>
     ''' <param name="haystack">The dictionary that's being searched.</param>
     ''' <param name="needle">The key that you're looking for.</param>
     ''' <param name="value">The value of the key you're looking for, passed as a ByRef so that you can access the value if the function returns True.</param>
