@@ -23,7 +23,7 @@ Public Class Form1
     Private boolDoneLoading As Boolean = False
     Private boolUpdateColorInRealTime As Boolean
     Private Property PipeServer As NamedPipeServerStream = Nothing
-    Private ReadOnly strNamedPipeServerName As String = "hasher_" & GetHashOfString(Environment.UserName, HashAlgorithmName.SHA256).Substring(0, 10)
+    Private ReadOnly strNamedPipeServerName As String = $"hasher_{GetHashOfString(Environment.UserName, HashAlgorithmName.SHA256).Substring(0, 10)}"
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolDidWePerformAPreviousHash As Boolean = False
     Private validColor, notValidColor, fileNotFoundColor As Color
@@ -144,17 +144,9 @@ Public Class Form1
     Private Sub UpdateFilesListCountHeader(Optional boolIncludeSelectedItemCount As Boolean = False)
         MyInvoke(Sub()
                      If boolIncludeSelectedItemCount Then
-                         lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed ({0} {3}, {1} {2} are selected)",
-                                                                          MyToString(listFiles.Items.Count),
-                                                                          MyToString(listFiles.SelectedItems.Count),
-                                                                          If(listFiles.SelectedItems.Count = 1, "file", "files"),
-                                                                          If(listFiles.Items.Count = 1, "file", "files")
-                                                                         )
+                         lblHashIndividualFilesStep1.Text = $"Step 1: Select Individual Files to be Hashed ({MyToString(listFiles.Items.Count)} {If(listFiles.Items.Count = 1, "file", "files")}, {MyToString(listFiles.SelectedItems.Count)} {If(listFiles.SelectedItems.Count = 1, "file", "files")} are selected)"
                      Else
-                         lblHashIndividualFilesStep1.Text = String.Format("Step 1: Select Individual Files to be Hashed ({0} {1})",
-                                                                          MyToString(listFiles.Items.Count),
-                                                                          If(listFiles.Items.Count = 1, "file", "files")
-                                                                         )
+                         lblHashIndividualFilesStep1.Text = $"Step 1: Select Individual Files to be Hashed ({MyToString(listFiles.Items.Count)} {If(listFiles.Items.Count = 1, "file", "files")})"
                      End If
 
                      If listFiles.Items.Count = 0 Then
@@ -182,7 +174,7 @@ Public Class Form1
     End Sub
 
     Private Sub BtnRemoveSelectedFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveSelectedFiles.Click
-        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox("It would be recommended to use the ""Remove All Files"" button instead, removing this many items (" & MyToString(listFiles.SelectedItems.Count) & " items) from the list is a slow process and will make the program appear locked up." & DoubleCRLF & "Are you sure you want to remove the items this way?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
+        If listFiles.SelectedItems.Count > 500 AndAlso MsgBox($"It would be recommended to use the ""Remove All Files"" button instead, removing this many items ({MyToString(listFiles.SelectedItems.Count)} items) from the list is a slow process and will make the program appear locked up.{DoubleCRLF}Are you sure you want to remove the items this way?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
             Exit Sub
         End If
 
@@ -320,12 +312,12 @@ Public Class Form1
                                                                                                          IndividualFilesProgressBar.Value = percentage
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                             lblHashIndividualFilesTotalStatus.Text = FileSizeToHumanSize(longAllReadBytes) & " of " & FileSizeToHumanSize(longAllBytes) & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) has been processed."
-                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                             lblHashIndividualFilesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
+                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
                                                                                                          End SyncLock
                                                                                                          ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
-                                                                                                         lblIndividualFilesStatus.Text = FileSizeToHumanSize(totalBytesRead) & " of " & FileSizeToHumanSize(size) & " (" & MyRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         lblIndividualFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
 
                                                                                                          If chkShowFileProgressInFileList.Checked Then
                                                                                                              currentItem.SubItems(2).Text = lblIndividualFilesStatus.Text
@@ -377,7 +369,7 @@ Public Class Form1
 
                                                              MyInvoke(Sub()
                                                                           fileCountPercentage = index / listFiles.Items.Count * 100
-                                                                          lblProcessingFile.Text = "Now processing file " & New IO.FileInfo(item.FileName).Name & "."
+                                                                          lblProcessingFile.Text = $"Now processing file {New IO.FileInfo(item.FileName).Name}."
                                                                           lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Items.Count)
 
                                                                           UpdateListViewItem(itemOnGUI, item, False)
@@ -420,9 +412,9 @@ Public Class Form1
                                                                   workingThread = Nothing
 
                                                                   If longErroredFiles = 0 Then
-                                                                      MsgBox("Completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                      MsgBox($"Completed in {TimespanToHMS(myStopWatch.Elapsed)}.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   Else
-                                                                      MsgBox("Completed in " & TimespanToHMS(myStopWatch.Elapsed) & "." & DoubleCRLF & longErroredFiles.ToString & If(longErroredFiles = 1, " file", " files") & " experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                      MsgBox($"Completed in {TimespanToHMS(myStopWatch.Elapsed)}.{DoubleCRLF}{MyToString(longErroredFiles)} {If(longErroredFiles = 1, "file", "files")} experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   End If
                                                               End Sub)
                                                  Catch ex As Threading.ThreadAbortException
@@ -491,7 +483,7 @@ Public Class Form1
 
     Private Function StrGetIndividualHashesInStringFormat(strPathOfChecksumFile As String, checksumType As HashAlgorithmName) As String
         Dim strDirectoryName As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName
-        Dim folderOfChecksumFile As String = If(strDirectoryName.Length = 3, strDirectoryName, strDirectoryName & "\")
+        Dim folderOfChecksumFile As String = If(strDirectoryName.Length = 3, strDirectoryName, $"{strDirectoryName}\")
         Dim stringBuilder As New Text.StringBuilder()
         Dim strFile As String
 
@@ -501,7 +493,7 @@ Public Class Form1
             If Not String.IsNullOrWhiteSpace(item.Hash) Then
                 strFile = item.FileName
                 If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.CaseInsensitiveReplace(folderOfChecksumFile, "")
-                stringBuilder.AppendLine(GetDataFromAllTheHashes(checksumType, item.AllTheHashes) & " *" & strFile)
+                stringBuilder.AppendLine($"{GetDataFromAllTheHashes(checksumType, item.AllTheHashes)} *{strFile}")
             End If
         Next
 
@@ -516,7 +508,7 @@ Public Class Form1
 
         For Each item As MyListViewItem In listFiles.Items
             If Not String.IsNullOrWhiteSpace(item.Hash) Then
-                stringBuilder.AppendLine(item.Hash & " *" & item.FileName)
+                stringBuilder.AppendLine($"{item.Hash} *{item.FileName}")
             End If
         Next
 
@@ -590,9 +582,9 @@ Public Class Form1
                     Dim MsgBoxQuestionResult As MsgBoxResult
 
                     If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
-                        MsgBoxQuestionResult = MsgBox("MD5 is not recommended for hashing files." & DoubleCRLF & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+                        MsgBoxQuestionResult = MsgBox($"MD5 is not recommended for hashing files.{DoubleCRLF}Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                     ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                        MsgBoxQuestionResult = MsgBox("SHA1 is not recommended for hashing files." & DoubleCRLF & "Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
+                        MsgBoxQuestionResult = MsgBox($"SHA1 is not recommended for hashing files.{DoubleCRLF}Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                     End If
 
                     If MsgBoxQuestionResult = MsgBoxResult.No Then
@@ -620,7 +612,7 @@ Public Class Form1
 
                     Media.SystemSounds.Exclamation.Play()
 
-                    If IO.File.Exists(SaveFileDialog.FileName) AndAlso MsgBox("The file named """ & New IO.FileInfo(SaveFileDialog.FileName).Name & """ already exists." & DoubleCRLF & "Are you absolutely sure you want to replace it?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "Overwrite?") = MsgBoxResult.No Then
+                    If IO.File.Exists(SaveFileDialog.FileName) AndAlso MsgBox($"The file named ""{New IO.FileInfo(SaveFileDialog.FileName).Name}"" already exists.{DoubleCRLF}Are you absolutely sure you want to replace it?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "Overwrite?") = MsgBoxResult.No Then
                         MsgBox("Save Results to Disk Aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                         Exit Sub
                     End If
@@ -663,8 +655,8 @@ Public Class Form1
         Dim StringBuilder As New Text.StringBuilder()
         StringBuilder.AppendLine("Your hash results have been written to disk.")
         StringBuilder.AppendLine()
-        StringBuilder.AppendLine("File Name: " & fileName)
-        StringBuilder.AppendLine("Checksum Type: " & ConvertChecksumTypeToString(checksumtype))
+        StringBuilder.AppendLine($"File Name: {fileName}")
+        StringBuilder.AppendLine($"Checksum Type: {ConvertChecksumTypeToString(checksumtype)}")
         StringBuilder.AppendLine()
 
         If BoolAskUserOpenInExplorer Then
@@ -778,7 +770,7 @@ Public Class Form1
     End Sub
 
     Private Sub LaunchURLInWebBrowser(url As String, Optional errorMessage As String = "An error occurred when trying the URL In your Default browser. The URL has been copied to your Windows Clipboard for you to paste into the address bar in the web browser of your choice.")
-        If Not url.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then url = "https://" & url
+        If Not url.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then url = $"https://{url}"
 
         Try
             Process.Start(url)
@@ -1007,13 +999,13 @@ Public Class Form1
         boolDoneLoading = True
 
         If Not FileAssociation.DoesCompareFilesExist() Then
-            MsgBox("Hasher has a new function! The ability to compare two files from Windows Explorer." & DoubleCRLF & "Please go to the Setting tab and click on the ""Add Hasher to All Files"" button to add support to Windows Explorer for this new feature.", MsgBoxStyle.Information, strMessageBoxTitleText)
+            MsgBox($"Hasher has a new function! The ability to compare two files from Windows Explorer.{DoubleCRLF}Please go to the Setting tab and click on the ""Add Hasher to All Files"" button to add support to Windows Explorer for this new feature.", MsgBoxStyle.Information, strMessageBoxTitleText)
         End If
     End Sub
 
     Private Sub DeleteTemporaryNewEXEFile()
         Try
-            Dim newExecutableName As String = New IO.FileInfo(Application.ExecutablePath).Name & ".new.exe"
+            Dim newExecutableName As String = $"{New IO.FileInfo(Application.ExecutablePath).Name}.new.exe"
             If IO.File.Exists(newExecutableName) Then
                 SearchForProcessAndKillIt(newExecutableName, False)
                 IO.File.Delete(newExecutableName)
@@ -1189,7 +1181,7 @@ Public Class Form1
 
     Private Sub ProcessExistingHashFile(strPathToChecksumFile As String)
         strLastHashFileLoaded = strPathToChecksumFile
-        lblVerifyFileNameLabel.Text = "File Name: " & strPathToChecksumFile
+        lblVerifyFileNameLabel.Text = $"File Name: {strPathToChecksumFile}"
         verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height - 72)
 
         Dim checksumType As HashAlgorithmName
@@ -1268,14 +1260,14 @@ Public Class Form1
                                                      strLineInFile = Nothing
                                                      dataInFileArray = Nothing
 
-                                                     If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= " (" & MyToString(newDataInFileArray.Count) & " " & If(newDataInFileArray.Count = 1, "entry", "entries") & " in hash file)")
+                                                     If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= $" ({MyToString(newDataInFileArray.Count)} {If(newDataInFileArray.Count = 1, "entry", "entries")} in hash file)")
 
                                                      For Each strLineInFile In newDataInFileArray
                                                          intLineCounter += 1
                                                          MyInvoke(Sub()
                                                                       VerifyHashProgressBar.Value = intLineCounter / newDataInFileArray.LongCount * 100
                                                                       ProgressForm.SetTaskbarProgressBarValue(VerifyHashProgressBar.Value)
-                                                                      lblVerifyHashStatus.Text = strReadingHashFileMessage & " Processing item " & MyToString(intLineCounter) & " of " & MyToString(newDataInFileArray.LongCount) & " (" & MyRoundingFunction(VerifyHashProgressBar.Value, byteRoundPercentages) & "%)."
+                                                                      lblVerifyHashStatus.Text = $"{strReadingHashFileMessage} Processing item {MyToString(intLineCounter)} of {MyToString(newDataInFileArray.LongCount)} ({MyRoundingFunction(VerifyHashProgressBar.Value, byteRoundPercentages)}%)."
                                                                   End Sub)
 
                                                          If Not String.IsNullOrEmpty(strLineInFile) Then
@@ -1325,10 +1317,10 @@ Public Class Form1
                                                                                                          VerifyHashProgressBar.Value = percentage
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                             lblVerifyHashesTotalStatus.Text = FileSizeToHumanSize(longAllReadBytes) & " of " & FileSizeToHumanSize(longAllBytes) & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                             lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) have been processed."
+                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
                                                                                                          End SyncLock
-                                                                                                         lblProcessingFileVerify.Text = FileSizeToHumanSize(totalBytesRead) & " of " & FileSizeToHumanSize(size) & " (" & MyRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                         lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
                                                                                                          If chkShowFileProgressInFileList.Checked Then
                                                                                                              currentItem.SubItems(4).Text = lblProcessingFileVerify.Text
                                                                                                              itemOnGUI.SubItems(4) = currentItem.SubItems(4)
@@ -1359,7 +1351,7 @@ Public Class Form1
                                                              item.SubItems(4).Text = strCurrentlyBeingProcessed
 
                                                              MyInvoke(Sub()
-                                                                          lblVerifyHashStatus.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & "."
+                                                                          lblVerifyHashStatus.Text = $"Now processing file {New IO.FileInfo(strFileName).Name}."
                                                                           UpdateListViewItem(itemOnGUI, item, False)
                                                                       End Sub)
 
@@ -1428,18 +1420,11 @@ Public Class Form1
                                                                           If longTotalFiles = 1 Then
                                                                               sbMessageBoxText.AppendLine("Processing of hash file complete. The one file in the hash file has passed verification.")
                                                                           Else
-                                                                              sbMessageBoxText.AppendLine("Processing of hash file complete. All " & MyToString(longTotalFiles) & " files have passed verification.")
+                                                                              sbMessageBoxText.AppendLine($"Processing of hash file complete. All {MyToString(longTotalFiles)} files have passed verification.")
                                                                           End If
                                                                       Else
                                                                           If longFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
-                                                                          sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} {4} passed verification, {2} {3} didn't pass verification.",
-                                                                                                                    MyToString(longFilesThatPassedVerification),
-                                                                                                                    MyToString(longTotalFiles),
-                                                                                                                    MyToString(longFilesThatDidNotPassVerification),
-                                                                                                                    If(longFilesThatDidNotPassVerification = 1, "file", "files"),
-                                                                                                                    If(longTotalFiles = 1, "file", "files")
-                                                                                                                   )
-                                                                           )
+                                                                          sbMessageBoxText.AppendLine($"Processing of hash file complete. {MyToString(longFilesThatPassedVerification)} out of {MyToString(longTotalFiles)} {If(longTotalFiles = 1, "file", "files")} passed verification, {MyToString(longFilesThatDidNotPassVerification)} {If(longFilesThatDidNotPassVerification = 1, "file", "files")} didn't pass verification.")
                                                                       End If
                                                                   Else
                                                                       sbMessageBoxText.AppendLine("Processing of hash file complete.")
@@ -1447,39 +1432,22 @@ Public Class Form1
                                                                       btnRetestFailedFiles.Visible = True
 
                                                                       If longFilesThatPassedVerification = longTotalFiles Then
-                                                                          sbMessageBoxText.AppendLine(String.Format("All files have passed verification. Unfortunately, {0} {1} were not found.",
-                                                                                                                    MyToString(longFilesThatWereNotFound),
-                                                                                                                    If(longFilesThatWereNotFound = 1, "file", "files")
-                                                                                                                   )
-                                                                           )
+                                                                          sbMessageBoxText.AppendLine($"All files have passed verification. Unfortunately, {MyToString(longFilesThatWereNotFound)} {If(longFilesThatWereNotFound = 1, "file", "files")} were not found.")
                                                                       Else
                                                                           If longFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
 
                                                                           If longFilesThatPassedVerification = 0 Then
-                                                                              sbMessageBoxText.Append(String.Format("None of the files out of {0} {1} passed verification. ",
-                                                                                                                        MyToString(longTotalFiles),
-                                                                                                                        If(longTotalFiles = 1, "file", "files")
-                                                                                                                       )
-                                                                               )
+                                                                              sbMessageBoxText.Append($"None of the files out of {MyToString(longTotalFiles)} {If(longTotalFiles = 1, "file", "files")} passed verification. ")
                                                                           Else
                                                                               longTotalFiles -= longFilesThatWereNotFound
-                                                                              sbMessageBoxText.Append(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification.",
-                                                                                                                        MyToString(longFilesThatPassedVerification),
-                                                                                                                        MyToString(longTotalFiles),
-                                                                                                                        If(longTotalFiles = 1, "file", "files")
-                                                                                                                       )
-                                                                               )
+                                                                              sbMessageBoxText.Append($"Not all of the files passed verification, only {MyToString(longFilesThatPassedVerification)} out of {MyToString(longTotalFiles)} {If(longTotalFiles = 1, "file", "files")} passed verification.")
                                                                           End If
-                                                                          sbMessageBoxText.AppendLine(String.Format(" Unfortunately, {0} {1} not found.",
-                                                                                                                    MyToString(longFilesThatWereNotFound),
-                                                                                                                    If(longFilesThatWereNotFound = 1, "file was", "files were")
-                                                                                                                   )
-                                                                           )
+                                                                          sbMessageBoxText.AppendLine($" Unfortunately, {MyToString(longFilesThatWereNotFound)} {If(longFilesThatWereNotFound = 1, "file was", "files were")} not found.")
                                                                       End If
                                                                   End If
 
                                                                   sbMessageBoxText.AppendLine()
-                                                                  sbMessageBoxText.AppendLine("Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".")
+                                                                  sbMessageBoxText.AppendLine($"Processing completed in {TimespanToHMS(myStopWatch.Elapsed)}.")
 
                                                                   MyInvoke(Sub() verifyHashesListFiles.RedrawItems(0, verifyHashesListFiles.Items.Count - 1, False))
                                                                   MsgBox(sbMessageBoxText.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
@@ -1511,7 +1479,7 @@ Public Class Form1
                                                                   If ex.GetType = GetType(Threading.ThreadAbortException) And Not boolClosingWindow Then
                                                                       MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   ElseIf ex.GetType = GetType(UnauthorizedAccessException) Then
-                                                                      MsgBox("Unable to access data, an Unauthorized Access Exception has occurred." & vbCrLf & vbCrLf & "Check to see if you have access to the data in question." & vbCrLf & vbCrLf & ex.Message, MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                      MsgBox($"Unable to access data, an Unauthorized Access Exception has occurred.{DoubleCRLF}Check to see if you have access to the data in question.{vbCrLf}{vbCrLf}{ex.Message}", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                   End If
                                                               End Sub)
                                                  Finally
@@ -1597,7 +1565,7 @@ Public Class Form1
     End Sub
 
     Private Sub TxtTextToHash_TextChanged(sender As Object, e As EventArgs) Handles txtTextToHash.TextChanged
-        lblHashTextStep1.Text = "Step 1: Input some text: " & MyToString(txtTextToHash.Text.Length) & " " & If(txtTextToHash.Text.Length = 1, "Character", "Characters")
+        lblHashTextStep1.Text = $"Step 1: Input some text: {MyToString(txtTextToHash.Text.Length)} {If(txtTextToHash.Text.Length = 1, "Character", "Characters")}"
         Dim boolEnableButtons As Boolean = txtTextToHash.Text.Length <> 0
         btnComputeTextHash.Enabled = boolEnableButtons
         btnCheckHaveIBeenPwned.Enabled = boolEnableButtons
@@ -1640,11 +1608,11 @@ Public Class Form1
 
     Private Sub BtnCopyTextHashResultsToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyTextHashResultsToClipboard.Click
         Dim strHash As New Text.StringBuilder
-        strHash.AppendLine("MD5: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes).ToLower))
-        strHash.AppendLine("SHA1/SHA160: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes).ToLower))
-        strHash.AppendLine("SHA256: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes).ToLower))
-        strHash.AppendLine("SHA384: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA384, hashTextAllTheHashes).ToLower))
-        strHash.AppendLine("SHA512: " & If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA512, hashTextAllTheHashes).ToLower))
+        strHash.AppendLine($"MD5: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes).ToLower)}")
+        strHash.AppendLine($"SHA1/SHA160: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes).ToLower)}")
+        strHash.AppendLine($"SHA256: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes).ToLower)}")
+        strHash.AppendLine($"SHA384: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA384, hashTextAllTheHashes).ToLower)}")
+        strHash.AppendLine($"SHA512: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA512, hashTextAllTheHashes).ToLower)}")
 
         If CopyTextToWindowsClipboard(strHash.ToString.Trim) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
@@ -1724,7 +1692,7 @@ Public Class Form1
 
         ' Display the new sort order.
         m_SortingColumn2 = new_sorting_column
-        m_SortingColumn2.Text = If(sort_order = SortOrder.Ascending, "> " & m_SortingColumn2.Text, "< " & m_SortingColumn2.Text)
+        m_SortingColumn2.Text = If(sort_order = SortOrder.Ascending, $"> {m_SortingColumn2.Text}", $"< {m_SortingColumn2.Text}")
 
         ' Create a comparer.
         listFiles.ListViewItemSorter = New ListViewComparer(e.Column, sort_order)
@@ -1744,24 +1712,24 @@ Public Class Form1
 
             Dim MyListViewItem As MyListViewItem = DirectCast(listFiles.SelectedItems(0), MyListViewItem)
             globalAllTheHashes = MyListViewItem.AllTheHashes
-            listFilesContextMenuFileName.Text = "File Name: " & MyListViewItem.FileName
+            listFilesContextMenuFileName.Text = $"File Name: {MyListViewItem.FileName}"
             With MyListViewItem.AllTheHashes
-                listFilesContextMenuMD5.Text = "MD5: " & If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)
-                listFilesContextMenuSHA160.Text = "SHA160: " & If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)
-                listFilesContextMenuSHA256.Text = "SHA256: " & If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)
-                listFilesContextMenuSHA384.Text = "SHA384: " & If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)
-                listFilesContextMenuSHA512.Text = "SHA512: " & If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)
+                listFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
+                listFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
+                listFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
+                listFilesContextMenuSHA384.Text = $"SHA384: {If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)}"
+                listFilesContextMenuSHA512.Text = $"SHA512: {If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)}"
             End With
         End If
     End Sub
 
     Private Sub AddHashFileHeader(ByRef stringBuilder As Text.StringBuilder, intFileCount As Integer)
         stringBuilder.AppendLine("'")
-        stringBuilder.AppendLine("' Hash file generated by Hasher, version " & checkForUpdates.versionString & ". Written by Tom Parkison.")
+        stringBuilder.AppendLine($"' Hash file generated by Hasher, version {checkForUpdates.versionString}. Written by Tom Parkison.")
         stringBuilder.AppendLine("' Web Site: https://www.toms-world.org/blog/hasher")
         stringBuilder.AppendLine("' Source Code Available At: https://github.com/trparky/Hasher")
         stringBuilder.AppendLine("'")
-        stringBuilder.AppendLine("' Number of files in hash data: " & MyToString(intFileCount))
+        stringBuilder.AppendLine($"' Number of files in hash data: {MyToString(intFileCount)}")
         stringBuilder.AppendLine("'")
     End Sub
 
@@ -1838,7 +1806,7 @@ Public Class Form1
 
         ' Display the new sort order.
         m_SortingColumn1 = new_sorting_column
-        m_SortingColumn1.Text = If(sort_order = SortOrder.Ascending, "> " & m_SortingColumn1.Text, "< " & m_SortingColumn1.Text)
+        m_SortingColumn1.Text = If(sort_order = SortOrder.Ascending, $"> {m_SortingColumn1.Text}", $"< {m_SortingColumn1.Text}")
 
         ' Create a comparer.
         verifyHashesListFiles.ListViewItemSorter = New ListViewComparer(e.Column, sort_order)
@@ -1889,8 +1857,8 @@ Public Class Form1
             Dim stringBuilder As New Text.StringBuilder
             stringBuilder.AppendLine("Both files are different file sizes, so we're going to assume that they're different. OK?")
             stringBuilder.AppendLine()
-            stringBuilder.AppendLine("File #1 Size: " & FileSizeToHumanSize(File1FileInfo.Length))
-            stringBuilder.AppendLine("File #2 Size: " & FileSizeToHumanSize(File2FileInfo.Length))
+            stringBuilder.AppendLine($"File #1 Size: {FileSizeToHumanSize(File1FileInfo.Length)}")
+            stringBuilder.AppendLine($"File #2 Size: {FileSizeToHumanSize(File2FileInfo.Length)}")
 
             MsgBox(stringBuilder.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
             Exit Sub
@@ -1952,9 +1920,9 @@ Public Class Form1
                                                                                                          End SyncLock
                                                                                                          ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          CompareFilesAllFilesProgress.Value = allBytesPercentage
-                                                                                                         lblCompareFilesStatus.Text = FileSizeToHumanSize(totalBytesRead) & " of " & FileSizeToHumanSize(size) & " (" & MyRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         lblCompareFilesAllFilesStatus.Text = FileSizeToHumanSize(longAllReadBytes) & " of " & FileSizeToHumanSize(longAllBytes) & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                         lblCompareFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
+                                                                                                         lblCompareFilesAllFilesStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) have been processed."
+                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -1983,10 +1951,10 @@ Public Class Form1
                                                          End If
 
                                                          MyInvoke(Sub()
-                                                                      lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
+                                                                      lblFile1Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)}"
                                                                       ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
 
-                                                                      lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
+                                                                      lblFile2Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)}"
                                                                       ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
                                                                   End Sub)
                                                      End If
@@ -2016,11 +1984,11 @@ Public Class Form1
                                                                       If strChecksum1.Equals(strChecksum2, StringComparison.OrdinalIgnoreCase) Then
                                                                           pictureBoxCompareFiles.Image = My.Resources.good_check
                                                                           ToolTip.SetToolTip(pictureBoxCompareFiles, "Both files are the same.")
-                                                                          MsgBox("Both files are the same." & DoubleCRLF & "Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                          MsgBox($"Both files are the same.{DoubleCRLF}Processing completed in {TimespanToHMS(myStopWatch.Elapsed)}.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                       Else
                                                                           pictureBoxCompareFiles.Image = My.Resources.bad_check
                                                                           ToolTip.SetToolTip(pictureBoxCompareFiles, "The two files don't match.")
-                                                                          MsgBox("The two files don't match." & DoubleCRLF & "Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                          MsgBox($"The two files don't match.{DoubleCRLF}Processing completed in {TimespanToHMS(myStopWatch.Elapsed)}.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
                                                                       MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strMessageBoxTitleText)
@@ -2206,8 +2174,8 @@ Public Class Form1
                                                                                                          percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                          compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                          ProgressForm.SetTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
-                                                                                                         lblCompareAgainstKnownHashStatus.Text = FileSizeToHumanSize(totalBytesRead) & " of " & FileSizeToHumanSize(size) & " (" & MyRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & MyRoundingFunction(percentage, byteRoundPercentages) & "% Completed)"
+                                                                                                         lblCompareAgainstKnownHashStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
+                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(percentage, byteRoundPercentages)}% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -2234,11 +2202,11 @@ Public Class Form1
                                                                       If strChecksum.Equals(txtKnownHash.Text.Trim, StringComparison.OrdinalIgnoreCase) Then
                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.good_check
                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum Verified!")
-                                                                          MsgBox("The checksums match!" & DoubleCRLF & "Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                          MsgBox($"The checksums match!{DoubleCRLF}Processing completed in {TimespanToHMS(myStopWatch.Elapsed)}.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                       Else
                                                                           pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
                                                                           ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "Checksum verification failed, checksum didn't match!")
-                                                                          MsgBox("The checksums DON'T match!" & DoubleCRLF & "Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                          MsgBox($"The checksums DON'T match!{DoubleCRLF}Processing completed in {TimespanToHMS(myStopWatch.Elapsed)}.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
                                                                       pictureBoxVerifyAgainstResults.Image = Global.Hasher.My.Resources.Resources.bad_check
@@ -2579,7 +2547,7 @@ Public Class Form1
         intBufferSize = shortBufferSize * 1024 * 1024
         My.Settings.shortBufferSize = shortBufferSize
         btnSetBufferSize.Enabled = False
-        MsgBox("Data buffer size set successfully to " & shortBufferSize & If(shortBufferSize = 1, " MB.", " MBs."), MsgBoxStyle.Information, strMessageBoxTitleText)
+        MsgBox($"Data buffer size set successfully to {shortBufferSize} {If(shortBufferSize = 1, "MB", "MBs")}.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BufferSize_ValueChanged(sender As Object, e As EventArgs) Handles bufferSize.ValueChanged
@@ -2595,7 +2563,7 @@ Public Class Form1
                 intBufferSize = benchmark.shortBufferSize * 1024 * 1024
                 My.Settings.shortBufferSize = benchmark.shortBufferSize
                 btnSetBufferSize.Enabled = False
-                MsgBox("Data buffer size set successfully to " & benchmark.shortBufferSize & If(benchmark.shortBufferSize = 1, " MB.", " MBs."), MsgBoxStyle.Information, strMessageBoxTitleText)
+                MsgBox($"Data buffer size set successfully to {benchmark.shortBufferSize} {If(benchmark.shortBufferSize = 1, "MB", "MBs")}.", MsgBoxStyle.Information, strMessageBoxTitleText)
             End If
         End Using
     End Sub
@@ -2652,7 +2620,7 @@ Public Class Form1
     End Sub
 
     Private Sub ChkAutoAddExtension_Click(sender As Object, e As EventArgs) Handles chkAutoAddExtension.Click
-        If Not chkAutoAddExtension.Checked AndAlso MsgBox("You are disabling a highly recommended option, it is HIGHLY recommended that you re-enable this option to prevent accidental data loss." & DoubleCRLF & "Are you sure you want to do this?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
+        If Not chkAutoAddExtension.Checked AndAlso MsgBox($"You are disabling a highly recommended option, it is HIGHLY recommended that you re-enable this option to prevent accidental data loss.{DoubleCRLF}Are you sure you want to do this?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.No Then
             chkAutoAddExtension.Checked = True
         End If
         My.Settings.boolAutoAddExtension = chkAutoAddExtension.Checked
@@ -2663,8 +2631,8 @@ Public Class Form1
         Dim strChecksum2 As String = GetDataFromAllTheHashes(checksumType, compareFilesAllTheHashes2)
 
         If Not String.IsNullOrWhiteSpace(strChecksum1) AndAlso Not String.IsNullOrWhiteSpace(strChecksum2) Then
-            lblFile1Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)
-            lblFile2Hash.Text = "Hash/Checksum: " & If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)
+            lblFile1Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)}"
+            lblFile2Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)}"
             ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
             ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
         End If
@@ -2729,7 +2697,7 @@ Public Class Form1
                                                        MyInvoke(Sub()
                                                                     VerifyHashProgressBar.Value = intLineCounter / listViewItemCollection.Count * 100
                                                                     ProgressForm.SetTaskbarProgressBarValue(VerifyHashProgressBar.Value)
-                                                                    lblVerifyHashStatus.Text = "Processing item " & MyToString(intLineCounter) & " of " & MyToString(listViewItemCollection.Count) & " (" & VerifyHashProgressBar.Value & "%)."
+                                                                    lblVerifyHashStatus.Text = $"Processing item {MyToString(intLineCounter)} of {MyToString(listViewItemCollection.Count)} ({VerifyHashProgressBar.Value}%)."
                                                                 End Sub)
 
                                                        If Not filesInListFiles.Contains(item.FileName.Trim.ToLower) And IO.File.Exists(item.FileName) Then
@@ -2817,13 +2785,13 @@ Public Class Form1
             If verifyHashesListFiles.SelectedItems.Count = 1 Then
                 Dim MyListViewItem As MyListViewItem = DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem)
                 globalAllTheHashes = MyListViewItem.AllTheHashes
-                verifyListFilesContextMenuFileName.Text = "File Name: " & MyListViewItem.FileName
+                verifyListFilesContextMenuFileName.Text = $"File Name: {MyListViewItem.FileName}"
                 With MyListViewItem.AllTheHashes
-                    verifyListFilesContextMenuMD5.Text = "MD5: " & If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)
-                    verifyListFilesContextMenuSHA160.Text = "SHA160: " & If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)
-                    verifyListFilesContextMenuSHA256.Text = "SHA256: " & If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)
-                    verifyListFilesContextMenuSHA384.Text = "SHA384: " & If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)
-                    verifyListFilesContextMenuSHA512.Text = "SHA512: " & If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)
+                    verifyListFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
+                    verifyListFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
+                    verifyListFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
+                    verifyListFilesContextMenuSHA384.Text = $"SHA384: {If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)}"
+                    verifyListFilesContextMenuSHA512.Text = $"SHA512: {If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)}"
                 End With
             End If
         End If
@@ -2974,10 +2942,10 @@ Public Class Form1
                                                                                                    VerifyHashProgressBar.Value = percentage
                                                                                                    SyncLock threadLockingObject
                                                                                                        allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                       lblVerifyHashesTotalStatus.Text = FileSizeToHumanSize(longAllReadBytes) & " of " & FileSizeToHumanSize(longAllBytes) & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "%) have been processed."
-                                                                                                       If chkShowPercentageInWindowTitleBar.Checked Then Text = strWindowTitle & " (" & MyRoundingFunction(allBytesPercentage, byteRoundPercentages) & "% Completed)"
+                                                                                                       lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) have been processed."
+                                                                                                       If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
                                                                                                    End SyncLock
-                                                                                                   lblProcessingFileVerify.Text = FileSizeToHumanSize(totalBytesRead) & " of " & FileSizeToHumanSize(size) & " (" & MyRoundingFunction(percentage, byteRoundPercentages) & "%) have been processed."
+                                                                                                   lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
                                                                                                    If chkShowFileProgressInFileList.Checked Then
                                                                                                        currentItem.SubItems(4).Text = lblProcessingFileVerify.Text
                                                                                                        itemOnGUI.SubItems(4) = currentItem.SubItems(4)
@@ -2992,7 +2960,7 @@ Public Class Form1
                                                                  item.SubItems(4).Text = strCurrentlyBeingProcessed
 
                                                                  MyInvoke(Sub()
-                                                                              lblVerifyHashStatus.Text = "Now processing file " & New IO.FileInfo(strFileName).Name & "."
+                                                                              lblVerifyHashStatus.Text = $"Now processing file {New IO.FileInfo(strFileName).Name}."
                                                                               UpdateListViewItem(itemOnGUI, item, False)
                                                                           End Sub)
 
@@ -3082,29 +3050,18 @@ Public Class Form1
 
                                                                       Dim intTotalFiles As Integer = intFileCount - intFilesNotFound
                                                                       If longFilesThatPassedVerification = intTotalFiles Then
-                                                                          sbMessageBoxText.AppendLine(String.Format("All files have passed verification. Unfortunately, {0} {1} were not found.",
-                                                                                                                    MyToString(intFilesNotFound),
-                                                                                                                    If(intFilesNotFound = 1, "file", "files")
-                                                                                                                   )
+                                                                          sbMessageBoxText.AppendLine($"All files have passed verification. Unfortunately, {MyToString(intFilesNotFound)} {If(intFilesNotFound = 1, "file", "files")} were not found."
                                                                            )
                                                                       Else
                                                                           intFilesThatDidNotPassVerification = intTotalFiles - longFilesThatPassedVerification
                                                                           If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
-                                                                          sbMessageBoxText.AppendLine(String.Format("Not all of the files passed verification, only {0} out of {1} {2} passed verification, Unfortunately, {3} {4} didn't pass verification and {5} {6} were not found.",
-                                                                                                                    MyToString(longFilesThatPassedVerification),
-                                                                                                                    MyToString(intTotalFiles),
-                                                                                                                    If(intTotalFiles = 1, "file", "files"),
-                                                                                                                    MyToString(intFilesThatDidNotPassVerification),
-                                                                                                                    If(intFilesThatDidNotPassVerification = 1, "file", "files"),
-                                                                                                                    MyToString(intFilesNotFound),
-                                                                                                                    If(intFilesNotFound = 1, "file", "files")
-                                                                                                                   )
+                                                                          sbMessageBoxText.AppendLine($"Not all of the files passed verification, only {MyToString(longFilesThatPassedVerification)} out of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")} passed verification, Unfortunately, {MyToString(intFilesThatDidNotPassVerification)} {If(intFilesThatDidNotPassVerification = 1, "file", "files")} didn't pass verification and {MyToString(intFilesNotFound)} {If(intFilesNotFound = 1, "file", "files")} were not found."
                                                                            )
                                                                       End If
                                                                   End If
 
                                                                   sbMessageBoxText.AppendLine()
-                                                                  sbMessageBoxText.AppendLine("Processing completed in " & TimespanToHMS(myStopWatch.Elapsed) & ".")
+                                                                  sbMessageBoxText.AppendLine($"Processing completed in {TimespanToHMS(myStopWatch.Elapsed)}.")
 
                                                                   MsgBox(sbMessageBoxText.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
@@ -3324,7 +3281,7 @@ Public Class Form1
 
                                                    ' Call HaveIBeenPwned.com's Password Checking API. Note how we only send the first five characters
                                                    ' to the server, you can see that by our use of the strSHA1ToSearchWith variable created above.
-                                                   If httpHelper.GetWebData("https://api.pwnedpasswords.com/range/" & strSHA1ToSearchWith, strWebData, False) Then
+                                                   If httpHelper.GetWebData($"https://api.pwnedpasswords.com/range/{strSHA1ToSearchWith}", strWebData, False) Then
                                                        ' OK, we have a valid HTTP response, now let's do something with it.
 
                                                        ' We do some parsing of the incoming data, we do that by searching for the full SHA1 String in the web
@@ -3341,14 +3298,14 @@ Public Class Form1
                                                            ' Try to parse the Integer that's a String into an actual Integer.
                                                            If Integer.TryParse(regexMatchResults.Item(0).Groups(1).ToString, intTimes) Then
                                                                ' Parsing worked, let's plug it into the message box text.
-                                                               MyInvoke(Sub() MsgBox("OH NO!" & DoubleCRLF & "Your password has been found " & MyToString(intTimes) & " " & If(intTimes = 1, "time", "times") & " in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                                                               MyInvoke(Sub() MsgBox($"OH NO!{DoubleCRLF}Your password has been found {MyToString(intTimes)} {If(intTimes = 1, "time", "times")} in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText))
                                                            Else
                                                                ' Oops, parsing failed; let's just use a generic message instead of a custom one.
-                                                               MyInvoke(Sub() MsgBox("OH NO!" & DoubleCRLF & "Your password has been found in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                                                               MyInvoke(Sub() MsgBox($"OH NO!{DoubleCRLF}Your password has been found in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText))
                                                            End If
                                                        Else
                                                            ' Nope, the password hasn't been breached.
-                                                           MyInvoke(Sub() MsgBox("Your password has not been found in the HaveIBeenPwned.com database." & DoubleCRLF & "Congratulations!", MsgBoxStyle.Information, strMessageBoxTitleText))
+                                                           MyInvoke(Sub() MsgBox($"Your password has not been found in the HaveIBeenPwned.com database.{DoubleCRLF}Congratulations!", MsgBoxStyle.Information, strMessageBoxTitleText))
                                                        End If
                                                    Else
                                                        ' Something happened during our API call, give the user an error message.
@@ -3371,7 +3328,7 @@ Public Class Form1
             btnRemoveFileAssociations.Enabled = False
             MsgBox("File associations have been removed successfully.", MsgBoxStyle.Information, strMessageBoxTitleText)
         Catch ex As Exception
-            MsgBox("Something went wrong while removing file associations." & DoubleCRLF & ex.Message & " -- " & ex.StackTrace, MsgBoxStyle.Critical, strMessageBoxTitleText)
+            MsgBox($"Something went wrong while removing file associations.{DoubleCRLF}{ex.Message} -- {ex.StackTrace}", MsgBoxStyle.Critical, strMessageBoxTitleText)
         End Try
     End Sub
 
@@ -3393,7 +3350,7 @@ Public Class Form1
                 process.WaitForExit()
                 boolSuccessful = True
             Catch ex As Win32Exception
-                MsgBox("Failed to elevate process." & DoubleCRLF & "Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                MsgBox($"Failed to elevate process.{DoubleCRLF}Please try again but make sure you respond with a ""Yes"" to the UAC Prompt.", MsgBoxStyle.Critical, strMessageBoxTitleText)
             End Try
         End If
 

@@ -37,7 +37,7 @@
                                                                                             Invoke(Sub()
                                                                                                        percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
                                                                                                        ProgressBar.Value = percentage
-                                                                                                       lblStatus.Text = strFileNameLine & FileSizeToHumanSize(totalBytesRead) & " of " & FileSizeToHumanSize(size) & " (" & Math.Round(percentage, byteRoundPercentages) & "%) have been processed with a " & intBufferSize.ToString & " MB buffer size."
+                                                                                                       lblStatus.Text = $"{strFileNameLine}{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({Math.Round(percentage, byteRoundPercentages)}%) have been processed with a {intBufferSize} MB buffer size."
                                                                                                    End Sub)
                                                                                         Catch ex As Exception
                                                                                         End Try
@@ -53,7 +53,7 @@
                                                          computeStopwatch = Stopwatch.StartNew
 
                                                          If DoChecksumWithAttachedSubRoutine(OpenFileDialog.FileName, strChecksum, subRoutine, intRealBufferSize) Then
-                                                             itemToBeAdded = New BenchmarkListViewItem(intBufferSize & If(intBufferSize = 1, " MB", " MBs")) With {.BufferSize = intBufferSize}
+                                                             itemToBeAdded = New BenchmarkListViewItem($"{intBufferSize} {If(intBufferSize = 1, "MB", "MBs")}") With {.BufferSize = intBufferSize}
                                                              itemToBeAdded.SubItems.Add(TimespanToHMS(computeStopwatch.Elapsed))
                                                              Invoke(Sub() listResults.Items.Add(itemToBeAdded))
                                                          End If
@@ -61,7 +61,7 @@
 
                                                      Invoke(Sub()
                                                                 Text = "Hasher"
-                                                                MsgBox("Benchmark completed in " & TimespanToHMS(stopWatch.Elapsed) & ".", MsgBoxStyle.Information, "Hasher Benchmark")
+                                                                MsgBox($"Benchmark completed in {TimespanToHMS(stopWatch.Elapsed)}.", MsgBoxStyle.Information, "Hasher Benchmark")
                                                             End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                  Finally
@@ -118,7 +118,7 @@
         Else
             Dim selectedItem As BenchmarkListViewItem = listResults.SelectedItems(0)
             shortBufferSize = selectedItem.BufferSize
-            btnSetBufferSize.Text = "Set Buffer Size to " & If(selectedItem.BufferSize = 1, "1 MB", selectedItem.BufferSize & " MBs")
+            btnSetBufferSize.Text = $"Set Buffer Size to {If(selectedItem.BufferSize = 1, "1 MB", selectedItem.BufferSize & " MBs")}"
         End If
     End Sub
 

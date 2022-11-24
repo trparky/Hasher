@@ -185,7 +185,7 @@ Namespace checkForUpdates
             httpHelper.SetURLPreProcessor = Function(strURLInput As String) As String
                                                 Try
                                                     If Not strURLInput.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then
-                                                        Return "https://" & strURLInput
+                                                        Return $"https://{strURLInput}"
                                                     Else
                                                         Return strURLInput
                                                     End If
@@ -252,7 +252,7 @@ Namespace checkForUpdates
         End Function
 
         Private Sub DownloadAndPerformUpdate()
-            Dim newExecutableName As String = New FileInfo(Application.ExecutablePath).Name & ".new.exe"
+            Dim newExecutableName As String = $"{New FileInfo(Application.ExecutablePath).Name}.new.exe"
 
             ' We have to do this stuff on the thread that the form belongs to or we will get an error.
             windowObject.Invoke(Sub()
@@ -310,7 +310,7 @@ Namespace checkForUpdates
             Try
                 Dim intOSMajorVersion As Integer = Environment.OSVersion.Version.Major
                 Dim intOSMinorVersion As Integer = Environment.OSVersion.Version.Minor
-                Dim dblDOTNETVersion As Double = Double.Parse(Environment.Version.Major & "." & Environment.Version.Minor)
+                Dim dblDOTNETVersion As Double = Double.Parse($"{Environment.Version.Major}.{Environment.Version.Minor}")
                 Dim strOSName As String
 
                 If intOSMajorVersion = 5 And intOSMinorVersion = 0 Then
@@ -333,10 +333,10 @@ Namespace checkForUpdates
                     strOSName = String.Format("Windows NT {0}.{1}", intOSMajorVersion, intOSMinorVersion)
                 End If
 
-                Return String.Format("{0} {2}-bit (Microsoft .NET {1})", strOSName, dblDOTNETVersion, If(Environment.Is64BitOperatingSystem, "64", "32"))
+                Return $"{strOSName} {If(Environment.Is64BitOperatingSystem, "64", "32")}-bit (Microsoft .NET {dblDOTNETVersion })"
             Catch ex As Exception
                 Try
-                    Return "Unknown Windows Operating System (" & Environment.OSVersion.VersionString & ")"
+                    Return $"Unknown Windows Operating System ({Environment.OSVersion.VersionString})"
                 Catch ex2 As Exception
                     Return "Unknown Windows Operating System"
                 End Try
@@ -369,7 +369,7 @@ Namespace checkForUpdates
                         Dim response As ProcessUpdateXMLResponse = ProcessUpdateXMLData(xmlData, remoteVersion, remoteBuild)
 
                         If response = ProcessUpdateXMLResponse.newVersion Then
-                            If BackgroundThreadMessageBox(String.Format("An update to Hasher (version {0} Build {1}) is available to be downloaded, do you want to download and update to this new version?", remoteVersion, remoteBuild), strMessageBoxTitleText) = MsgBoxResult.Yes Then
+                            If BackgroundThreadMessageBox($"An update to Hasher (version {remoteVersion} Build {remoteBuild}) is available to be downloaded, do you want to download and update to this new version?", strMessageBoxTitleText) = MsgBoxResult.Yes Then
                                 DownloadAndPerformUpdate()
                             Else
                                 windowObject.Invoke(Sub() MsgBox("The update will not be downloaded.", MsgBoxStyle.Information, strMessageBoxTitleText))
