@@ -61,11 +61,7 @@ Public Class Form1
     Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[a-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
     Private Function GenerateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
-        Return String.Format("Processing file {0} of {1} {2}.",
-                             MyToString(intCurrentFile),
-                             MyToString(intTotalFiles),
-                             If(intTotalFiles = 1, "file", "files")
-               )
+        Return $"Processing file {MyToString(intCurrentFile)} of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")}."
     End Function
 
     ''' <summary>
@@ -3034,14 +3030,7 @@ Public Class Form1
                                                                       Else
                                                                           intFilesThatDidNotPassVerification = intFileCount - longFilesThatPassedVerification
                                                                           If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
-                                                                          sbMessageBoxText.AppendLine(String.Format("Processing of hash file complete. {0} out of {1} {4} passed verification, {2} {3} didn't pass verification.",
-                                                                                                                    MyToString(longFilesThatPassedVerification),
-                                                                                                                    MyToString(intFileCount),
-                                                                                                                    MyToString(intFilesThatDidNotPassVerification),
-                                                                                                                    If(intFilesThatDidNotPassVerification = 1, "file", "files"),
-                                                                                                                    If(intFileCount = 1, "file", "files")
-                                                                                                                   )
-                                                                           )
+                                                                          sbMessageBoxText.AppendLine($"Processing of hash file complete. {MyToString(longFilesThatPassedVerification) } out of {MyToString(intFileCount) } {If(intFileCount = 1, "file", "files") } passed verification, {MyToString(intFilesThatDidNotPassVerification) } {If(intFilesThatDidNotPassVerification = 1, "file", "files") } didn't pass verification.")
                                                                       End If
                                                                   Else
                                                                       sbMessageBoxText.AppendLine("Processing of hash file complete.")
@@ -3050,13 +3039,11 @@ Public Class Form1
 
                                                                       Dim intTotalFiles As Integer = intFileCount - intFilesNotFound
                                                                       If longFilesThatPassedVerification = intTotalFiles Then
-                                                                          sbMessageBoxText.AppendLine($"All files have passed verification. Unfortunately, {MyToString(intFilesNotFound)} {If(intFilesNotFound = 1, "file", "files")} were not found."
-                                                                           )
+                                                                          sbMessageBoxText.AppendLine($"All files have passed verification. Unfortunately, {MyToString(intFilesNotFound)} {If(intFilesNotFound = 1, "file", "files")} were not found.")
                                                                       Else
                                                                           intFilesThatDidNotPassVerification = intTotalFiles - longFilesThatPassedVerification
                                                                           If intFilesThatDidNotPassVerification <> 0 Then btnRetestFailedFiles.Visible = True
-                                                                          sbMessageBoxText.AppendLine($"Not all of the files passed verification, only {MyToString(longFilesThatPassedVerification)} out of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")} passed verification, Unfortunately, {MyToString(intFilesThatDidNotPassVerification)} {If(intFilesThatDidNotPassVerification = 1, "file", "files")} didn't pass verification and {MyToString(intFilesNotFound)} {If(intFilesNotFound = 1, "file", "files")} were not found."
-                                                                           )
+                                                                          sbMessageBoxText.AppendLine($"Not all of the files passed verification, only {MyToString(longFilesThatPassedVerification)} out of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")} passed verification, Unfortunately, {MyToString(intFilesThatDidNotPassVerification)} {If(intFilesThatDidNotPassVerification = 1, "file", "files")} didn't pass verification and {MyToString(intFilesNotFound)} {If(intFilesNotFound = 1, "file", "files")} were not found.")
                                                                       End If
                                                                   End If
 
