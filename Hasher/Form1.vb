@@ -365,7 +365,7 @@ Public Class Form1
 
                                                              MyInvoke(Sub()
                                                                           fileCountPercentage = index / listFiles.Items.Count * 100
-                                                                          lblProcessingFile.Text = $"Now processing file {New IO.FileInfo(item.FileName).Name}."
+                                                                          lblProcessingFile.Text = $"Now processing file ""{New IO.FileInfo(item.FileName).Name}""."
                                                                           lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Items.Count)
 
                                                                           UpdateListViewItem(itemOnGUI, item, False)
@@ -1347,7 +1347,7 @@ Public Class Form1
                                                              item.SubItems(4).Text = strCurrentlyBeingProcessed
 
                                                              MyInvoke(Sub()
-                                                                          lblVerifyHashStatus.Text = $"Now processing file {New IO.FileInfo(strFileName).Name}."
+                                                                          lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
                                                                           UpdateListViewItem(itemOnGUI, item, False)
                                                                       End Sub)
 
@@ -2956,7 +2956,7 @@ Public Class Form1
                                                                  item.SubItems(4).Text = strCurrentlyBeingProcessed
 
                                                                  MyInvoke(Sub()
-                                                                              lblVerifyHashStatus.Text = $"Now processing file {New IO.FileInfo(strFileName).Name}."
+                                                                              lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
                                                                               UpdateListViewItem(itemOnGUI, item, False)
                                                                           End Sub)
 
