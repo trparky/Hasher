@@ -313,7 +313,7 @@ Public Class Form1
                                                                                                          End SyncLock
                                                                                                          ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
-                                                                                                         lblIndividualFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
+                                                                                                         lblIndividualFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
 
                                                                                                          If chkShowFileProgressInFileList.Checked Then
                                                                                                              currentItem.SubItems(2).Text = lblIndividualFilesStatus.Text
@@ -1313,10 +1313,10 @@ Public Class Form1
                                                                                                          VerifyHashProgressBar.Value = percentage
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                             lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) have been processed."
+                                                                                                             lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
                                                                                                              If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
                                                                                                          End SyncLock
-                                                                                                         lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
+                                                                                                         lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
                                                                                                          If chkShowFileProgressInFileList.Checked Then
                                                                                                              currentItem.SubItems(4).Text = lblProcessingFileVerify.Text
                                                                                                              itemOnGUI.SubItems(4) = currentItem.SubItems(4)
@@ -1916,8 +1916,8 @@ Public Class Form1
                                                                                                          End SyncLock
                                                                                                          ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          CompareFilesAllFilesProgress.Value = allBytesPercentage
-                                                                                                         lblCompareFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
-                                                                                                         lblCompareFilesAllFilesStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) have been processed."
+                                                                                                         lblCompareFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
+                                                                                                         lblCompareFilesAllFilesStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
                                                                                                          If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
@@ -2170,7 +2170,7 @@ Public Class Form1
                                                                                                          percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                          compareAgainstKnownHashProgressBar.Value = percentage
                                                                                                          ProgressForm.SetTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
-                                                                                                         lblCompareAgainstKnownHashStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
+                                                                                                         lblCompareAgainstKnownHashStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
                                                                                                          If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(percentage, byteRoundPercentages)}% Completed)"
                                                                                                      End Sub)
                                                                                         Catch ex As Exception
@@ -2938,10 +2938,10 @@ Public Class Form1
                                                                                                    VerifyHashProgressBar.Value = percentage
                                                                                                    SyncLock threadLockingObject
                                                                                                        allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                       lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) have been processed."
+                                                                                                       lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
                                                                                                        If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
                                                                                                    End SyncLock
-                                                                                                   lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) have been processed."
+                                                                                                   lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
                                                                                                    If chkShowFileProgressInFileList.Checked Then
                                                                                                        currentItem.SubItems(4).Text = lblProcessingFileVerify.Text
                                                                                                        itemOnGUI.SubItems(4) = currentItem.SubItems(4)
