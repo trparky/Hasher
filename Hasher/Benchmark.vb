@@ -27,7 +27,7 @@
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
-                                                     Dim strFileNameLine As String = "Benchmarking with file " & New IO.FileInfo(OpenFileDialog.FileName).Name & vbCrLf
+                                                     Dim strFileNameLine As String = $"Benchmarking with file {New IO.FileInfo(OpenFileDialog.FileName).Name}{vbCrLf}"
                                                      Dim intBufferSize As Integer
                                                      Dim percentage As Double
                                                      Dim strChecksum As String = Nothing
@@ -118,7 +118,7 @@
         Else
             Dim selectedItem As BenchmarkListViewItem = listResults.SelectedItems(0)
             shortBufferSize = selectedItem.BufferSize
-            btnSetBufferSize.Text = $"Set Buffer Size to {If(selectedItem.BufferSize = 1, "1 MB", selectedItem.BufferSize & " MBs")}"
+            btnSetBufferSize.Text = $"Set Buffer Size to {If(selectedItem.BufferSize = 1, "1 MB", $"{selectedItem.BufferSize} MBs")}"
         End If
     End Sub
 
