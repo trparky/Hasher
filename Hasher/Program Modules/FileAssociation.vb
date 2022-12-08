@@ -32,19 +32,19 @@ Namespace FileAssociation
         Public Sub CreateAssociation(extension As String, description As String, application As String, icon As String)
             Dim selectedKey As RegistryKey
 
-            If Registry.CurrentUser.OpenSubKey("Software\Classes\" & extension) Is Nothing Then
+            If Registry.CurrentUser.OpenSubKey($"Software\Classes\{extension}") Is Nothing Then
                 selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes", True).CreateSubKey(extension)
 
                 If selectedKey IsNot Nothing Then
                     CreateAssociationSubRoutine(selectedKey, description, application, icon)
                 End If
             Else
-                Dim strDefaultValue As String = Registry.CurrentUser.OpenSubKey("Software\Classes\" & extension).GetValue(vbNullString, Nothing)
+                Dim strDefaultValue As String = Registry.CurrentUser.OpenSubKey($"Software\Classes\{extension}").GetValue(vbNullString, Nothing)
 
                 If String.IsNullOrWhiteSpace(strDefaultValue) Then
-                    CreateAssociationSubRoutine(Registry.CurrentUser.OpenSubKey("Software\Classes\" & extension), description, application, icon)
+                    CreateAssociationSubRoutine(Registry.CurrentUser.OpenSubKey($"Software\Classes\{extension}"), description, application, icon)
                 Else
-                    selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\" & extension, True)
+                    selectedKey = Registry.CurrentUser.OpenSubKey($"Software\Classes\{extension}", True)
                     If selectedKey Is Nothing Then
                         selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes", True).CreateSubKey(strDefaultValue)
                     End If
@@ -55,7 +55,7 @@ Namespace FileAssociation
 
         Public Sub SelfCreateAssociation(extension As String, Optional description As String = "")
             Dim FileLocation As String = Reflection.Assembly.GetExecutingAssembly().Location
-            CreateAssociation(extension, description, FileLocation, FileLocation & ",0")
+            CreateAssociation(extension, description, FileLocation, $"{FileLocation},0")
         End Sub
 
         Public Sub DeleteFileAssociation()
@@ -101,7 +101,7 @@ Namespace FileAssociation
 
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Hash with Hasher")
-                selectedKey.SetValue("icon", FileLocation & ",0", RegistryValueKind.ExpandString)
+                selectedKey.SetValue("icon", $"{FileLocation},0", RegistryValueKind.ExpandString)
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --addfile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
 
@@ -109,7 +109,7 @@ Namespace FileAssociation
 
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Verify against known hash with Hasher")
-                selectedKey.SetValue("icon", FileLocation & ",0", RegistryValueKind.ExpandString)
+                selectedKey.SetValue("icon", $"{FileLocation},0", RegistryValueKind.ExpandString)
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --knownhashfile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
 
@@ -117,7 +117,7 @@ Namespace FileAssociation
 
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Compare Two Files")
-                selectedKey.SetValue("icon", FileLocation & ",0", RegistryValueKind.ExpandString)
+                selectedKey.SetValue("icon", $"{FileLocation},0", RegistryValueKind.ExpandString)
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --comparefile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
 
@@ -125,7 +125,7 @@ Namespace FileAssociation
 
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Hash with Hasher")
-                selectedKey.SetValue("icon", FileLocation & ",0", RegistryValueKind.ExpandString)
+                selectedKey.SetValue("icon", $"{FileLocation},0", RegistryValueKind.ExpandString)
                 selectedKey.CreateSubKey("command").SetValue("", String.Format("{0}{1}{0} --addfile={0}%1{0}", Chr(34), FileLocation), RegistryValueKind.ExpandString)
             End If
         End Sub

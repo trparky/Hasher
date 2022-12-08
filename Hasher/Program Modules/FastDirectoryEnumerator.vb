@@ -79,7 +79,7 @@ Namespace FastDirectoryEnumerator
         Public cAlternateFileName As String
 
         Public Overrides Function ToString() As String
-            Return "File name=" & cFileName
+            Return $"File name={cFileName}"
         End Function
     End Class
 

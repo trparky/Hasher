@@ -14,13 +14,13 @@ Public Module SaveAppSettings
 
                 If settingType = GetType(Point) Then
                     point = DirectCast(settingProperty.PropertyValue, Point)
-                    rawValue = point.X & "|" & point.Y
+                    rawValue = $"{point.X}|{point.Y}"
                     point = Nothing
                 ElseIf settingType = GetType(Color) Then
                     rawValue = DirectCast(settingProperty.PropertyValue, Color).ToArgb
                 ElseIf settingType = GetType(Size) Then
                     size = DirectCast(settingProperty.PropertyValue, Size)
-                    rawValue = size.Height & "|" & size.Width
+                    rawValue = $"{size.Height}|{size.Width}"
                     size = Nothing
                 Else
                     rawValue = settingProperty.PropertyValue
@@ -85,7 +85,7 @@ Public Module SaveAppSettings
 
             Return True
         Catch ex As Exception
-            MsgBox("There was an issue decoding your chosen JSON settings file, import failed." & DoubleCRLF & ex.Message & ex.StackTrace.Trim, MsgBoxStyle.Critical, checkForUpdates.strMessageBoxTitleText)
+            MsgBox($"There was an issue decoding your chosen JSON settings file, import failed.{DoubleCRLF}{ex.Message}{ex.StackTrace.Trim}", MsgBoxStyle.Critical, checkForUpdates.strMessageBoxTitleText)
             Return False
         End Try
     End Function
