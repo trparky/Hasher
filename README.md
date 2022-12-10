@@ -12,3 +12,7 @@ All active development occurs in the dev branch, that's where changes to the cod
 **Thursday, August 4th, 2022 Update**
 
 This program is now in maintenence mode. Active development has ceased, only bug fixes will be introduced from this point on but since it's quite a stable program so I figure that even that won't happen. The dev branch for testing new code has been removed as well.
+
+**Friday, December 9th, 2022 Update**
+
+I've done some under the hood improvements and some bug fixes since Thursday, August 4th, 2022.
