@@ -27,7 +27,7 @@
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
-                                                     Dim strFileNameLine As String = $"Benchmarking with file {New IO.FileInfo(OpenFileDialog.FileName).Name}{vbCrLf}"
+                                                     Dim strFileNameLine As String = $"Benchmarking with file ""{New IO.FileInfo(OpenFileDialog.FileName).Name}"".{vbCrLf}"
                                                      Dim intBufferSize As Integer
                                                      Dim percentage As Double
                                                      Dim strChecksum As String = Nothing
@@ -65,16 +65,18 @@
                                                             End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                  Finally
-                                                     Invoke(Sub()
-                                                                If Not boolClosingWindow Then
-                                                                    lblStatus.Text = "(No Background Process Running)"
-                                                                    btnOpenFile.Text = "Open File for Benchmarking"
-                                                                    ProgressBar.Value = 0
-                                                                End If
+                                                     If Not boolClosingWindow Then
+                                                         Invoke(Sub()
+                                                                    If Not boolClosingWindow Then
+                                                                        lblStatus.Text = "(No Background Process Running)"
+                                                                        btnOpenFile.Text = "Open File for Benchmarking"
+                                                                        ProgressBar.Value = 0
+                                                                    End If
 
-                                                                boolBackgroundThreadWorking = False
-                                                                workingThread = Nothing
-                                                            End Sub)
+                                                                    boolBackgroundThreadWorking = False
+                                                                    workingThread = Nothing
+                                                                End Sub)
+                                                     End If
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
