@@ -65,16 +65,18 @@
                                                             End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                  Finally
-                                                     Invoke(Sub()
-                                                                If Not boolClosingWindow Then
-                                                                    lblStatus.Text = "(No Background Process Running)"
-                                                                    btnOpenFile.Text = "Open File for Benchmarking"
-                                                                    ProgressBar.Value = 0
-                                                                End If
+                                                     If Not boolClosingWindow Then
+                                                         Invoke(Sub()
+                                                                    If Not boolClosingWindow Then
+                                                                        lblStatus.Text = "(No Background Process Running)"
+                                                                        btnOpenFile.Text = "Open File for Benchmarking"
+                                                                        ProgressBar.Value = 0
+                                                                    End If
 
-                                                                boolBackgroundThreadWorking = False
-                                                                workingThread = Nothing
-                                                            End Sub)
+                                                                    boolBackgroundThreadWorking = False
+                                                                    workingThread = Nothing
+                                                                End Sub)
+                                                     End If
                                                  End Try
                                              End Sub) With {
             .Priority = Threading.ThreadPriority.Highest,
