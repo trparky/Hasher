@@ -27,7 +27,7 @@
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
-                                                     Dim strFileNameLine As String = $"Benchmarking with file {New IO.FileInfo(OpenFileDialog.FileName).Name}{vbCrLf}"
+                                                     Dim strFileNameLine As String = $"Benchmarking with file ""{New IO.FileInfo(OpenFileDialog.FileName).Name}"".{vbCrLf}"
                                                      Dim intBufferSize As Integer
                                                      Dim percentage As Double
                                                      Dim strChecksum As String = Nothing
