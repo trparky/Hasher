@@ -109,9 +109,9 @@ Namespace checkForUpdates
                         Return ProcessUpdateXMLResponse.noUpdateNeeded
                     Else
                         ' First we do a check of the version, if it's not equal we simply return a newVersion value.
-                        If Not remoteVersion.Equals(versionStringWithoutBuild) Then
+                        If Not remoteVersion.ToString.Equals(versionStringWithoutBuild) Then
                             ' Checks to see if the remote version is less than the current version.
-                            If remoteVersion < versionStringWithoutBuild Then
+                            If remoteVersion < Double.Parse(versionStringWithoutBuild) Then
                                 ' This is weird, the remote build is less than the current build so we return a newerVersionThanWebSite value.
                                 Return ProcessUpdateXMLResponse.newerVersionThanWebSite
                             End If
