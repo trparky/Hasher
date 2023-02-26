@@ -97,6 +97,7 @@ Public Class Form1
 
     Private Sub UpdateListViewItem(ByRef itemOnGUI As MyListViewItem, ByRef item As MyListViewItem, boolForceUpdateColor As Boolean)
         With itemOnGUI
+            If item IsNot Nothing Then
             For i As Short = 1 To item.SubItems.Count - 1
                 .SubItems(i) = item.SubItems(i)
             Next
@@ -110,6 +111,7 @@ Public Class Form1
             .AllTheHashes = item.AllTheHashes
             .BoolValidHash = item.BoolValidHash
             If boolForceUpdateColor Then .BackColor = item.Color
+            End If
         End With
     End Sub
 
@@ -426,7 +428,7 @@ Public Class Form1
                                                                       ResetHashIndividualFilesProgress()
                                                                       Text = strWindowTitle
 
-                                                                      currentItem.SubItems(2).Text = strWaitingToBeProcessed
+                                                                      If currentItem IsNot Nothing Then currentItem.SubItems(2).Text = strWaitingToBeProcessed
                                                                       UpdateListViewItem(itemOnGUI, currentItem, False)
 
                                                                       Dim intNumberOfItemsWithoutHash As Integer = listFiles.Items.Cast(Of MyListViewItem).Where(Function(item As MyListViewItem) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count
