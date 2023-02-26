@@ -98,19 +98,19 @@ Public Class Form1
     Private Sub UpdateListViewItem(ByRef itemOnGUI As MyListViewItem, ByRef item As MyListViewItem, boolForceUpdateColor As Boolean)
         With itemOnGUI
             If item IsNot Nothing Then
-            For i As Short = 1 To item.SubItems.Count - 1
-                .SubItems(i) = item.SubItems(i)
-            Next
+                For i As Short = 1 To item.SubItems.Count - 1
+                    .SubItems(i) = item.SubItems(i)
+                Next
 
-            .FileSize = item.FileSize
-            .Hash = item.Hash
-            .FileName = item.FileName
-            .Color = item.Color
-            .BoolFileExists = item.BoolFileExists
-            .ComputeTime = item.ComputeTime
-            .AllTheHashes = item.AllTheHashes
-            .BoolValidHash = item.BoolValidHash
-            If boolForceUpdateColor Then .BackColor = item.Color
+                .FileSize = item.FileSize
+                .Hash = item.Hash
+                .FileName = item.FileName
+                .Color = item.Color
+                .BoolFileExists = item.BoolFileExists
+                .ComputeTime = item.ComputeTime
+                .AllTheHashes = item.AllTheHashes
+                .BoolValidHash = item.BoolValidHash
+                If boolForceUpdateColor Then .BackColor = item.Color
             End If
         End With
     End Sub
@@ -256,7 +256,7 @@ Public Class Form1
         If btnComputeHash.Text = "Abort Processing" Then
             If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
-                    workingThread.Abort()
+                    boolAbortThread = True
                     boolBackgroundThreadWorking = False
                 End If
 
@@ -348,11 +348,13 @@ Public Class Form1
 
                                                      SyncLock threadLockingObject
                                                          For Each item As MyListViewItem In items
+                                                             If boolAbortThread Then Throw New MyThreadAbortException()
                                                              If String.IsNullOrWhiteSpace(item.Hash) And IO.File.Exists(item.FileName) Then longAllBytes += item.FileSize
                                                          Next
                                                      End SyncLock
 
                                                      For Each item As MyListViewItem In items
+                                                         If boolAbortThread Then Throw New MyThreadAbortException()
                                                          currentItem = item
                                                          intIndexBeingWorkedOn = item.Index
                                                          itemOnGUI = Nothing
@@ -415,7 +417,7 @@ Public Class Form1
                                                                       MsgBox($"Completed in {TimespanToHMS(myStopWatch.Elapsed)}.{DoubleCRLF}{MyToString(longErroredFiles)} {If(longErroredFiles = 1, "file", "files")} experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   End If
                                                               End Sub)
-                                                 Catch ex As Threading.ThreadAbortException
+                                                 Catch ex As MyThreadAbortException
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       lblProcessingFile.Text = Nothing
@@ -441,6 +443,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
+                                                     boolAbortThread = False
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
@@ -1049,6 +1052,7 @@ Public Class Form1
                                                      Dim percentage As Double
 
                                                      For Each filedata As FastDirectoryEnumerator.FileData In filesInDirectory
+                                                         If boolAbortThread Then Throw New MyThreadAbortException()
                                                          intFileIndexNumber += 1
                                                          MyInvoke(Sub()
                                                                       percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
@@ -1083,7 +1087,7 @@ Public Class Form1
                                                                   btnIndividualFilesCopyToClipboard.Enabled = False
                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = False
                                                               End Sub)
-                                                 Catch ex As Threading.ThreadAbortException
+                                                 Catch ex As MyThreadAbortException
                                                      filesInListFiles.Clear()
                                                      filesInListFiles = oldFilesInListFiles
 
@@ -1118,6 +1122,7 @@ Public Class Form1
                                                                                             End Sub)
 
                                                      boolBackgroundThreadWorking = False
+                                                     boolAbortThread = False
                                                  End Try
                                              End Sub) With {
             .Priority = GetThreadPriority(),
@@ -1129,7 +1134,7 @@ Public Class Form1
 
     Private Sub BtnAddFilesInFolder_Click(sender As Object, e As EventArgs) Handles btnAddFilesInFolder.Click
         If btnAddFilesInFolder.Text = "Abort Adding Files" AndAlso workingThread IsNot Nothing AndAlso MsgBox("Are you sure you want to abort adding files?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-            workingThread.Abort()
+            boolAbortThread = True
             boolBackgroundThreadWorking = False
             Exit Sub
         End If
@@ -1254,6 +1259,7 @@ Public Class Form1
 
                                                      Dim newDataInFileArray As New List(Of String)
                                                      For Each strLineInFile In dataInFileArray
+                                                         If boolAbortThread Then Throw New MyThreadAbortException
                                                          If Not strLineInFile.Trim.StartsWith("'") Then newDataInFileArray.Add(strLineInFile)
                                                      Next
                                                      strLineInFile = Nothing
@@ -1262,6 +1268,7 @@ Public Class Form1
                                                      If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= $" ({MyToString(newDataInFileArray.Count)} {If(newDataInFileArray.Count = 1, "entry", "entries")} in hash file)")
 
                                                      For Each strLineInFile In newDataInFileArray
+                                                         If boolAbortThread Then Throw New MyThreadAbortException
                                                          intLineCounter += 1
                                                          MyInvoke(Sub()
                                                                       VerifyHashProgressBar.Value = intLineCounter / newDataInFileArray.LongCount * 100
@@ -1334,6 +1341,7 @@ Public Class Form1
                                                      longTotalFiles = items.Count
 
                                                      For Each item As MyListViewItem In items
+                                                         If boolAbortThread Then Throw New MyThreadAbortException
                                                          currentItem = item
                                                          intIndexBeingWorkedOn = item.Index
                                                          fileCountPercentage = index / intFileCount * 100
@@ -1454,7 +1462,7 @@ Public Class Form1
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                 Catch ex As Exception
+                                                 Catch ex As MyThreadAbortException
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       verifyHashesListFiles.EndUpdate()
@@ -1482,6 +1490,7 @@ Public Class Form1
                                                                   End If
                                                               End Sub)
                                                  Finally
+                                                     boolAbortThread = False
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
@@ -1510,7 +1519,7 @@ Public Class Form1
         If btnOpenExistingHashFile.Text = "Abort Processing" Then
             If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
-                    workingThread.Abort()
+                    boolAbortThread = True
                     boolBackgroundThreadWorking = False
                 End If
 
@@ -1639,7 +1648,7 @@ Public Class Form1
             Exit Sub
         Else
             If workingThread IsNot Nothing Then
-                workingThread.Abort()
+                boolAbortThread = True
                 boolBackgroundThreadWorking = False
             End If
         End If
@@ -1657,7 +1666,7 @@ Public Class Form1
                 PipeServer.Close()
             End If
 
-            If workingThread IsNot Nothing Then workingThread.Abort()
+            If workingThread IsNot Nothing Then boolAbortThread = True
 
             My.Settings.windowLocation = Location
         End If
@@ -1826,7 +1835,7 @@ Public Class Form1
         If btnCompareFiles.Text = "Abort Processing" Then
             If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
-                    workingThread.Abort()
+                    boolAbortThread = True
                     boolBackgroundThreadWorking = False
                 End If
 
@@ -1882,6 +1891,7 @@ Public Class Form1
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
+                                                     If boolAbortThread Then Throw New MyThreadAbortException()
                                                      Dim checksumType As HashAlgorithmName
 
                                                      MyInvoke(Sub()
@@ -1929,6 +1939,7 @@ Public Class Form1
 
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
 
+                                                     If boolAbortThread Then Throw New MyThreadAbortException()
                                                      If DoChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine) AndAlso DoChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine) Then
                                                          boolSuccessful = True
 
@@ -1996,7 +2007,7 @@ Public Class Form1
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
                                                               End Sub)
-                                                 Catch ex As Threading.ThreadAbortException
+                                                 Catch ex As MyThreadAbortException
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       btnCompareFilesBrowseFile1.Enabled = True
@@ -2024,6 +2035,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
+                                                     boolAbortThread = False
                                                      intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
                                                          longAllReadBytes = 0
@@ -2123,7 +2135,7 @@ Public Class Form1
         If btnCompareAgainstKnownHash.Text = "Abort Processing" Then
             If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
-                    workingThread.Abort()
+                    boolAbortThread = True
                     boolBackgroundThreadWorking = False
                 End If
 
@@ -2150,6 +2162,7 @@ Public Class Form1
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
+                                                     If boolAbortThread Then Throw New MyThreadAbortException()
                                                      boolBackgroundThreadWorking = True
                                                      Dim checksumType As HashAlgorithmName
 
@@ -2215,7 +2228,7 @@ Public Class Form1
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
                                                               End Sub)
-                                                 Catch ex As Threading.ThreadAbortException
+                                                 Catch ex As MyThreadAbortException
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       txtFileForKnownHash.Enabled = True

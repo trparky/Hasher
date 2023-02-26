@@ -9,6 +9,7 @@ Public Module Globals
     Public byteRoundFileSizes As Byte = My.Settings.roundFileSizes
     Public byteRoundPercentages As Byte = My.Settings.roundPercentages
     Public Const DoubleCRLF As String = vbCrLf & vbCrLf
+    Public boolAbortThread As Boolean = False
 
     Public Function MyRoundingFunction(value As Double, digits As Integer) As String
         If digits = 0 Then
@@ -82,3 +83,18 @@ Public Module Globals
         End Try
     End Function
 End Module
+
+Public Class MyThreadAbortException
+    Inherits Exception
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(message As String)
+        MyBase.New(message)
+    End Sub
+
+    Public Sub New(message As String, inner As Exception)
+        MyBase.New(message, inner)
+    End Sub
+End Class
