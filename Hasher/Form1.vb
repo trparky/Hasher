@@ -362,7 +362,7 @@ Public Class Form1
                                                              If Not IO.File.Exists(item.FileName) Then longAllBytes -= item.FileSize
                                                          End SyncLock
 
-                                                         If String.IsNullOrWhiteSpace(item.Hash) And IO.File.Exists(item.FileName) Then
+                                                         If (String.IsNullOrWhiteSpace(item.Hash) Or Not item.SubItems(2).Text.Equals(strWaitingToBeProcessed)) And IO.File.Exists(item.FileName) Then
                                                              item.SubItems(2).Text = strCurrentlyBeingProcessed
 
                                                              MyInvoke(Sub()
