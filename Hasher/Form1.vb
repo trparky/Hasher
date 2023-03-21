@@ -432,7 +432,6 @@ Public Class Form1
 
                                                                       If currentItem IsNot Nothing Then currentItem.SubItems(2).Text = strWaitingToBeProcessed
                                                                       UpdateListViewItem(itemOnGUI, currentItem, False)
-                                                                      btnRemoveAllFiles.PerformClick()
 
                                                                       Dim intNumberOfItemsWithoutHash As Integer = listFiles.Items.Cast(Of MyListViewItem).Where(Function(item As MyListViewItem) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count
                                                                       btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
