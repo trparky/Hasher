@@ -84,7 +84,7 @@ Public Class Form1
     Private Function GetListViewItems(lstview As ListView) As ListView.ListViewItemCollection
         Dim tempListViewItemCollection As New ListView.ListViewItemCollection(New ListView())
 
-        If Not lstview.InvokeRequired() Then
+        If Not InvokeRequired() Then
             For Each item As MyListViewItem In lstview.Items
                 tempListViewItemCollection.Add(CType(item.Clone(), MyListViewItem))
             Next
