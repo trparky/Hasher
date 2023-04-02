@@ -387,7 +387,7 @@ Public Class Form1
                                                                  item.SubItems(3).Text = TimespanToHMS(item.ComputeTime)
                                                                  item.Hash = strChecksum
                                                              Else
-                                                                 item.SubItems(2).Text = $"(An error occurred while calculating checksum, {exType})"
+                                                                 item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                  item.SubItems(3).Text = ""
                                                                  item.ComputeTime = Nothing
                                                                  longErroredFiles += 1
@@ -1392,7 +1392,7 @@ Public Class Form1
                                                              Else
                                                                  item.ColorType = ColorType.NotFound
                                                                  item.Color = fileNotFoundColor
-                                                                 item.SubItems(2).Text = $"(An error occurred while calculating checksum, {exType})"
+                                                                 item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                  longFilesThatWereNotFound += 1
                                                              End If
 
@@ -3006,8 +3006,8 @@ Public Class Form1
                                                                      End If
                                                                  Else
                                                                      item.Color = fileNotFoundColor
-                                                                     item.SubItems(2).Text = $"(An error occurred while calculating checksum, {exType})"
-                                                                     item.SubItems(4).Text = $"(An error occurred while calculating checksum, {exType})"
+                                                                     item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                     item.SubItems(4).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                      item.BoolValidHash = False
 
                                                                      SyncLock threadLockingObject
