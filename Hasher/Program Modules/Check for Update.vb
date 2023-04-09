@@ -59,7 +59,7 @@ Namespace checkForUpdates
 
         Public windowObject As Form1
         Private ReadOnly shortBuild As Short = Short.Parse(versionInfo(VersionPieces.build).Trim)
-        Private ReadOnly versionStringWithoutBuild As Double = Double.Parse(String.Format("{0}.{1}", versionInfo(VersionPieces.major), versionInfo(VersionPieces.minor)))
+        Private ReadOnly versionStringWithoutBuild As Double = Double.Parse($"{versionInfo(VersionPieces.major)}.{versionInfo(VersionPieces.minor)}")
 
         Public Sub New(inputWindowObject As Form1)
             windowObject = inputWindowObject
@@ -259,7 +259,7 @@ Namespace checkForUpdates
             Dim httpHelper As HttpHelper = CreateNewHTTPHelperObject()
             httpHelper.SetDownloadStatusUpdateRoutine = Function(downloadStatusDetails As DownloadStatusDetails)
                                                             windowObject.Invoke(Sub()
-                                                                                    windowObject.lblDownloadNotification.Text = String.Format("{0}% Downloaded.", downloadStatusDetails.PercentageDownloaded.ToString)
+                                                                                    windowObject.lblDownloadNotification.Text = $"{downloadStatusDetails.PercentageDownloaded}% Downloaded."
                                                                                 End Sub)
                                                             Return Nothing
                                                         End Function
@@ -299,8 +299,8 @@ Namespace checkForUpdates
         ''' <returns>String type.</returns>
         Private Shared Function CreateHTTPUserAgentHeaderString() As String
             Dim versionInfo As String() = Application.ProductVersion.Split(".")
-            Dim versionString As String = String.Format("{0}.{1} Build {2}", versionInfo(0), versionInfo(1), versionInfo(2))
-            Return String.Format("Hasher version {0} on {1}", versionString, GetFullOSVersionString())
+            Dim versionString As String = $"{versionInfo(0)}.{versionInfo(1)} Build {versionInfo(2)}"
+            Return $"Hasher version {versionString} on {GetFullOSVersionString()}"
         End Function
 
         Private Shared Function GetFullOSVersionString() As String
@@ -327,7 +327,7 @@ Namespace checkForUpdates
                 ElseIf intOSMajorVersion = 11 Then
                     strOSName = "Windows 11"
                 Else
-                    strOSName = String.Format("Windows NT {0}.{1}", intOSMajorVersion, intOSMinorVersion)
+                    strOSName = $"Windows NT {intOSMajorVersion}.{intOSMinorVersion}"
                 End If
 
                 Return $"{strOSName} {If(Environment.Is64BitOperatingSystem, "64", "32")}-bit (Microsoft .NET {dblDOTNETVersion })"
