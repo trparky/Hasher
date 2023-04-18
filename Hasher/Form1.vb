@@ -3383,7 +3383,10 @@ Public Class Form1
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         ' This is to work around a bug in Windows 10 in which the Start Menu doesn't close when launching a .NET program from the Start Menu.
-        If Environment.OSVersion.Version.Major = 10 Or Environment.OSVersion.Version.Major = 11 Then SendKeys.Send("{ESC}")
+        Try
+            If Environment.OSVersion.Version.Major = 10 Or Environment.OSVersion.Version.Major = 11 Then SendKeys.Send("{ESC}")
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub ChkUpdateColorInRealTime_Click(sender As Object, e As EventArgs) Handles chkUpdateColorInRealTime.Click
