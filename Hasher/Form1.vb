@@ -799,18 +799,6 @@ Public Class Form1
         End Try
     End Sub
 
-    ''' <summary>Creates a named pipe server. Returns a Boolean value indicating if the function was able to create a named pipe server.</summary>
-    ''' <returns>Returns a Boolean value indicating if the function was able to create a named pipe server.</returns>
-    Private Function StartNamedPipeServer() As Boolean
-        Try
-            Dim pipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
-            pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
-            Return True ' We were able to create a named pipe server. Yay!
-        Catch oEX As Exception
-            Return False ' OK, there's already a named pipe server in operation already so we return a False value.
-        End Try
-    End Function
-
     ''' <summary>
     ''' This function will act upon either a file or a directory path.
     ''' If it's passed a directory path it will call the addFilesFromDirectory() function.
@@ -848,6 +836,54 @@ Public Class Form1
 
     Private Sub Form1_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
         CallSaveColumnOrders()
+    End Sub
+
+    ''' <summary>Creates a named pipe server. Returns a Boolean value indicating if the function was able to create a named pipe server.</summary>
+    ''' <returns>Returns a Boolean value indicating if the function was able to create a named pipe server.</returns>
+    Private Function StartNamedPipeServer() As Boolean
+        Try
+            Dim pipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
+            pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
+            Return True ' We were able to create a named pipe server. Yay!
+        Catch oEX As Exception
+            Return False ' OK, there's already a named pipe server in operation already so we return a False value.
+        End Try
+    End Function
+
+    Private Sub WaitForConnectionCallBack(iar As IAsyncResult)
+        Try
+            Dim namedPipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
+            namedPipeServer.EndWaitForConnection(iar)
+            Dim buffer As Byte() = New Byte(499) {}
+            namedPipeServer.Read(buffer, 0, 500)
+
+            Dim strReceivedMessage As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
+
+            If strReceivedMessage.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+                MyInvoke(Sub()
+                             Dim strFilePathToBeCompared As String = strReceivedMessage.CaseInsensitiveReplace("--comparefile=", "", StringComparison.OrdinalIgnoreCase)
+
+                             If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
+                                 txtFile1.Text = strFilePathToBeCompared
+                             ElseIf String.IsNullOrWhiteSpace(txtFile1.Text) And Not String.IsNullOrWhiteSpace(txtFile2.Text) Then
+                                 txtFile1.Text = strFilePathToBeCompared
+                             ElseIf Not String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
+                                 txtFile2.Text = strFilePathToBeCompared
+                             End If
+
+                             TabControl1.SelectedIndex = TabNumberCompareFilesTab
+                             If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
+                         End Sub)
+            ElseIf strReceivedMessage.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                AddFileOrDirectoryToHashFileList(strReceivedMessage.CaseInsensitiveReplace("--addfile=", "", StringComparison.OrdinalIgnoreCase))
+            End If
+
+            namedPipeServer.Dispose()
+            namedPipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
+            namedPipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), namedPipeServer)
+        Catch
+            Return
+        End Try
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -2426,42 +2462,6 @@ Public Class Form1
 
     Private Sub ChkSortFileListingAfterAddingFilesToHash_Click(sender As Object, e As EventArgs) Handles chkSortFileListingAfterAddingFilesToHash.Click
         My.Settings.boolSortFileListingAfterAddingFilesToHash = chkSortFileListingAfterAddingFilesToHash.Checked
-    End Sub
-
-    Private Sub WaitForConnectionCallBack(iar As IAsyncResult)
-        Try
-            Dim namedPipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
-            namedPipeServer.EndWaitForConnection(iar)
-            Dim buffer As Byte() = New Byte(499) {}
-            namedPipeServer.Read(buffer, 0, 500)
-
-            Dim strReceivedMessage As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
-
-            If strReceivedMessage.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
-                MyInvoke(Sub()
-                             Dim strFilePathToBeCompared As String = strReceivedMessage.CaseInsensitiveReplace("--comparefile=", "", StringComparison.OrdinalIgnoreCase)
-
-                             If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
-                                 txtFile1.Text = strFilePathToBeCompared
-                             ElseIf String.IsNullOrWhiteSpace(txtFile1.Text) And Not String.IsNullOrWhiteSpace(txtFile2.Text) Then
-                                 txtFile1.Text = strFilePathToBeCompared
-                             ElseIf Not String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
-                                 txtFile2.Text = strFilePathToBeCompared
-                             End If
-
-                             TabControl1.SelectedIndex = TabNumberCompareFilesTab
-                             If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
-                         End Sub)
-            ElseIf strReceivedMessage.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                AddFileOrDirectoryToHashFileList(strReceivedMessage.CaseInsensitiveReplace("--addfile=", "", StringComparison.OrdinalIgnoreCase))
-            End If
-
-            namedPipeServer.Dispose()
-            namedPipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
-            namedPipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), namedPipeServer)
-        Catch
-            Return
-        End Try
     End Sub
 
     Private Sub ChkUseMilliseconds_Click(sender As Object, e As EventArgs) Handles chkUseMilliseconds.Click
