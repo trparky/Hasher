@@ -84,7 +84,7 @@ Public Class Form1
     Private Function GetListViewItems(lstview As ListView) As ListView.ListViewItemCollection
         Dim tempListViewItemCollection As New ListView.ListViewItemCollection(New ListView())
 
-        If Not lstview.InvokeRequired() Then
+        If Not InvokeRequired() Then
             For Each item As MyListViewItem In lstview.Items
                 tempListViewItemCollection.Add(CType(item.Clone(), MyListViewItem))
             Next
@@ -98,19 +98,19 @@ Public Class Form1
     Private Sub UpdateListViewItem(ByRef itemOnGUI As MyListViewItem, ByRef item As MyListViewItem, boolForceUpdateColor As Boolean)
         With itemOnGUI
             If item IsNot Nothing Then
-            For i As Short = 1 To item.SubItems.Count - 1
-                .SubItems(i) = item.SubItems(i)
-            Next
+                For i As Short = 1 To item.SubItems.Count - 1
+                    .SubItems(i) = item.SubItems(i)
+                Next
 
-            .FileSize = item.FileSize
-            .Hash = item.Hash
-            .FileName = item.FileName
-            .Color = item.Color
-            .BoolFileExists = item.BoolFileExists
-            .ComputeTime = item.ComputeTime
-            .AllTheHashes = item.AllTheHashes
-            .BoolValidHash = item.BoolValidHash
-            If boolForceUpdateColor Then .BackColor = item.Color
+                .FileSize = item.FileSize
+                .Hash = item.Hash
+                .FileName = item.FileName
+                .Color = item.Color
+                .BoolFileExists = item.BoolFileExists
+                .ComputeTime = item.ComputeTime
+                .AllTheHashes = item.AllTheHashes
+                .BoolValidHash = item.BoolValidHash
+                If boolForceUpdateColor Then .BackColor = item.Color
             End If
         End With
     End Sub
@@ -123,7 +123,7 @@ Public Class Form1
         Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
     End Function
 
-    Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef allTheHashes As AllTheHashes, subRoutine As [Delegate]) As Boolean
+    Private Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef allTheHashes As AllTheHashes, subRoutine As [Delegate], ByRef exType As Type) As Boolean
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New Checksums(subRoutine)
@@ -135,6 +135,7 @@ Public Class Form1
 
             Return False
         Catch ex As Exception
+            exType = ex.GetType
             Return False
         End Try
     End Function
@@ -256,7 +257,7 @@ Public Class Form1
         If btnComputeHash.Text = "Abort Processing" Then
             If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
-                    workingThread.Abort()
+                    boolAbortThread = True
                     boolBackgroundThreadWorking = False
                 End If
 
@@ -297,6 +298,7 @@ Public Class Form1
                                                      Dim items As ListView.ListViewItemCollection = GetListViewItems(listFiles)
                                                      Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim fileCountPercentage As Double
+                                                     Dim exType As Type = Nothing
 
                                                      SyncLock threadLockingObject
                                                          longAllReadBytes = 0
@@ -348,11 +350,13 @@ Public Class Form1
 
                                                      SyncLock threadLockingObject
                                                          For Each item As MyListViewItem In items
+                                                             If boolAbortThread Then Throw New MyThreadAbortException()
                                                              If String.IsNullOrWhiteSpace(item.Hash) And IO.File.Exists(item.FileName) Then longAllBytes += item.FileSize
                                                          Next
                                                      End SyncLock
 
                                                      For Each item As MyListViewItem In items
+                                                         If boolAbortThread Then Throw New MyThreadAbortException()
                                                          currentItem = item
                                                          intIndexBeingWorkedOn = item.Index
                                                          itemOnGUI = Nothing
@@ -375,7 +379,7 @@ Public Class Form1
 
                                                              computeStopwatch = Stopwatch.StartNew
 
-                                                             If DoChecksumWithAttachedSubRoutine(item.FileName, allTheHashes, subRoutine) Then
+                                                             If DoChecksumWithAttachedSubRoutine(item.FileName, allTheHashes, subRoutine, exType) Then
                                                                  item.AllTheHashes = allTheHashes
                                                                  strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
                                                                  item.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
@@ -383,7 +387,7 @@ Public Class Form1
                                                                  item.SubItems(3).Text = TimespanToHMS(item.ComputeTime)
                                                                  item.Hash = strChecksum
                                                              Else
-                                                                 item.SubItems(2).Text = "(Error while calculating checksum)"
+                                                                 item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                  item.SubItems(3).Text = ""
                                                                  item.ComputeTime = Nothing
                                                                  longErroredFiles += 1
@@ -415,7 +419,7 @@ Public Class Form1
                                                                       MsgBox($"Completed in {TimespanToHMS(myStopWatch.Elapsed)}.{DoubleCRLF}{MyToString(longErroredFiles)} {If(longErroredFiles = 1, "file", "files")} experienced a general I/O error while processing.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                                   End If
                                                               End Sub)
-                                                 Catch ex As Threading.ThreadAbortException
+                                                 Catch ex As MyThreadAbortException
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       lblProcessingFile.Text = Nothing
@@ -430,7 +434,6 @@ Public Class Form1
 
                                                                       If currentItem IsNot Nothing Then currentItem.SubItems(2).Text = strWaitingToBeProcessed
                                                                       UpdateListViewItem(itemOnGUI, currentItem, False)
-                                                                      btnRemoveAllFiles.PerformClick()
 
                                                                       Dim intNumberOfItemsWithoutHash As Integer = listFiles.Items.Cast(Of MyListViewItem).Where(Function(item As MyListViewItem) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count
                                                                       btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
@@ -441,6 +444,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
+                                                     boolAbortThread = False
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
@@ -491,7 +495,7 @@ Public Class Form1
         For Each item As MyListViewItem In listFiles.Items
             If Not String.IsNullOrWhiteSpace(item.Hash) Then
                 strFile = item.FileName
-                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.CaseInsensitiveReplace(folderOfChecksumFile, "")
+                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.CaseInsensitiveReplace(folderOfChecksumFile, "", StringComparison.OrdinalIgnoreCase)
                 stringBuilder.AppendLine($"{GetDataFromAllTheHashes(checksumType, item.AllTheHashes)} *{strFile}")
             End If
         Next
@@ -795,18 +799,6 @@ Public Class Form1
         End Try
     End Sub
 
-    ''' <summary>Creates a named pipe server. Returns a Boolean value indicating if the function was able to create a named pipe server.</summary>
-    ''' <returns>Returns a Boolean value indicating if the function was able to create a named pipe server.</returns>
-    Private Function StartNamedPipeServer() As Boolean
-        Try
-            Dim pipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
-            pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
-            Return True ' We were able to create a named pipe server. Yay!
-        Catch oEX As Exception
-            Return False ' OK, there's already a named pipe server in operation already so we return a False value.
-        End Try
-    End Function
-
     ''' <summary>
     ''' This function will act upon either a file or a directory path.
     ''' If it's passed a directory path it will call the addFilesFromDirectory() function.
@@ -846,6 +838,54 @@ Public Class Form1
         CallSaveColumnOrders()
     End Sub
 
+    ''' <summary>Creates a named pipe server. Returns a Boolean value indicating if the function was able to create a named pipe server.</summary>
+    ''' <returns>Returns a Boolean value indicating if the function was able to create a named pipe server.</returns>
+    Private Function StartNamedPipeServer() As Boolean
+        Try
+            Dim pipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
+            pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
+            Return True ' We were able to create a named pipe server. Yay!
+        Catch oEX As Exception
+            Return False ' OK, there's already a named pipe server in operation already so we return a False value.
+        End Try
+    End Function
+
+    Private Sub WaitForConnectionCallBack(iar As IAsyncResult)
+        Try
+            Dim namedPipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
+            namedPipeServer.EndWaitForConnection(iar)
+            Dim buffer As Byte() = New Byte(499) {}
+            namedPipeServer.Read(buffer, 0, 500)
+
+            Dim strReceivedMessage As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
+
+            If strReceivedMessage.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+                MyInvoke(Sub()
+                             Dim strFilePathToBeCompared As String = strReceivedMessage.CaseInsensitiveReplace("--comparefile=", "", StringComparison.OrdinalIgnoreCase)
+
+                             If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
+                                 txtFile1.Text = strFilePathToBeCompared
+                             ElseIf String.IsNullOrWhiteSpace(txtFile1.Text) And Not String.IsNullOrWhiteSpace(txtFile2.Text) Then
+                                 txtFile1.Text = strFilePathToBeCompared
+                             ElseIf Not String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
+                                 txtFile2.Text = strFilePathToBeCompared
+                             End If
+
+                             TabControl1.SelectedIndex = TabNumberCompareFilesTab
+                             If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
+                         End Sub)
+            ElseIf strReceivedMessage.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                AddFileOrDirectoryToHashFileList(strReceivedMessage.CaseInsensitiveReplace("--addfile=", "", StringComparison.OrdinalIgnoreCase))
+            End If
+
+            namedPipeServer.Dispose()
+            namedPipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
+            namedPipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), namedPipeServer)
+        Catch
+            Return
+        End Try
+    End Sub
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' This function returns a Boolean value indicating if the name pipe server was started or not.
         Dim boolNamedPipeServerStarted As Boolean = StartNamedPipeServer()
@@ -861,11 +901,11 @@ Public Class Form1
                     ' so, this instance of the program will continue operating as the host of the named pipe server.
                     If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
                         ' We now have to strip off what we don't need.
-                        commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--addfile=", "").Replace(Chr(34), "")
+                        commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--addfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
                         AddFileOrDirectoryToHashFileList(commandLineArgument)
                     ElseIf commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
                         ' We now have to strip off what we don't need.
-                        commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--comparefile=", "").Replace(Chr(34), "")
+                        commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--comparefile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
                         txtFile1.Text = commandLineArgument
                     End If
                 Else
@@ -877,7 +917,7 @@ Public Class Form1
                     Process.GetCurrentProcess.Kill() ' This terminates the process.
                 End If
             ElseIf commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--hashfile=", "").Replace(Chr(34), "")
+                commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--hashfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
 
                 If IO.File.Exists(commandLineArgument) Then
                     TabControl1.SelectTab(TabNumberVerifySavedHashesTab)
@@ -886,7 +926,7 @@ Public Class Form1
                     ProcessExistingHashFile(commandLineArgument)
                 End If
             ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--knownhashfile=", "").Replace(Chr(34), "")
+                commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--knownhashfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
                 TabControl1.SelectTab(TabNumberCompareFileAgainstKnownHashTab)
                 txtFileForKnownHash.Text = commandLineArgument
                 txtKnownHash.Select()
@@ -1049,6 +1089,7 @@ Public Class Form1
                                                      Dim percentage As Double
 
                                                      For Each filedata As FastDirectoryEnumerator.FileData In filesInDirectory
+                                                         If boolAbortThread Then Throw New MyThreadAbortException()
                                                          intFileIndexNumber += 1
                                                          MyInvoke(Sub()
                                                                       percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
@@ -1083,7 +1124,7 @@ Public Class Form1
                                                                   btnIndividualFilesCopyToClipboard.Enabled = False
                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = False
                                                               End Sub)
-                                                 Catch ex As Threading.ThreadAbortException
+                                                 Catch ex As MyThreadAbortException
                                                      filesInListFiles.Clear()
                                                      filesInListFiles = oldFilesInListFiles
 
@@ -1118,6 +1159,7 @@ Public Class Form1
                                                                                             End Sub)
 
                                                      boolBackgroundThreadWorking = False
+                                                     boolAbortThread = False
                                                  End Try
                                              End Sub) With {
             .Priority = GetThreadPriority(),
@@ -1129,7 +1171,7 @@ Public Class Form1
 
     Private Sub BtnAddFilesInFolder_Click(sender As Object, e As EventArgs) Handles btnAddFilesInFolder.Click
         If btnAddFilesInFolder.Text = "Abort Adding Files" AndAlso workingThread IsNot Nothing AndAlso MsgBox("Are you sure you want to abort adding files?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-            workingThread.Abort()
+            boolAbortThread = True
             boolBackgroundThreadWorking = False
             Exit Sub
         End If
@@ -1232,6 +1274,7 @@ Public Class Form1
                                                      Dim listOfListViewItems As New List(Of MyListViewItem)
                                                      Dim intIndexBeingWorkedOn As Integer
                                                      Dim currentItem As MyListViewItem = Nothing
+                                                     Dim exType As Type = Nothing
 
                                                      MyInvoke(Sub()
                                                                   btnRetestFailedFiles.Visible = False
@@ -1254,6 +1297,7 @@ Public Class Form1
 
                                                      Dim newDataInFileArray As New List(Of String)
                                                      For Each strLineInFile In dataInFileArray
+                                                         If boolAbortThread Then Throw New MyThreadAbortException
                                                          If Not strLineInFile.Trim.StartsWith("'") Then newDataInFileArray.Add(strLineInFile)
                                                      Next
                                                      strLineInFile = Nothing
@@ -1262,6 +1306,7 @@ Public Class Form1
                                                      If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= $" ({MyToString(newDataInFileArray.Count)} {If(newDataInFileArray.Count = 1, "entry", "entries")} in hash file)")
 
                                                      For Each strLineInFile In newDataInFileArray
+                                                         If boolAbortThread Then Throw New MyThreadAbortException
                                                          intLineCounter += 1
                                                          MyInvoke(Sub()
                                                                       VerifyHashProgressBar.Value = intLineCounter / newDataInFileArray.LongCount * 100
@@ -1334,6 +1379,7 @@ Public Class Form1
                                                      longTotalFiles = items.Count
 
                                                      For Each item As MyListViewItem In items
+                                                         If boolAbortThread Then Throw New MyThreadAbortException
                                                          currentItem = item
                                                          intIndexBeingWorkedOn = item.Index
                                                          fileCountPercentage = index / intFileCount * 100
@@ -1356,7 +1402,7 @@ Public Class Form1
 
                                                              computeStopwatch = Stopwatch.StartNew
 
-                                                             If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine) Then
+                                                             If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exType) Then
                                                                  strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
                                                                  item.AllTheHashes = allTheHashes
 
@@ -1382,7 +1428,7 @@ Public Class Form1
                                                              Else
                                                                  item.ColorType = ColorType.NotFound
                                                                  item.Color = fileNotFoundColor
-                                                                 item.SubItems(2).Text = "(Error while calculating checksum)"
+                                                                 item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                  longFilesThatWereNotFound += 1
                                                              End If
 
@@ -1454,7 +1500,7 @@ Public Class Form1
 
                                                      boolBackgroundThreadWorking = False
                                                      workingThread = Nothing
-                                                 Catch ex As Exception
+                                                 Catch ex As MyThreadAbortException
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       verifyHashesListFiles.EndUpdate()
@@ -1482,6 +1528,7 @@ Public Class Form1
                                                                   End If
                                                               End Sub)
                                                  Finally
+                                                     boolAbortThread = False
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
@@ -1510,7 +1557,7 @@ Public Class Form1
         If btnOpenExistingHashFile.Text = "Abort Processing" Then
             If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
-                    workingThread.Abort()
+                    boolAbortThread = True
                     boolBackgroundThreadWorking = False
                 End If
 
@@ -1639,7 +1686,7 @@ Public Class Form1
             Exit Sub
         Else
             If workingThread IsNot Nothing Then
-                workingThread.Abort()
+                boolAbortThread = True
                 boolBackgroundThreadWorking = False
             End If
         End If
@@ -1657,7 +1704,7 @@ Public Class Form1
                 PipeServer.Close()
             End If
 
-            If workingThread IsNot Nothing Then workingThread.Abort()
+            If workingThread IsNot Nothing Then boolAbortThread = True
 
             My.Settings.windowLocation = Location
         End If
@@ -1826,7 +1873,7 @@ Public Class Form1
         If btnCompareFiles.Text = "Abort Processing" Then
             If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
-                    workingThread.Abort()
+                    boolAbortThread = True
                     boolBackgroundThreadWorking = False
                 End If
 
@@ -1882,6 +1929,7 @@ Public Class Form1
         workingThread = New Threading.Thread(Sub()
                                                  Try
                                                      boolBackgroundThreadWorking = True
+                                                     If boolAbortThread Then Throw New MyThreadAbortException()
                                                      Dim checksumType As HashAlgorithmName
 
                                                      MyInvoke(Sub()
@@ -1909,6 +1957,8 @@ Public Class Form1
                                                      Dim strChecksum2 As String = Nothing
                                                      Dim boolSuccessful As Boolean = False
                                                      Dim percentage, allBytesPercentage As Double
+                                                     Dim exType1 As Type = Nothing
+                                                     Dim exType2 As Type = Nothing
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
                                                                                         Try
                                                                                             MyInvoke(Sub()
@@ -1929,7 +1979,8 @@ Public Class Form1
 
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
 
-                                                     If DoChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine) AndAlso DoChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine) Then
+                                                     If boolAbortThread Then Throw New MyThreadAbortException()
+                                                     If DoChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine, exType1) AndAlso DoChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine, exType2) Then
                                                          boolSuccessful = True
 
                                                          If checksumType = HashAlgorithmName.MD5 Then
@@ -1996,7 +2047,7 @@ Public Class Form1
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
                                                               End Sub)
-                                                 Catch ex As Threading.ThreadAbortException
+                                                 Catch ex As MyThreadAbortException
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       btnCompareFilesBrowseFile1.Enabled = True
@@ -2024,6 +2075,7 @@ Public Class Form1
                                                                   If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                               End Sub)
                                                  Finally
+                                                     boolAbortThread = False
                                                      intCurrentlyActiveTab = TabNumberNull
                                                      SyncLock threadLockingObject
                                                          longAllReadBytes = 0
@@ -2123,7 +2175,7 @@ Public Class Form1
         If btnCompareAgainstKnownHash.Text = "Abort Processing" Then
             If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
                 If workingThread IsNot Nothing Then
-                    workingThread.Abort()
+                    boolAbortThread = True
                     boolBackgroundThreadWorking = False
                 End If
 
@@ -2150,6 +2202,7 @@ Public Class Form1
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
+                                                     If boolAbortThread Then Throw New MyThreadAbortException()
                                                      boolBackgroundThreadWorking = True
                                                      Dim checksumType As HashAlgorithmName
 
@@ -2182,7 +2235,8 @@ Public Class Form1
 
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim allTheHashes As AllTheHashes = Nothing
-                                                     Dim boolSuccessful As Boolean = DoChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, allTheHashes, subRoutine)
+                                                     Dim exType As Type = Nothing
+                                                     Dim boolSuccessful As Boolean = DoChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, allTheHashes, subRoutine, exType)
                                                      strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
 
                                                      MyInvoke(Sub()
@@ -2215,7 +2269,7 @@ Public Class Form1
                                                                   boolBackgroundThreadWorking = False
                                                                   workingThread = Nothing
                                                               End Sub)
-                                                 Catch ex As Threading.ThreadAbortException
+                                                 Catch ex As MyThreadAbortException
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       txtFileForKnownHash.Enabled = True
@@ -2408,42 +2462,6 @@ Public Class Form1
 
     Private Sub ChkSortFileListingAfterAddingFilesToHash_Click(sender As Object, e As EventArgs) Handles chkSortFileListingAfterAddingFilesToHash.Click
         My.Settings.boolSortFileListingAfterAddingFilesToHash = chkSortFileListingAfterAddingFilesToHash.Checked
-    End Sub
-
-    Private Sub WaitForConnectionCallBack(iar As IAsyncResult)
-        Try
-            Dim namedPipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
-            namedPipeServer.EndWaitForConnection(iar)
-            Dim buffer As Byte() = New Byte(499) {}
-            namedPipeServer.Read(buffer, 0, 500)
-
-            Dim strReceivedMessage As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
-
-            If strReceivedMessage.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
-                MyInvoke(Sub()
-                             Dim strFilePathToBeCompared As String = strReceivedMessage.CaseInsensitiveReplace("--comparefile=", "")
-
-                             If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
-                                 txtFile1.Text = strFilePathToBeCompared
-                             ElseIf String.IsNullOrWhiteSpace(txtFile1.Text) And Not String.IsNullOrWhiteSpace(txtFile2.Text) Then
-                                 txtFile1.Text = strFilePathToBeCompared
-                             ElseIf Not String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
-                                 txtFile2.Text = strFilePathToBeCompared
-                             End If
-
-                             TabControl1.SelectedIndex = TabNumberCompareFilesTab
-                             If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
-                         End Sub)
-            ElseIf strReceivedMessage.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                AddFileOrDirectoryToHashFileList(strReceivedMessage.CaseInsensitiveReplace("--addfile=", ""))
-            End If
-
-            namedPipeServer.Dispose()
-            namedPipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
-            namedPipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), namedPipeServer)
-        Catch
-            Return
-        End Try
     End Sub
 
     Private Sub ChkUseMilliseconds_Click(sender As Object, e As EventArgs) Handles chkUseMilliseconds.Click
@@ -2894,6 +2912,7 @@ Public Class Form1
                                                      Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
                                                      Dim intFileCount As Integer = 0
+                                                     Dim exType As Type = Nothing
 
                                                      For Each item As MyListViewItem In items
                                                          MyInvoke(Sub() itemOnGUI = verifyHashesListFiles.Items(item.Index))
@@ -2965,7 +2984,7 @@ Public Class Form1
 
                                                                  computeStopwatch = Stopwatch.StartNew
 
-                                                                 If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine) Then
+                                                                 If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exType) Then
                                                                      strChecksum = GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes)
                                                                      item.AllTheHashes = allTheHashes
 
@@ -2987,8 +3006,8 @@ Public Class Form1
                                                                      End If
                                                                  Else
                                                                      item.Color = fileNotFoundColor
-                                                                     item.SubItems(2).Text = "(Error while calculating checksum)"
-                                                                     item.SubItems(4).Text = "(Error while calculating checksum)"
+                                                                     item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                     item.SubItems(4).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                      item.BoolValidHash = False
 
                                                                      SyncLock threadLockingObject
@@ -3364,10 +3383,10 @@ Public Class Form1
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         ' This is to work around a bug in Windows 10 in which the Start Menu doesn't close when launching a .NET program from the Start Menu.
-        If Environment.OSVersion.Version.Major = 10 Or Environment.OSVersion.Version.Major = 11 Then
-            NativeMethod.NativeMethods.keybd_event(NativeMethod.NativeMethods.ESC, 0, 0, 0)
-            NativeMethod.NativeMethods.keybd_event(NativeMethod.NativeMethods.ESC, 0, NativeMethod.NativeMethods.UP, 0)
-        End If
+        Try
+            If Environment.OSVersion.Version.Major = 10 Or Environment.OSVersion.Version.Major = 11 Then SendKeys.Send("{ESC}")
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub ChkUpdateColorInRealTime_Click(sender As Object, e As EventArgs) Handles chkUpdateColorInRealTime.Click

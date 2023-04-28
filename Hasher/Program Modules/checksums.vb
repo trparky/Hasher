@@ -49,6 +49,7 @@ Public Class Checksums
 
         ' Open the file for reading.
         Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
+            If boolAbortThread Then Throw New MyThreadAbortException
             byteDataBuffer = New Byte(intBufferSize - 1) {} ' Create a data buffer in system memory to store some data.
             intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the above data buffer.
             SyncLock threadLockingObject
@@ -67,6 +68,12 @@ Public Class Checksums
 
             ' We're going to loop until all the data for the file we're processing has been read from disk.
             Do While longTotalBytesRead < longFileSize
+                If boolAbortThread Then
+                    stream.Close()
+                    stream.Dispose()
+                    Throw New MyThreadAbortException()
+                End If
+
                 ' Add the data that we've read from disk into the hasher function.
                 md5Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
                 sha160Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)

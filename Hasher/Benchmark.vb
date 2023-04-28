@@ -12,7 +12,7 @@
     Private Sub BtnOpenFile_Click(sender As Object, e As EventArgs) Handles btnOpenFile.Click
         If btnOpenFile.Text = "Abort Processing" Then
             If workingThread IsNot Nothing Then
-                workingThread.Abort()
+                boolAbortThread = True
                 boolBackgroundThreadWorking = False
             End If
 
@@ -26,6 +26,7 @@
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
+                                                     If boolAbortThread Then Throw New MyThreadAbortException()
                                                      boolBackgroundThreadWorking = True
                                                      Dim strFileNameLine As String = $"Benchmarking with file ""{New IO.FileInfo(OpenFileDialog.FileName).Name}"".{vbCrLf}"
                                                      Dim intBufferSize As Integer
@@ -49,6 +50,7 @@
                                                      Dim itemToBeAdded As BenchmarkListViewItem
 
                                                      For intBufferSize = 1 To 16
+                                                         If boolAbortThread Then Throw New MyThreadAbortException()
                                                          intRealBufferSize = intBufferSize * 1024 * 1024
                                                          computeStopwatch = Stopwatch.StartNew
 
@@ -65,6 +67,7 @@
                                                             End Sub)
                                                  Catch ex As Threading.ThreadAbortException
                                                  Finally
+                                                     boolAbortThread = False
                                                      If Not boolClosingWindow Then
                                                          Invoke(Sub()
                                                                     If Not boolClosingWindow Then
@@ -93,7 +96,7 @@
         Else
             If workingThread IsNot Nothing Then
                 boolClosingWindow = True
-                workingThread.Abort()
+                boolAbortThread = True
             End If
         End If
     End Sub
