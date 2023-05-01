@@ -251,18 +251,7 @@ Namespace checkForUpdates
         Private Sub DownloadAndPerformUpdate()
             Dim newExecutableName As String = $"{New FileInfo(Application.ExecutablePath).Name}.new.exe"
 
-            ' We have to do this stuff on the thread that the form belongs to or we will get an error.
-            windowObject.Invoke(Sub()
-                                    windowObject.lblDownloadNotification.Visible = True
-                                End Sub)
-
             Dim httpHelper As HttpHelper = CreateNewHTTPHelperObject()
-            httpHelper.SetDownloadStatusUpdateRoutine = Function(downloadStatusDetails As DownloadStatusDetails)
-                                                            windowObject.Invoke(Sub()
-                                                                                    windowObject.lblDownloadNotification.Text = $"{downloadStatusDetails.PercentageDownloaded}% Downloaded."
-                                                                                End Sub)
-                                                            Return Nothing
-                                                        End Function
 
             Using memoryStream As New MemoryStream()
                 If Not httpHelper.DownloadFile(programZipFileURL, memoryStream, False) Then

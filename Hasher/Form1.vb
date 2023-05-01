@@ -963,6 +963,7 @@ Public Class Form1
         chkDisplayHashesInUpperCase.Checked = My.Settings.boolDisplayHashesInUpperCase
         chkUseCommasInNumbers.Checked = My.Settings.boolUseCommasInNumbers
         chkCheckForUpdates.Checked = My.Settings.boolCheckForUpdates
+        btnCheckForUpdates.Visible = Not chkCheckForUpdates.Checked
         chkAutoAddExtension.Checked = My.Settings.boolAutoAddExtension
         chkDisplayValidChecksumString.Checked = My.Settings.boolDisplayValidChecksumString
         chkOpenInExplorer.Checked = My.Settings.boolOpenInExplorer
@@ -2634,6 +2635,7 @@ Public Class Form1
 
     Private Sub ChkCheckForUpdates_Click(sender As Object, e As EventArgs) Handles chkCheckForUpdates.Click
         My.Settings.boolCheckForUpdates = chkCheckForUpdates.Checked
+        btnCheckForUpdates.Visible = Not chkCheckForUpdates.Checked
     End Sub
 
     Private Sub ChkAutoAddExtension_Click(sender As Object, e As EventArgs) Handles chkAutoAddExtension.Click
