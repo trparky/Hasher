@@ -495,7 +495,7 @@ Public Class Form1
         For Each item As MyListViewItem In listFiles.Items
             If Not String.IsNullOrWhiteSpace(item.Hash) Then
                 strFile = item.FileName
-                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.CaseInsensitiveReplace(folderOfChecksumFile, "", StringComparison.OrdinalIgnoreCase)
+                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.Replace(folderOfChecksumFile, "", StringComparison.OrdinalIgnoreCase)
                 stringBuilder.AppendLine($"{GetDataFromAllTheHashes(checksumType, item.AllTheHashes)} *{strFile}")
             End If
         Next
@@ -861,7 +861,7 @@ Public Class Form1
 
             If strReceivedMessage.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
                 MyInvoke(Sub()
-                             Dim strFilePathToBeCompared As String = strReceivedMessage.CaseInsensitiveReplace("--comparefile=", "", StringComparison.OrdinalIgnoreCase)
+                             Dim strFilePathToBeCompared As String = strReceivedMessage.Replace("--comparefile=", "", StringComparison.OrdinalIgnoreCase)
 
                              If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
                                  txtFile1.Text = strFilePathToBeCompared
@@ -875,7 +875,7 @@ Public Class Form1
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub)
             ElseIf strReceivedMessage.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                AddFileOrDirectoryToHashFileList(strReceivedMessage.CaseInsensitiveReplace("--addfile=", "", StringComparison.OrdinalIgnoreCase))
+                AddFileOrDirectoryToHashFileList(strReceivedMessage.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase))
             End If
 
             namedPipeServer.Dispose()
@@ -901,11 +901,11 @@ Public Class Form1
                     ' so, this instance of the program will continue operating as the host of the named pipe server.
                     If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
                         ' We now have to strip off what we don't need.
-                        commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--addfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
+                        commandLineArgument = commandLineArgument.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
                         AddFileOrDirectoryToHashFileList(commandLineArgument)
                     ElseIf commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
                         ' We now have to strip off what we don't need.
-                        commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--comparefile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
+                        commandLineArgument = commandLineArgument.Replace("--comparefile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
                         txtFile1.Text = commandLineArgument
                     End If
                 Else
@@ -917,7 +917,7 @@ Public Class Form1
                     Process.GetCurrentProcess.Kill() ' This terminates the process.
                 End If
             ElseIf commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--hashfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
+                commandLineArgument = commandLineArgument.Replace("--hashfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
 
                 If IO.File.Exists(commandLineArgument) Then
                     TabControl1.SelectTab(TabNumberVerifySavedHashesTab)
@@ -926,7 +926,7 @@ Public Class Form1
                     ProcessExistingHashFile(commandLineArgument)
                 End If
             ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.CaseInsensitiveReplace("--knownhashfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
+                commandLineArgument = commandLineArgument.Replace("--knownhashfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
                 TabControl1.SelectTab(TabNumberCompareFileAgainstKnownHashTab)
                 txtFileForKnownHash.Text = commandLineArgument
                 txtKnownHash.Select()
@@ -963,6 +963,7 @@ Public Class Form1
         chkDisplayHashesInUpperCase.Checked = My.Settings.boolDisplayHashesInUpperCase
         chkUseCommasInNumbers.Checked = My.Settings.boolUseCommasInNumbers
         chkCheckForUpdates.Checked = My.Settings.boolCheckForUpdates
+        btnCheckForUpdates.Visible = Not chkCheckForUpdates.Checked
         chkAutoAddExtension.Checked = My.Settings.boolAutoAddExtension
         chkDisplayValidChecksumString.Checked = My.Settings.boolDisplayValidChecksumString
         chkOpenInExplorer.Checked = My.Settings.boolOpenInExplorer
@@ -2634,6 +2635,7 @@ Public Class Form1
 
     Private Sub ChkCheckForUpdates_Click(sender As Object, e As EventArgs) Handles chkCheckForUpdates.Click
         My.Settings.boolCheckForUpdates = chkCheckForUpdates.Checked
+        btnCheckForUpdates.Visible = Not chkCheckForUpdates.Checked
     End Sub
 
     Private Sub ChkAutoAddExtension_Click(sender As Object, e As EventArgs) Handles chkAutoAddExtension.Click

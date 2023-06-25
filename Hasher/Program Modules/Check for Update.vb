@@ -33,7 +33,7 @@ Namespace checkForUpdates
             Dim currentProcessFileName As String = New FileInfo(Application.ExecutablePath).Name
 
             If currentProcessFileName.CaseInsensitiveContains(".new.exe") Then
-                Dim mainEXEName As String = currentProcessFileName.CaseInsensitiveReplace(".new.exe", "", StringComparison.OrdinalIgnoreCase)
+                Dim mainEXEName As String = currentProcessFileName.Replace(".new.exe", "", StringComparison.OrdinalIgnoreCase)
 
                 SearchForProcessAndKillIt(mainEXEName, False)
 
@@ -251,18 +251,7 @@ Namespace checkForUpdates
         Private Sub DownloadAndPerformUpdate()
             Dim newExecutableName As String = $"{New FileInfo(Application.ExecutablePath).Name}.new.exe"
 
-            ' We have to do this stuff on the thread that the form belongs to or we will get an error.
-            windowObject.Invoke(Sub()
-                                    windowObject.lblDownloadNotification.Visible = True
-                                End Sub)
-
             Dim httpHelper As HttpHelper = CreateNewHTTPHelperObject()
-            httpHelper.SetDownloadStatusUpdateRoutine = Function(downloadStatusDetails As DownloadStatusDetails)
-                                                            windowObject.Invoke(Sub()
-                                                                                    windowObject.lblDownloadNotification.Text = $"{downloadStatusDetails.PercentageDownloaded}% Downloaded."
-                                                                                End Sub)
-                                                            Return Nothing
-                                                        End Function
 
             Using memoryStream As New MemoryStream()
                 If Not httpHelper.DownloadFile(programZipFileURL, memoryStream, False) Then
@@ -300,7 +289,7 @@ Namespace checkForUpdates
         Private Shared Function CreateHTTPUserAgentHeaderString() As String
             Dim versionInfo As String() = Application.ProductVersion.Split(".")
             Dim versionString As String = $"{versionInfo(0)}.{versionInfo(1)} Build {versionInfo(2)}"
-            Return $"Hasher version {versionString} on {GetFullOSVersionString()}"
+            Return $"{strProgramName} version {versionString} on {GetFullOSVersionString()}"
         End Function
 
         Private Shared Function GetFullOSVersionString() As String
@@ -366,7 +355,7 @@ Namespace checkForUpdates
                         Dim response As ProcessUpdateXMLResponse = ProcessUpdateXMLData(xmlData, remoteVersion, remoteBuild)
 
                         If response = ProcessUpdateXMLResponse.newVersion Then
-                            If BackgroundThreadMessageBox($"An update to Hasher (version {remoteVersion} Build {remoteBuild}) is available to be downloaded, do you want to download and update to this new version?", strMessageBoxTitleText) = MsgBoxResult.Yes Then
+                            If BackgroundThreadMessageBox($"An update to {strProgramName} (version {remoteVersion} Build {remoteBuild}) is available to be downloaded, do you want to download and update to this new version?", strMessageBoxTitleText) = MsgBoxResult.Yes Then
                                 DownloadAndPerformUpdate()
                             Else
                                 windowObject.Invoke(Sub() MsgBox("The update will not be downloaded.", MsgBoxStyle.Information, strMessageBoxTitleText))

@@ -27,7 +27,6 @@ Partial Class Form1
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabWelcome = New System.Windows.Forms.TabPage()
         Me.btnDonate = New System.Windows.Forms.Button()
-        Me.lblDownloadNotification = New System.Windows.Forms.Label()
         Me.btnCheckForUpdates = New System.Windows.Forms.Button()
         Me.lblWelcomeText = New System.Windows.Forms.Label()
         Me.tabHashText = New System.Windows.Forms.TabPage()
@@ -231,7 +230,6 @@ Partial Class Form1
         '
         Me.tabWelcome.BackColor = System.Drawing.SystemColors.Control
         Me.tabWelcome.Controls.Add(Me.btnDonate)
-        Me.tabWelcome.Controls.Add(Me.lblDownloadNotification)
         Me.tabWelcome.Controls.Add(Me.btnCheckForUpdates)
         Me.tabWelcome.Controls.Add(Me.lblWelcomeText)
         Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
@@ -245,7 +243,7 @@ Partial Class Form1
         '
         Me.btnDonate.Image = Global.Hasher.My.Resources.Resources.green_dollar
         Me.btnDonate.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btnDonate.Location = New System.Drawing.Point(19, 119)
+        Me.btnDonate.Location = New System.Drawing.Point(19, 74)
         Me.btnDonate.Name = "btnDonate"
         Me.btnDonate.Size = New System.Drawing.Size(163, 39)
         Me.btnDonate.TabIndex = 9
@@ -253,19 +251,9 @@ Partial Class Form1
         Me.btnDonate.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnDonate.UseVisualStyleBackColor = True
         '
-        'lblDownloadNotification
-        '
-        Me.lblDownloadNotification.AutoSize = True
-        Me.lblDownloadNotification.Location = New System.Drawing.Point(188, 74)
-        Me.lblDownloadNotification.Name = "lblDownloadNotification"
-        Me.lblDownloadNotification.Size = New System.Drawing.Size(133, 13)
-        Me.lblDownloadNotification.TabIndex = 8
-        Me.lblDownloadNotification.Text = "(No Download in Progress)"
-        Me.lblDownloadNotification.Visible = False
-        '
         'btnCheckForUpdates
         '
-        Me.btnCheckForUpdates.Location = New System.Drawing.Point(19, 74)
+        Me.btnCheckForUpdates.Location = New System.Drawing.Point(19, 119)
         Me.btnCheckForUpdates.Name = "btnCheckForUpdates"
         Me.btnCheckForUpdates.Size = New System.Drawing.Size(163, 39)
         Me.btnCheckForUpdates.TabIndex = 7
@@ -283,7 +271,7 @@ Partial Class Form1
         Me.lblWelcomeText.TabIndex = 0
         Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hasher version {0}        (Ru" &
     "nning in {1}-bit mode on a {2}-bit operating system)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written by Tom Parkison." &
-    " Copyright Thomas Parkison 2018-2023."
+    " Copyright Thomas Parkison 2018-2024."
         '
         'tabHashText
         '
@@ -1991,7 +1979,6 @@ Partial Class Form1
     Friend WithEvents colFileSize As ColumnHeader
     Friend WithEvents colFileSize2 As ColumnHeader
     Friend WithEvents listFilesContextMenu As ContextMenuStrip
-    Friend WithEvents lblDownloadNotification As Label
     Friend WithEvents btnCheckForUpdates As Button
     Friend WithEvents tabCompareFiles As TabPage
     Friend WithEvents btnCompareFilesBrowseFile1 As Button
