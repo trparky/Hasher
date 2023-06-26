@@ -267,11 +267,10 @@ Partial Class Form1
         Me.lblWelcomeText.AutoSize = True
         Me.lblWelcomeText.Location = New System.Drawing.Point(16, 19)
         Me.lblWelcomeText.Name = "lblWelcomeText"
-        Me.lblWelcomeText.Size = New System.Drawing.Size(373, 52)
+        Me.lblWelcomeText.Size = New System.Drawing.Size(315, 52)
         Me.lblWelcomeText.TabIndex = 0
-        Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hasher version {0}        (Ru" &
-    "nning in {1}-bit mode on a {2}-bit operating system)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written by Tom Parkison." &
-    " Copyright Thomas Parkison 2018-2024."
+        Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hasher version {0}" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written" &
+    " by Tom Parkison. Copyright Thomas Parkison 2018-2024."
         '
         'tabHashText
         '
