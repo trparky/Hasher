@@ -15,22 +15,6 @@ Public Class Checksums
         checksumStatusUpdater = inputDelegate
     End Sub
 
-    Public Shared Function GetHashEngine(hashType As HashAlgorithmName) As HashAlgorithm
-        If hashType = HashAlgorithmName.MD5 Then
-            Return New MD5CryptoServiceProvider
-        ElseIf hashType = HashAlgorithmName.SHA1 Then
-            Return New SHA1CryptoServiceProvider
-        ElseIf hashType = HashAlgorithmName.SHA256 Then
-            Return New SHA256CryptoServiceProvider
-        ElseIf hashType = HashAlgorithmName.SHA384 Then
-            Return New SHA384CryptoServiceProvider
-        ElseIf hashType = HashAlgorithmName.SHA512 Then
-            Return New SHA512CryptoServiceProvider
-        Else
-            Return New SHA512CryptoServiceProvider
-        End If
-    End Function
-
     Public Function PerformFileHash(strFileName As String, intBufferSize As Integer) As AllTheHashes
         ' Declare some variables.
         Dim byteDataBuffer As Byte()
@@ -60,11 +44,11 @@ Public Class Checksums
             ' Call the status updating delegate.
             checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead)
 
-            Dim md5Engine As HashAlgorithm = GetHashEngine(HashAlgorithmName.MD5)
-            Dim sha160Engine As HashAlgorithm = GetHashEngine(HashAlgorithmName.SHA1)
-            Dim sha256Engine As HashAlgorithm = GetHashEngine(HashAlgorithmName.SHA256)
-            Dim sha384Engine As HashAlgorithm = GetHashEngine(HashAlgorithmName.SHA384)
-            Dim sha512Engine As HashAlgorithm = GetHashEngine(HashAlgorithmName.SHA512)
+            Dim md5Engine As HashAlgorithm = New MD5CryptoServiceProvider
+            Dim sha160Engine As HashAlgorithm = New SHA1CryptoServiceProvider
+            Dim sha256Engine As HashAlgorithm = New SHA256CryptoServiceProvider
+            Dim sha384Engine As HashAlgorithm = New SHA384CryptoServiceProvider
+            Dim sha512Engine As HashAlgorithm = New SHA512CryptoServiceProvider
 
             ' We're going to loop until all the data for the file we're processing has been read from disk.
             Do While longTotalBytesRead < longFileSize

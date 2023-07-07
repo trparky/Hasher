@@ -23,7 +23,7 @@ Public Class Form1
     Private boolDoneLoading As Boolean = False
     Private boolUpdateColorInRealTime As Boolean
     Private Property PipeServer As NamedPipeServerStream = Nothing
-    Private ReadOnly strNamedPipeServerName As String = $"hasher_{GetHashOfString(Environment.UserName, HashAlgorithmName.SHA256).Substring(0, 10)}"
+    Private ReadOnly strNamedPipeServerName As String = $"hasher_{GetSHA256HashOfString(Environment.UserName).Substring(0, 10)}"
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolDidWePerformAPreviousHash As Boolean = False
     Private validColor, notValidColor, fileNotFoundColor As Color
@@ -2318,19 +2318,26 @@ Public Class Form1
         If boolDoneLoading Then My.Settings.boolWindowMaximized = WindowState = FormWindowState.Maximized
     End Sub
 
-    Private Function GetHashOfString(inputString As String, hashType As HashAlgorithmName) As String
-        Using HashAlgorithm As HashAlgorithm = Checksums.GetHashEngine(hashType)
-            Dim byteOutput As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+    Private Function GetSHA160HashOfString(inputString As String) As String
+        Using sha256Engine As HashAlgorithm = New SHA1CryptoServiceProvider
+            Dim byteOutput As Byte() = sha256Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+            Return BitConverter.ToString(byteOutput).ToLower().Replace("-", "")
+        End Using
+    End Function
+
+    Private Function GetSHA256HashOfString(inputString As String) As String
+        Using sha256Engine As HashAlgorithm = New SHA256CryptoServiceProvider
+            Dim byteOutput As Byte() = sha256Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
             Return BitConverter.ToString(byteOutput).ToLower().Replace("-", "")
         End Using
     End Function
 
     Private Function GetHashOfString(inputString As String) As AllTheHashes
-        Dim md5Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.MD5)
-        Dim sha160Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.SHA1)
-        Dim sha256Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.SHA256)
-        Dim sha384Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.SHA384)
-        Dim sha512Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.SHA512)
+        Dim md5Engine As HashAlgorithm = New MD5CryptoServiceProvider
+        Dim sha160Engine As HashAlgorithm = New SHA1CryptoServiceProvider
+        Dim sha256Engine As HashAlgorithm = New SHA256CryptoServiceProvider
+        Dim sha384Engine As HashAlgorithm = New SHA384CryptoServiceProvider
+        Dim sha512Engine As HashAlgorithm = New SHA512CryptoServiceProvider
         Dim byteArray As Byte() = System.Text.Encoding.UTF8.GetBytes(inputString)
 
         md5Engine.ComputeHash(byteArray)
@@ -3295,7 +3302,7 @@ Public Class Form1
 
         ' Do all of this work in a background thread so as to keep the GUI active even while work is being done in this routine.
         Threading.ThreadPool.QueueUserWorkItem(Sub()
-                                                   Dim strFullSHA1String As String = GetHashOfString(txtTextToHash.Text).Sha160.ToUpper ' First hash the String.
+                                                   Dim strFullSHA1String As String = GetSHA160HashOfString(txtTextToHash.Text).ToUpper ' First hash the String.
                                                    Dim strSHA1ToSearchWith As String = strFullSHA1String.Substring(0, 5) ' Take out only what we want, the first five characters. That's all we send to the server.
                                                    Dim strWebData As String = Nothing ' Prepare a variable to get data from the web.
 
