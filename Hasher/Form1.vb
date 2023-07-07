@@ -269,17 +269,13 @@ Public Class Form1
     End Function
 
     Private Sub BtnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
-        If btnComputeHash.Text = "Abort Processing" Then
-            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-                If workingThread IsNot Nothing Then
-                    boolAbortThread = True
-                    boolBackgroundThreadWorking = False
-                End If
-
-                Exit Sub
-            Else
-                Exit Sub
+        If btnComputeHash.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+            If workingThread IsNot Nothing Then
+                boolAbortThread = True
+                boolBackgroundThreadWorking = False
             End If
+
+            Exit Sub
         End If
 
         btnComputeHash.Text = "Abort Processing"
@@ -1566,17 +1562,13 @@ Public Class Form1
     End Sub
 
     Private Sub BtnOpenExistingHashFile_Click(sender As Object, e As EventArgs) Handles btnOpenExistingHashFile.Click
-        If btnOpenExistingHashFile.Text = "Abort Processing" Then
-            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-                If workingThread IsNot Nothing Then
-                    boolAbortThread = True
-                    boolBackgroundThreadWorking = False
-                End If
-
-                Exit Sub
-            Else
-                Exit Sub
+        If btnOpenExistingHashFile.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+            If workingThread IsNot Nothing Then
+                boolAbortThread = True
+                boolBackgroundThreadWorking = False
             End If
+
+            Exit Sub
         End If
 
         btnTransferToHashIndividualFilesTab.Enabled = False
@@ -1882,17 +1874,13 @@ Public Class Form1
 
     Private Sub BtnCompareFiles_Click(sender As Object, e As EventArgs) Handles btnCompareFiles.Click
         compareRadioSHA512.Checked = True
-        If btnCompareFiles.Text = "Abort Processing" Then
-            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-                If workingThread IsNot Nothing Then
-                    boolAbortThread = True
-                    boolBackgroundThreadWorking = False
-                End If
-
-                Exit Sub
-            Else
-                Exit Sub
+        If btnCompareFiles.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+            If workingThread IsNot Nothing Then
+                boolAbortThread = True
+                boolBackgroundThreadWorking = False
             End If
+
+            Exit Sub
         End If
 
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
@@ -2184,17 +2172,13 @@ Public Class Form1
     End Sub
 
     Private Sub BtnCompareAgainstKnownHash_Click(sender As Object, e As EventArgs) Handles btnCompareAgainstKnownHash.Click
-        If btnCompareAgainstKnownHash.Text = "Abort Processing" Then
-            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-                If workingThread IsNot Nothing Then
-                    boolAbortThread = True
-                    boolBackgroundThreadWorking = False
-                End If
-
-                Exit Sub
-            Else
-                Exit Sub
+        If btnCompareAgainstKnownHash.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+            If workingThread IsNot Nothing Then
+                boolAbortThread = True
+                boolBackgroundThreadWorking = False
             End If
+
+            Exit Sub
         End If
 
         txtFileForKnownHash.Text = txtFileForKnownHash.Text.Trim
