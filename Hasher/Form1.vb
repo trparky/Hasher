@@ -202,6 +202,21 @@ Public Class Form1
         Return itemToBeAdded
     End Function
 
+    Private Function CreateListFilesObject(strFileName As String, longFileSize As Long) As MyListViewItem
+        filesInListFiles.Add(strFileName.Trim.ToLower)
+
+        Dim itemToBeAdded As New MyListViewItem(strFileName)
+        With itemToBeAdded
+            .FileSize = longFileSize
+            .FileName = strFileName
+            .SubItems.Add(FileSizeToHumanSize(itemToBeAdded.FileSize))
+            .SubItems.Add(strWaitingToBeProcessed)
+            .SubItems.Add("")
+        End With
+
+        Return itemToBeAdded
+    End Function
+
     Private Sub BtnAddIndividualFiles_Click(sender As Object, e As EventArgs) Handles btnAddIndividualFiles.Click
         Using OpenFileDialog As New OpenFileDialog
             OpenFileDialog.Title = "Select Files to be Hashed..."
@@ -1095,7 +1110,7 @@ Public Class Form1
                                                                       lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
                                                                   End Sub)
                                                          If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
-                                                             If IO.File.Exists(filedata.Path) Then collectionOfListViewItems.Add(CreateListFilesObject(filedata.Path))
+                                                             If IO.File.Exists(filedata.Path) Then collectionOfListViewItems.Add(CreateListFilesObject(filedata.Path, filedata.Size))
                                                          End If
                                                      Next
 
