@@ -1080,7 +1080,7 @@ Public Class Form1
                                                                   lblIndividualFilesStatus.Text = Nothing
                                                               End Sub)
 
-                                                     Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
+                                                     Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
                                                      Dim intFileIndexNumber As Integer = 0
                                                      Dim intTotalNumberOfFiles As Integer = filesInDirectory.Count
                                                      Dim percentage As Double
