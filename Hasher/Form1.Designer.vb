@@ -187,6 +187,7 @@ Partial Class Form1
         Me.btnRemoveSystemLevelFileAssociations = New System.Windows.Forms.Button()
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnRemoveFileAssociations = New System.Windows.Forms.Button()
+        Me.lblFileCountOnHashIndividualFilesTab = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -267,11 +268,10 @@ Partial Class Form1
         Me.lblWelcomeText.AutoSize = True
         Me.lblWelcomeText.Location = New System.Drawing.Point(16, 19)
         Me.lblWelcomeText.Name = "lblWelcomeText"
-        Me.lblWelcomeText.Size = New System.Drawing.Size(373, 52)
+        Me.lblWelcomeText.Size = New System.Drawing.Size(315, 52)
         Me.lblWelcomeText.TabIndex = 0
-        Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hasher version {0}        (Ru" &
-    "nning in {1}-bit mode on a {2}-bit operating system)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written by Tom Parkison." &
-    " Copyright Thomas Parkison 2018-2024."
+        Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hasher version {0}" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written" &
+    " by Tom Parkison. Copyright Thomas Parkison 2018-2024."
         '
         'tabHashText
         '
@@ -419,6 +419,7 @@ Partial Class Form1
         'tabHashIndividualFiles
         '
         Me.tabHashIndividualFiles.BackColor = System.Drawing.SystemColors.Control
+        Me.tabHashIndividualFiles.Controls.Add(Me.lblFileCountOnHashIndividualFilesTab)
         Me.tabHashIndividualFiles.Controls.Add(Me.hashIndividualFilesTableLayoutControl)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep3)
         Me.tabHashIndividualFiles.Controls.Add(Me.lblHashIndividualFilesStep2)
@@ -643,9 +644,9 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblHashIndividualFilesStep1.Location = New System.Drawing.Point(15, 4)
         Me.lblHashIndividualFilesStep1.Name = "lblHashIndividualFilesStep1"
-        Me.lblHashIndividualFilesStep1.Size = New System.Drawing.Size(306, 13)
+        Me.lblHashIndividualFilesStep1.Size = New System.Drawing.Size(257, 13)
         Me.lblHashIndividualFilesStep1.TabIndex = 6
-        Me.lblHashIndividualFilesStep1.Text = "Step 1: Select Individual Files to be Hashed (0 Files)"
+        Me.lblHashIndividualFilesStep1.Text = "Step 1: Select Individual Files to be Hashed"
         '
         'listFiles
         '
@@ -1884,6 +1885,15 @@ Partial Class Form1
         Me.btnRemoveFileAssociations.Text = "Remove File Associations"
         Me.btnRemoveFileAssociations.UseVisualStyleBackColor = True
         '
+        'lblFileCountOnHashIndividualFilesTab
+        '
+        Me.lblFileCountOnHashIndividualFilesTab.AutoSize = True
+        Me.lblFileCountOnHashIndividualFilesTab.Location = New System.Drawing.Point(270, 4)
+        Me.lblFileCountOnHashIndividualFilesTab.Name = "lblFileCountOnHashIndividualFilesTab"
+        Me.lblFileCountOnHashIndividualFilesTab.Size = New System.Drawing.Size(43, 13)
+        Me.lblFileCountOnHashIndividualFilesTab.TabIndex = 25
+        Me.lblFileCountOnHashIndividualFilesTab.Text = "(0 Files)"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2090,4 +2100,5 @@ Partial Class Form1
     Friend WithEvents btnCheckHaveIBeenPwned As Button
     Friend WithEvents btnRemoveFileAssociations As Button
     Friend WithEvents btnRemoveSystemLevelFileAssociations As Button
+    Friend WithEvents lblFileCountOnHashIndividualFilesTab As Label
 End Class

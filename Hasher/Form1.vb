@@ -23,7 +23,7 @@ Public Class Form1
     Private boolDoneLoading As Boolean = False
     Private boolUpdateColorInRealTime As Boolean
     Private Property PipeServer As NamedPipeServerStream = Nothing
-    Private ReadOnly strNamedPipeServerName As String = $"hasher_{GetHashOfString(Environment.UserName, HashAlgorithmName.SHA256).Substring(0, 10)}"
+    Private ReadOnly strNamedPipeServerName As String = $"hasher_{GetSHA256HashOfString(Environment.UserName).Substring(0, 10)}"
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolDidWePerformAPreviousHash As Boolean = False
     Private validColor, notValidColor, fileNotFoundColor As Color
@@ -143,9 +143,9 @@ Public Class Form1
     Private Sub UpdateFilesListCountHeader(Optional boolIncludeSelectedItemCount As Boolean = False)
         MyInvoke(Sub()
                      If boolIncludeSelectedItemCount Then
-                         lblHashIndividualFilesStep1.Text = $"Step 1: Select Individual Files to be Hashed ({MyToString(listFiles.Items.Count)} {If(listFiles.Items.Count = 1, "file", "files")}, {MyToString(listFiles.SelectedItems.Count)} {If(listFiles.SelectedItems.Count = 1, "file", "files")} are selected)"
+                         lblFileCountOnHashIndividualFilesTab.Text = $"({MyToString(listFiles.Items.Count)} {If(listFiles.Items.Count = 1, "file", "files")}, {MyToString(listFiles.SelectedItems.Count)} {If(listFiles.SelectedItems.Count = 1, "file", "files")} are selected)"
                      Else
-                         lblHashIndividualFilesStep1.Text = $"Step 1: Select Individual Files to be Hashed ({MyToString(listFiles.Items.Count)} {If(listFiles.Items.Count = 1, "file", "files")})"
+                         lblFileCountOnHashIndividualFilesTab.Text = $"({MyToString(listFiles.Items.Count)} {If(listFiles.Items.Count = 1, "file", "files")})"
                      End If
 
                      If listFiles.Items.Count = 0 Then
@@ -193,6 +193,21 @@ Public Class Form1
         Dim itemToBeAdded As New MyListViewItem(strFileName)
         With itemToBeAdded
             .FileSize = New IO.FileInfo(strFileName).Length
+            .FileName = strFileName
+            .SubItems.Add(FileSizeToHumanSize(itemToBeAdded.FileSize))
+            .SubItems.Add(strWaitingToBeProcessed)
+            .SubItems.Add("")
+        End With
+
+        Return itemToBeAdded
+    End Function
+
+    Private Function CreateListFilesObject(strFileName As String, longFileSize As Long) As MyListViewItem
+        filesInListFiles.Add(strFileName.Trim.ToLower)
+
+        Dim itemToBeAdded As New MyListViewItem(strFileName)
+        With itemToBeAdded
+            .FileSize = longFileSize
             .FileName = strFileName
             .SubItems.Add(FileSizeToHumanSize(itemToBeAdded.FileSize))
             .SubItems.Add(strWaitingToBeProcessed)
@@ -254,17 +269,13 @@ Public Class Form1
     End Function
 
     Private Sub BtnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
-        If btnComputeHash.Text = "Abort Processing" Then
-            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-                If workingThread IsNot Nothing Then
-                    boolAbortThread = True
-                    boolBackgroundThreadWorking = False
-                End If
-
-                Exit Sub
-            Else
-                Exit Sub
+        If btnComputeHash.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+            If workingThread IsNot Nothing Then
+                boolAbortThread = True
+                boolBackgroundThreadWorking = False
             End If
+
+            Exit Sub
         End If
 
         btnComputeHash.Text = "Abort Processing"
@@ -974,11 +985,7 @@ Public Class Form1
         chkClearBeforeTransferringFromVerifyToHash.Checked = My.Settings.boolClearBeforeTransferringFromVerifyToHash
         chkUpdateColorInRealTime.Checked = My.Settings.boolUpdateColorInRealTime
         boolUpdateColorInRealTime = My.Settings.boolUpdateColorInRealTime
-        lblWelcomeText.Text = String.Format(lblWelcomeText.Text,
-                                            checkForUpdates.versionString,
-                                            If(Environment.Is64BitProcess, "64", "32"),
-                                            If(Environment.Is64BitOperatingSystem, "64", "32")
-                                           )
+        lblWelcomeText.Text = String.Format(lblWelcomeText.Text, checkForUpdates.versionString)
         Size = My.Settings.windowSize
         If My.Settings.boolWindowMaximized Then WindowState = FormWindowState.Maximized
         validColor = My.Settings.validColor
@@ -1084,7 +1091,7 @@ Public Class Form1
                                                                   lblIndividualFilesStatus.Text = Nothing
                                                               End Sub)
 
-                                                     Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
+                                                     Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
                                                      Dim intFileIndexNumber As Integer = 0
                                                      Dim intTotalNumberOfFiles As Integer = filesInDirectory.Count
                                                      Dim percentage As Double
@@ -1099,7 +1106,7 @@ Public Class Form1
                                                                       lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
                                                                   End Sub)
                                                          If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
-                                                             If IO.File.Exists(filedata.Path) Then collectionOfListViewItems.Add(CreateListFilesObject(filedata.Path))
+                                                             If IO.File.Exists(filedata.Path) Then collectionOfListViewItems.Add(CreateListFilesObject(filedata.Path, filedata.Size))
                                                          End If
                                                      Next
 
@@ -1555,17 +1562,13 @@ Public Class Form1
     End Sub
 
     Private Sub BtnOpenExistingHashFile_Click(sender As Object, e As EventArgs) Handles btnOpenExistingHashFile.Click
-        If btnOpenExistingHashFile.Text = "Abort Processing" Then
-            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-                If workingThread IsNot Nothing Then
-                    boolAbortThread = True
-                    boolBackgroundThreadWorking = False
-                End If
-
-                Exit Sub
-            Else
-                Exit Sub
+        If btnOpenExistingHashFile.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+            If workingThread IsNot Nothing Then
+                boolAbortThread = True
+                boolBackgroundThreadWorking = False
             End If
+
+            Exit Sub
         End If
 
         btnTransferToHashIndividualFilesTab.Enabled = False
@@ -1871,17 +1874,13 @@ Public Class Form1
 
     Private Sub BtnCompareFiles_Click(sender As Object, e As EventArgs) Handles btnCompareFiles.Click
         compareRadioSHA512.Checked = True
-        If btnCompareFiles.Text = "Abort Processing" Then
-            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-                If workingThread IsNot Nothing Then
-                    boolAbortThread = True
-                    boolBackgroundThreadWorking = False
-                End If
-
-                Exit Sub
-            Else
-                Exit Sub
+        If btnCompareFiles.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+            If workingThread IsNot Nothing Then
+                boolAbortThread = True
+                boolBackgroundThreadWorking = False
             End If
+
+            Exit Sub
         End If
 
         If txtFile1.Text.Equals(txtFile2.Text, StringComparison.OrdinalIgnoreCase) Then
@@ -2042,7 +2041,11 @@ Public Class Form1
                                                                           MsgBox($"The two files don't match.{DoubleCRLF}Processing completed in {TimespanToHMS(myStopWatch.Elapsed)}.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
-                                                                      MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                      If boolAbortThread AndAlso Not boolClosingWindow Then
+                                                                          MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                      Else
+                                                                          MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                      End If
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
@@ -2173,17 +2176,13 @@ Public Class Form1
     End Sub
 
     Private Sub BtnCompareAgainstKnownHash_Click(sender As Object, e As EventArgs) Handles btnCompareAgainstKnownHash.Click
-        If btnCompareAgainstKnownHash.Text = "Abort Processing" Then
-            If MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
-                If workingThread IsNot Nothing Then
-                    boolAbortThread = True
-                    boolBackgroundThreadWorking = False
-                End If
-
-                Exit Sub
-            Else
-                Exit Sub
+        If btnCompareAgainstKnownHash.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
+            If workingThread IsNot Nothing Then
+                boolAbortThread = True
+                boolBackgroundThreadWorking = False
             End If
+
+            Exit Sub
         End If
 
         txtFileForKnownHash.Text = txtFileForKnownHash.Text.Trim
@@ -2307,19 +2306,26 @@ Public Class Form1
         If boolDoneLoading Then My.Settings.boolWindowMaximized = WindowState = FormWindowState.Maximized
     End Sub
 
-    Private Function GetHashOfString(inputString As String, hashType As HashAlgorithmName) As String
-        Using HashAlgorithm As HashAlgorithm = Checksums.GetHashEngine(hashType)
-            Dim byteOutput As Byte() = HashAlgorithm.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+    Private Function GetSHA160HashOfString(inputString As String) As String
+        Using sha256Engine As HashAlgorithm = New SHA1CryptoServiceProvider
+            Dim byteOutput As Byte() = sha256Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
+            Return BitConverter.ToString(byteOutput).ToLower().Replace("-", "")
+        End Using
+    End Function
+
+    Private Function GetSHA256HashOfString(inputString As String) As String
+        Using sha256Engine As HashAlgorithm = New SHA256CryptoServiceProvider
+            Dim byteOutput As Byte() = sha256Engine.ComputeHash(System.Text.Encoding.UTF8.GetBytes(inputString))
             Return BitConverter.ToString(byteOutput).ToLower().Replace("-", "")
         End Using
     End Function
 
     Private Function GetHashOfString(inputString As String) As AllTheHashes
-        Dim md5Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.MD5)
-        Dim sha160Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.SHA1)
-        Dim sha256Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.SHA256)
-        Dim sha384Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.SHA384)
-        Dim sha512Engine As HashAlgorithm = Checksums.GetHashEngine(HashAlgorithmName.SHA512)
+        Dim md5Engine As HashAlgorithm = New MD5CryptoServiceProvider
+        Dim sha160Engine As HashAlgorithm = New SHA1CryptoServiceProvider
+        Dim sha256Engine As HashAlgorithm = New SHA256CryptoServiceProvider
+        Dim sha384Engine As HashAlgorithm = New SHA384CryptoServiceProvider
+        Dim sha512Engine As HashAlgorithm = New SHA512CryptoServiceProvider
         Dim byteArray As Byte() = System.Text.Encoding.UTF8.GetBytes(inputString)
 
         md5Engine.ComputeHash(byteArray)
@@ -3284,7 +3290,7 @@ Public Class Form1
 
         ' Do all of this work in a background thread so as to keep the GUI active even while work is being done in this routine.
         Threading.ThreadPool.QueueUserWorkItem(Sub()
-                                                   Dim strFullSHA1String As String = GetHashOfString(txtTextToHash.Text).Sha160.ToUpper ' First hash the String.
+                                                   Dim strFullSHA1String As String = GetSHA160HashOfString(txtTextToHash.Text).ToUpper ' First hash the String.
                                                    Dim strSHA1ToSearchWith As String = strFullSHA1String.Substring(0, 5) ' Take out only what we want, the first five characters. That's all we send to the server.
                                                    Dim strWebData As String = Nothing ' Prepare a variable to get data from the web.
 
