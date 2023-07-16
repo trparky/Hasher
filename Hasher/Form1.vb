@@ -2041,7 +2041,11 @@ Public Class Form1
                                                                           MsgBox($"The two files don't match.{DoubleCRLF}Processing completed in {TimespanToHMS(myStopWatch.Elapsed)}.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                                                                       End If
                                                                   Else
-                                                                      MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                      If boolAbortThread AndAlso Not boolClosingWindow Then
+                                                                          MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
+                                                                      Else
+                                                                          MsgBox("There was an error while calculating the checksum.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                                                      End If
                                                                   End If
 
                                                                   boolBackgroundThreadWorking = False
