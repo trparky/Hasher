@@ -125,7 +125,7 @@ Public Class Form1
         Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
     End Function
 
-    Private Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef allTheHashes As AllTheHashes, subRoutine As [Delegate], ByRef exType As Type, ByRef strStackTrace As String) As Boolean
+    Private Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef allTheHashes As AllTheHashes, subRoutine As [Delegate], ByRef exceptionObject As Exception) As Boolean
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New Checksums(subRoutine)
@@ -137,8 +137,7 @@ Public Class Form1
 
             Return False
         Catch ex As Exception
-            strStackTrace = ex.Message & " -- " & ex.StackTrace
-            exType = ex.GetType
+            exceptionObject = ex
             Return False
         End Try
     End Function
@@ -312,8 +311,7 @@ Public Class Form1
                                                      Dim items As ListView.ListViewItemCollection = GetListViewItems(listFiles)
                                                      Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim fileCountPercentage As Double
-                                                     Dim exType As Type = Nothing
-                                                     Dim strStackTrace As String = Nothing
+                                                     Dim exceptionObject As Exception = Nothing
 
                                                      SyncLock threadLockingObject
                                                          longAllReadBytes = 0
@@ -394,7 +392,7 @@ Public Class Form1
 
                                                              computeStopwatch = Stopwatch.StartNew
 
-                                                             If DoChecksumWithAttachedSubRoutine(item.FileName, allTheHashes, subRoutine, exType, strStackTrace) Then
+                                                             If DoChecksumWithAttachedSubRoutine(item.FileName, allTheHashes, subRoutine, exceptionObject) Then
                                                                  item.AllTheHashes = allTheHashes
                                                                  strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
                                                                  item.SubItems(2).Text = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
@@ -402,11 +400,11 @@ Public Class Form1
                                                                  item.SubItems(3).Text = TimespanToHMS(item.ComputeTime)
                                                                  item.Hash = strChecksum
                                                              Else
-                                                                 item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                 item.SubItems(2).Text = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                  item.SubItems(3).Text = ""
                                                                  item.ComputeTime = Nothing
                                                                  item.boolExceptionOccurred = True
-                                                                 item.strCrashData = strStackTrace
+                                                                 item.strCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
                                                                  longErroredFiles += 1
                                                              End If
 
@@ -1368,7 +1366,7 @@ Public Class Form1
                                                      Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
                                                      Dim fileCountPercentage As Double
-                                                     Dim strStackTrace As String = Nothing
+                                                     Dim exceptionObject As Exception = Nothing
 
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
                                                                                         Try
@@ -1418,7 +1416,7 @@ Public Class Form1
 
                                                              computeStopwatch = Stopwatch.StartNew
 
-                                                             If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exType, strStackTrace) Then
+                                                             If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exceptionObject) Then
                                                                  strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
                                                                  item.AllTheHashes = allTheHashes
 
@@ -1446,7 +1444,7 @@ Public Class Form1
                                                                  item.Color = fileNotFoundColor
                                                                  item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                  item.boolExceptionOccurred = True
-                                                                 item.strCrashData = strStackTrace
+                                                                 item.strCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
                                                                  longFilesThatWereNotFound += 1
                                                              End If
 
@@ -1967,10 +1965,8 @@ Public Class Form1
                                                      Dim strChecksum2 As String = Nothing
                                                      Dim boolSuccessful As Boolean = False
                                                      Dim percentage, allBytesPercentage As Double
-                                                     Dim exType1 As Type = Nothing
-                                                     Dim exType2 As Type = Nothing
-                                                     Dim strStackTrace1 As String = Nothing
-                                                     Dim strStackTrace2 As String = Nothing
+                                                     Dim exceptionObject1 As Exception = Nothing
+                                                     Dim exceptionObject2 As Exception = Nothing
 
                                                      Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
                                                                                         Try
@@ -1993,7 +1989,7 @@ Public Class Form1
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      If boolAbortThread Then Throw New MyThreadAbortException()
-                                                     If DoChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine, exType1, strStackTrace1) AndAlso DoChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine, exType2, strStackTrace2) Then
+                                                     If DoChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine, exceptionObject1) AndAlso DoChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine, exceptionObject2) Then
                                                          boolSuccessful = True
 
                                                          If checksumType = HashAlgorithmName.MD5 Then
@@ -2248,9 +2244,8 @@ Public Class Form1
 
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim allTheHashes As AllTheHashes = Nothing
-                                                     Dim exType As Type = Nothing
-                                                     Dim strStackTrace As String = Nothing
-                                                     Dim boolSuccessful As Boolean = DoChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, allTheHashes, subRoutine, exType, strStackTrace)
+                                                     Dim exceptionObject As Exception = Nothing
+                                                     Dim boolSuccessful As Boolean = DoChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, allTheHashes, subRoutine, exceptionObject)
                                                      strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
 
                                                      MyInvoke(Sub()
@@ -2934,8 +2929,7 @@ Public Class Form1
                                                      Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
                                                      Dim intFileCount As Integer = 0
-                                                     Dim exType As Type = Nothing
-                                                     Dim strStackTrace As String = Nothing
+                                                     Dim exceptionObject As Exception = Nothing
 
                                                      For Each item As MyListViewItem In items
                                                          MyInvoke(Sub() itemOnGUI = verifyHashesListFiles.Items(item.Index))
@@ -3007,7 +3001,7 @@ Public Class Form1
 
                                                                  computeStopwatch = Stopwatch.StartNew
 
-                                                                 If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exType, strStackTrace) Then
+                                                                 If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exceptionObject) Then
                                                                      strChecksum = GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes)
                                                                      item.AllTheHashes = allTheHashes
 
@@ -3029,10 +3023,10 @@ Public Class Form1
                                                                      End If
                                                                  Else
                                                                      item.Color = fileNotFoundColor
-                                                                     item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                     item.SubItems(4).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                     item.SubItems(2).Text = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                     item.SubItems(4).Text = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                      item.boolExceptionOccurred = True
-                                                                     item.strCrashData = strStackTrace
+                                                                     item.strCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
                                                                      item.BoolValidHash = False
 
                                                                      SyncLock threadLockingObject
