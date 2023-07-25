@@ -1761,7 +1761,7 @@ Public Class Form1
         listFiles.Sort()
     End Sub
 
-    Private Sub ContextMenuStrip1_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles listFilesContextMenu.Opening
+    Private Sub ListFilesContextMenu_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles listFilesContextMenu.Opening
         If listFiles.SelectedItems.Count = 0 Or listFiles.SelectedItems.Count > 1 Then
             e.Cancel = True
         ElseIf listFiles.SelectedItems.Count = 1 Then
