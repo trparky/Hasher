@@ -399,6 +399,8 @@ Public Class Form1
                                                                  item.ComputeTime = computeStopwatch.Elapsed
                                                                  item.SubItems(3).Text = TimespanToHMS(item.ComputeTime)
                                                                  item.Hash = strChecksum
+                                                                 item.boolExceptionOccurred = False
+                                                                 item.strCrashData = Nothing
                                                              Else
                                                                  item.SubItems(2).Text = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                  item.SubItems(3).Text = ""
@@ -1439,6 +1441,9 @@ Public Class Form1
                                                                      longFilesThatDidNotPassVerification += 1
                                                                      item.BoolValidHash = False
                                                                  End If
+
+                                                                 item.boolExceptionOccurred = False
+                                                                 item.strCrashData = Nothing
                                                              Else
                                                                  item.ColorType = ColorType.NotFound
                                                                  item.Color = fileNotFoundColor
@@ -3021,6 +3026,9 @@ Public Class Form1
                                                                          item.SubItems(4).Text = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes).ToLower)
                                                                          item.BoolValidHash = False
                                                                      End If
+
+                                                                     item.boolExceptionOccurred = False
+                                                                     item.strCrashData = Nothing
                                                                  Else
                                                                      item.Color = fileNotFoundColor
                                                                      item.SubItems(2).Text = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
