@@ -40,11 +40,11 @@ Partial Class Exception_Viewer
         'btnClose
         '
         Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnClose.Location = New System.Drawing.Point(445, 162)
+        Me.btnClose.Location = New System.Drawing.Point(416, 162)
         Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(75, 23)
+        Me.btnClose.Size = New System.Drawing.Size(104, 23)
         Me.btnClose.TabIndex = 1
-        Me.btnClose.Text = "Close"
+        Me.btnClose.Text = "&Close (ESC)"
         Me.btnClose.UseVisualStyleBackColor = True
         '
         'Exception_Viewer
