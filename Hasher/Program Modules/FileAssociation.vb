@@ -15,14 +15,14 @@ Namespace FileAssociation
                     selectedKey.CreateSubKey("Shell\Verify with Hasher").SetValue("icon", icon, RegistryValueKind.ExpandString)
                 End If
 
-                If Not String.IsNullOrWhiteSpace(application) Then selectedKey.CreateSubKey("Shell\Verify with Hasher\command").SetValue("", $"{Chr(34)}{application}{Chr(34)} --hashfile={Chr(34)}%1{Chr(34)}", RegistryValueKind.ExpandString)
+                If Not String.IsNullOrWhiteSpace(application) Then selectedKey.CreateSubKey("Shell\Verify with Hasher\command").SetValue("", $"""{application}"" --hashfile=""%1""", RegistryValueKind.ExpandString)
             End If
 
             selectedKey = selectedKey.OpenSubKey("Shell\Verify with Hasher\command", True)
 
             If selectedKey IsNot Nothing Then
                 If Not selectedKey.GetValue("", Nothing).ToString.CaseInsensitiveContains("hasher.exe") Then
-                    selectedKey.SetValue("", $"{Chr(34)}{application}{Chr(34)} --hashfile={Chr(34)}%1{Chr(34)}", RegistryValueKind.ExpandString)
+                    selectedKey.SetValue("", $"""{application}"" --hashfile=""%1""", RegistryValueKind.ExpandString)
                 End If
             End If
 
@@ -102,7 +102,7 @@ Namespace FileAssociation
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Hash with Hasher")
                 selectedKey.SetValue("icon", $"{FileLocation},0", RegistryValueKind.ExpandString)
-                selectedKey.CreateSubKey("command").SetValue("", $"{Chr(34)}{FileLocation}{Chr(34)} --addfile={Chr(34)}%1{Chr(34)}", RegistryValueKind.ExpandString)
+                selectedKey.CreateSubKey("command").SetValue("", $"""{FileLocation}"" --addfile=""%1""", RegistryValueKind.ExpandString)
             End If
 
             selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell", True)
@@ -110,7 +110,7 @@ Namespace FileAssociation
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Verify against known hash with Hasher")
                 selectedKey.SetValue("icon", $"{FileLocation},0", RegistryValueKind.ExpandString)
-                selectedKey.CreateSubKey("command").SetValue("", $"{Chr(34)}{FileLocation}{Chr(34)} --knownhashfile={Chr(34)}%1{Chr(34)}", RegistryValueKind.ExpandString)
+                selectedKey.CreateSubKey("command").SetValue("", $"""{FileLocation}"" --knownhashfile=""%1""", RegistryValueKind.ExpandString)
             End If
 
             selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell", True)
@@ -118,7 +118,7 @@ Namespace FileAssociation
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Compare Two Files")
                 selectedKey.SetValue("icon", $"{FileLocation},0", RegistryValueKind.ExpandString)
-                selectedKey.CreateSubKey("command").SetValue("", $"{Chr(34)}{FileLocation}{Chr(34)} --comparefile={Chr(34)}%1{Chr(34)}", RegistryValueKind.ExpandString)
+                selectedKey.CreateSubKey("command").SetValue("", $"""{FileLocation}"" --comparefile=""%1""", RegistryValueKind.ExpandString)
             End If
 
             selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes\Folder\Shell", True)
@@ -126,7 +126,7 @@ Namespace FileAssociation
             If selectedKey IsNot Nothing Then
                 selectedKey = selectedKey.CreateSubKey("Hash with Hasher")
                 selectedKey.SetValue("icon", $"{FileLocation},0", RegistryValueKind.ExpandString)
-                selectedKey.CreateSubKey("command").SetValue("", $"{Chr(34)}{FileLocation}{Chr(34)} --addfile={Chr(34)}%1{Chr(34)}", RegistryValueKind.ExpandString)
+                selectedKey.CreateSubKey("command").SetValue("", $"""{FileLocation}"" --addfile=""%1""", RegistryValueKind.ExpandString)
             End If
         End Sub
 
