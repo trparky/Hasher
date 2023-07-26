@@ -10,12 +10,12 @@ Namespace FileAssociation
             If selectedKey.OpenSubKey("Shell\Verify with Hasher") Is Nothing Then
                 If description IsNot Nothing Then selectedKey.SetValue(vbNullString, description)
 
-                If icon IsNot Nothing Then
+                If Not String.IsNullOrWhiteSpace(icon) Then
                     selectedKey.CreateSubKey("DefaultIcon").SetValue("", icon, RegistryValueKind.ExpandString)
                     selectedKey.CreateSubKey("Shell\Verify with Hasher").SetValue("icon", icon, RegistryValueKind.ExpandString)
                 End If
 
-                If application IsNot Nothing Then selectedKey.CreateSubKey("Shell\Verify with Hasher\command").SetValue("", $"{Chr(34)}{application}{Chr(34)} --hashfile={Chr(34)}%1{Chr(34)}", RegistryValueKind.ExpandString)
+                If Not String.IsNullOrWhiteSpace(application) Then selectedKey.CreateSubKey("Shell\Verify with Hasher\command").SetValue("", $"{Chr(34)}{application}{Chr(34)} --hashfile={Chr(34)}%1{Chr(34)}", RegistryValueKind.ExpandString)
             End If
 
             selectedKey = selectedKey.OpenSubKey("Shell\Verify with Hasher\command", True)
