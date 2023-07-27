@@ -97,6 +97,12 @@
     <Compile Include="Benchmark.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Exception Viewer.Designer.vb">
+      <DependentUpon>Exception Viewer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Exception Viewer.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Program Modules\Check for Update.vb" />
     <Compile Include="Checksum Difference.Designer.vb">
       <DependentUpon>Checksum Difference.vb</DependentUpon>
@@ -153,6 +159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Checksum Difference.resx">
       <DependentUpon>Checksum Difference.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Exception Viewer.resx">
+      <DependentUpon>Exception Viewer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>

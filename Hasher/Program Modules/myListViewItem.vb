@@ -11,6 +11,8 @@ Public Class MyListViewItem
     Public Property AllTheHashes As AllTheHashes
     Public Property BoolValidHash As Boolean
     Public Property ColorType As ColorType
+    Public Property boolExceptionOccurred As Boolean = False
+    Public Property strCrashData As String
 
     Public Sub New(strInput As String)
         Me.Text = strInput
@@ -34,6 +36,8 @@ Public Class MyListViewItem
             .AllTheHashes = Me.AllTheHashes
             .BoolValidHash = Me.BoolValidHash
             .ColorType = Me.ColorType
+            .boolExceptionOccurred = Me.boolExceptionOccurred
+            .strCrashData = Me.strCrashData
         End With
 
         Return newListViewItem
