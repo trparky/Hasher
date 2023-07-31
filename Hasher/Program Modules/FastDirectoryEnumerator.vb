@@ -101,14 +101,6 @@ Namespace FastDirectoryEnumerator
             Return New FileEnumerable(fullPath, searchPattern, searchOption)
         End Function
 
-        Function GetFiles(path As String, searchPattern As String, searchOption As SearchOption) As FileData()
-            Dim e As IEnumerable(Of FileData) = EnumerateFiles(path, searchPattern, searchOption)
-            Dim list As New List(Of FileData)(e)
-            Dim retval As FileData() = New FileData(list.Count - 1) {}
-            list.CopyTo(retval)
-            Return retval
-        End Function
-
         Private Class FileEnumerable
             Implements IEnumerable(Of FileData), IEnumerable
             Private ReadOnly m_path As String
