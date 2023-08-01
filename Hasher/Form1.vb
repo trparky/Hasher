@@ -2825,17 +2825,29 @@ Public Class Form1
 
             If verifyHashesListFiles.SelectedItems.Count = 1 Then
                 Dim MyListViewItem As MyListViewItem = DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem)
+                Debug.WriteIf(MyListViewItem.BoolFileExists, "true")
                 globalAllTheHashes = MyListViewItem.AllTheHashes
                 verifyListFilesContextMenuFileName.Text = $"File Name: {MyListViewItem.FileName}"
                 With MyListViewItem.AllTheHashes
                     ' We should only need to check this to avoid a NullReferenceException.
                     If String.IsNullOrWhiteSpace(.Sha512) Then
-                        verifyListFilesContextMenuMD5.Text = "MD5: (Error)"
-                        verifyListFilesContextMenuSHA160.Text = "SHA160: (Error)"
-                        verifyListFilesContextMenuSHA256.Text = "SHA256: (Error)"
-                        verifyListFilesContextMenuSHA384.Text = "SHA384: (Error)"
-                        verifyListFilesContextMenuSHA512.Text = "SHA512: (Error)"
+                        If Not MyListViewItem.BoolFileExists Then
+                            ' Shows file not found error
+                            verifyListFilesContextMenuMD5.Text = "MD5: (Error, File Doesn't Exist)"
+                            verifyListFilesContextMenuSHA160.Text = "SHA160: (Error, File Doesn't Exist)"
+                            verifyListFilesContextMenuSHA256.Text = "SHA256: (Error, File Doesn't Exist)"
+                            verifyListFilesContextMenuSHA384.Text = "SHA384: (Error, File Doesn't Exist)"
+                            verifyListFilesContextMenuSHA512.Text = "SHA512: (Error, File Doesn't Exist)"
+                        Else
+                            ' Shows general error
+                            verifyListFilesContextMenuMD5.Text = "MD5: (Error)"
+                            verifyListFilesContextMenuSHA160.Text = "SHA160: (Error)"
+                            verifyListFilesContextMenuSHA256.Text = "SHA256: (Error)"
+                            verifyListFilesContextMenuSHA384.Text = "SHA384: (Error)"
+                            verifyListFilesContextMenuSHA512.Text = "SHA512: (Error)"
+                        End If
                     Else
+                        ' Everything is good.
                         verifyListFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
                         verifyListFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
                         verifyListFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
