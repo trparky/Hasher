@@ -1097,7 +1097,9 @@ Public Class Form1
                                                                   lblIndividualFilesStatus.Text = Nothing
                                                               End Sub)
 
-                                                     Dim filesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
+                                                     Dim rawFilesInDirectory As IEnumerable(Of FastDirectoryEnumerator.FileData) = FastDirectoryEnumerator.EnumerateFiles(directoryPath, "*.*", If(chkRecurrsiveDirectorySearch.Checked, IO.SearchOption.AllDirectories, IO.SearchOption.TopDirectoryOnly))
+                                                     Dim filesInDirectory As List(Of FastDirectoryEnumerator.FileData) = rawFilesInDirectory.Where(Function(filedata As FastDirectoryEnumerator.FileData) Not IO.Directory.Exists(filedata.Path) AndAlso Not (filedata.Name = "." OrElse filedata.Name = "..")).ToList()
+
                                                      Dim intFileIndexNumber As Integer = 0
                                                      Dim intTotalNumberOfFiles As Integer = filesInDirectory.Count
                                                      Dim percentage As Double
@@ -2826,11 +2828,20 @@ Public Class Form1
                 globalAllTheHashes = MyListViewItem.AllTheHashes
                 verifyListFilesContextMenuFileName.Text = $"File Name: {MyListViewItem.FileName}"
                 With MyListViewItem.AllTheHashes
-                    verifyListFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
-                    verifyListFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
-                    verifyListFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
-                    verifyListFilesContextMenuSHA384.Text = $"SHA384: {If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)}"
-                    verifyListFilesContextMenuSHA512.Text = $"SHA512: {If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)}"
+                    ' We should only need to check this to avoid a NullReferenceException.
+                    If String.IsNullOrWhiteSpace(.Sha512) Then
+                        verifyListFilesContextMenuMD5.Text = "MD5: (Error)"
+                        verifyListFilesContextMenuSHA160.Text = "SHA160: (Error)"
+                        verifyListFilesContextMenuSHA256.Text = "SHA256: (Error)"
+                        verifyListFilesContextMenuSHA384.Text = "SHA384: (Error)"
+                        verifyListFilesContextMenuSHA512.Text = "SHA512: (Error)"
+                    Else
+                        verifyListFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
+                        verifyListFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
+                        verifyListFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
+                        verifyListFilesContextMenuSHA384.Text = $"SHA384: {If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)}"
+                        verifyListFilesContextMenuSHA512.Text = $"SHA512: {If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)}"
+                    End If
                 End With
             End If
         End If
