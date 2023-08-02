@@ -2825,7 +2825,6 @@ Public Class Form1
 
             If verifyHashesListFiles.SelectedItems.Count = 1 Then
                 Dim MyListViewItem As MyListViewItem = DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem)
-                Debug.WriteIf(MyListViewItem.BoolFileExists, "true")
                 globalAllTheHashes = MyListViewItem.AllTheHashes
                 verifyListFilesContextMenuFileName.Text = $"File Name: {MyListViewItem.FileName}"
                 With MyListViewItem.AllTheHashes
