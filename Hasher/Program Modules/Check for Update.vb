@@ -17,16 +17,8 @@ Namespace checkForUpdates
 
         Sub New()
             versionString = $"{versionInfo(0)}.{versionInfo(1)} Build {versionInfo(2)}"
-            If IsDebugBuild() And Integer.Parse(versionInfo(3)) <> 0 Then versionString &= $" (Debug Build {versionInfo(3)})"
+            If File.Exists("tom") Then versionString &= $" (Revision {versionInfo(3)})"
         End Sub
-
-        Private Function IsDebugBuild() As Boolean
-#If DEBUG Then
-            Return True
-#Else
-            Return False
-#End If
-        End Function
 
         Public Sub DoUpdateAtStartup()
             If File.Exists(strZipFileName) Then File.Delete(strZipFileName)
