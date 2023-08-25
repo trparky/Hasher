@@ -14,10 +14,11 @@ Namespace checkForUpdates
 
         Public versionString As String
         Public versionInfo As String() = Application.ProductVersion.Split(".")
+        Public strDisplayVersionString As String = $"{versionInfo(VersionPieces.major)}.{versionInfo(VersionPieces.minor)} Build {versionInfo(VersionPieces.build)}"
 
         Sub New()
             versionString = $"{versionInfo(0)}.{versionInfo(1)} Build {versionInfo(2)}"
-            If File.Exists("tom") Then versionString &= $" (Revision {versionInfo(3)})"
+            If File.Exists("tom") Then strDisplayVersionString &= $" (Revision {versionInfo(3)})"
         End Sub
 
         Public Sub DoUpdateAtStartup()

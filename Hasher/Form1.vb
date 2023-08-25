@@ -991,7 +991,7 @@ Public Class Form1
         chkClearBeforeTransferringFromVerifyToHash.Checked = My.Settings.boolClearBeforeTransferringFromVerifyToHash
         chkUpdateColorInRealTime.Checked = My.Settings.boolUpdateColorInRealTime
         boolUpdateColorInRealTime = My.Settings.boolUpdateColorInRealTime
-        lblWelcomeText.Text = String.Format(lblWelcomeText.Text, checkForUpdates.versionString)
+        lblWelcomeText.Text = String.Format(lblWelcomeText.Text, checkForUpdates.strDisplayVersionString)
         Size = My.Settings.windowSize
         If My.Settings.boolWindowMaximized Then WindowState = FormWindowState.Maximized
         validColor = My.Settings.validColor
