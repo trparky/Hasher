@@ -16,3 +16,7 @@ This program is now in maintenence mode. Active development has ceased, only bug
 **Friday, December 9th, 2022 Update**
 
 I've done some under the hood improvements and some bug fixes since Thursday, August 4th, 2022.
+
+**Tuesday, September 26th, 2023 Update**
+
+Once again, like I stated back on Thursday, August 4th, 2022, this program will go back into maintenence mode and active development will cease.
