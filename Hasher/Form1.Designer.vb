@@ -1138,7 +1138,7 @@ Partial Class Form1
         Me.btnCompareFiles.Enabled = False
         Me.btnCompareFiles.Location = New System.Drawing.Point(18, 154)
         Me.btnCompareFiles.Name = "btnCompareFiles"
-        Me.btnCompareFiles.Size = New System.Drawing.Size(142, 48)
+        Me.btnCompareFiles.Size = New System.Drawing.Size(142, 51)
         Me.btnCompareFiles.TabIndex = 29
         Me.btnCompareFiles.Text = "Compare Files"
         Me.btnCompareFiles.UseVisualStyleBackColor = True
