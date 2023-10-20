@@ -12,9 +12,7 @@ Namespace My
             If Application.CommandLineArgs.Count = 1 Then
                 Dim commandLineArgument As String = Application.CommandLineArgs(0).Trim
 
-                If commandLineArgument.Equals("-update", StringComparison.OrdinalIgnoreCase) Then
-                    checkForUpdates.DoUpdateAtStartup()
-                ElseIf commandLineArgument.Equals("-removesystemlevelassociations", StringComparison.OrdinalIgnoreCase) Then
+                If commandLineArgument.Equals("-removesystemlevelassociations", StringComparison.OrdinalIgnoreCase) Then
                     FileAssociation.DeleteSystemLevelFileAssociation()
                     FileAssociation.DeleteSystemLevelAssociationWithAllFiles()
                     Process.GetCurrentProcess.Kill()
