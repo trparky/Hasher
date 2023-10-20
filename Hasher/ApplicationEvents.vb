@@ -9,6 +9,11 @@ Namespace My
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     Partial Friend Class MyApplication
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
+            If IO.File.Exists("updater.exe") Then
+                SearchForProcessAndKillIt("updater.exe", False)
+                IO.File.Delete("updater.exe")
+            End If
+
             If Application.CommandLineArgs.Count = 1 Then
                 Dim commandLineArgument As String = Application.CommandLineArgs(0).Trim
 
