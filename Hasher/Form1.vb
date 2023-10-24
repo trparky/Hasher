@@ -1025,7 +1025,6 @@ Public Class Form1
             btnRemoveSystemLevelFileAssociations.Visible = False
         End If
 
-        DeleteTemporaryNewEXEFile()
         LoadColumnOrders(listFiles, My.Settings.listFilesColumnOrder)
         LoadColumnOrders(verifyHashesListFiles, My.Settings.verifyListFilesColumnOrder)
 
@@ -1054,17 +1053,6 @@ Public Class Form1
         If Not FileAssociation.DoesCompareFilesExist() Then
             MsgBox($"Hasher has a new function! The ability to compare two files from Windows Explorer.{DoubleCRLF}Please go to the Setting tab and click on the ""Add Hasher to All Files"" button to add support to Windows Explorer for this new feature.", MsgBoxStyle.Information, strMessageBoxTitleText)
         End If
-    End Sub
-
-    Private Sub DeleteTemporaryNewEXEFile()
-        Try
-            Dim newExecutableName As String = $"{New IO.FileInfo(Application.ExecutablePath).Name}.new.exe"
-            If IO.File.Exists(newExecutableName) Then
-                SearchForProcessAndKillIt(newExecutableName, False)
-                IO.File.Delete(newExecutableName)
-            End If
-        Catch ex As Exception
-        End Try
     End Sub
 
     Private Sub AddFilesFromDirectory(directoryPath As String)
