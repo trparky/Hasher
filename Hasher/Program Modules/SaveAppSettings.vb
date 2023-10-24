@@ -31,8 +31,7 @@ Public Module SaveAppSettings
         Next
 
         Using streamWriter As New IO.StreamWriter(strFileName)
-            Dim json As New JavaScriptSerializer()
-            streamWriter.Write(json.Serialize(exportedSettingsArray))
+            streamWriter.Write(Newtonsoft.Json.JsonConvert.SerializeObject(exportedSettingsArray))
         End Using
     End Sub
 
@@ -43,8 +42,7 @@ Public Module SaveAppSettings
             Dim rawValue As Object = Nothing
 
             Using streamReader As New IO.StreamReader(strFileName)
-                Dim json As New JavaScriptSerializer()
-                exportedSettingsArray = json.Deserialize(Of Dictionary(Of String, Object))(streamReader.ReadToEnd.Trim)
+                exportedSettingsArray = Newtonsoft.Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(streamReader.ReadToEnd.Trim)
             End Using
 
             For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
@@ -90,7 +88,7 @@ Public Module SaveAppSettings
         End Try
     End Function
 
-    Private Function ConvertArrayListToSpecializedStringCollection(input As ArrayList) As Specialized.StringCollection
+    Private Function ConvertArrayListToSpecializedStringCollection(input As Newtonsoft.Json.Linq.JArray) As Specialized.StringCollection
         Try
             Dim stringCollection As New Specialized.StringCollection
             For Each item As String In input
