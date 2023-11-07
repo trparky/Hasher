@@ -1,5 +1,4 @@
-﻿Imports System.Web.Script.Serialization
-Imports System.Runtime.CompilerServices
+﻿Imports System.Runtime.CompilerServices
 
 Public Module SaveAppSettings
     Public Sub SaveApplicationSettingsToFile(strFileName As String)
