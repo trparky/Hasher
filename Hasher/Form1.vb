@@ -110,8 +110,8 @@ Public Class Form1
                 .ComputeTime = item.ComputeTime
                 .AllTheHashes = item.AllTheHashes
                 .BoolValidHash = item.BoolValidHash
-                .strCrashData = item.strCrashData
-                .boolExceptionOccurred = item.boolExceptionOccurred
+                .StrCrashData = item.StrCrashData
+                .BoolExceptionOccurred = item.BoolExceptionOccurred
                 If boolForceUpdateColor Then .BackColor = item.Color
             End If
         End With
@@ -399,14 +399,14 @@ Public Class Form1
                                                                  item.ComputeTime = computeStopwatch.Elapsed
                                                                  item.SubItems(3).Text = TimespanToHMS(item.ComputeTime)
                                                                  item.Hash = strChecksum
-                                                                 item.boolExceptionOccurred = False
-                                                                 item.strCrashData = Nothing
+                                                                 item.BoolExceptionOccurred = False
+                                                                 item.StrCrashData = Nothing
                                                              Else
                                                                  item.SubItems(2).Text = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                  item.SubItems(3).Text = ""
                                                                  item.ComputeTime = Nothing
-                                                                 item.boolExceptionOccurred = True
-                                                                 item.strCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                 item.BoolExceptionOccurred = True
+                                                                 item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
                                                                  longErroredFiles += 1
                                                              End If
 
@@ -1432,14 +1432,14 @@ Public Class Form1
                                                                      item.BoolValidHash = False
                                                                  End If
 
-                                                                 item.boolExceptionOccurred = False
-                                                                 item.strCrashData = Nothing
+                                                                 item.BoolExceptionOccurred = False
+                                                                 item.StrCrashData = Nothing
                                                              Else
                                                                  item.ColorType = ColorType.NotFound
                                                                  item.Color = fileNotFoundColor
                                                                  item.SubItems(2).Text = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                 item.boolExceptionOccurred = True
-                                                                 item.strCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                 item.BoolExceptionOccurred = True
+                                                                 item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
                                                                  longFilesThatWereNotFound += 1
                                                              End If
 
@@ -3037,14 +3037,14 @@ Public Class Form1
                                                                          item.BoolValidHash = False
                                                                      End If
 
-                                                                     item.boolExceptionOccurred = False
-                                                                     item.strCrashData = Nothing
+                                                                     item.BoolExceptionOccurred = False
+                                                                     item.StrCrashData = Nothing
                                                                  Else
                                                                      item.Color = fileNotFoundColor
                                                                      item.SubItems(2).Text = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
                                                                      item.SubItems(4).Text = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                     item.boolExceptionOccurred = True
-                                                                     item.strCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                     item.BoolExceptionOccurred = True
+                                                                     item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
                                                                      item.BoolValidHash = False
 
                                                                      SyncLock threadLockingObject
@@ -3431,19 +3431,19 @@ Public Class Form1
         boolUpdateColorInRealTime = chkUpdateColorInRealTime.Checked
     End Sub
 
-    Private Sub listFiles_DoubleClick(sender As Object, e As EventArgs) Handles listFiles.DoubleClick
+    Private Sub ListFiles_DoubleClick(sender As Object, e As EventArgs) Handles listFiles.DoubleClick
         ShowExceptionViewerWindow(DirectCast(listFiles.SelectedItems(0), MyListViewItem))
     End Sub
 
-    Private Sub verifyHashesListFiles_DoubleClick(sender As Object, e As EventArgs) Handles verifyHashesListFiles.DoubleClick
+    Private Sub VerifyHashesListFiles_DoubleClick(sender As Object, e As EventArgs) Handles verifyHashesListFiles.DoubleClick
         ShowExceptionViewerWindow(DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem))
     End Sub
 
     Private Sub ShowExceptionViewerWindow(selectedItem As MyListViewItem)
-        If selectedItem.boolExceptionOccurred Then
+        If selectedItem.BoolExceptionOccurred Then
             Using exceptionViewerWindow As New Exception_Viewer
                 With exceptionViewerWindow
-                    .TxtExceptionData.Text = selectedItem.strCrashData
+                    .TxtExceptionData.Text = selectedItem.StrCrashData
                     .StartPosition = FormStartPosition.CenterParent
                     .Size = My.Settings.exceptionViewerWindowSize
                     .Icon = Icon
