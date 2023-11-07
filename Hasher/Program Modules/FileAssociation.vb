@@ -44,10 +44,7 @@ Namespace FileAssociation
                 If String.IsNullOrWhiteSpace(strDefaultValue) Then
                     CreateAssociationSubRoutine(Registry.CurrentUser.OpenSubKey($"Software\Classes\{extension}"), description, application, icon)
                 Else
-                    selectedKey = Registry.CurrentUser.OpenSubKey($"Software\Classes\{extension}", True)
-                    If selectedKey Is Nothing Then
-                        selectedKey = Registry.CurrentUser.OpenSubKey("Software\Classes", True).CreateSubKey(strDefaultValue)
-                    End If
+                    selectedKey = If(Registry.CurrentUser.OpenSubKey($"Software\Classes\{extension}", True), Registry.CurrentUser.OpenSubKey("Software\Classes", True).CreateSubKey(strDefaultValue))
                     CreateAssociationSubRoutine(selectedKey, description, application, icon)
                 End If
             End If
