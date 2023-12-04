@@ -418,6 +418,8 @@ Public Class Form1
                                                          index += 1
                                                      Next
 
+                                                     GC.Collect()
+
                                                      MyInvoke(Sub()
                                                                   btnIndividualFilesCopyToClipboard.Enabled = True
                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = True
@@ -1452,6 +1454,8 @@ Public Class Form1
                                                              item.BoolValidHash = False
                                                          End If
                                                      Next
+
+                                                     GC.Collect()
 
                                                      subRoutine = Nothing
 
