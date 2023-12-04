@@ -46,11 +46,11 @@ Public Class Checksums
             ' Call the status updating delegate.
             checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead)
 
-            Dim md5Engine As HashAlgorithm = New MD5CryptoServiceProvider
-            Dim sha160Engine As HashAlgorithm = New SHA1CryptoServiceProvider
-            Dim sha256Engine As HashAlgorithm = New SHA256CryptoServiceProvider
-            Dim sha384Engine As HashAlgorithm = New SHA384CryptoServiceProvider
-            Dim sha512Engine As HashAlgorithm = New SHA512CryptoServiceProvider
+            Dim md5Engine As New MD5CryptoServiceProvider
+            Dim sha160Engine As New SHA1CryptoServiceProvider
+            Dim sha256Engine As New SHA256CryptoServiceProvider
+            Dim sha384Engine As New SHA384CryptoServiceProvider
+            Dim sha512Engine As New SHA512CryptoServiceProvider
 
             ' We're going to loop until all the data for the file we're processing has been read from disk.
             Do While longTotalBytesRead < longFileSize
