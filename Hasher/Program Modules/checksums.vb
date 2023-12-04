@@ -55,8 +55,20 @@ Public Class Checksums
             ' We're going to loop until all the data for the file we're processing has been read from disk.
             Do While longTotalBytesRead < longFileSize
                 If boolAbortThread Then
+                    longFileSize = 0
+                    longTotalBytesRead = 0
+                    intBytesRead = 0
+
                     stream.Close()
                     stream.Dispose()
+
+                    md5Engine.Dispose()
+                    sha160Engine.Dispose()
+                    sha256Engine.Dispose()
+                    sha384Engine.Dispose()
+                    sha512Engine.Dispose()
+
+                    Array.Clear(byteDataBuffer, 0, byteDataBuffer.Length) ' Clear the Byte Array.
                     Throw New MyThreadAbortException()
                 End If
 
@@ -102,7 +114,12 @@ Public Class Checksums
             sha384Engine.Dispose()
             sha512Engine.Dispose()
 
+            longFileSize = 0
+            longTotalBytesRead = 0
+            intBytesRead = 0
+
             Array.Clear(byteDataBuffer, 0, byteDataBuffer.Length) ' Clear the Byte Array.
+
             Return allTheHashes
         End Using
     End Function
