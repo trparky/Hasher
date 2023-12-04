@@ -323,11 +323,13 @@ Public Class Form1
                                                                                             MyInvoke(Sub()
                                                                                                          percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                          IndividualFilesProgressBar.Value = percentage
+
                                                                                                          SyncLock threadLockingObject
                                                                                                              allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
                                                                                                              lblHashIndividualFilesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
                                                                                                              If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
                                                                                                          End SyncLock
+
                                                                                                          ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
                                                                                                          hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
                                                                                                          lblIndividualFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."

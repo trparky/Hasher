@@ -36,9 +36,11 @@ Public Class Checksums
             If boolAbortThread Then Throw New MyThreadAbortException
             byteDataBuffer = New Byte(intBufferSize - 1) {} ' Create a data buffer in system memory to store some data.
             intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the above data buffer.
+
             SyncLock threadLockingObject
                 longAllReadBytes += intBytesRead
             End SyncLock
+
             longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
             ' Call the status updating delegate.
@@ -67,9 +69,11 @@ Public Class Checksums
 
                 Array.Clear(byteDataBuffer, 0, byteDataBuffer.Length) ' Clear the Byte Array.
                 intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length) ' Read some data from disk into the data buffer that was created above.
+
                 SyncLock threadLockingObject
                     longAllReadBytes += intBytesRead
                 End SyncLock
+
                 longTotalBytesRead += intBytesRead ' Increment the amount of data that we've read by the amount we read above.
 
                 ' This sub-routine call is to help de-duplicate code.
