@@ -1576,7 +1576,7 @@ Partial Class Form1
         'bufferSize
         '
         Me.bufferSize.Location = New System.Drawing.Point(812, 283)
-        Me.bufferSize.Maximum = New Decimal(New Integer() {16, 0, 0, 0})
+        Me.bufferSize.Maximum = New Decimal(New Integer() {25, 0, 0, 0})
         Me.bufferSize.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.bufferSize.Name = "bufferSize"
         Me.bufferSize.Size = New System.Drawing.Size(50, 20)
