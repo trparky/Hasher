@@ -12,6 +12,8 @@ Public Module Globals
     Public boolAbortThread As Boolean = False
 
     Public Function MyRoundingFunction(value As Double, digits As Integer) As String
+        If digits < 0 Then Throw New ArgumentException("The number of digits must be non-negative.", NameOf(digits))
+
         If digits = 0 Then
             Return Math.Round(value, digits).ToString
         Else
