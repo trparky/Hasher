@@ -17,8 +17,7 @@ Public Module Globals
         If digits = 0 Then
             Return Math.Round(value, digits).ToString
         Else
-            Dim strFormatString As String = "{0:0." & New String("0", digits) & "}"
-            Return String.Format(strFormatString, Math.Round(value, digits))
+            Return Math.Round(value, digits).ToString("0." & New String("0", digits))
         End If
     End Function
 
