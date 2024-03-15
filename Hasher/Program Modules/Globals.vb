@@ -56,19 +56,19 @@ Public Module Globals
 
         Dim strReturnedString As String = Nothing
 
-        If timeSpan.Hours <> 0 Then strReturnedString = $"{timeSpan.Hours}{If(timeSpan.Hours = 1, " Hour", " Hours")}"
+        If timeSpan.Hours <> 0 Then strReturnedString = $"{timeSpan.Hours} {If(timeSpan.Hours = 1, "Hour", "Hours")}"
         If timeSpan.Minutes <> 0 Then
             If String.IsNullOrWhiteSpace(strReturnedString) Then
-                strReturnedString = $"{timeSpan.Minutes}{If(timeSpan.Minutes = 1, " Minute", " Minutes")}"
+                strReturnedString = $"{timeSpan.Minutes} {If(timeSpan.Minutes = 1, "Minute", "Minutes")}"
             Else
-                strReturnedString &= $", {timeSpan.Minutes}{If(timeSpan.Minutes = 1, " Minute", " Minutes")}"
+                strReturnedString &= $", {timeSpan.Minutes} {If(timeSpan.Minutes = 1, "Minute", "Minutes")}"
             End If
         End If
         If timeSpan.Seconds <> 0 Then
             If String.IsNullOrWhiteSpace(strReturnedString) Then
-                strReturnedString = $"{timeSpan.Seconds}{If(timeSpan.Seconds = 1, " Second", " Seconds")}"
+                strReturnedString = $"{timeSpan.Seconds} {If(timeSpan.Seconds = 1, "Second", "Seconds")}"
             Else
-                strReturnedString &= $" and {timeSpan.Seconds}{If(timeSpan.Seconds = 1, " Second", " Seconds")}"
+                strReturnedString &= $" and {timeSpan.Seconds} {If(timeSpan.Seconds = 1, "Second", "Seconds")}"
             End If
         End If
 
