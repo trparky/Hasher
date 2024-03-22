@@ -3438,14 +3438,14 @@ Public Class Form1
     End Sub
 
     Private Sub ListFiles_DoubleClick(sender As Object, e As EventArgs) Handles listFiles.DoubleClick
-        ShowExceptionViewerWindow(DirectCast(listFiles.SelectedItems(0), MyListViewItem))
+        ShowExceptionOrChecksumViewerWindow(DirectCast(listFiles.SelectedItems(0), MyListViewItem))
     End Sub
 
     Private Sub VerifyHashesListFiles_DoubleClick(sender As Object, e As EventArgs) Handles verifyHashesListFiles.DoubleClick
-        ShowExceptionViewerWindow(DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem))
+        ShowExceptionOrChecksumViewerWindow(DirectCast(verifyHashesListFiles.SelectedItems(0), MyListViewItem))
     End Sub
 
-    Private Sub ShowExceptionViewerWindow(selectedItem As MyListViewItem)
+    Private Sub ShowExceptionOrChecksumViewerWindow(selectedItem As MyListViewItem)
         If selectedItem.BoolExceptionOccurred Then
             Using exceptionViewerWindow As New Exception_Viewer
                 With exceptionViewerWindow
