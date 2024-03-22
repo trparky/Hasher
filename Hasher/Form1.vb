@@ -3457,6 +3457,34 @@ Public Class Form1
 
                 exceptionViewerWindow.ShowDialog()
             End Using
+        Else
+            Using checksumViewerWindowInstance As New Checksum_Viewer
+                With checksumViewerWindowInstance
+                    .lblFileName.Text = $"File Name: {selectedItem.FileName}"
+                    .Icon = Icon
+                    .StartPosition = FormStartPosition.CenterParent
+
+                    Dim checksumsToDisplay As New List(Of ListViewItem) From {
+                        CreateChecksumViewerListViewItem("MD5", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Md5.ToUpper, selectedItem.AllTheHashes.Md5.ToLower)),
+                        CreateChecksumViewerListViewItem("SHA1", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Sha160.ToUpper, selectedItem.AllTheHashes.Sha160.ToLower)),
+                        CreateChecksumViewerListViewItem("SHA256", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Sha256.ToUpper, selectedItem.AllTheHashes.Sha256.ToLower)),
+                        CreateChecksumViewerListViewItem("SHA384", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Sha384.ToUpper, selectedItem.AllTheHashes.Sha384.ToLower)),
+                        CreateChecksumViewerListViewItem("SHA512", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Sha512.ToUpper, selectedItem.AllTheHashes.Sha512.ToLower))
+                    }
+
+                    .checksums.Items.AddRange(checksumsToDisplay.ToArray)
+                End With
+
+                checksumViewerWindowInstance.ShowDialog()
+            End Using
         End If
     End Sub
+
+    Private Function CreateChecksumViewerListViewItem(strType As String, strChecksum As String) As ListViewItem
+        Dim itemToBeAdded As New ListViewItem(strType)
+        With itemToBeAdded
+            .SubItems.Add(strChecksum)
+        End With
+        Return itemToBeAdded
+    End Function
 End Class

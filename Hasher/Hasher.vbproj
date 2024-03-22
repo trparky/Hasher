@@ -99,6 +99,12 @@
     <Compile Include="Benchmark.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Checksum Viewer.Designer.vb">
+      <DependentUpon>Checksum Viewer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Checksum Viewer.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Exception Viewer.Designer.vb">
       <DependentUpon>Exception Viewer.vb</DependentUpon>
     </Compile>
@@ -162,6 +168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Checksum Difference.resx">
       <DependentUpon>Checksum Difference.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Checksum Viewer.resx">
+      <DependentUpon>Checksum Viewer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Exception Viewer.resx">
       <DependentUpon>Exception Viewer.vb</DependentUpon>
