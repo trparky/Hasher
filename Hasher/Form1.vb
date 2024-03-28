@@ -820,14 +820,12 @@ Public Class Form1
         Try
             If boolBackgroundThreadWorking Then Exit Sub
             If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
-                MyInvoke(Sub()
                              TabControl1.SelectTab(TabNumberHashIndividualFilesTab)
                              NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
-                         End Sub)
 
                 If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
                     strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
-                    MyInvoke(Sub() If IO.File.Exists(strReceivedFileName) Then listFiles.Items.Add(CreateListFilesObject(strReceivedFileName)))
+                    If IO.File.Exists(strReceivedFileName) Then listFiles.Items.Add(CreateListFilesObject(strReceivedFileName))
                 Else
                     AddFilesFromDirectory(strReceivedFileName)
                 End If
