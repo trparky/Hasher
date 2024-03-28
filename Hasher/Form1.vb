@@ -22,7 +22,7 @@ Public Class Form1
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
     Private boolDoneLoading As Boolean = False
     Private boolUpdateColorInRealTime As Boolean
-    Private ReadOnly strMutexName As String = $"hasher_{GetSHA256HashOfString(Environment.UserName).Substring(0, 10)}"
+    Private ReadOnly strMutexName As String = $"hasher_{Environment.UserName}"
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolDidWePerformAPreviousHash As Boolean = False
     Private validColor, notValidColor, fileNotFoundColor As Color
