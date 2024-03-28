@@ -1,5 +1,4 @@
 ﻿Imports System.ComponentModel
-Imports System.IO.Pipes
 Imports System.Security.Cryptography
 
 Public Class Form1
