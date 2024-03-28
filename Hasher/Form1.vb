@@ -820,8 +820,8 @@ Public Class Form1
         Try
             If boolBackgroundThreadWorking Then Exit Sub
             If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
-                             TabControl1.SelectTab(TabNumberHashIndividualFilesTab)
-                             NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
+                TabControl1.SelectTab(TabNumberHashIndividualFilesTab)
+                NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
 
                 If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
                     strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
@@ -872,7 +872,7 @@ Public Class Form1
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub)
             ElseIf strReceivedData.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                AddFileOrDirectoryToHashFileList(strReceivedData.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase))
+                MyInvoke(Sub() AddFileOrDirectoryToHashFileList(strReceivedData.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase)))
             End If
 
             strReceivedData = Nothing
