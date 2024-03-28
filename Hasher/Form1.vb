@@ -888,7 +888,6 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        MsgBox(Net.IPAddress.Loopback.ToString)
         mutex = New Threading.Mutex(initiallyOwned:=False, name:=strMutexName, createdNew:=Nothing)
         Dim boolMutexAcquired As Boolean = False
 
