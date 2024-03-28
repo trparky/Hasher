@@ -888,7 +888,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        mutex = New Threading.Mutex(initiallyOwned:=False, name:=strMutexName, createdNew:=Nothing)
+        mutex = New Threading.Mutex(False, strMutexName, Nothing)
         Dim boolMutexAcquired As Boolean = False
 
         If mutex.WaitOne(0, False) Then
