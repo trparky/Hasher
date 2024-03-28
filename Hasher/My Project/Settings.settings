@@ -122,5 +122,8 @@
     <Setting Name="exceptionViewerWindowSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">549, 236</Value>
     </Setting>
+    <Setting Name="boolHideCheckForUpdatesButton" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
