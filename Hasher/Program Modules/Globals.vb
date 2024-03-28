@@ -10,6 +10,7 @@ Public Module Globals
     Public byteRoundPercentages As Byte = My.Settings.roundPercentages
     Public Const DoubleCRLF As String = vbCrLf & vbCrLf
     Public boolAbortThread As Boolean = False
+    Public strEXEPath As String = Process.GetCurrentProcess.MainModule.FileName
 
     Public Function MyRoundingFunction(value As Double, digits As Integer) As String
         If digits < 0 Then Throw New ArgumentException("The number of digits must be non-negative.", NameOf(digits))

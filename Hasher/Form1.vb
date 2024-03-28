@@ -3230,7 +3230,7 @@ Public Class Form1
             If OpenFileDialogBox.ShowDialog = DialogResult.OK AndAlso LoadApplicationSettingsFromFile(OpenFileDialogBox.FileName) Then
                 My.Settings.Save()
                 MsgBox("Hasher will now close and restart itself for the imported settings to take effect.", MsgBoxStyle.Information, strMessageBoxTitleText)
-                Process.Start(Application.ExecutablePath)
+                Process.Start(strEXEPath)
                 Process.GetCurrentProcess.Kill()
             End If
         End Using
@@ -3392,7 +3392,7 @@ Public Class Form1
         Else
             Try
                 Dim startInfo As New ProcessStartInfo With {
-                    .FileName = Application.ExecutablePath,
+                    .FileName = strEXEPath,
                     .Arguments = "-removesystemlevelassociations",
                     .Verb = "runas"
                 }

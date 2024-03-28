@@ -223,7 +223,7 @@ Namespace checkForUpdates
                 .FileName = "updater.exe",
                 .Arguments = $"--programcode={programCode}"
             }
-            If Not CheckFolderPermissionsByACLs(New FileInfo(Application.ExecutablePath).DirectoryName) Then startInfo.Verb = "runas"
+            If Not CheckFolderPermissionsByACLs(New FileInfo(strEXEPath).DirectoryName) Then startInfo.Verb = "runas"
             Process.Start(startInfo)
 
             Process.GetCurrentProcess.Kill()
