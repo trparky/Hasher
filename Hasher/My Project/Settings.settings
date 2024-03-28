@@ -122,5 +122,8 @@
     <Setting Name="exceptionViewerWindowSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">549, 236</Value>
     </Setting>
+    <Setting Name="portNumber" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

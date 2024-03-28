@@ -22,8 +22,7 @@ Public Class Form1
     Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
     Private boolDoneLoading As Boolean = False
     Private boolUpdateColorInRealTime As Boolean
-    Private Property PipeServer As NamedPipeServerStream = Nothing
-    Private ReadOnly strNamedPipeServerName As String = $"hasher_{GetSHA256HashOfString(Environment.UserName).Substring(0, 10)}"
+    Private ReadOnly strMutexName As String = $"hasher_{GetSHA256HashOfString(Environment.UserName).Substring(0, 10)}"
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
     Private boolDidWePerformAPreviousHash As Boolean = False
     Private validColor, notValidColor, fileNotFoundColor As Color
@@ -34,6 +33,8 @@ Public Class Form1
     Private globalAllTheHashes As AllTheHashes = Nothing
     Private checksumTypeForChecksumCompareWindow As HashAlgorithmName
     Private strLastHashFileLoaded As String = Nothing
+    Private mutex As Threading.Mutex
+    Private serverThread As Threading.Thread
 
     Private Const strColumnTitleChecksumMD5 As String = "Hash/Checksum (MD5)"
     Private Const strColumnTitleChecksumSHA160 As String = "Hash/Checksum (SHA1/SHA160)"
@@ -808,18 +809,6 @@ Public Class Form1
         LaunchURLInWebBrowser(strPayPal)
     End Sub
 
-    Private Sub SendToIPCNamedPipeServer(strMessageToSend As String)
-        Try
-            Using memoryStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strMessageToSend))
-                Dim namedPipeDataStream As New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
-                namedPipeDataStream.Connect(5000)
-                memoryStream.CopyTo(namedPipeDataStream)
-            End Using
-        Catch ex As IO.IOException
-            MsgBox("There was an error sending data to the named pipe server used for interprocess communication, please close all Hasher instances and try again.", MsgBoxStyle.Critical, strMessageBoxTitleText)
-        End Try
-    End Sub
-
     ''' <summary>
     ''' This function will act upon either a file or a directory path.
     ''' If it's passed a directory path it will call the addFilesFromDirectory() function.
@@ -859,30 +848,19 @@ Public Class Form1
         CallSaveColumnOrders()
     End Sub
 
-    ''' <summary>Creates a named pipe server. Returns a Boolean value indicating if the function was able to create a named pipe server.</summary>
-    ''' <returns>Returns a Boolean value indicating if the function was able to create a named pipe server.</returns>
-    Private Function StartNamedPipeServer() As Boolean
-        Try
-            Dim pipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
-            pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
-            Return True ' We were able to create a named pipe server. Yay!
-        Catch oEX As Exception
-            Return False ' OK, there's already a named pipe server in operation already so we return a False value.
-        End Try
-    End Function
+    Private Sub UDPServerThread()
+        Dim ipEndPoint As New Net.IPEndPoint(Net.IPAddress.Loopback, 0)
+        Dim udpServer As New Net.Sockets.UdpClient(My.Settings.portNumber)
+        Dim strReceivedData As String
+        Dim byteReceivedData() As Byte
 
-    Private Sub WaitForConnectionCallBack(iar As IAsyncResult)
-        Try
-            Dim namedPipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
-            namedPipeServer.EndWaitForConnection(iar)
-            Dim buffer As Byte() = New Byte(499) {}
-            namedPipeServer.Read(buffer, 0, 500)
+        While True
+            byteReceivedData = udpServer.Receive(ipEndPoint)
+            strReceivedData = System.Text.Encoding.UTF8.GetString(byteReceivedData)
 
-            Dim strReceivedMessage As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
-
-            If strReceivedMessage.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+            If strReceivedData.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
                 MyInvoke(Sub()
-                             Dim strFilePathToBeCompared As String = strReceivedMessage.Replace("--comparefile=", "", StringComparison.OrdinalIgnoreCase)
+                             Dim strFilePathToBeCompared As String = strReceivedData.Replace("--comparefile=", "", StringComparison.OrdinalIgnoreCase)
 
                              If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
                                  txtFile1.Text = strFilePathToBeCompared
@@ -895,31 +873,44 @@ Public Class Form1
                              TabControl1.SelectedIndex = TabNumberCompareFilesTab
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub)
-            ElseIf strReceivedMessage.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                AddFileOrDirectoryToHashFileList(strReceivedMessage.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase))
+            ElseIf strReceivedData.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                AddFileOrDirectoryToHashFileList(strReceivedData.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase))
             End If
 
-            namedPipeServer.Dispose()
-            namedPipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
-            namedPipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), namedPipeServer)
-        Catch
-            Return
-        End Try
+            strReceivedData = Nothing
+        End While
+    End Sub
+
+    Private Sub SendMessageToUDPIPCServer(strMessage As String)
+        Using udpClient As New Net.Sockets.UdpClient()
+            udpClient.Connect(Net.IPAddress.Loopback.ToString, My.Settings.portNumber)
+            Dim data As Byte() = System.Text.Encoding.UTF8.GetBytes(strMessage)
+            udpClient.Send(data, data.Length)
+        End Using
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        ' This function returns a Boolean value indicating if the name pipe server was started or not.
-        Dim boolNamedPipeServerStarted As Boolean = StartNamedPipeServer()
+        MsgBox(Net.IPAddress.Loopback.ToString)
+        mutex = New Threading.Mutex(initiallyOwned:=False, name:=strMutexName, createdNew:=Nothing)
+        Dim boolMutexAcquired As Boolean = False
+
+        If mutex.WaitOne(0, False) Then
+            boolMutexAcquired = True
+            My.Settings.portNumber = New Random().Next(1024, 65536)
+            serverThread = New Threading.Thread(AddressOf UDPServerThread) With {.Name = "UDP Server Thread", .IsBackground = True, .Priority = Threading.ThreadPriority.Normal}
+            serverThread.Start()
+        End If
+
         Dim commandLineArgument As String
 
         If My.Application.CommandLineArgs.Count = 1 Then
             commandLineArgument = My.Application.CommandLineArgs(0).Trim
 
             If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Or commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
-                If boolNamedPipeServerStarted Then
-                    ' This instance of the program is the first executed instance so it's the host of the named pipe server.
+                If boolMutexAcquired Then
+                    ' This instance of the program is the first executed instance so it's the host of the UDP server.
                     ' We still need to process the first incoming file passed to it via command line arguments. After doing
-                    ' so, this instance of the program will continue operating as the host of the named pipe server.
+                    ' so, this instance of the program will continue operating as the host of the UDP server.
                     If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
                         ' We now have to strip off what we don't need.
                         commandLineArgument = commandLineArgument.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
@@ -932,9 +923,9 @@ Public Class Form1
                 Else
                     ' This instance of the program isn't the first running instance, this instance is a secondary instance
                     ' for the lack of a better word. However, this instance has received data from Windows Explorer so we
-                    ' need to do something with it, namely pass that data to the first running instance via the named
-                    ' pipe and then terminate itself.
-                    SendToIPCNamedPipeServer(commandLineArgument) ' This passes the data to the named pipe server.
+                    ' need to do something with it, namely pass that data to the first running instance via the UDP server
+                    ' and then terminate itself.
+                    SendMessageToUDPIPCServer(commandLineArgument) ' This passes the data to the UDP server.
                     Process.GetCurrentProcess.Kill() ' This terminates the process.
                 End If
             ElseIf commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
@@ -1711,11 +1702,8 @@ Public Class Form1
             Exit Sub
         Else
             boolClosingWindow = True
-
-            If PipeServer IsNot Nothing Then
-                PipeServer.Disconnect()
-                PipeServer.Close()
-            End If
+            mutex.ReleaseMutex()
+            serverThread.Abort()
 
             If workingThread IsNot Nothing Then boolAbortThread = True
 
