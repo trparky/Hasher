@@ -34,6 +34,7 @@ Public Class Form1
     Private strLastHashFileLoaded As String = Nothing
     Private mutex As Threading.Mutex
     Private serverThread As Threading.Thread
+    Private boolDoWeOwnTheMutex As Boolean = False
 
     Private Const strColumnTitleChecksumMD5 As String = "Hash/Checksum (MD5)"
     Private Const strColumnTitleChecksumSHA160 As String = "Hash/Checksum (SHA1/SHA160)"
@@ -847,11 +848,13 @@ Public Class Form1
 
     Private Sub UDPServerThread()
         Dim ipEndPoint As New Net.IPEndPoint(Net.IPAddress.Loopback, 0)
-        Dim udpServer As New Net.Sockets.UdpClient(My.Settings.portNumber)
+
+        Using udpServer As New Net.Sockets.UdpClient(My.Settings.portNumber)
         Dim strReceivedData As String
         Dim byteReceivedData() As Byte
+            Dim boolDoServerLoop As Boolean = True
 
-        While True
+            While boolDoServerLoop
             byteReceivedData = udpServer.Receive(ipEndPoint)
             strReceivedData = System.Text.Encoding.UTF8.GetString(byteReceivedData)
 
@@ -872,10 +875,13 @@ Public Class Form1
                          End Sub)
             ElseIf strReceivedData.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
                 MyInvoke(Sub() AddFileOrDirectoryToHashFileList(strReceivedData.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase)))
+                ElseIf strReceivedData.Trim.Equals("terminate", StringComparison.OrdinalIgnoreCase) Then
+                    boolDoServerLoop = False
             End If
 
             strReceivedData = Nothing
         End While
+        End Using
     End Sub
 
     Private Sub SendMessageToUDPIPCServer(strMessage As String)
@@ -893,7 +899,8 @@ Public Class Form1
         If mutex.WaitOne(0, False) Then
             boolMutexAcquired = True
             My.Settings.portNumber = New Random().Next(1024, 65536)
-            serverThread = New Threading.Thread(AddressOf UDPServerThread) With {.Name = "UDP Server Thread", .IsBackground = True, .Priority = Threading.ThreadPriority.Normal}
+            boolDoWeOwnTheMutex = True
+            serverThread = New Threading.Thread(AddressOf UDPServerThread) With {.Name = "UDP Server Thread", .Priority = Threading.ThreadPriority.Normal}
             serverThread.Start()
         End If
 
@@ -1700,11 +1707,9 @@ Public Class Form1
             Exit Sub
         Else
             boolClosingWindow = True
+            If boolDoWeOwnTheMutex Then SendMessageToUDPIPCServer("terminate")
             mutex.ReleaseMutex()
-            serverThread.Abort()
-
             If workingThread IsNot Nothing Then boolAbortThread = True
-
             My.Settings.windowLocation = Location
         End If
     End Sub
