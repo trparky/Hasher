@@ -45,7 +45,7 @@ Public Module SaveAppSettings
             End Using
 
             For Each settingProperty As Configuration.SettingsPropertyValue In My.Settings.PropertyValues
-                If exportedSettingsArray.FindKeyInDictionaryAndReturnIt(settingProperty.Name, rawValue) Then
+                If exportedSettingsArray.FindKeyInDictionaryAndReturnIt(settingProperty.Name, rawValue) And settingProperty.PropertyValue IsNot Nothing Then
                     If settingProperty.Name.Equals("listFilesColumnOrder", StringComparison.OrdinalIgnoreCase) Or settingProperty.Name.Equals("verifyListFilesColumnOrder", StringComparison.OrdinalIgnoreCase) Then
                         settingType = GetType(Specialized.StringCollection)
                     Else
