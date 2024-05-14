@@ -1,11 +1,11 @@
-﻿' This class extends the ListViewItem so that I can add more properties to it for my purposes.
-Public Class MyListViewItem
-    Inherits ListViewItem
+﻿' This class extends the DataGridViewRow so that I can add more properties to it for my purposes.
+Public Class MyDataGridViewRow
+    Inherits DataGridViewRow
     Implements ICloneable
     Public Property FileSize As Long
     Public Property Hash As String
     Public Property FileName As String
-    Public Property Color As Color
+    Public Property MyColor As Color
     Public Property BoolFileExists As Boolean
     Public Property ComputeTime As TimeSpan
     Public Property AllTheHashes As AllTheHashes
@@ -14,25 +14,21 @@ Public Class MyListViewItem
     Public Property BoolExceptionOccurred As Boolean = False
     Public Property StrCrashData As String
 
-    Public Sub New(strInput As String)
-        Me.Text = strInput
-    End Sub
-
     Public Overrides Function Clone() As Object Implements ICloneable.Clone
-        Dim newListViewItem As New MyListViewItem(Me.Text)
+        Dim newMyDataGridViewRow As New MyDataGridViewRow()
+        newMyDataGridViewRow.CreateCells(Form1.listFiles)
 
-        For index As Short = 1 To Me.SubItems.Count - 1
-            newListViewItem.SubItems.Add(Me.SubItems(index))
+        For index As Short = 1 To Me.Cells.Count - 1
+            newMyDataGridViewRow.Cells(index).Value = Me.Cells(index).Value
         Next
 
-        With newListViewItem
+        With newMyDataGridViewRow
             .FileSize = Me.FileSize
             .Hash = Me.Hash
             .FileName = Me.FileName
-            .Color = Me.Color
+            .MyColor = Me.MyColor
             .BoolFileExists = Me.BoolFileExists
             .ComputeTime = Me.ComputeTime
-            .BackColor = Me.BackColor
             .AllTheHashes = Me.AllTheHashes
             .BoolValidHash = Me.BoolValidHash
             .ColorType = Me.ColorType
@@ -40,7 +36,7 @@ Public Class MyListViewItem
             .StrCrashData = Me.StrCrashData
         End With
 
-        Return newListViewItem
+        Return newMyDataGridViewRow
     End Function
 End Class
 

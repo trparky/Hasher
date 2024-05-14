@@ -62,11 +62,11 @@ Partial Class Form1
         Me.radioSHA256 = New System.Windows.Forms.RadioButton()
         Me.radioSHA1 = New System.Windows.Forms.RadioButton()
         Me.lblHashIndividualFilesStep1 = New System.Windows.Forms.Label()
-        Me.listFiles = New System.Windows.Forms.ListView()
-        Me.colFileName = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colFileSize = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colChecksum = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colComputeTime = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.listFiles = New System.Windows.Forms.DataGridView()
+        Me.colFileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colFileSize = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colChecksum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colComputeTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.listFilesContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.listFilesContextMenuFileName = New System.Windows.Forms.ToolStripMenuItem()
         Me.listFilesContextMenuLine = New System.Windows.Forms.ToolStripSeparator()
@@ -82,12 +82,12 @@ Partial Class Form1
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
         Me.btnCheckHaveIBeenPwned = New System.Windows.Forms.Button()
-        Me.verifyHashesListFiles = New Hasher.ListViewDoubleBuffered()
-        Me.colFile = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colFileSize2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colResults = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colComputeTime2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.colNewHash = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.verifyHashesListFiles = New System.Windows.Forms.DataGridView()
+        Me.colFile = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colFileSize2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colResults = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colComputeTime2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colNewHash = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.verifyListFilesContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ViewChecksumDifferenceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.verifyListFilesContextMenuLine1 = New System.Windows.Forms.ToolStripSeparator()
@@ -194,10 +194,12 @@ Partial Class Form1
         Me.tabHashText.SuspendLayout()
         Me.textHashContextMenu.SuspendLayout()
         Me.tabHashIndividualFiles.SuspendLayout()
+        CType(Me.listFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.hashIndividualFilesTableLayoutControl.SuspendLayout()
         Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
         Me.verifyListFilesContextMenu.SuspendLayout()
+        CType(Me.verifyHashesListFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.verifySavedHashesTableLayoutControl.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
         CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -225,7 +227,7 @@ Partial Class Form1
         Me.TabControl1.Location = New System.Drawing.Point(12, 12)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(1048, 470)
+        Me.TabControl1.Size = New System.Drawing.Size(1618, 470)
         Me.TabControl1.TabIndex = 0
         '
         'tabWelcome
@@ -237,7 +239,7 @@ Partial Class Form1
         Me.tabWelcome.Location = New System.Drawing.Point(4, 22)
         Me.tabWelcome.Name = "tabWelcome"
         Me.tabWelcome.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabWelcome.Size = New System.Drawing.Size(1040, 444)
+        Me.tabWelcome.Size = New System.Drawing.Size(1610, 444)
         Me.tabWelcome.TabIndex = 0
         Me.tabWelcome.Text = "Welcome"
         '
@@ -290,7 +292,7 @@ Partial Class Form1
         Me.tabHashText.Location = New System.Drawing.Point(4, 22)
         Me.tabHashText.Name = "tabHashText"
         Me.tabHashText.Padding = New System.Windows.Forms.Padding(3)
-        Me.tabHashText.Size = New System.Drawing.Size(1040, 444)
+        Me.tabHashText.Size = New System.Drawing.Size(1610, 444)
         Me.tabHashText.TabIndex = 1
         Me.tabHashText.Text = "Hash Text"
         '
@@ -349,7 +351,7 @@ Partial Class Form1
         Me.txtHashResults.Location = New System.Drawing.Point(18, 288)
         Me.txtHashResults.MultiSelect = False
         Me.txtHashResults.Name = "txtHashResults"
-        Me.txtHashResults.Size = New System.Drawing.Size(1016, 121)
+        Me.txtHashResults.Size = New System.Drawing.Size(1586, 121)
         Me.txtHashResults.TabIndex = 32
         Me.txtHashResults.UseCompatibleStateImageBehavior = False
         Me.txtHashResults.View = System.Windows.Forms.View.Details
@@ -404,7 +406,7 @@ Partial Class Form1
         Me.txtTextToHash.Multiline = True
         Me.txtTextToHash.Name = "txtTextToHash"
         Me.txtTextToHash.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtTextToHash.Size = New System.Drawing.Size(854, 150)
+        Me.txtTextToHash.Size = New System.Drawing.Size(1424, 150)
         Me.txtTextToHash.TabIndex = 1
         '
         'lblTextToHash
@@ -440,7 +442,7 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Controls.Add(Me.btnAddIndividualFiles)
         Me.tabHashIndividualFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabHashIndividualFiles.Name = "tabHashIndividualFiles"
-        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1040, 444)
+        Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1610, 444)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
         '
@@ -463,13 +465,13 @@ Partial Class Form1
         Me.hashIndividualFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.hashIndividualFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.hashIndividualFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.hashIndividualFilesTableLayoutControl.Size = New System.Drawing.Size(800, 66)
+        Me.hashIndividualFilesTableLayoutControl.Size = New System.Drawing.Size(1370, 66)
         Me.hashIndividualFilesTableLayoutControl.TabIndex = 24
         '
         'lblIndividualFilesStatusProcessingFile
         '
         Me.lblIndividualFilesStatusProcessingFile.AutoSize = True
-        Me.lblIndividualFilesStatusProcessingFile.Location = New System.Drawing.Point(403, 0)
+        Me.lblIndividualFilesStatusProcessingFile.Location = New System.Drawing.Point(688, 0)
         Me.lblIndividualFilesStatusProcessingFile.Name = "lblIndividualFilesStatusProcessingFile"
         Me.lblIndividualFilesStatusProcessingFile.Size = New System.Drawing.Size(181, 13)
         Me.lblIndividualFilesStatusProcessingFile.TabIndex = 17
@@ -491,7 +493,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.IndividualFilesProgressBar.Location = New System.Drawing.Point(3, 19)
         Me.IndividualFilesProgressBar.Name = "IndividualFilesProgressBar"
-        Me.IndividualFilesProgressBar.Size = New System.Drawing.Size(394, 27)
+        Me.IndividualFilesProgressBar.Size = New System.Drawing.Size(679, 27)
         Me.IndividualFilesProgressBar.TabIndex = 14
         Me.IndividualFilesProgressBar.Visible = False
         '
@@ -500,16 +502,16 @@ Partial Class Form1
         Me.hashIndividualFilesAllFilesProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.hashIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(403, 19)
+        Me.hashIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(688, 19)
         Me.hashIndividualFilesAllFilesProgressBar.Name = "hashIndividualFilesAllFilesProgressBar"
-        Me.hashIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(394, 27)
+        Me.hashIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(679, 27)
         Me.hashIndividualFilesAllFilesProgressBar.TabIndex = 23
         '
         'lblHashIndividualFilesTotalStatus
         '
         Me.lblHashIndividualFilesTotalStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblHashIndividualFilesTotalStatus.AutoSize = True
-        Me.lblHashIndividualFilesTotalStatus.Location = New System.Drawing.Point(403, 53)
+        Me.lblHashIndividualFilesTotalStatus.Location = New System.Drawing.Point(688, 53)
         Me.lblHashIndividualFilesTotalStatus.Name = "lblHashIndividualFilesTotalStatus"
         Me.lblHashIndividualFilesTotalStatus.Size = New System.Drawing.Size(162, 13)
         Me.lblHashIndividualFilesTotalStatus.TabIndex = 24
@@ -651,40 +653,46 @@ Partial Class Form1
         '
         'listFiles
         '
-        Me.listFiles.AllowColumnReorder = True
-        Me.listFiles.AllowDrop = True
+        Me.listFiles.AllowUserToAddRows = False
         Me.listFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.listFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFileName, Me.colFileSize, Me.colChecksum, Me.colComputeTime})
+        Me.listFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.listFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFileName, Me.colFileSize, Me.colChecksum, Me.colComputeTime})
         Me.listFiles.ContextMenuStrip = Me.listFilesContextMenu
-        Me.listFiles.FullRowSelect = True
-        Me.listFiles.HideSelection = False
-        Me.listFiles.Location = New System.Drawing.Point(160, 20)
+        Me.listFiles.Location = New System.Drawing.Point(157, 20)
         Me.listFiles.Name = "listFiles"
-        Me.listFiles.Size = New System.Drawing.Size(877, 223)
-        Me.listFiles.TabIndex = 5
-        Me.listFiles.UseCompatibleStateImageBehavior = False
-        Me.listFiles.View = System.Windows.Forms.View.Details
+        Me.listFiles.ReadOnly = True
+        Me.listFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.listFiles.Size = New System.Drawing.Size(1447, 234)
+        Me.listFiles.TabIndex = 26
         '
         'colFileName
         '
-        Me.colFileName.Text = "File Name"
+        Me.colFileName.HeaderText = "File Name"
+        Me.colFileName.Name = "colFileName"
+        Me.colFileName.ReadOnly = True
         Me.colFileName.Width = 528
         '
         'colFileSize
         '
-        Me.colFileSize.Text = "File Size"
+        Me.colFileSize.HeaderText = "File Size"
+        Me.colFileSize.Name = "colFileSize"
+        Me.colFileSize.ReadOnly = True
         Me.colFileSize.Width = 70
         '
         'colChecksum
         '
-        Me.colChecksum.Text = "Hash/Checksum (SHA256)"
+        Me.colChecksum.HeaderText = "Hash/Checksum (SHA256)"
+        Me.colChecksum.Name = "colChecksum"
+        Me.colChecksum.ReadOnly = True
         Me.colChecksum.Width = 241
         '
         'colComputeTime
         '
-        Me.colComputeTime.Text = "Compute Time"
+        Me.colComputeTime.HeaderText = "Compute Time"
+        Me.colComputeTime.Name = "colComputeTime"
+        Me.colComputeTime.ReadOnly = True
         Me.colComputeTime.Width = 150
         '
         'listFilesContextMenu
@@ -781,7 +789,7 @@ Partial Class Form1
         Me.tabVerifySavedHashes.Controls.Add(Me.btnTransferToHashIndividualFilesTab)
         Me.tabVerifySavedHashes.Location = New System.Drawing.Point(4, 22)
         Me.tabVerifySavedHashes.Name = "tabVerifySavedHashes"
-        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1040, 444)
+        Me.tabVerifySavedHashes.Size = New System.Drawing.Size(1610, 444)
         Me.tabVerifySavedHashes.TabIndex = 3
         Me.tabVerifySavedHashes.Text = "Verify Saved Hashes"
         '
@@ -811,45 +819,53 @@ Partial Class Form1
         '
         'verifyHashesListFiles
         '
-        Me.verifyHashesListFiles.AllowColumnReorder = True
+        Me.verifyHashesListFiles.AllowUserToAddRows = False
         Me.verifyHashesListFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2, Me.colNewHash})
+        Me.verifyHashesListFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2, Me.colNewHash})
         Me.verifyHashesListFiles.ContextMenuStrip = Me.verifyListFilesContextMenu
-        Me.verifyHashesListFiles.FullRowSelect = True
-        Me.verifyHashesListFiles.HideSelection = False
-        Me.verifyHashesListFiles.Location = New System.Drawing.Point(160, 28)
-        Me.verifyHashesListFiles.MultiSelect = False
+        Me.verifyHashesListFiles.Location = New System.Drawing.Point(163, 28)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
-        Me.verifyHashesListFiles.Size = New System.Drawing.Size(877, 413)
-        Me.verifyHashesListFiles.TabIndex = 6
-        Me.verifyHashesListFiles.UseCompatibleStateImageBehavior = False
-        Me.verifyHashesListFiles.View = System.Windows.Forms.View.Details
+        Me.verifyHashesListFiles.ReadOnly = True
+        Me.verifyHashesListFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.verifyHashesListFiles.Size = New System.Drawing.Size(1441, 341)
+        Me.verifyHashesListFiles.TabIndex = 28
         '
         'colFile
         '
-        Me.colFile.Text = "File Name"
+        Me.colFile.HeaderText = "File Name"
+        Me.colFile.Name = "colFile"
+        Me.colFile.ReadOnly = True
         Me.colFile.Width = 557
         '
         'colFileSize2
         '
-        Me.colFileSize2.Text = "File Size"
+        Me.colFileSize2.HeaderText = "File Size"
+        Me.colFileSize2.Name = "colFileSize2"
+        Me.colFileSize2.ReadOnly = True
         Me.colFileSize2.Width = 87
         '
         'colResults
         '
-        Me.colResults.Text = "Results"
+        Me.colResults.HeaderText = "Results"
+        Me.colResults.Name = "colResults"
+        Me.colResults.ReadOnly = True
         Me.colResults.Width = 72
         '
         'colComputeTime2
         '
-        Me.colComputeTime2.Text = "Compute Time"
+        Me.colComputeTime2.HeaderText = "Compute Time"
+        Me.colComputeTime2.Name = "colComputeTime2"
+        Me.colComputeTime2.ReadOnly = True
         Me.colComputeTime2.Width = 150
         '
         'colNewHash
         '
-        Me.colNewHash.Text = "Computed Hash/Checksum (Displays the hash that was computed only if not valid)"
+        Me.colNewHash.HeaderText = "Computed Hash/Checksum (Displays the hash that was computed only if not valid)"
+        Me.colNewHash.Name = "colNewHash"
+        Me.colNewHash.ReadOnly = True
         Me.colNewHash.Width = 120
         '
         'verifyListFilesContextMenu
@@ -929,7 +945,7 @@ Partial Class Form1
         Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.verifySavedHashesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.verifySavedHashesTableLayoutControl.Size = New System.Drawing.Size(1025, 66)
+        Me.verifySavedHashesTableLayoutControl.Size = New System.Drawing.Size(1595, 66)
         Me.verifySavedHashesTableLayoutControl.TabIndex = 25
         '
         'VerifyHashProgressBar
@@ -939,14 +955,14 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.VerifyHashProgressBar.Location = New System.Drawing.Point(3, 19)
         Me.VerifyHashProgressBar.Name = "VerifyHashProgressBar"
-        Me.VerifyHashProgressBar.Size = New System.Drawing.Size(506, 27)
+        Me.VerifyHashProgressBar.Size = New System.Drawing.Size(791, 27)
         Me.VerifyHashProgressBar.TabIndex = 16
         Me.VerifyHashProgressBar.Visible = False
         '
         'lblVerifyHashStatusProcessingFile
         '
         Me.lblVerifyHashStatusProcessingFile.AutoSize = True
-        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(515, 0)
+        Me.lblVerifyHashStatusProcessingFile.Location = New System.Drawing.Point(800, 0)
         Me.lblVerifyHashStatusProcessingFile.Name = "lblVerifyHashStatusProcessingFile"
         Me.lblVerifyHashStatusProcessingFile.Size = New System.Drawing.Size(166, 13)
         Me.lblVerifyHashStatusProcessingFile.TabIndex = 18
@@ -957,16 +973,16 @@ Partial Class Form1
         Me.verifyIndividualFilesAllFilesProgressBar.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.verifyIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(515, 19)
+        Me.verifyIndividualFilesAllFilesProgressBar.Location = New System.Drawing.Point(800, 19)
         Me.verifyIndividualFilesAllFilesProgressBar.Name = "verifyIndividualFilesAllFilesProgressBar"
-        Me.verifyIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(507, 27)
+        Me.verifyIndividualFilesAllFilesProgressBar.Size = New System.Drawing.Size(792, 27)
         Me.verifyIndividualFilesAllFilesProgressBar.TabIndex = 24
         '
         'lblVerifyHashesTotalStatus
         '
         Me.lblVerifyHashesTotalStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblVerifyHashesTotalStatus.AutoSize = True
-        Me.lblVerifyHashesTotalStatus.Location = New System.Drawing.Point(515, 53)
+        Me.lblVerifyHashesTotalStatus.Location = New System.Drawing.Point(800, 53)
         Me.lblVerifyHashesTotalStatus.Name = "lblVerifyHashesTotalStatus"
         Me.lblVerifyHashesTotalStatus.Size = New System.Drawing.Size(133, 13)
         Me.lblVerifyHashesTotalStatus.TabIndex = 25
@@ -1044,7 +1060,7 @@ Partial Class Form1
         Me.tabCompareFiles.Controls.Add(Me.Label4)
         Me.tabCompareFiles.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareFiles.Name = "tabCompareFiles"
-        Me.tabCompareFiles.Size = New System.Drawing.Size(1040, 444)
+        Me.tabCompareFiles.Size = New System.Drawing.Size(1610, 444)
         Me.tabCompareFiles.TabIndex = 5
         Me.tabCompareFiles.Text = "Compare Files"
         '
@@ -1287,7 +1303,7 @@ Partial Class Form1
         Me.tabCompareAgainstKnownHash.Controls.Add(Me.Label7)
         Me.tabCompareAgainstKnownHash.Location = New System.Drawing.Point(4, 22)
         Me.tabCompareAgainstKnownHash.Name = "tabCompareAgainstKnownHash"
-        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1040, 444)
+        Me.tabCompareAgainstKnownHash.Size = New System.Drawing.Size(1610, 444)
         Me.tabCompareAgainstKnownHash.TabIndex = 6
         Me.tabCompareAgainstKnownHash.Text = "Compare file against known hash"
         '
@@ -1443,7 +1459,7 @@ Partial Class Form1
         Me.tabSettings.Controls.Add(Me.btnRemoveFileAssociations)
         Me.tabSettings.Location = New System.Drawing.Point(4, 22)
         Me.tabSettings.Name = "tabSettings"
-        Me.tabSettings.Size = New System.Drawing.Size(1040, 444)
+        Me.tabSettings.Size = New System.Drawing.Size(1610, 444)
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
         '
@@ -1911,7 +1927,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1072, 495)
+        Me.ClientSize = New System.Drawing.Size(1642, 495)
         Me.Controls.Add(Me.TabControl1)
         Me.KeyPreview = True
         Me.MinimumSize = New System.Drawing.Size(1088, 534)
@@ -1925,12 +1941,14 @@ Partial Class Form1
         Me.textHashContextMenu.ResumeLayout(False)
         Me.tabHashIndividualFiles.ResumeLayout(False)
         Me.tabHashIndividualFiles.PerformLayout()
+        CType(Me.listFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.hashIndividualFilesTableLayoutControl.ResumeLayout(False)
         Me.hashIndividualFilesTableLayoutControl.PerformLayout()
         Me.listFilesContextMenu.ResumeLayout(False)
         Me.tabVerifySavedHashes.ResumeLayout(False)
         Me.tabVerifySavedHashes.PerformLayout()
         Me.verifyListFilesContextMenu.ResumeLayout(False)
+        CType(Me.verifyHashesListFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.verifySavedHashesTableLayoutControl.ResumeLayout(False)
         Me.verifySavedHashesTableLayoutControl.PerformLayout()
         Me.tabCompareFiles.ResumeLayout(False)
@@ -1958,8 +1976,8 @@ Partial Class Form1
     Friend WithEvents btnRemoveAllFiles As Button
     Friend WithEvents btnAddFilesInFolder As Button
     Friend WithEvents btnAddIndividualFiles As Button
-    Friend WithEvents listFiles As ListView
-    Friend WithEvents colFileName As ColumnHeader
+    Friend WithEvents listFiles As DataGridView
+    Friend WithEvents colFileName As DataGridViewTextBoxColumn
     Friend WithEvents lblHashIndividualFilesStep1 As Label
     Friend WithEvents radioSHA1 As RadioButton
     Friend WithEvents radioMD5 As RadioButton
@@ -1976,9 +1994,7 @@ Partial Class Form1
     Friend WithEvents lblHashIndividualFilesStep2 As Label
     Friend WithEvents lblWelcomeText As Label
     Friend WithEvents tabVerifySavedHashes As TabPage
-    Friend WithEvents verifyHashesListFiles As ListViewDoubleBuffered
-    Friend WithEvents colFile As ColumnHeader
-    Friend WithEvents colResults As ColumnHeader
+    Friend WithEvents verifyHashesListFiles As DataGridView
     Friend WithEvents btnOpenExistingHashFile As Button
     Friend WithEvents VerifyHashProgressBar As ProgressBar
     Friend WithEvents lblVerifyHashStatus As Label
@@ -1998,9 +2014,11 @@ Partial Class Form1
     Friend WithEvents CopyHashToWindowsClipboardToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Label3 As Label
     Friend WithEvents btnCopyTextHashResultsToClipboard As Button
-    Friend WithEvents colChecksum As ColumnHeader
-    Friend WithEvents colFileSize As ColumnHeader
-    Friend WithEvents colFileSize2 As ColumnHeader
+    Friend WithEvents colChecksum As DataGridViewTextBoxColumn
+    Friend WithEvents colFileSize As DataGridViewTextBoxColumn
+    Friend WithEvents colFileSize2 As DataGridViewTextBoxColumn
+    Friend WithEvents colFile As DataGridViewTextBoxColumn
+    Friend WithEvents colResults As DataGridViewTextBoxColumn
     Friend WithEvents listFilesContextMenu As ContextMenuStrip
     Friend WithEvents btnCheckForUpdates As Button
     Friend WithEvents tabCompareFiles As TabPage
@@ -2041,8 +2059,8 @@ Partial Class Form1
     Friend WithEvents chkSaveChecksumFilesWithRelativePaths As CheckBox
     Friend WithEvents chkSortFileListingAfterAddingFilesToHash As CheckBox
     Friend WithEvents btnDonate As Button
-    Friend WithEvents colComputeTime As ColumnHeader
-    Friend WithEvents colComputeTime2 As ColumnHeader
+    Friend WithEvents colComputeTime As DataGridViewTextBoxColumn
+    Friend WithEvents colComputeTime2 As DataGridViewTextBoxColumn
     Friend WithEvents chkUseMilliseconds As CheckBox
     Friend WithEvents chkDisplayHashesInUpperCase As CheckBox
     Friend WithEvents pictureBoxVerifyAgainstResults As PictureBox
@@ -2077,7 +2095,7 @@ Partial Class Form1
     Friend WithEvents roundFileSizes As NumericUpDown
     Friend WithEvents lblRoundFileSizesLabel As Label
     Friend WithEvents btnTransferToHashIndividualFilesTab As Button
-    Friend WithEvents colNewHash As ColumnHeader
+    Friend WithEvents colNewHash As DataGridViewTextBoxColumn
     Friend WithEvents verifyListFilesContextMenu As ContextMenuStrip
     Friend WithEvents ViewChecksumDifferenceToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents lblCompareFilesAllFilesStatus As Label
