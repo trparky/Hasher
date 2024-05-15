@@ -13,17 +13,17 @@ Option Explicit On
 
 
 Namespace My
-
-    <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),
-     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.9.0.0"),
-     Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>
+    
+    <Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute(),  _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.9.0.0"),  _
+     Global.System.ComponentModel.EditorBrowsableAttribute(Global.System.ComponentModel.EditorBrowsableState.Advanced)>  _
     Partial Friend NotInheritable Class MySettings
         Inherits Global.System.Configuration.ApplicationSettingsBase
-
-        Private Shared defaultInstance As MySettings = CType(Global.System.Configuration.ApplicationSettingsBase.Synchronized(New MySettings()), MySettings)
-
+        
+        Private Shared defaultInstance As MySettings = CType(Global.System.Configuration.ApplicationSettingsBase.Synchronized(New MySettings()),MySettings)
+        
 #Region "My.Settings Auto-Save Functionality"
-#If _MYTYPE = "WindowsForms" Then
+#If _MyType = "WindowsForms" Then
     Private Shared addedHandler As Boolean
 
     Private Shared addedHandlerLockObject As New Object
@@ -36,11 +36,11 @@ Namespace My
     End Sub
 #End If
 #End Region
-
+        
         Public Shared ReadOnly Property [Default]() As MySettings
             Get
-
-#If _MYTYPE = "WindowsForms" Then
+                
+#If _MyType = "WindowsForms" Then
                If Not addedHandler Then
                     SyncLock addedHandlerLockObject
                         If Not addedHandler Then
@@ -53,507 +53,495 @@ Namespace My
                 Return defaultInstance
             End Get
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolRecurrsiveDirectorySearch() As Boolean
             Get
-                Return CType(Me("boolRecurrsiveDirectorySearch"), Boolean)
+                Return CType(Me("boolRecurrsiveDirectorySearch"),Boolean)
             End Get
             Set
-                Me("boolRecurrsiveDirectorySearch") = Value
+                Me("boolRecurrsiveDirectorySearch") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("1088, 446")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1088, 446")>  _
         Public Property windowSize() As Global.System.Drawing.Size
             Get
-                Return CType(Me("windowSize"), Global.System.Drawing.Size)
+                Return CType(Me("windowSize"),Global.System.Drawing.Size)
             End Get
             Set
-                Me("windowSize") = Value
+                Me("windowSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("528")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("528")>  _
         Public Property hashIndividualFilesFileNameColumnSize() As Short
             Get
-                Return CType(Me("hashIndividualFilesFileNameColumnSize"), Short)
+                Return CType(Me("hashIndividualFilesFileNameColumnSize"),Short)
             End Get
             Set
-                Me("hashIndividualFilesFileNameColumnSize") = Value
+                Me("hashIndividualFilesFileNameColumnSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("70")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("70")>  _
         Public Property hashIndividualFilesFileSizeColumnSize() As Short
             Get
-                Return CType(Me("hashIndividualFilesFileSizeColumnSize"), Short)
+                Return CType(Me("hashIndividualFilesFileSizeColumnSize"),Short)
             End Get
             Set
-                Me("hashIndividualFilesFileSizeColumnSize") = Value
+                Me("hashIndividualFilesFileSizeColumnSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("241")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("241")>  _
         Public Property hashIndividualFilesChecksumColumnSize() As Short
             Get
-                Return CType(Me("hashIndividualFilesChecksumColumnSize"), Short)
+                Return CType(Me("hashIndividualFilesChecksumColumnSize"),Short)
             End Get
             Set
-                Me("hashIndividualFilesChecksumColumnSize") = Value
+                Me("hashIndividualFilesChecksumColumnSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("557")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("557")>  _
         Public Property verifyHashFileNameColumnSize() As Short
             Get
-                Return CType(Me("verifyHashFileNameColumnSize"), Short)
+                Return CType(Me("verifyHashFileNameColumnSize"),Short)
             End Get
             Set
-                Me("verifyHashFileNameColumnSize") = Value
+                Me("verifyHashFileNameColumnSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("87")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("87")>  _
         Public Property verifyHashFileSizeColumnSize() As Short
             Get
-                Return CType(Me("verifyHashFileSizeColumnSize"), Short)
+                Return CType(Me("verifyHashFileSizeColumnSize"),Short)
             End Get
             Set
-                Me("verifyHashFileSizeColumnSize") = Value
+                Me("verifyHashFileSizeColumnSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("72")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("72")>  _
         Public Property verifyHashFileResults() As Short
             Get
-                Return CType(Me("verifyHashFileResults"), Short)
+                Return CType(Me("verifyHashFileResults"),Short)
             End Get
             Set
-                Me("verifyHashFileResults") = Value
+                Me("verifyHashFileResults") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolSortByFileSizeAfterLoadingHashFile() As Boolean
             Get
-                Return CType(Me("boolSortByFileSizeAfterLoadingHashFile"), Boolean)
+                Return CType(Me("boolSortByFileSizeAfterLoadingHashFile"),Boolean)
             End Get
             Set
-                Me("boolSortByFileSizeAfterLoadingHashFile") = Value
+                Me("boolSortByFileSizeAfterLoadingHashFile") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolSaveChecksumFilesWithRelativePaths() As Boolean
             Get
-                Return CType(Me("boolSaveChecksumFilesWithRelativePaths"), Boolean)
+                Return CType(Me("boolSaveChecksumFilesWithRelativePaths"),Boolean)
             End Get
             Set
-                Me("boolSaveChecksumFilesWithRelativePaths") = Value
+                Me("boolSaveChecksumFilesWithRelativePaths") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolSortFileListingAfterAddingFilesToHash() As Boolean
             Get
-                Return CType(Me("boolSortFileListingAfterAddingFilesToHash"), Boolean)
+                Return CType(Me("boolSortFileListingAfterAddingFilesToHash"),Boolean)
             End Get
             Set
-                Me("boolSortFileListingAfterAddingFilesToHash") = Value
+                Me("boolSortFileListingAfterAddingFilesToHash") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("150")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("150")>  _
         Public Property hashIndividualFilesComputeTimeColumnSize() As Short
             Get
-                Return CType(Me("hashIndividualFilesComputeTimeColumnSize"), Short)
+                Return CType(Me("hashIndividualFilesComputeTimeColumnSize"),Short)
             End Get
             Set
-                Me("hashIndividualFilesComputeTimeColumnSize") = Value
+                Me("hashIndividualFilesComputeTimeColumnSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("150")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("150")>  _
         Public Property verifyHashComputeTimeColumnSize() As Short
             Get
-                Return CType(Me("verifyHashComputeTimeColumnSize"), Short)
+                Return CType(Me("verifyHashComputeTimeColumnSize"),Short)
             End Get
             Set
-                Me("verifyHashComputeTimeColumnSize") = Value
+                Me("verifyHashComputeTimeColumnSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolUseMilliseconds() As Boolean
             Get
-                Return CType(Me("boolUseMilliseconds"), Boolean)
+                Return CType(Me("boolUseMilliseconds"),Boolean)
             End Get
             Set
-                Me("boolUseMilliseconds") = Value
+                Me("boolUseMilliseconds") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolDisplayHashesInUpperCase() As Boolean
             Get
-                Return CType(Me("boolDisplayHashesInUpperCase"), Boolean)
+                Return CType(Me("boolDisplayHashesInUpperCase"),Boolean)
             End Get
             Set
-                Me("boolDisplayHashesInUpperCase") = Value
+                Me("boolDisplayHashesInUpperCase") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("LightGreen")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("LightGreen")>  _
         Public Property validColor() As Global.System.Drawing.Color
             Get
-                Return CType(Me("validColor"), Global.System.Drawing.Color)
+                Return CType(Me("validColor"),Global.System.Drawing.Color)
             End Get
             Set
-                Me("validColor") = Value
+                Me("validColor") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("Pink")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Pink")>  _
         Public Property notValidColor() As Global.System.Drawing.Color
             Get
-                Return CType(Me("notValidColor"), Global.System.Drawing.Color)
+                Return CType(Me("notValidColor"),Global.System.Drawing.Color)
             End Get
             Set
-                Me("notValidColor") = Value
+                Me("notValidColor") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("LightGray")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("LightGray")>  _
         Public Property fileNotFoundColor() As Global.System.Drawing.Color
             Get
-                Return CType(Me("fileNotFoundColor"), Global.System.Drawing.Color)
+                Return CType(Me("fileNotFoundColor"),Global.System.Drawing.Color)
             End Get
             Set
-                Me("fileNotFoundColor") = Value
+                Me("fileNotFoundColor") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("2")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
         Public Property shortBufferSize() As Short
             Get
-                Return CType(Me("shortBufferSize"), Short)
+                Return CType(Me("shortBufferSize"),Short)
             End Get
             Set
-                Me("shortBufferSize") = Value
+                Me("shortBufferSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolUseCommasInNumbers() As Boolean
             Get
-                Return CType(Me("boolUseCommasInNumbers"), Boolean)
+                Return CType(Me("boolUseCommasInNumbers"),Boolean)
             End Get
             Set
-                Me("boolUseCommasInNumbers") = Value
+                Me("boolUseCommasInNumbers") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("4")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("4")>  _
         Public Property taskPriority() As Byte
             Get
-                Return CType(Me("taskPriority"), Byte)
+                Return CType(Me("taskPriority"),Byte)
             End Get
             Set
-                Me("taskPriority") = Value
+                Me("taskPriority") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolCheckForUpdates() As Boolean
             Get
-                Return CType(Me("boolCheckForUpdates"), Boolean)
+                Return CType(Me("boolCheckForUpdates"),Boolean)
             End Get
             Set
-                Me("boolCheckForUpdates") = Value
+                Me("boolCheckForUpdates") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolAutoAddExtension() As Boolean
             Get
-                Return CType(Me("boolAutoAddExtension"), Boolean)
+                Return CType(Me("boolAutoAddExtension"),Boolean)
             End Get
             Set
-                Me("boolAutoAddExtension") = Value
+                Me("boolAutoAddExtension") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("2")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
         Public Property roundFileSizes() As Byte
             Get
-                Return CType(Me("roundFileSizes"), Byte)
+                Return CType(Me("roundFileSizes"),Byte)
             End Get
             Set
-                Me("roundFileSizes") = Value
+                Me("roundFileSizes") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("2")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
         Public Property roundPercentages() As Byte
             Get
-                Return CType(Me("roundPercentages"), Byte)
+                Return CType(Me("roundPercentages"),Byte)
             End Get
             Set
-                Me("roundPercentages") = Value
+                Me("roundPercentages") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("0, 0")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0, 0")>  _
         Public Property windowLocation() As Global.System.Drawing.Point
             Get
-                Return CType(Me("windowLocation"), Global.System.Drawing.Point)
+                Return CType(Me("windowLocation"),Global.System.Drawing.Point)
             End Get
             Set
-                Me("windowLocation") = Value
+                Me("windowLocation") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("120")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("120")>  _
         Public Property newHashChecksumColumnSize() As Short
             Get
-                Return CType(Me("newHashChecksumColumnSize"), Short)
+                Return CType(Me("newHashChecksumColumnSize"),Short)
             End Get
             Set
-                Me("newHashChecksumColumnSize") = Value
+                Me("newHashChecksumColumnSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
         Public Property boolDisplayValidChecksumString() As Boolean
             Get
-                Return CType(Me("boolDisplayValidChecksumString"), Boolean)
+                Return CType(Me("boolDisplayValidChecksumString"),Boolean)
             End Get
             Set
-                Me("boolDisplayValidChecksumString") = Value
+                Me("boolDisplayValidChecksumString") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolOpenInExplorer() As Boolean
             Get
-                Return CType(Me("boolOpenInExplorer"), Boolean)
+                Return CType(Me("boolOpenInExplorer"),Boolean)
             End Get
             Set
-                Me("boolOpenInExplorer") = Value
+                Me("boolOpenInExplorer") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolShowPercentageInWindowTitleBar() As Boolean
             Get
-                Return CType(Me("boolShowPercentageInWindowTitleBar"), Boolean)
+                Return CType(Me("boolShowPercentageInWindowTitleBar"),Boolean)
             End Get
             Set
-                Me("boolShowPercentageInWindowTitleBar") = Value
+                Me("boolShowPercentageInWindowTitleBar") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("2")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2")>  _
         Public Property defaultHash() As Byte
             Get
-                Return CType(Me("defaultHash"), Byte)
+                Return CType(Me("defaultHash"),Byte)
             End Get
             Set
-                Me("defaultHash") = Value
+                Me("defaultHash") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
         Public Property boolWindowMaximized() As Boolean
             Get
-                Return CType(Me("boolWindowMaximized"), Boolean)
+                Return CType(Me("boolWindowMaximized"),Boolean)
             End Get
             Set
-                Me("boolWindowMaximized") = Value
+                Me("boolWindowMaximized") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolShowFileProgressInFileList() As Boolean
             Get
-                Return CType(Me("boolShowFileProgressInFileList"), Boolean)
+                Return CType(Me("boolShowFileProgressInFileList"),Boolean)
             End Get
             Set
-                Me("boolShowFileProgressInFileList") = Value
+                Me("boolShowFileProgressInFileList") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolIncludeEntryCountInFileNameHeader() As Boolean
             Get
-                Return CType(Me("boolIncludeEntryCountInFileNameHeader"), Boolean)
+                Return CType(Me("boolIncludeEntryCountInFileNameHeader"),Boolean)
             End Get
             Set
-                Me("boolIncludeEntryCountInFileNameHeader") = Value
+                Me("boolIncludeEntryCountInFileNameHeader") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes() As Boolean
             Get
-                Return CType(Me("boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes"), Boolean)
+                Return CType(Me("boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes"),Boolean)
             End Get
             Set
-                Me("boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes") = Value
+                Me("boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolClearBeforeTransferringFromVerifyToHash() As Boolean
             Get
-                Return CType(Me("boolClearBeforeTransferringFromVerifyToHash"), Boolean)
+                Return CType(Me("boolClearBeforeTransferringFromVerifyToHash"),Boolean)
             End Get
             Set
-                Me("boolClearBeforeTransferringFromVerifyToHash") = Value
+                Me("boolClearBeforeTransferringFromVerifyToHash") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
         Public Property listFilesColumnOrder() As Global.System.Collections.Specialized.StringCollection
             Get
-                Return CType(Me("listFilesColumnOrder"), Global.System.Collections.Specialized.StringCollection)
+                Return CType(Me("listFilesColumnOrder"),Global.System.Collections.Specialized.StringCollection)
             End Get
             Set
-                Me("listFilesColumnOrder") = Value
+                Me("listFilesColumnOrder") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
         Public Property verifyListFilesColumnOrder() As Global.System.Collections.Specialized.StringCollection
             Get
-                Return CType(Me("verifyListFilesColumnOrder"), Global.System.Collections.Specialized.StringCollection)
+                Return CType(Me("verifyListFilesColumnOrder"),Global.System.Collections.Specialized.StringCollection)
             End Get
             Set
-                Me("verifyListFilesColumnOrder") = Value
+                Me("verifyListFilesColumnOrder") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>
-        Public Property boolUpdateColorInRealTime() As Boolean
-            Get
-                Return CType(Me("boolUpdateColorInRealTime"), Boolean)
-            End Get
-            Set
-                Me("boolUpdateColorInRealTime") = Value
-            End Set
-        End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("549, 236")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("549, 236")>  _
         Public Property exceptionViewerWindowSize() As Global.System.Drawing.Size
             Get
-                Return CType(Me("exceptionViewerWindowSize"), Global.System.Drawing.Size)
+                Return CType(Me("exceptionViewerWindowSize"),Global.System.Drawing.Size)
             End Get
             Set
-                Me("exceptionViewerWindowSize") = Value
+                Me("exceptionViewerWindowSize") = value
             End Set
         End Property
-
-        <Global.System.Configuration.UserScopedSettingAttribute(),
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-         Global.System.Configuration.DefaultSettingValueAttribute("True")>
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
         Public Property boolHideCheckForUpdatesButton() As Boolean
             Get
-                Return CType(Me("boolHideCheckForUpdatesButton"), Boolean)
+                Return CType(Me("boolHideCheckForUpdatesButton"),Boolean)
             End Get
             Set
-                Me("boolHideCheckForUpdatesButton") = Value
+                Me("boolHideCheckForUpdatesButton") = value
             End Set
         End Property
     End Class
 End Namespace
 
 Namespace My
-
-    <Global.Microsoft.VisualBasic.HideModuleNameAttribute(),
-     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),
-     Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute()>
+    
+    <Global.Microsoft.VisualBasic.HideModuleNameAttribute(),  _
+     Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+     Global.System.Runtime.CompilerServices.CompilerGeneratedAttribute()>  _
     Friend Module MySettingsProperty
-
-        <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>
+        
+        <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
         Friend ReadOnly Property Settings() As Global.Hasher.My.MySettings
             Get
                 Return Global.Hasher.My.MySettings.Default

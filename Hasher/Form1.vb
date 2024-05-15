@@ -2,6 +2,7 @@
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
+Imports Microsoft.VisualBasic.Logging
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -20,9 +21,9 @@ Public Class Form1
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
     Private boolClosingWindow As Boolean = False
-    Private m_SortingColumn1, m_SortingColumn2 As ColumnHeader
+    Private sortOrderForListFiles As SortOrder = SortOrder.Ascending ' Define soSortOrder at class level
+    Private sortOrderForVerifyHashesListFiles As SortOrder = SortOrder.Ascending ' Define soSortOrder at class level
     Private boolDoneLoading As Boolean = False
-    Private boolUpdateColorInRealTime As Boolean
     Private Property PipeServer As NamedPipeServerStream = Nothing
     Private ReadOnly strNamedPipeServerName As String = $"hasher_{GetSHA256HashOfString(Environment.UserName).Substring(0, 10)}"
     Private Const strPayPal As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HQL3AC96XKM42&lc=US&no_note=1&no_shipping=1&rm=1&return=http%3a%2f%2fwww%2etoms%2dworld%2eorg%2fblog%2fthank%2dyou%2dfor%2dyour%2ddonation&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted"
@@ -82,7 +83,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub UpdateDataGridViewRow(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow, boolForceUpdateColor As Boolean)
+    Private Sub UpdateDataGridViewRow(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow)
         With itemOnGUI
             If item IsNot Nothing Then
                 For i As Short = 1 To item.Cells.Count - 1
@@ -99,7 +100,7 @@ Public Class Form1
                 .BoolValidHash = item.BoolValidHash
                 .StrCrashData = item.StrCrashData
                 .BoolExceptionOccurred = item.BoolExceptionOccurred
-                If boolForceUpdateColor Then .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor}
+                .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor}
             End If
         End With
     End Sub
@@ -251,7 +252,7 @@ Public Class Form1
             End If
 
             UpdateFilesListCountHeader()
-            'If chkSortFileListingAfterAddingFilesToHash.Checked Then ApplyFileSizeSortingToHashList()
+            If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
         End Using
     End Sub
 
@@ -376,7 +377,6 @@ Public Class Form1
                                                          Next
                                                      End SyncLock
 
-
                                                      For Each item As DataGridViewRow In listFiles.Rows
                                                          If boolAbortThread Then Throw New MyThreadAbortException()
 
@@ -399,7 +399,7 @@ Public Class Form1
                                                                               lblProcessingFile.Text = $"Now processing file ""{New IO.FileInfo(myItem.FileName).Name}""."
                                                                               lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Rows.Count)
 
-                                                                              UpdateDataGridViewRow(itemOnGUI, item, False)
+                                                                              UpdateDataGridViewRow(itemOnGUI, item)
                                                                           End Sub)
 
                                                                  computeStopwatch = Stopwatch.StartNew
@@ -422,7 +422,7 @@ Public Class Form1
                                                                      longErroredFiles += 1
                                                                  End If
 
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item, False))
+                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
                                                              End If
                                                          End If
 
@@ -465,7 +465,7 @@ Public Class Form1
                                                                       Text = strWindowTitle
 
                                                                       If currentItem IsNot Nothing Then currentItem.Cells(2).Value = strWaitingToBeProcessed
-                                                                      UpdateDataGridViewRow(itemOnGUI, currentItem, False)
+                                                                      UpdateDataGridViewRow(itemOnGUI, currentItem)
 
                                                                       Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of MyDataGridViewRow).Where(Function(item As MyDataGridViewRow) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count
                                                                       btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
@@ -737,45 +737,22 @@ Public Class Form1
 
     Private Sub UpdateChecksumsInListFiles(checksumType As HashAlgorithmName)
         If listFiles.Rows.Count <> 0 Then
-            Dim selectedItemsIntegerArray As New List(Of Integer)
-
-            If listFiles.SelectedRows.Count <> 0 Then
-                For Each item As Integer In listFiles.SelectedRows
-                    selectedItemsIntegerArray.Add(item)
-                Next
-            End If
-
             Dim strChecksum As String
-            Dim tempListViewItemCollection As New List(Of MyDataGridViewRow)
-            Dim listViewItem As MyDataGridViewRow
+            Dim dataGridRow As MyDataGridViewRow
 
             For Each item As DataGridViewRow In listFiles.Rows
                 If Not String.IsNullOrWhiteSpace(item.Cells(0).Value) Then
-                    listViewItem = DirectCast(item, MyDataGridViewRow)
-                    strChecksum = GetDataFromAllTheHashes(checksumType, listViewItem.AllTheHashes)
+                    dataGridRow = DirectCast(item, MyDataGridViewRow)
+                    strChecksum = GetDataFromAllTheHashes(checksumType, dataGridRow.AllTheHashes)
 
                     If Not String.IsNullOrWhiteSpace(strChecksum) Then
-                        listViewItem.Hash = strChecksum
-                        listViewItem.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+                        dataGridRow.Hash = strChecksum
+                        dataGridRow.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
                     End If
 
-                    tempListViewItemCollection.Add(listViewItem)
-                    listViewItem = Nothing
+                    dataGridRow = Nothing
                 End If
             Next
-
-            listFiles.Rows.Clear()
-            listFiles.Rows.AddRange(tempListViewItemCollection.ToArray)
-
-            If selectedItemsIntegerArray.Count <> 0 Then
-                For Each item As Integer In selectedItemsIntegerArray
-                    listFiles.Rows(item).Selected = True
-                Next
-                listFiles.Select()
-                listFiles.FirstDisplayedScrollingRowIndex = selectedItemsIntegerArray.Count - 1
-            End If
-
-            listFiles.Refresh()
         End If
     End Sub
 
@@ -853,7 +830,7 @@ Public Class Form1
                 End If
 
                 UpdateFilesListCountHeader()
-                'If chkSortFileListingAfterAddingFilesToHash.Checked Then ApplyFileSizeSortingToHashList()
+                If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
             End If
         Catch ex As Exception
         End Try
@@ -1009,8 +986,6 @@ Public Class Form1
         ChkIncludeEntryCountInFileNameHeader.Checked = My.Settings.boolIncludeEntryCountInFileNameHeader
         ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Checked = My.Settings.boolComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes
         chkClearBeforeTransferringFromVerifyToHash.Checked = My.Settings.boolClearBeforeTransferringFromVerifyToHash
-        chkUpdateColorInRealTime.Checked = My.Settings.boolUpdateColorInRealTime
-        boolUpdateColorInRealTime = My.Settings.boolUpdateColorInRealTime
         lblWelcomeText.Text = String.Format(lblWelcomeText.Text, checkForUpdates.strDisplayVersionString)
         Size = My.Settings.windowSize
         If My.Settings.boolWindowMaximized Then WindowState = FormWindowState.Maximized
@@ -1138,7 +1113,7 @@ Public Class Form1
                                                                   listFiles.Rows.AddRange(collectionOfListViewItems.ToArray())
                                                                   collectionOfListViewItems.Clear()
                                                                   collectionOfListViewItems = Nothing
-                                                                  'If chkSortFileListingAfterAddingFilesToHash.Checked Then ApplyFileSizeSortingToHashList()
+                                                                  If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
 
                                                                   UpdateFilesListCountHeader()
 
@@ -1291,7 +1266,7 @@ Public Class Form1
                                                      Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Dim intLineCounter As Integer = 0
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
-                                                     Dim strReadingHashFileMessage As String = "Reading hash file and creating ListView item objects... Please wait."
+                                                     Dim strReadingHashFileMessage As String = "Reading hash file and creating DataGridView item objects... Please wait."
                                                      Dim boolFileExists As Boolean
                                                      Dim intFileCount As Integer = 0
                                                      Dim strLineInFile As String
@@ -1359,7 +1334,7 @@ Public Class Form1
                                                      MyInvoke(Sub()
                                                                   verifyHashesListFiles.Rows.AddRange(listOfListViewItems.ToArray)
                                                                   Text = strWindowTitle
-                                                                  'If chkSortByFileSizeAfterLoadingHashFile.Checked Then ApplyFileSizeSortingToVerifyList()
+                                                                  If chkSortByFileSizeAfterLoadingHashFile.Checked Then SortLogsByFileSize(1, sortOrderForVerifyHashesListFiles, verifyHashesListFiles)
                                                                   VerifyHashProgressBar.Value = 0
                                                                   ProgressForm.SetTaskbarProgressBarValue(0)
                                                                   lblVerifyHashStatusProcessingFile.Visible = True
@@ -1420,7 +1395,7 @@ Public Class Form1
 
                                                              MyInvoke(Sub()
                                                                           lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
-                                                                          UpdateDataGridViewRow(itemOnGUI, item, False)
+                                                                          UpdateDataGridViewRow(itemOnGUI, item)
                                                                       End Sub)
 
                                                              computeStopwatch = Stopwatch.StartNew
@@ -1462,7 +1437,7 @@ Public Class Form1
                                                                  longFilesThatWereNotFound += 1
                                                              End If
 
-                                                             MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item, boolUpdateColorInRealTime))
+                                                             MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
 
                                                              index += 1
                                                          Else
@@ -1621,7 +1596,7 @@ Public Class Form1
         Next
 
         UpdateFilesListCountHeader()
-        'If chkSortFileListingAfterAddingFilesToHash.Checked Then ApplyFileSizeSortingToHashList()
+        If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
     End Sub
 
     Private Sub ListFiles_DragEnter(sender As Object, e As DragEventArgs)
@@ -1800,86 +1775,6 @@ Public Class Form1
         stringBuilder.AppendLine($"' Number of files in hash data: {MyToString(intFileCount)}")
         stringBuilder.AppendLine("'")
     End Sub
-
-    'Private Sub ApplyFileSizeSortingToHashList()
-    '    MyInvoke(Sub()
-    '                 colFileName.HeaderText = "File Name"
-    '                 colFileSize.HeaderText = "File Size"
-    '                 colComputeTime.HeaderText = "Compute Time"
-
-    '                 If radioMD5.Checked Then
-    '                     colChecksum.HeaderText = strColumnTitleChecksumMD5
-    '                 ElseIf radioSHA1.Checked Then
-    '                     colChecksum.HeaderText = strColumnTitleChecksumSHA160
-    '                 ElseIf radioSHA256.Checked Then
-    '                     colChecksum.HeaderText = strColumnTitleChecksumSHA256
-    '                 ElseIf radioSHA384.Checked Then
-    '                     colChecksum.HeaderText = strColumnTitleChecksumSHA384
-    '                 ElseIf radioSHA512.Checked Then
-    '                     colChecksum.HeaderText = strColumnTitleChecksumSHA512
-    '                 End If
-
-    '                 Dim new_sorting_column As columns = listFiles.Columns(1)
-    '                 Dim sort_order As SortOrder = SortOrder.Ascending
-
-    '                 m_SortingColumn2 = new_sorting_column
-    '                 m_SortingColumn2.Text = "> File Size"
-
-    '                 listFiles.Sort()
-    '             End Sub)
-    'End Sub
-    'Private Sub ApplyFileSizeSortingToVerifyList()
-    '    colFile.HeaderText = "File Name"
-    '    colFileSize2.HeaderText = "File Size"
-    '    colResults.HeaderText = "Results"
-    '    colComputeTime2.HeaderText = "Compute Time"
-
-    '    Dim new_sorting_column As ColumnHeader = verifyHashesListFiles.Columns(1)
-    '    Dim sort_order As SortOrder = SortOrder.Ascending
-
-    '    m_SortingColumn1 = new_sorting_column
-    '    m_SortingColumn1.Text = "> File Size"
-
-    '    verifyHashesListFiles.ListViewItemSorter = New ListViewComparer(1, sort_order)
-    '    verifyHashesListFiles.Sort()
-    'End Sub
-
-    'Private Sub VerifyHashesListFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs)
-    '    If boolBackgroundThreadWorking Then Exit Sub ' Disable resorting the list while the program is working in the background.
-
-    '    ' Get the new sorting column.
-    '    Dim new_sorting_column As ColumnHeader = verifyHashesListFiles.Columns(e.Column)
-
-    '    ' Figure out the new sorting order.
-    '    Dim sort_order As SortOrder
-
-    '    If m_SortingColumn1 Is Nothing Then
-    '        ' New column. Sort ascending.
-    '        sort_order = SortOrder.Ascending
-    '    Else
-    '        ' See if this is the same column.
-    '        If new_sorting_column.Equals(m_SortingColumn1) Then
-    '            ' Same column. Switch the sort order.
-    '            sort_order = If(m_SortingColumn1.Text.StartsWith("> "), SortOrder.Descending, SortOrder.Ascending)
-    '        Else
-    '            ' New column. Sort ascending.
-    '            sort_order = SortOrder.Ascending
-    '        End If
-
-    '        ' Remove the old sort indicator.
-    '        m_SortingColumn1.Text = m_SortingColumn1.Text.Substring(2)
-    '    End If
-
-    '    ' Display the new sort order.
-    '    m_SortingColumn1 = new_sorting_column
-    '    m_SortingColumn1.Text = If(sort_order = SortOrder.Ascending, $"> {m_SortingColumn1.Text}", $"< {m_SortingColumn1.Text}")
-
-    '    ' Create a comparer.
-    '    verifyHashesListFiles.ListViewItemSorter = New ListViewComparer(e.Column, sort_order)
-
-    '    ' Sort.
-    '    verifyHashesListFiles.Sort()
-    'End Sub
 
     Private Sub BtnCheckForUpdates_Click(sender As Object, e As EventArgs) Handles btnCheckForUpdates.Click
         Threading.ThreadPool.QueueUserWorkItem(Sub()
@@ -2468,7 +2363,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub listFiles_SelectionChanged(sender As Object, e As EventArgs) Handles listFiles.SelectionChanged
+    Private Sub ListFiles_SelectionChanged(sender As Object, e As EventArgs) Handles listFiles.SelectionChanged
         UpdateFilesListCountHeader(True)
     End Sub
 
@@ -2569,7 +2464,7 @@ Public Class Form1
                 If item.ColorType = ColorType.NotFound Then
                     item.MyColor = Color.LightGray
                 ElseIf item.ColorType = ColorType.NotValid Then
-                    item.myColor = Color.Pink
+                    item.MyColor = Color.Pink
                 ElseIf item.ColorType = ColorType.Valid Then
                     item.MyColor = Color.LightGreen
                 End If
@@ -2766,7 +2661,7 @@ Public Class Form1
                                                                 listFiles.Rows.AddRange(listOfListViewItems.ToArray)
                                                                 listOfListViewItems = Nothing
 
-                                                                'If chkSortFileListingAfterAddingFilesToHash.Checked Then ApplyFileSizeSortingToHashList()
+                                                                If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
                                                                 colChecksum.HeaderText = strColumnTitleChecksumSHA256
                                                                 TabControl1.SelectedIndex = TabNumberHashIndividualFilesTab
                                                                 btnIndividualFilesCopyToClipboard.Enabled = True
@@ -2967,7 +2862,7 @@ Public Class Form1
                                                                  item.Cells(4).Value = strWaitingToBeProcessed
                                                                  item.MyColor = Color.FromKnownColor(KnownColor.Window)
 
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item, False))
+                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
 
                                                                  longAllBytes += item.FileSize
                                                                  intFileCount += 1
@@ -2977,7 +2872,7 @@ Public Class Form1
                                                          End If
                                                      Next
 
-                                                     'If chkSortByFileSizeAfterLoadingHashFile.Checked Then MyInvoke(Sub() ApplyFileSizeSortingToVerifyList())
+                                                     If chkSortByFileSizeAfterLoadingHashFile.Checked Then MyInvoke(Sub() SortLogsByFileSize(1, sortOrderForListFiles, listFiles))
                                                      index = 1
 
                                                      For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
@@ -3018,7 +2913,7 @@ Public Class Form1
 
                                                                  MyInvoke(Sub()
                                                                               lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
-                                                                              UpdateDataGridViewRow(itemOnGUI, item, False)
+                                                                              UpdateDataGridViewRow(itemOnGUI, item)
                                                                           End Sub)
 
                                                                  computeStopwatch = Stopwatch.StartNew
@@ -3061,7 +2956,7 @@ Public Class Form1
 
                                                                  subRoutine = Nothing
 
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item, False))
+                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
 
                                                                  index += 1
                                                              End If
@@ -3457,11 +3352,6 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub ChkUpdateColorInRealTime_Click(sender As Object, e As EventArgs) Handles chkUpdateColorInRealTime.Click
-        My.Settings.boolUpdateColorInRealTime = chkUpdateColorInRealTime.Checked
-        boolUpdateColorInRealTime = chkUpdateColorInRealTime.Checked
-    End Sub
-
     Private Sub ListFiles_DoubleClick(sender As Object, e As EventArgs)
         ShowExceptionOrChecksumViewerWindow(DirectCast(listFiles.SelectedRows(0), MyDataGridViewRow))
     End Sub
@@ -3516,5 +3406,72 @@ Public Class Form1
     Private Sub ChkHideCheckForUpdatesButton_Click(sender As Object, e As EventArgs) Handles chkHideCheckForUpdatesButton.Click
         My.Settings.boolHideCheckForUpdatesButton = chkHideCheckForUpdatesButton.Checked
         btnCheckForUpdates.Visible = Not chkHideCheckForUpdatesButton.Checked Or Not chkCheckForUpdates.Checked
+    End Sub
+
+    Private Sub ListFiles_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles listFiles.ColumnHeaderMouseClick
+        ' Disable user sorting
+        listFiles.AllowUserToOrderColumns = False
+
+        Dim column As DataGridViewColumn = listFiles.Columns(e.ColumnIndex)
+
+        If e.ColumnIndex = 1 Then
+            If sortOrderForListFiles = SortOrder.Descending Then
+                sortOrderForListFiles = SortOrder.Ascending
+            ElseIf sortOrderForListFiles = SortOrder.Ascending Then
+                sortOrderForListFiles = SortOrder.Descending
+            Else
+                sortOrderForListFiles = SortOrder.Ascending
+            End If
+
+            colFileName.HeaderCell.SortGlyphDirection = SortOrder.None
+            colChecksum.HeaderCell.SortGlyphDirection = SortOrder.None
+            colComputeTime.HeaderCell.SortGlyphDirection = SortOrder.None
+
+            SortLogsByFileSize(column.Index, sortOrderForListFiles, listFiles)
+        Else
+            sortOrderForListFiles = SortOrder.None
+        End If
+    End Sub
+
+    Private Sub VerifyHashesListFiles_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles verifyHashesListFiles.ColumnHeaderMouseClick
+        ' Disable user sorting
+        verifyHashesListFiles.AllowUserToOrderColumns = False
+
+        Dim column As DataGridViewColumn = verifyHashesListFiles.Columns(e.ColumnIndex)
+
+        If e.ColumnIndex = 1 Then
+            If sortOrderForVerifyHashesListFiles = SortOrder.Descending Then
+                sortOrderForVerifyHashesListFiles = SortOrder.Ascending
+            ElseIf sortOrderForVerifyHashesListFiles = SortOrder.Ascending Then
+                sortOrderForVerifyHashesListFiles = SortOrder.Descending
+            Else
+                sortOrderForVerifyHashesListFiles = SortOrder.Ascending
+            End If
+
+            colFile.HeaderCell.SortGlyphDirection = SortOrder.None
+            colResults.HeaderCell.SortGlyphDirection = SortOrder.None
+            colComputeTime2.HeaderCell.SortGlyphDirection = SortOrder.None
+            colNewHash.HeaderCell.SortGlyphDirection = SortOrder.None
+
+            SortLogsByFileSize(column.Index, sortOrderForVerifyHashesListFiles, verifyHashesListFiles)
+        Else
+            sortOrderForVerifyHashesListFiles = SortOrder.None
+        End If
+    End Sub
+
+    Private Sub SortLogsByFileSize(columnIndex As Integer, order As SortOrder, ByRef DataGridObject As DataGridView)
+        DataGridObject.AllowUserToOrderColumns = False
+        DataGridObject.Enabled = False
+
+        Dim comparer As New DataGridViewComparer(columnIndex, order)
+        Dim rows As MyDataGridViewRow() = DataGridObject.Rows.Cast(Of DataGridViewRow)().OfType(Of MyDataGridViewRow)().ToArray()
+
+        Array.Sort(rows, Function(row1, row2) comparer.Compare(row1, row2))
+
+        DataGridObject.Rows.Clear()
+        DataGridObject.Rows.AddRange(rows)
+
+        DataGridObject.Enabled = True
+        DataGridObject.AllowUserToOrderColumns = True
     End Sub
 End Class

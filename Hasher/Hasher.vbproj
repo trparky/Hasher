@@ -122,6 +122,7 @@
     <Compile Include="ListViewDoubleBuffered.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Program Modules\DataGridViewComparer.vb" />
     <Compile Include="Program Modules\FastDirectoryEnumerator.vb" />
     <Compile Include="Program Modules\FileAssociation.vb" />
     <Compile Include="Form1.vb">

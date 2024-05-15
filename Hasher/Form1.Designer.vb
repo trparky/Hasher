@@ -142,7 +142,6 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
-        Me.chkUpdateColorInRealTime = New System.Windows.Forms.CheckBox()
         Me.chkClearBeforeTransferringFromVerifyToHash = New System.Windows.Forms.CheckBox()
         Me.BtnLoadSettingsFromFile = New System.Windows.Forms.Button()
         Me.BtnSaveSettingsToFile = New System.Windows.Forms.Button()
@@ -660,11 +659,11 @@ Partial Class Form1
         Me.listFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.listFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFileName, Me.colFileSize, Me.colChecksum, Me.colComputeTime})
         Me.listFiles.ContextMenuStrip = Me.listFilesContextMenu
-        Me.listFiles.Location = New System.Drawing.Point(157, 20)
+        Me.listFiles.Location = New System.Drawing.Point(160, 20)
         Me.listFiles.Name = "listFiles"
         Me.listFiles.ReadOnly = True
         Me.listFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.listFiles.Size = New System.Drawing.Size(1447, 234)
+        Me.listFiles.Size = New System.Drawing.Size(1444, 234)
         Me.listFiles.TabIndex = 26
         '
         'colFileName
@@ -679,6 +678,7 @@ Partial Class Form1
         Me.colFileSize.HeaderText = "File Size"
         Me.colFileSize.Name = "colFileSize"
         Me.colFileSize.ReadOnly = True
+        Me.colFileSize.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic
         Me.colFileSize.Width = 70
         '
         'colChecksum
@@ -830,7 +830,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
         Me.verifyHashesListFiles.ReadOnly = True
         Me.verifyHashesListFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.verifyHashesListFiles.Size = New System.Drawing.Size(1441, 341)
+        Me.verifyHashesListFiles.Size = New System.Drawing.Size(1441, 413)
         Me.verifyHashesListFiles.TabIndex = 28
         '
         'colFile
@@ -845,6 +845,7 @@ Partial Class Form1
         Me.colFileSize2.HeaderText = "File Size"
         Me.colFileSize2.Name = "colFileSize2"
         Me.colFileSize2.ReadOnly = True
+        Me.colFileSize2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic
         Me.colFileSize2.Width = 87
         '
         'colResults
@@ -1414,7 +1415,6 @@ Partial Class Form1
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
         Me.tabSettings.Controls.Add(Me.chkHideCheckForUpdatesButton)
         Me.tabSettings.Controls.Add(Me.btnRemoveSystemLevelFileAssociations)
-        Me.tabSettings.Controls.Add(Me.chkUpdateColorInRealTime)
         Me.tabSettings.Controls.Add(Me.chkClearBeforeTransferringFromVerifyToHash)
         Me.tabSettings.Controls.Add(Me.BtnLoadSettingsFromFile)
         Me.tabSettings.Controls.Add(Me.BtnSaveSettingsToFile)
@@ -1471,19 +1471,6 @@ Partial Class Form1
         Me.btnRemoveSystemLevelFileAssociations.TabIndex = 53
         Me.btnRemoveSystemLevelFileAssociations.Text = "Remove System-Level File Associations"
         Me.btnRemoveSystemLevelFileAssociations.UseVisualStyleBackColor = True
-        '
-        'chkUpdateColorInRealTime
-        '
-        Me.chkUpdateColorInRealTime.AutoSize = True
-        Me.chkUpdateColorInRealTime.Location = New System.Drawing.Point(15, 383)
-        Me.chkUpdateColorInRealTime.Name = "chkUpdateColorInRealTime"
-        Me.chkUpdateColorInRealTime.Size = New System.Drawing.Size(497, 17)
-        Me.chkUpdateColorInRealTime.TabIndex = 51
-        Me.chkUpdateColorInRealTime.Text = "Update colors in the listview on the ""Verify Saved Hashes"" tab in real time while" &
-    " processing hash file"
-        Me.ToolTip.SetToolTip(Me.chkUpdateColorInRealTime, "Looks fancy, however, it can affect performance." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Turn off if you want maximum ap" &
-        "plication performance.")
-        Me.chkUpdateColorInRealTime.UseVisualStyleBackColor = True
         '
         'chkClearBeforeTransferringFromVerifyToHash
         '
@@ -2127,7 +2114,6 @@ Partial Class Form1
     Friend WithEvents listFilesContextMenuLine As ToolStripSeparator
     Friend WithEvents verifyListFilesContextMenuLine1 As ToolStripSeparator
     Friend WithEvents verifyListFilesContextMenuLine2 As ToolStripSeparator
-    Friend WithEvents chkUpdateColorInRealTime As CheckBox
     Friend WithEvents btnCheckHaveIBeenPwned As Button
     Friend WithEvents btnRemoveFileAssociations As Button
     Friend WithEvents btnRemoveSystemLevelFileAssociations As Button
