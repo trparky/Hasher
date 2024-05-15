@@ -1056,7 +1056,7 @@ Public Class Form1
 
                                                  Try
                                                      strLastDirectoryWorkedOn = directoryPath
-                                                     Dim collectionOfListViewItems As New List(Of MyDataGridViewRow)
+                                                     Dim collectionOfDataGridRows As New List(Of MyDataGridViewRow)
                                                      Dim index As Integer = 0
                                                      boolBackgroundThreadWorking = True
 
@@ -1097,7 +1097,7 @@ Public Class Form1
                                                                       lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
                                                                   End Sub)
                                                          If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
-                                                             If IO.File.Exists(filedata.Path) Then collectionOfListViewItems.Add(CreateFilesDataGridObject(filedata.Path, filedata.Size, listFiles))
+                                                             If IO.File.Exists(filedata.Path) Then collectionOfDataGridRows.Add(CreateFilesDataGridObject(filedata.Path, filedata.Size, listFiles))
                                                          End If
                                                      Next
 
@@ -1110,9 +1110,9 @@ Public Class Form1
                                                      Threading.Thread.Sleep(250)
 
                                                      MyInvoke(Sub()
-                                                                  listFiles.Rows.AddRange(collectionOfListViewItems.ToArray())
-                                                                  collectionOfListViewItems.Clear()
-                                                                  collectionOfListViewItems = Nothing
+                                                                  listFiles.Rows.AddRange(collectionOfDataGridRows.ToArray())
+                                                                  collectionOfDataGridRows.Clear()
+                                                                  collectionOfDataGridRows = Nothing
                                                                   If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
 
                                                                   UpdateFilesListCountHeader()
@@ -1270,7 +1270,7 @@ Public Class Form1
                                                      Dim boolFileExists As Boolean
                                                      Dim intFileCount As Integer = 0
                                                      Dim strLineInFile As String
-                                                     Dim listOfListViewItems As New List(Of MyDataGridViewRow)
+                                                     Dim listOfDataGridRows As New List(Of MyDataGridViewRow)
                                                      Dim intIndexBeingWorkedOn As Integer
                                                      Dim currentItem As MyDataGridViewRow = Nothing
                                                      Dim exType As Type = Nothing
@@ -1323,7 +1323,7 @@ Public Class Form1
                                                                      strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
                                                                  End If
 
-                                                                 listOfListViewItems.Add(CreateMyDataGridRowForHashFileEntry(strFileName, strChecksum, longFilesThatWereNotFound, boolFileExists, verifyHashesListFiles))
+                                                                 listOfDataGridRows.Add(CreateMyDataGridRowForHashFileEntry(strFileName, strChecksum, longFilesThatWereNotFound, boolFileExists, verifyHashesListFiles))
                                                                  If boolFileExists Then intFileCount += 1
                                                              End If
 
@@ -1332,7 +1332,7 @@ Public Class Form1
                                                      Next
 
                                                      MyInvoke(Sub()
-                                                                  verifyHashesListFiles.Rows.AddRange(listOfListViewItems.ToArray)
+                                                                  verifyHashesListFiles.Rows.AddRange(listOfDataGridRows.ToArray)
                                                                   Text = strWindowTitle
                                                                   If chkSortByFileSizeAfterLoadingHashFile.Checked Then SortLogsByFileSize(1, sortOrderForVerifyHashesListFiles, verifyHashesListFiles)
                                                                   VerifyHashProgressBar.Value = 0
@@ -1342,7 +1342,7 @@ Public Class Form1
 
                                                      newDataInFileArray = Nothing
                                                      strLineInFile = Nothing
-                                                     listOfListViewItems = Nothing
+                                                     listOfDataGridRows = Nothing
 
                                                      Dim strChecksumInFile As String = Nothing
                                                      Dim percentage, allBytesPercentage As Double
@@ -1753,10 +1753,12 @@ Public Class Form1
                 Exit Sub
             End If
 
-            Dim MyListViewItem As MyDataGridViewRow = DirectCast(listFiles.SelectedRows(0), MyDataGridViewRow)
-            globalAllTheHashes = MyListViewItem.AllTheHashes
-            listFilesContextMenuFileName.Text = $"File Name: {MyListViewItem.FileName}"
-            With MyListViewItem.AllTheHashes
+            Dim MyDataGridRow As MyDataGridViewRow = DirectCast(listFiles.SelectedRows(0), MyDataGridViewRow)
+
+            globalAllTheHashes = MyDataGridRow.AllTheHashes
+            listFilesContextMenuFileName.Text = $"File Name: {MyDataGridRow.FileName}"
+
+            With MyDataGridRow.AllTheHashes
                 listFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
                 listFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
                 listFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
@@ -2611,7 +2613,7 @@ Public Class Form1
                                                             End Sub)
 
                                                    boolBackgroundThreadWorking = True
-                                                   Dim listOfListViewItems As New List(Of MyDataGridViewRow)
+                                                   Dim listOfDataGridRows As New List(Of MyDataGridViewRow)
                                                    Dim intLineCounter As Integer = 0
                                                    Dim strHashString As String
                                                    Dim checksumType As HashAlgorithmName
@@ -2656,14 +2658,14 @@ Public Class Form1
                                                                .Hash = strHashString
                                                            End With
 
-                                                           listOfListViewItems.Add(itemToBeAdded)
+                                                           listOfDataGridRows.Add(itemToBeAdded)
                                                        End If
                                                    Next
 
                                                    MyInvoke(Sub()
                                                                 boolBackgroundThreadWorking = False
-                                                                listFiles.Rows.AddRange(listOfListViewItems.ToArray)
-                                                                listOfListViewItems = Nothing
+                                                                listFiles.Rows.AddRange(listOfDataGridRows.ToArray)
+                                                                listOfDataGridRows = Nothing
 
                                                                 If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
                                                                 colChecksum.HeaderText = strColumnTitleChecksumSHA256
@@ -2721,13 +2723,15 @@ Public Class Form1
             End If
 
             If verifyHashesListFiles.SelectedRows.Count = 1 Then
-                Dim MyListViewItem As MyDataGridViewRow = DirectCast(verifyHashesListFiles.SelectedRows(0), MyDataGridViewRow)
-                globalAllTheHashes = MyListViewItem.AllTheHashes
-                verifyListFilesContextMenuFileName.Text = $"File Name: {MyListViewItem.FileName}"
-                With MyListViewItem.AllTheHashes
+                Dim MyDataGridRow As MyDataGridViewRow = DirectCast(verifyHashesListFiles.SelectedRows(0), MyDataGridViewRow)
+
+                globalAllTheHashes = MyDataGridRow.AllTheHashes
+                verifyListFilesContextMenuFileName.Text = $"File Name: {MyDataGridRow.FileName}"
+
+                With MyDataGridRow.AllTheHashes
                     ' We should only need to check this to avoid a NullReferenceException.
                     If String.IsNullOrWhiteSpace(.Sha512) Then
-                        If Not MyListViewItem.BoolFileExists Then
+                        If Not MyDataGridRow.BoolFileExists Then
                             ' Shows file not found error
                             verifyListFilesContextMenuMD5.Text = "MD5: (Error, File Doesn't Exist)"
                             verifyListFilesContextMenuSHA160.Text = "SHA160: (Error, File Doesn't Exist)"
@@ -3320,12 +3324,12 @@ Public Class Form1
         If boolSuccessful Then MsgBox("System-level file associations have been removed successfully.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
-    Private Sub LoadColumnOrders(ByRef ListViewObject As DataGridView, ByRef specializedStringCollection As Specialized.StringCollection)
+    Private Sub LoadColumnOrders(ByRef DataGridObject As DataGridView, ByRef specializedStringCollection As Specialized.StringCollection)
         Try
             Dim intParsedDisplayIndex As Integer
             If specializedStringCollection IsNot Nothing AndAlso specializedStringCollection.Count <> 0 Then
-                For Each column As ColumnHeader In ListViewObject.Columns
-                    If Integer.TryParse(specializedStringCollection(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < ListViewObject.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
+                For Each column As ColumnHeader In DataGridObject.Columns
+                    If Integer.TryParse(specializedStringCollection(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < DataGridObject.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
                 Next
             End If
         Catch ex As Exception
