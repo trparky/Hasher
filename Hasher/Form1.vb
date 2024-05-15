@@ -1707,43 +1707,6 @@ Public Class Form1
         End If
     End Sub
 
-    'Private Sub ListFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs)
-    '    If boolBackgroundThreadWorking Then Exit Sub ' Disable resorting the list while the program is working in the background.
-
-    '    ' Get the new sorting column.
-    '    Dim new_sorting_column As ColumnHeader = listFiles.Columns(e.Column)
-
-    '    ' Figure out the new sorting order.
-    '    Dim sort_order As SortOrder
-
-    '    If m_SortingColumn2 Is Nothing Then
-    '        ' New column. Sort ascending.
-    '        sort_order = SortOrder.Ascending
-    '    Else
-    '        ' See if this is the same column.
-    '        If new_sorting_column.Equals(m_SortingColumn2) Then
-    '            ' Same column. Switch the sort order.
-    '            sort_order = If(m_SortingColumn2.Text.StartsWith("> "), SortOrder.Descending, SortOrder.Ascending)
-    '        Else
-    '            ' New column. Sort ascending.
-    '            sort_order = SortOrder.Ascending
-    '        End If
-
-    '        ' Remove the old sort indicator.
-    '        m_SortingColumn2.Text = m_SortingColumn2.Text.Substring(2)
-    '    End If
-
-    '    ' Display the new sort order.
-    '    m_SortingColumn2 = new_sorting_column
-    '    m_SortingColumn2.Text = If(sort_order = SortOrder.Ascending, $"> {m_SortingColumn2.Text}", $"< {m_SortingColumn2.Text}")
-
-    '    ' Create a comparer.
-    '    listFiles.ListViewItemSorter = New ListViewComparer(e.Column, sort_order)
-
-    '    ' Sort.
-    '    listFiles.Sort()
-    'End Sub
-
     Private Sub ListFilesContextMenu_Opening(sender As Object, e As CancelEventArgs) Handles listFilesContextMenu.Opening
         If listFiles.SelectedRows.Count = 0 Or listFiles.SelectedRows.Count > 1 Then
             e.Cancel = True
@@ -3209,18 +3172,6 @@ Public Class Form1
         SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.SHA512)
     End Sub
 
-    Private Function SaveColumnOrders(columns As ListView.ColumnHeaderCollection) As Specialized.StringCollection
-        Try
-            Dim SpecializedStringCollection As New Specialized.StringCollection
-            For Each column As ColumnHeader In columns
-                SpecializedStringCollection.Add(column.DisplayIndex.ToString)
-            Next
-            Return SpecializedStringCollection
-        Catch ex As Exception
-            Return New Specialized.StringCollection
-        End Try
-    End Function
-
     Private Function SaveColumnOrders(columns As DataGridViewColumnCollection) As Specialized.StringCollection
         Try
             Dim SpecializedStringCollection As New Specialized.StringCollection
@@ -3331,21 +3282,6 @@ Public Class Form1
                 For Each column As ColumnHeader In DataGridObject.Columns
                     If Integer.TryParse(specializedStringCollection(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < DataGridObject.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
                 Next
-            End If
-        Catch ex As Exception
-            specializedStringCollection = Nothing
-        End Try
-    End Sub
-
-    Private Sub LoadColumnOrders(ByRef ListViewObject As ListView, ByRef specializedStringCollection As Specialized.StringCollection)
-        Try
-            Dim intParsedDisplayIndex As Integer
-            If specializedStringCollection IsNot Nothing AndAlso specializedStringCollection.Count <> 0 Then
-                ListViewObject.BeginUpdate()
-                For Each column As ColumnHeader In ListViewObject.Columns
-                    If Integer.TryParse(specializedStringCollection(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < ListViewObject.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
-                Next
-                ListViewObject.EndUpdate()
             End If
         Catch ex As Exception
             specializedStringCollection = Nothing
