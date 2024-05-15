@@ -143,7 +143,7 @@ Public Class Form1
                          btnIndividualFilesCopyToClipboard.Enabled = False
                          btnIndividualFilesSaveResultsToDisk.Enabled = False
                      Else
-                         Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of DataGridViewRow).Where(Function(item As DataGridViewRow) item.Cells(2).Value = strCurrentlyBeingProcessed).Count
+                         Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of DataGridViewRow).Where(Function(item As DataGridViewRow) item.Cells(2).Value.Equals(strWaitingToBeProcessed)).Count
 
                          btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
 
@@ -2628,6 +2628,8 @@ Public Class Form1
                                                        checksumType = HashAlgorithmName.SHA512
                                                    End If
 
+                                                   Dim itemToBeAdded As MyDataGridViewRow
+
                                                    For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
                                                        intLineCounter += 1
                                                        MyInvoke(Sub()
@@ -2639,15 +2641,17 @@ Public Class Form1
                                                        If Not filesInListFiles.Contains(item.FileName.Trim.ToLower) And IO.File.Exists(item.FileName) Then
                                                            filesInListFiles.Add(item.FileName.Trim.ToLower)
 
-                                                           Dim itemToBeAdded As New MyDataGridViewRow() With {
+                                                           itemToBeAdded = New MyDataGridViewRow() With {
                                                                .FileSize = New IO.FileInfo(item.FileName).Length,
                                                                .FileName = item.FileName
                                                            }
                                                            With itemToBeAdded
+                                                               .CreateCells(listFiles)
                                                                strHashString = GetDataFromAllTheHashes(checksumType, item.AllTheHashes)
-                                                               .Cells(0).Value = FileSizeToHumanSize(itemToBeAdded.FileSize)
-                                                               .Cells(1).Value = If(chkDisplayHashesInUpperCase.Checked, strHashString.ToUpper, strHashString.ToLower)
-                                                               .Cells(2).Value = TimespanToHMS(item.ComputeTime)
+                                                               .Cells(0).Value = item.FileName
+                                                               .Cells(1).Value = FileSizeToHumanSize(itemToBeAdded.FileSize)
+                                                               .Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strHashString.ToUpper, strHashString.ToLower)
+                                                               .Cells(3).Value = TimespanToHMS(item.ComputeTime)
                                                                .AllTheHashes = item.AllTheHashes
                                                                .Hash = strHashString
                                                            End With
