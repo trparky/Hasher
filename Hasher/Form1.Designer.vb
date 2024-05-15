@@ -656,6 +656,7 @@ Partial Class Form1
         Me.listFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.listFiles.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight
         Me.listFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.listFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFileName, Me.colFileSize, Me.colChecksum, Me.colComputeTime})
         Me.listFiles.ContextMenuStrip = Me.listFilesContextMenu
@@ -823,6 +824,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.verifyHashesListFiles.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight
         Me.verifyHashesListFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2, Me.colNewHash})
         Me.verifyHashesListFiles.ContextMenuStrip = Me.verifyListFilesContextMenu
