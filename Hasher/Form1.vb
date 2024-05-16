@@ -585,17 +585,18 @@ Public Class Form1
             If Not String.IsNullOrWhiteSpace(strLastHashFileLoaded) Then
                 strFileExtension = New IO.FileInfo(strLastHashFileLoaded).Extension
 
-                If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
-                ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
-                ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
-                ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
-                ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
-                End If
+                Select Case strFileExtension.Trim().ToLower()
+                    Case ".md5"
+                        SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
+                    Case ".sha1"
+                        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
+                    Case ".sha256"
+                        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
+                    Case ".sha384"
+                        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
+                    Case ".sha512"
+                        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
+                End Select
 
                 SaveFileDialog.FileName = strLastHashFileLoaded
             Else
@@ -632,17 +633,18 @@ Public Class Form1
                     strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
 
                     If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                        If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
-                            SaveFileDialog.FileName &= ".md5"
-                        ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
-                            SaveFileDialog.FileName &= ".sha1"
-                        ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256 Then
-                            SaveFileDialog.FileName &= ".sha256"
-                        ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384 Then
-                            SaveFileDialog.FileName &= ".sha384"
-                        ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512 Then
-                            SaveFileDialog.FileName &= ".sha512"
-                        End If
+                        Select Case SaveFileDialog.FilterIndex
+                            Case ChecksumFilterIndexMD5
+                                SaveFileDialog.FileName &= ".md5"
+                            Case ChecksumFilterIndexSHA160
+                                SaveFileDialog.FileName &= ".sha1"
+                            Case ChecksumFilterIndexSHA256
+                                SaveFileDialog.FileName &= ".sha256"
+                            Case ChecksumFilterIndexSHA384
+                                SaveFileDialog.FileName &= ".sha384"
+                            Case ChecksumFilterIndexSHA512
+                                SaveFileDialog.FileName &= ".sha512"
+                        End Select
                     End If
 
                     Media.SystemSounds.Exclamation.Play()
@@ -656,17 +658,18 @@ Public Class Form1
                 Dim fileInfo As New IO.FileInfo(SaveFileDialog.FileName)
                 strFileExtension = fileInfo.Extension
 
-                If strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
-                    checksumType = HashAlgorithmName.MD5
-                ElseIf strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
-                    checksumType = HashAlgorithmName.SHA1
-                ElseIf strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
-                    checksumType = HashAlgorithmName.SHA256
-                ElseIf strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
-                    checksumType = HashAlgorithmName.SHA384
-                ElseIf strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                    checksumType = HashAlgorithmName.SHA512
-                End If
+                Select Case strFileExtension.Trim().ToLower()
+                    Case ".md5"
+                        checksumType = HashAlgorithmName.MD5
+                    Case ".sha1"
+                        checksumType = HashAlgorithmName.SHA1
+                    Case ".sha256"
+                        checksumType = HashAlgorithmName.SHA256
+                    Case ".sha384"
+                        checksumType = HashAlgorithmName.SHA384
+                    Case ".sha512"
+                        checksumType = HashAlgorithmName.SHA512
+                End Select
 
                 Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
                     streamWriter.Write(StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
@@ -720,19 +723,20 @@ Public Class Form1
     End Sub
 
     Private Function ConvertChecksumTypeToString(checksumType As HashAlgorithmName) As String
-        If checksumType = HashAlgorithmName.MD5 Then
-            Return "MD5"
-        ElseIf checksumType = HashAlgorithmName.SHA1 Then
-            Return "SHA1/SHA160"
-        ElseIf checksumType = HashAlgorithmName.SHA256 Then
-            Return "SHA256"
-        ElseIf checksumType = HashAlgorithmName.SHA384 Then
-            Return "SHA384"
-        ElseIf checksumType = HashAlgorithmName.SHA512 Then
-            Return "SHA512"
-        Else
-            Return ""
-        End If
+        Select Case checksumType
+            Case HashAlgorithmName.MD5
+                Return "MD5"
+            Case HashAlgorithmName.SHA1
+                Return "SHA1/SHA160"
+            Case HashAlgorithmName.SHA256
+                Return "SHA256"
+            Case HashAlgorithmName.SHA384
+                Return "SHA384"
+            Case HashAlgorithmName.SHA512
+                Return "SHA512"
+            Case Else
+                Return ""
+        End Select
     End Function
 
     Private Sub UpdateChecksumsInListFiles(checksumType As HashAlgorithmName)
@@ -1234,20 +1238,21 @@ Public Class Form1
         checksumFileInfo = Nothing
         intCurrentlyActiveTab = TabNumberVerifySavedHashesTab
 
-        If strChecksumFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = HashAlgorithmName.MD5
-        ElseIf strChecksumFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = HashAlgorithmName.SHA1
-        ElseIf strChecksumFileExtension.Equals(".sha2", StringComparison.OrdinalIgnoreCase) Or strChecksumFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = HashAlgorithmName.SHA256
-        ElseIf strChecksumFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = HashAlgorithmName.SHA384
-        ElseIf strChecksumFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-            checksumType = HashAlgorithmName.SHA512
-        Else
-            MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strMessageBoxTitleText)
-            Exit Sub
-        End If
+        Select Case strChecksumFileExtension.ToLower()
+            Case ".md5"
+                checksumType = HashAlgorithmName.MD5
+            Case ".sha1"
+                checksumType = HashAlgorithmName.SHA1
+            Case ".sha2", ".sha256"
+                checksumType = HashAlgorithmName.SHA256
+            Case ".sha384"
+                checksumType = HashAlgorithmName.SHA384
+            Case ".sha512"
+                checksumType = HashAlgorithmName.SHA512
+            Case Else
+                MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                Exit Sub
+        End Select
 
         checksumTypeForChecksumCompareWindow = checksumType
 
@@ -1860,22 +1865,23 @@ Public Class Form1
                                                      If DoChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine, exceptionObject1) AndAlso DoChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine, exceptionObject2) Then
                                                          boolSuccessful = True
 
-                                                         If checksumType = HashAlgorithmName.MD5 Then
-                                                             strChecksum1 = compareFilesAllTheHashes1.Md5
-                                                             strChecksum2 = compareFilesAllTheHashes2.Md5
-                                                         ElseIf checksumType = HashAlgorithmName.SHA1 Then
-                                                             strChecksum1 = compareFilesAllTheHashes1.Sha160
-                                                             strChecksum2 = compareFilesAllTheHashes2.Sha160
-                                                         ElseIf checksumType = HashAlgorithmName.SHA256 Then
-                                                             strChecksum1 = compareFilesAllTheHashes1.Sha256
-                                                             strChecksum2 = compareFilesAllTheHashes2.Sha256
-                                                         ElseIf checksumType = HashAlgorithmName.SHA384 Then
-                                                             strChecksum1 = compareFilesAllTheHashes1.Sha384
-                                                             strChecksum2 = compareFilesAllTheHashes2.Sha384
-                                                         ElseIf checksumType = HashAlgorithmName.SHA512 Then
-                                                             strChecksum1 = compareFilesAllTheHashes1.Sha512
-                                                             strChecksum2 = compareFilesAllTheHashes2.Sha512
-                                                         End If
+                                                         Select Case checksumType
+                                                             Case HashAlgorithmName.MD5
+                                                                 strChecksum1 = compareFilesAllTheHashes1.Md5
+                                                                 strChecksum2 = compareFilesAllTheHashes2.Md5
+                                                             Case HashAlgorithmName.SHA1
+                                                                 strChecksum1 = compareFilesAllTheHashes1.Sha160
+                                                                 strChecksum2 = compareFilesAllTheHashes2.Sha160
+                                                             Case HashAlgorithmName.SHA256
+                                                                 strChecksum1 = compareFilesAllTheHashes1.Sha256
+                                                                 strChecksum2 = compareFilesAllTheHashes2.Sha256
+                                                             Case HashAlgorithmName.SHA384
+                                                                 strChecksum1 = compareFilesAllTheHashes1.Sha384
+                                                                 strChecksum2 = compareFilesAllTheHashes2.Sha384
+                                                             Case HashAlgorithmName.SHA512
+                                                                 strChecksum1 = compareFilesAllTheHashes1.Sha512
+                                                                 strChecksum2 = compareFilesAllTheHashes2.Sha512
+                                                         End Select
 
                                                          MyInvoke(Sub()
                                                                       lblFile1Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)}"
@@ -2028,17 +2034,18 @@ Public Class Form1
             If txtKnownHash.Text.Length = 128 Or txtKnownHash.Text.Length = 96 Or txtKnownHash.Text.Length = 64 Or txtKnownHash.Text.Length = 40 Or txtKnownHash.Text.Length = 32 Then
                 If Not String.IsNullOrWhiteSpace(txtFileForKnownHash.Text) Then btnCompareAgainstKnownHash.Enabled = True
 
-                If txtKnownHash.Text.Length = 32 Then
-                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: MD5"
-                ElseIf txtKnownHash.Text.Length = 40 Then
-                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA1"
-                ElseIf txtKnownHash.Text.Length = 64 Then
-                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA256"
-                ElseIf txtKnownHash.Text.Length = 96 Then
-                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA384"
-                ElseIf txtKnownHash.Text.Length = 128 Then
-                    lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA512"
-                End If
+                Select Case txtKnownHash.Text.Length
+                    Case 32
+                        lblCompareFileAgainstKnownHashType.Text = "Hash Type: MD5"
+                    Case 40
+                        lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA1"
+                    Case 64
+                        lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA256"
+                    Case 96
+                        lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA384"
+                    Case 128
+                        lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA512"
+                End Select
             Else
                 lblCompareFileAgainstKnownHashType.Text = Nothing
                 btnCompareAgainstKnownHash.Enabled = False
@@ -2083,17 +2090,18 @@ Public Class Form1
                                                      boolBackgroundThreadWorking = True
                                                      Dim checksumType As HashAlgorithmName
 
-                                                     If txtKnownHash.Text.Length = 32 Then
-                                                         checksumType = HashAlgorithmName.MD5
-                                                     ElseIf txtKnownHash.Text.Length = 40 Then
-                                                         checksumType = HashAlgorithmName.SHA1
-                                                     ElseIf txtKnownHash.Text.Length = 64 Then
-                                                         checksumType = HashAlgorithmName.SHA256
-                                                     ElseIf txtKnownHash.Text.Length = 96 Then
-                                                         checksumType = HashAlgorithmName.SHA384
-                                                     ElseIf txtKnownHash.Text.Length = 128 Then
-                                                         checksumType = HashAlgorithmName.SHA512
-                                                     End If
+                                                     Select Case txtKnownHash.Text.Length
+                                                         Case 32
+                                                             checksumType = HashAlgorithmName.MD5
+                                                         Case 40
+                                                             checksumType = HashAlgorithmName.SHA1
+                                                         Case 64
+                                                             checksumType = HashAlgorithmName.SHA256
+                                                         Case 96
+                                                             checksumType = HashAlgorithmName.SHA384
+                                                         Case 128
+                                                             checksumType = HashAlgorithmName.SHA512
+                                                     End Select
 
                                                      Dim strChecksum As String = Nothing
                                                      Dim percentage As Double
@@ -2581,17 +2589,18 @@ Public Class Form1
                                                    Dim strHashString As String
                                                    Dim checksumType As HashAlgorithmName
 
-                                                   If My.Settings.defaultHash = Byte.Parse(0) Then
-                                                       checksumType = HashAlgorithmName.MD5
-                                                   ElseIf My.Settings.defaultHash = Byte.Parse(1) Then
-                                                       checksumType = HashAlgorithmName.SHA1
-                                                   ElseIf My.Settings.defaultHash = Byte.Parse(2) Then
-                                                       checksumType = HashAlgorithmName.SHA256
-                                                   ElseIf My.Settings.defaultHash = Byte.Parse(3) Then
-                                                       checksumType = HashAlgorithmName.SHA384
-                                                   ElseIf My.Settings.defaultHash = Byte.Parse(4) Then
-                                                       checksumType = HashAlgorithmName.SHA512
-                                                   End If
+                                                   Select Case My.Settings.defaultHash
+                                                       Case Byte.Parse(0)
+                                                           checksumType = HashAlgorithmName.MD5
+                                                       Case Byte.Parse(1)
+                                                           checksumType = HashAlgorithmName.SHA1
+                                                       Case Byte.Parse(2)
+                                                           checksumType = HashAlgorithmName.SHA256
+                                                       Case Byte.Parse(3)
+                                                           checksumType = HashAlgorithmName.SHA384
+                                                       Case Byte.Parse(4)
+                                                           checksumType = HashAlgorithmName.SHA512
+                                                   End Select
 
                                                    Dim itemToBeAdded As MyDataGridViewRow
 
@@ -3041,22 +3050,23 @@ Public Class Form1
     End Sub
 
     Private Sub SetDefaultHashTypeGUIElementOptions()
-        If defaultHashType.SelectedIndex = 0 Then
-            radioMD5.Checked = True
-            colChecksum.HeaderText = strColumnTitleChecksumMD5
-        ElseIf defaultHashType.SelectedIndex = 1 Then
-            radioSHA1.Checked = True
-            colChecksum.HeaderText = strColumnTitleChecksumSHA160
-        ElseIf defaultHashType.SelectedIndex = 2 Then
-            radioSHA256.Checked = True
-            colChecksum.HeaderText = strColumnTitleChecksumSHA256
-        ElseIf defaultHashType.SelectedIndex = 3 Then
-            radioSHA384.Checked = True
-            colChecksum.HeaderText = strColumnTitleChecksumSHA384
-        ElseIf defaultHashType.SelectedIndex = 4 Then
-            radioSHA512.Checked = True
-            colChecksum.HeaderText = strColumnTitleChecksumSHA512
-        End If
+        Select Case defaultHashType.SelectedIndex
+            Case 0
+                radioMD5.Checked = True
+                colChecksum.HeaderText = strColumnTitleChecksumMD5
+            Case 1
+                radioSHA1.Checked = True
+                colChecksum.HeaderText = strColumnTitleChecksumSHA160
+            Case 2
+                radioSHA256.Checked = True
+                colChecksum.HeaderText = strColumnTitleChecksumSHA256
+            Case 3
+                radioSHA384.Checked = True
+                colChecksum.HeaderText = strColumnTitleChecksumSHA384
+            Case 4
+                radioSHA512.Checked = True
+                colChecksum.HeaderText = strColumnTitleChecksumSHA512
+        End Select
     End Sub
 
     Private Sub ChkShowFileProgressInFileList_Click(sender As Object, e As EventArgs) Handles chkShowFileProgressInFileList.Click
