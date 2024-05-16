@@ -1618,14 +1618,16 @@ Public Class Form1
         btnComputeTextHash.Enabled = boolEnableButtons
         btnCheckHaveIBeenPwned.Enabled = boolEnableButtons
         btnCopyTextHashResultsToClipboard.Enabled = False
-        txtHashResults.Items.Clear()
+        txtHashResults.Rows.Clear()
         hashTextAllTheHashes = Nothing
     End Sub
 
-    Private Function MakeTextHashListViewItem(strHashType As String, strHash As String) As ListViewItem
-        Dim itemToBeAdded As New ListViewItem(strHashType)
+    Private Function MakeTextHashListViewItem(strHashType As String, strHash As String) As DataGridViewRow
+        Dim itemToBeAdded As New DataGridViewRow()
         With itemToBeAdded
-            .SubItems.Add(If(chkDisplayHashesInUpperCase.Checked, strHash.ToUpper, strHash.ToLower))
+            .CreateCells(txtHashResults)
+            .Cells(0).Value = strHashType
+            .Cells(1).Value = If(chkDisplayHashesInUpperCase.Checked, strHash.ToUpper, strHash.ToLower)
         End With
         Return itemToBeAdded
     End Function
@@ -1633,21 +1635,21 @@ Public Class Form1
     Private Sub BtnComputeTextHash_Click(sender As Object, e As EventArgs) Handles btnComputeTextHash.Click
         hashTextAllTheHashes = GetHashOfString(txtTextToHash.Text)
 
-        txtHashResults.Items.Clear()
+        txtHashResults.Rows.Clear()
 
-        txtHashResults.Items.Add(MakeTextHashListViewItem("MD5", GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes)))
-        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA1/SHA160", GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes)))
-        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA256", GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes)))
-        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA384", GetDataFromAllTheHashes(HashAlgorithmName.SHA384, hashTextAllTheHashes)))
-        txtHashResults.Items.Add(MakeTextHashListViewItem("SHA512", GetDataFromAllTheHashes(HashAlgorithmName.SHA512, hashTextAllTheHashes)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("MD5", GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA1/SHA160", GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA256", GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA384", GetDataFromAllTheHashes(HashAlgorithmName.SHA384, hashTextAllTheHashes)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA512", GetDataFromAllTheHashes(HashAlgorithmName.SHA512, hashTextAllTheHashes)))
 
         btnCopyTextHashResultsToClipboard.Enabled = True
         btnComputeTextHash.Enabled = False
     End Sub
 
     Private Sub CopyHashToWindowsClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyHashToWindowsClipboardToolStripMenuItem.Click
-        Dim listViewItem As ListViewItem = txtHashResults.SelectedItems(0)
-        If CopyTextToWindowsClipboard(listViewItem.SubItems(1).Text) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
+        Dim listViewItem As DataGridViewRow = txtHashResults.SelectedRows(0)
+        If CopyTextToWindowsClipboard(listViewItem.Cells(1).Value) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
     Private Sub BtnPasteTextFromWindowsClipboard_Click(sender As Object, e As EventArgs) Handles btnPasteTextFromWindowsClipboard.Click
@@ -2369,9 +2371,9 @@ Public Class Form1
                 item.Cells(2).Value = If(boolDisplayHashesInUpperCase, item.Hash.ToUpper, item.Hash.ToLower)
             Next
         End If
-        If txtHashResults.Items.Count <> 0 Then
-            For Each item As ListViewItem In txtHashResults.Items
-                item.SubItems(1).Text = If(boolDisplayHashesInUpperCase, item.SubItems(1).Text.ToUpper, item.SubItems(1).Text.ToLower)
+        If txtHashResults.Rows.Count <> 0 Then
+            For Each item As DataGridViewRow In txtHashResults.Rows
+                item.Cells(1).Value = If(boolDisplayHashesInUpperCase, item.Cells(1).Value.ToUpper, item.Cells(1).Value.ToLower)
             Next
         End If
 

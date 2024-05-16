@@ -36,9 +36,9 @@ Partial Class Form1
         Me.btnComputeTextHash = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblHashTextStep1 = New System.Windows.Forms.Label()
-        Me.txtHashResults = New System.Windows.Forms.ListView()
-        Me.txtHashTypeColumn = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.txtHashColumn = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.txtHashResults = New System.Windows.Forms.DataGridView()
+        Me.txtHashTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.txtHashColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.textHashContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.CopyHashToWindowsClipboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.txtTextToHash = New System.Windows.Forms.TextBox()
@@ -194,6 +194,7 @@ Partial Class Form1
         Me.textHashContextMenu.SuspendLayout()
         Me.tabHashIndividualFiles.SuspendLayout()
         CType(Me.listFiles, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.txtHashResults, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.hashIndividualFilesTableLayoutControl.SuspendLayout()
         Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
@@ -297,12 +298,14 @@ Partial Class Form1
         '
         'txtHashTypeColumn
         '
-        Me.txtHashTypeColumn.Text = "Type"
+        Me.txtHashTypeColumn.HeaderText = "Type"
+        Me.txtHashTypeColumn.Name = "txtHashTypeColumn"
         Me.txtHashTypeColumn.Width = 104
         '
         'txtHashColumn
         '
-        Me.txtHashColumn.Text = "Hash"
+        Me.txtHashColumn.HeaderText = "Hash"
+        Me.txtHashColumn.Name = "txtHashColumn"
         Me.txtHashColumn.Width = 854
         '
         'textHashContextMenu
@@ -321,7 +324,7 @@ Partial Class Form1
         '
         Me.btnCopyTextHashResultsToClipboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnCopyTextHashResultsToClipboard.Enabled = False
-        Me.btnCopyTextHashResultsToClipboard.Location = New System.Drawing.Point(17, 415)
+        Me.btnCopyTextHashResultsToClipboard.Location = New System.Drawing.Point(18, 402)
         Me.btnCopyTextHashResultsToClipboard.Name = "btnCopyTextHashResultsToClipboard"
         Me.btnCopyTextHashResultsToClipboard.Size = New System.Drawing.Size(156, 23)
         Me.btnCopyTextHashResultsToClipboard.TabIndex = 31
@@ -333,7 +336,7 @@ Partial Class Form1
         Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(15, 272)
+        Me.Label3.Location = New System.Drawing.Point(15, 246)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(112, 13)
         Me.Label3.TabIndex = 28
@@ -341,19 +344,20 @@ Partial Class Form1
         '
         'txtHashResults
         '
+        Me.txtHashResults.AllowUserToAddRows = False
         Me.txtHashResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtHashResults.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.txtHashTypeColumn, Me.txtHashColumn})
+        Me.txtHashResults.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight
+        Me.txtHashResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.txtHashResults.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.txtHashTypeColumn, Me.txtHashColumn})
         Me.txtHashResults.ContextMenuStrip = Me.textHashContextMenu
-        Me.txtHashResults.FullRowSelect = True
-        Me.txtHashResults.HideSelection = False
-        Me.txtHashResults.Location = New System.Drawing.Point(18, 288)
+        Me.txtHashResults.Location = New System.Drawing.Point(18, 262)
         Me.txtHashResults.MultiSelect = False
         Me.txtHashResults.Name = "txtHashResults"
-        Me.txtHashResults.Size = New System.Drawing.Size(1586, 121)
-        Me.txtHashResults.TabIndex = 32
-        Me.txtHashResults.UseCompatibleStateImageBehavior = False
-        Me.txtHashResults.View = System.Windows.Forms.View.Details
+        Me.txtHashResults.ReadOnly = True
+        Me.txtHashResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.txtHashResults.Size = New System.Drawing.Size(1586, 134)
+        Me.txtHashResults.TabIndex = 34
         '
         'btnPasteTextFromWindowsClipboard
         '
@@ -368,7 +372,7 @@ Partial Class Form1
         '
         Me.btnComputeTextHash.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnComputeTextHash.Enabled = False
-        Me.btnComputeTextHash.Location = New System.Drawing.Point(18, 198)
+        Me.btnComputeTextHash.Location = New System.Drawing.Point(18, 172)
         Me.btnComputeTextHash.Name = "btnComputeTextHash"
         Me.btnComputeTextHash.Size = New System.Drawing.Size(216, 71)
         Me.btnComputeTextHash.TabIndex = 26
@@ -380,7 +384,7 @@ Partial Class Form1
         Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(15, 182)
+        Me.Label2.Location = New System.Drawing.Point(15, 156)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(459, 13)
         Me.Label2.TabIndex = 25
@@ -405,7 +409,7 @@ Partial Class Form1
         Me.txtTextToHash.Multiline = True
         Me.txtTextToHash.Name = "txtTextToHash"
         Me.txtTextToHash.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtTextToHash.Size = New System.Drawing.Size(1424, 150)
+        Me.txtTextToHash.Size = New System.Drawing.Size(1424, 124)
         Me.txtTextToHash.TabIndex = 1
         '
         'lblTextToHash
@@ -808,7 +812,7 @@ Partial Class Form1
         '
         Me.btnCheckHaveIBeenPwned.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnCheckHaveIBeenPwned.Enabled = False
-        Me.btnCheckHaveIBeenPwned.Location = New System.Drawing.Point(240, 198)
+        Me.btnCheckHaveIBeenPwned.Location = New System.Drawing.Point(240, 172)
         Me.btnCheckHaveIBeenPwned.Name = "btnCheckHaveIBeenPwned"
         Me.btnCheckHaveIBeenPwned.Size = New System.Drawing.Size(291, 71)
         Me.btnCheckHaveIBeenPwned.TabIndex = 33
@@ -1928,6 +1932,7 @@ Partial Class Form1
         Me.tabHashText.ResumeLayout(False)
         Me.tabHashText.PerformLayout()
         Me.textHashContextMenu.ResumeLayout(False)
+        CType(Me.txtHashResults, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabHashIndividualFiles.ResumeLayout(False)
         Me.tabHashIndividualFiles.PerformLayout()
         CType(Me.listFiles, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1996,9 +2001,9 @@ Partial Class Form1
     Friend WithEvents btnComputeTextHash As Button
     Friend WithEvents Label2 As Label
     Friend WithEvents btnPasteTextFromWindowsClipboard As Button
-    Friend WithEvents txtHashResults As ListView
-    Friend WithEvents txtHashTypeColumn As ColumnHeader
-    Friend WithEvents txtHashColumn As ColumnHeader
+    Friend WithEvents txtHashResults As DataGridView
+    Friend WithEvents txtHashTypeColumn As DataGridViewTextBoxColumn
+    Friend WithEvents txtHashColumn As DataGridViewTextBoxColumn
     Friend WithEvents textHashContextMenu As ContextMenuStrip
     Friend WithEvents CopyHashToWindowsClipboardToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Label3 As Label
