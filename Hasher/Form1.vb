@@ -3430,4 +3430,17 @@ Public Class Form1
         DataGridObject.Enabled = True
         DataGridObject.AllowUserToOrderColumns = True
     End Sub
+
+    Private Sub TxtHashResults_MouseDown(sender As Object, e As MouseEventArgs) Handles txtHashResults.MouseDown
+        If e.Button = MouseButtons.Right Then
+            Dim currentMouseOverRow As Integer = txtHashResults.HitTest(e.X, e.Y).RowIndex
+
+            If currentMouseOverRow >= 0 Then
+                If txtHashResults.SelectedRows.Count <= 1 Then
+                    txtHashResults.ClearSelection()
+                    txtHashResults.Rows(currentMouseOverRow).Selected = True
+                End If
+            End If
+        End If
+    End Sub
 End Class
