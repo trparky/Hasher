@@ -140,7 +140,6 @@
     </Compile>
     <Compile Include="Program Modules\Globals.vb" />
     <Compile Include="Program Modules\HTTPHelper.vb" />
-    <Compile Include="Program Modules\listViewSorter.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
