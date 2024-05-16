@@ -237,15 +237,15 @@ Public Class Form1
                 ElseIf OpenFileDialog.FileNames.Count = 1 Then
                     strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
 
-                    If Not filesInListFiles.Contains(OpenFileDialog.FileName.Trim.ToLower) Then
-                        If IO.File.Exists(OpenFileDialog.FileName) Then listFiles.Rows.Add(CreateListFilesObject(OpenFileDialog.FileName, listFiles))
+                    If Not filesInListFiles.Contains(OpenFileDialog.FileName.Trim.ToLower) AndAlso IO.File.Exists(OpenFileDialog.FileName) Then
+                        listFiles.Rows.Add(CreateListFilesObject(OpenFileDialog.FileName, listFiles))
                     End If
                 Else
                     strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileNames(0)).DirectoryName
 
                     For Each strFileName As String In OpenFileDialog.FileNames
-                        If Not filesInListFiles.Contains(strFileName.Trim.ToLower) Then
-                            If IO.File.Exists(strFileName) Then listFiles.Rows.Add(CreateListFilesObject(strFileName, listFiles))
+                        If Not filesInListFiles.Contains(strFileName.Trim.ToLower) AndAlso IO.File.Exists(strFileName) Then
+                            listFiles.Rows.Add(CreateListFilesObject(strFileName, listFiles))
                         End If
                     Next
                 End If
