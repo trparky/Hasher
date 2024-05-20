@@ -1024,8 +1024,8 @@ Public Class Form1
             btnRemoveSystemLevelFileAssociations.Visible = False
         End If
 
-        LoadColumnOrders(listFiles, My.Settings.listFilesColumnOrder)
-        LoadColumnOrders(verifyHashesListFiles, My.Settings.verifyListFilesColumnOrder)
+        LoadColumnOrders(listFiles.Columns, My.Settings.listFilesColumnOrder)
+        LoadColumnOrders(verifyHashesListFiles.Columns, My.Settings.verifyListFilesColumnOrder)
 
         colFileName.Width = My.Settings.hashIndividualFilesFileNameColumnSize
         colFileSize.Width = My.Settings.hashIndividualFilesFileSizeColumnSize
@@ -3187,9 +3187,11 @@ Public Class Form1
     Private Function SaveColumnOrders(columns As DataGridViewColumnCollection) As Specialized.StringCollection
         Try
             Dim SpecializedStringCollection As New Specialized.StringCollection
-            For Each column As ColumnHeader In columns
-                SpecializedStringCollection.Add(column.DisplayIndex.ToString)
+
+            For Each column As DataGridViewTextBoxColumn In columns
+                SpecializedStringCollection.Add(Newtonsoft.Json.JsonConvert.SerializeObject(New ColumnOrder With {.ColumnName = column.Name, .ColumnIndex = column.DisplayIndex}))
             Next
+
             Return SpecializedStringCollection
         Catch ex As Exception
             Return New Specialized.StringCollection
@@ -3287,17 +3289,20 @@ Public Class Form1
         If boolSuccessful Then MsgBox("System-level file associations have been removed successfully.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
 
-    Private Sub LoadColumnOrders(ByRef DataGridObject As DataGridView, ByRef specializedStringCollection As Specialized.StringCollection)
-        Try
-            Dim intParsedDisplayIndex As Integer
-            If specializedStringCollection IsNot Nothing AndAlso specializedStringCollection.Count <> 0 Then
-                For Each column As ColumnHeader In DataGridObject.Columns
-                    If Integer.TryParse(specializedStringCollection(column.Index), intParsedDisplayIndex) AndAlso (intParsedDisplayIndex > -1 And intParsedDisplayIndex < DataGridObject.Columns.Count) Then column.DisplayIndex = intParsedDisplayIndex
+    Private Sub LoadColumnOrders(ByRef columns As DataGridViewColumnCollection, ByRef specializedStringCollection As Specialized.StringCollection)
+        Dim columnOrder As ColumnOrder
+        Dim jsonSerializerSettings As New Newtonsoft.Json.JsonSerializerSettings With {.MissingMemberHandling = Newtonsoft.Json.MissingMemberHandling.Error}
+
+        If specializedStringCollection IsNot Nothing AndAlso specializedStringCollection.Count <> 0 Then
+            Try
+                For Each item As String In specializedStringCollection
+                    columnOrder = Newtonsoft.Json.JsonConvert.DeserializeObject(Of ColumnOrder)(item, jsonSerializerSettings)
+                    columns(columnOrder.ColumnName).DisplayIndex = columnOrder.ColumnIndex
                 Next
-            End If
-        Catch ex As Exception
-            specializedStringCollection = Nothing
-        End Try
+            Catch ex As Newtonsoft.Json.JsonSerializationException
+                specializedStringCollection = Nothing
+            End Try
+        End If
     End Sub
 
     Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles Me.Shown

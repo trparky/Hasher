@@ -345,6 +345,7 @@ Partial Class Form1
         'txtHashResults
         '
         Me.txtHashResults.AllowUserToAddRows = False
+        Me.txtHashResults.AllowUserToOrderColumns = True
         Me.txtHashResults.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtHashResults.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight
@@ -657,6 +658,7 @@ Partial Class Form1
         'listFiles
         '
         Me.listFiles.AllowUserToAddRows = False
+        Me.listFiles.AllowUserToOrderColumns = True
         Me.listFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -825,6 +827,7 @@ Partial Class Form1
         'verifyHashesListFiles
         '
         Me.verifyHashesListFiles.AllowUserToAddRows = False
+        Me.verifyHashesListFiles.AllowUserToOrderColumns = True
         Me.verifyHashesListFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)

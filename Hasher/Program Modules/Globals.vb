@@ -100,3 +100,8 @@ Public Class MyThreadAbortException
         MyBase.New(message, inner)
     End Sub
 End Class
+
+Public Class ColumnOrder
+    Public ColumnName As String
+    Public ColumnIndex As Integer
+End Class
