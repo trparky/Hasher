@@ -392,7 +392,7 @@ Public Class Form1
                                                              End SyncLock
 
                                                              If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then
-                                                                 item.Cells(2).Value = strCurrentlyBeingProcessed
+                                                                 item.Cells(3).Value = strCurrentlyBeingProcessed
 
                                                                  MyInvoke(Sub()
                                                                               fileCountPercentage = index / listFiles.Rows.Count * 100
@@ -1396,7 +1396,7 @@ Public Class Form1
                                                              strChecksum = item.Hash
                                                              strFileName = item.FileName
 
-                                                             item.Cells(4).Value = strCurrentlyBeingProcessed
+                                                             item.Cells(3).Value = strCurrentlyBeingProcessed
 
                                                              MyInvoke(Sub()
                                                                           lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
@@ -2891,7 +2891,7 @@ Public Class Form1
                                                                                   End Try
                                                                               End Sub
 
-                                                                 item.Cells(4).Value = strCurrentlyBeingProcessed
+                                                                 item.Cells(3).Value = strCurrentlyBeingProcessed
 
                                                                  MyInvoke(Sub()
                                                                               lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
