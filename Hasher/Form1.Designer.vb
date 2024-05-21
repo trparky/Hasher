@@ -693,6 +693,7 @@ Partial Class Form1
         Me.colChecksum.HeaderText = "Hash/Checksum (SHA256)"
         Me.colChecksum.Name = "colChecksum"
         Me.colChecksum.ReadOnly = True
+        Me.colChecksum.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic
         Me.colChecksum.Width = 241
         '
         'colComputeTime
@@ -700,6 +701,7 @@ Partial Class Form1
         Me.colComputeTime.HeaderText = "Compute Time"
         Me.colComputeTime.Name = "colComputeTime"
         Me.colComputeTime.ReadOnly = True
+        Me.colComputeTime.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic
         Me.colComputeTime.Width = 150
         '
         'listFilesContextMenu
@@ -862,6 +864,7 @@ Partial Class Form1
         Me.colResults.HeaderText = "Results"
         Me.colResults.Name = "colResults"
         Me.colResults.ReadOnly = True
+        Me.colResults.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic
         Me.colResults.Width = 72
         '
         'colComputeTime2
@@ -869,6 +872,7 @@ Partial Class Form1
         Me.colComputeTime2.HeaderText = "Compute Time"
         Me.colComputeTime2.Name = "colComputeTime2"
         Me.colComputeTime2.ReadOnly = True
+        Me.colComputeTime2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic
         Me.colComputeTime2.Width = 150
         '
         'colNewHash
@@ -876,6 +880,7 @@ Partial Class Form1
         Me.colNewHash.HeaderText = "Computed Hash/Checksum (Displays the hash that was computed only if not valid)"
         Me.colNewHash.Name = "colNewHash"
         Me.colNewHash.ReadOnly = True
+        Me.colNewHash.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic
         Me.colNewHash.Width = 120
         '
         'verifyListFilesContextMenu

@@ -3375,23 +3375,19 @@ Public Class Form1
 
         Dim column As DataGridViewColumn = listFiles.Columns(e.ColumnIndex)
 
-        If e.ColumnIndex = 1 Then
-            If sortOrderForListFiles = SortOrder.Descending Then
-                sortOrderForListFiles = SortOrder.Ascending
-            ElseIf sortOrderForListFiles = SortOrder.Ascending Then
-                sortOrderForListFiles = SortOrder.Descending
-            Else
-                sortOrderForListFiles = SortOrder.Ascending
-            End If
-
-            colFileName.HeaderCell.SortGlyphDirection = SortOrder.None
-            colChecksum.HeaderCell.SortGlyphDirection = SortOrder.None
-            colComputeTime.HeaderCell.SortGlyphDirection = SortOrder.None
-
-            SortLogsByFileSize(column.Index, sortOrderForListFiles, listFiles)
+        If sortOrderForListFiles = SortOrder.Descending Then
+            sortOrderForListFiles = SortOrder.Ascending
+        ElseIf sortOrderForListFiles = SortOrder.Ascending Then
+            sortOrderForListFiles = SortOrder.Descending
         Else
-            sortOrderForListFiles = SortOrder.None
+            sortOrderForListFiles = SortOrder.Ascending
         End If
+
+        colFileName.HeaderCell.SortGlyphDirection = SortOrder.None
+        colChecksum.HeaderCell.SortGlyphDirection = SortOrder.None
+        colComputeTime.HeaderCell.SortGlyphDirection = SortOrder.None
+
+        SortLogsByFileSize(column.Index, sortOrderForListFiles, listFiles)
     End Sub
 
     Private Sub VerifyHashesListFiles_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles verifyHashesListFiles.ColumnHeaderMouseClick
@@ -3400,24 +3396,20 @@ Public Class Form1
 
         Dim column As DataGridViewColumn = verifyHashesListFiles.Columns(e.ColumnIndex)
 
-        If e.ColumnIndex = 1 Then
-            If sortOrderForVerifyHashesListFiles = SortOrder.Descending Then
-                sortOrderForVerifyHashesListFiles = SortOrder.Ascending
-            ElseIf sortOrderForVerifyHashesListFiles = SortOrder.Ascending Then
-                sortOrderForVerifyHashesListFiles = SortOrder.Descending
-            Else
-                sortOrderForVerifyHashesListFiles = SortOrder.Ascending
-            End If
-
-            colFile.HeaderCell.SortGlyphDirection = SortOrder.None
-            colResults.HeaderCell.SortGlyphDirection = SortOrder.None
-            colComputeTime2.HeaderCell.SortGlyphDirection = SortOrder.None
-            colNewHash.HeaderCell.SortGlyphDirection = SortOrder.None
-
-            SortLogsByFileSize(column.Index, sortOrderForVerifyHashesListFiles, verifyHashesListFiles)
+        If sortOrderForVerifyHashesListFiles = SortOrder.Descending Then
+            sortOrderForVerifyHashesListFiles = SortOrder.Ascending
+        ElseIf sortOrderForVerifyHashesListFiles = SortOrder.Ascending Then
+            sortOrderForVerifyHashesListFiles = SortOrder.Descending
         Else
-            sortOrderForVerifyHashesListFiles = SortOrder.None
+            sortOrderForVerifyHashesListFiles = SortOrder.Ascending
         End If
+
+        colFile.HeaderCell.SortGlyphDirection = SortOrder.None
+        colResults.HeaderCell.SortGlyphDirection = SortOrder.None
+        colComputeTime2.HeaderCell.SortGlyphDirection = SortOrder.None
+        colNewHash.HeaderCell.SortGlyphDirection = SortOrder.None
+
+        SortLogsByFileSize(column.Index, sortOrderForVerifyHashesListFiles, verifyHashesListFiles)
     End Sub
 
     Private Sub SortLogsByFileSize(columnIndex As Integer, order As SortOrder, ByRef DataGridObject As DataGridView)
@@ -3427,7 +3419,7 @@ Public Class Form1
         Dim comparer As New DataGridViewComparer(columnIndex, order)
         Dim rows As MyDataGridViewRow() = DataGridObject.Rows.Cast(Of DataGridViewRow)().OfType(Of MyDataGridViewRow)().ToArray()
 
-        Array.Sort(rows, Function(row1, row2) comparer.Compare(row1, row2))
+        Array.Sort(rows, Function(row1 As MyDataGridViewRow, row2 As MyDataGridViewRow) comparer.Compare(row1, row2))
 
         DataGridObject.Rows.Clear()
         DataGridObject.Rows.AddRange(rows)
