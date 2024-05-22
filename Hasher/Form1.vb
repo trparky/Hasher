@@ -3384,8 +3384,11 @@ Public Class Form1
         End If
 
         colFileName.HeaderCell.SortGlyphDirection = SortOrder.None
+        colFileSize.HeaderCell.SortGlyphDirection = SortOrder.None
         colChecksum.HeaderCell.SortGlyphDirection = SortOrder.None
         colComputeTime.HeaderCell.SortGlyphDirection = SortOrder.None
+
+        listFiles.Columns(e.ColumnIndex).HeaderCell.SortGlyphDirection = sortOrderForListFiles
 
         SortLogsByFileSize(column.Index, sortOrderForListFiles, listFiles)
     End Sub
@@ -3405,9 +3408,12 @@ Public Class Form1
         End If
 
         colFile.HeaderCell.SortGlyphDirection = SortOrder.None
+        colFileSize2.HeaderCell.SortGlyphDirection = SortOrder.None
         colResults.HeaderCell.SortGlyphDirection = SortOrder.None
         colComputeTime2.HeaderCell.SortGlyphDirection = SortOrder.None
         colNewHash.HeaderCell.SortGlyphDirection = SortOrder.None
+
+        verifyHashesListFiles.Columns(e.ColumnIndex).HeaderCell.SortGlyphDirection = sortOrderForVerifyHashesListFiles
 
         SortLogsByFileSize(column.Index, sortOrderForVerifyHashesListFiles, verifyHashesListFiles)
     End Sub
