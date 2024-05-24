@@ -199,34 +199,44 @@ Namespace checkForUpdates
         End Function
 
         Private Sub DownloadAndPerformUpdate()
-            Dim httpHelper As HttpHelper = CreateNewHTTPHelperObject()
+            Try
+                Dim httpHelper As HttpHelper = CreateNewHTTPHelperObject()
 
-            Using memoryStream As New MemoryStream()
-                If Not httpHelper.DownloadFile(updaterURL, memoryStream, False) Then
-                    windowObject.Invoke(Sub() MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, strMessageBoxTitleText))
-                    Exit Sub
-                End If
+                Using memoryStream As New MemoryStream()
+                    If Not httpHelper.DownloadFile(updaterURL, memoryStream, False) Then
+                        windowObject.Invoke(Sub() MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                        Exit Sub
+                    End If
 
-                If Not VerifyChecksum(updaterSHA256URL, memoryStream, httpHelper, True) Then
-                    windowObject.Invoke(Sub() MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, strMessageBoxTitleText))
-                    Exit Sub
-                End If
+                    If Not VerifyChecksum(updaterSHA256URL, memoryStream, httpHelper, True) Then
+                        windowObject.Invoke(Sub() MsgBox("There was an error while downloading required files.", MsgBoxStyle.Critical, strMessageBoxTitleText))
+                        Exit Sub
+                    End If
 
-                memoryStream.Position = 0
+                    memoryStream.Position = 0
 
-                Using fileStream As New FileStream("updater.exe", FileMode.OpenOrCreate)
-                    memoryStream.CopyTo(fileStream)
+                    Using fileStream As New FileStream("updater.exe", FileMode.OpenOrCreate)
+                        memoryStream.CopyTo(fileStream)
+                    End Using
                 End Using
-            End Using
 
-            Dim startInfo As New ProcessStartInfo With {
-                .FileName = "updater.exe",
-                .Arguments = $"--programcode={programCode}"
-            }
-            If Not CheckFolderPermissionsByACLs(New FileInfo(strEXEPath).DirectoryName) Then startInfo.Verb = "runas"
-            Process.Start(startInfo)
+                Dim startInfo As New ProcessStartInfo With {
+                    .FileName = "updater.exe",
+                    .Arguments = $"--programcode={programCode}"
+                }
+                If Not CheckFolderPermissionsByACLs(New FileInfo(strEXEPath).DirectoryName) Then startInfo.Verb = "runas"
+                Process.Start(startInfo)
 
-            Process.GetCurrentProcess.Kill()
+                Process.GetCurrentProcess.Kill()
+            Catch ex As Exception
+                Dim strCrashFile As String = Path.Combine(New FileInfo(Process.GetCurrentProcess.MainModule.FileName).DirectoryName, "Hasher Crash Details.log")
+                If File.Exists(strCrashFile) Then File.Delete(strCrashFile)
+                File.WriteAllText(strCrashFile, $"{ex.Message} -- {ex.StackTrace}")
+
+                MsgBox($"An error occurred while attempting to update the program. Crash data has been written to a file named ""Hasher Crash Details.log"".{vbCrLf}{vbCrLf}Windows Explorer will open to the file location.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+
+                SelectFileInWindowsExplorer(strCrashFile)
+            End Try
         End Sub
 
         ''' <summary>Creates a User Agent String for this program to be used in HTTP requests.</summary>
