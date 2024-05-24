@@ -12,6 +12,20 @@ Public Module Globals
     Public boolAbortThread As Boolean = False
     Public strEXEPath As String = Process.GetCurrentProcess.MainModule.FileName
 
+    Public Sub SelectFileInWindowsExplorer(strFullPath As String)
+        If Not String.IsNullOrEmpty(strFullPath) AndAlso IO.File.Exists(strFullPath) Then
+            Dim pidlList As IntPtr = NativeMethod.NativeMethods.ILCreateFromPathW(strFullPath)
+
+            If Not pidlList.Equals(IntPtr.Zero) Then
+                Try
+                    NativeMethod.NativeMethods.SHOpenFolderAndSelectItems(pidlList, 0, IntPtr.Zero, 0)
+                Finally
+                    NativeMethod.NativeMethods.ILFree(pidlList)
+                End Try
+            End If
+        End If
+    End Sub
+
     Public Function MyRoundingFunction(value As Double, digits As Integer) As String
         If digits < 0 Then Throw New ArgumentException("The number of digits must be non-negative.", NameOf(digits))
 

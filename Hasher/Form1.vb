@@ -708,20 +708,6 @@ Public Class Form1
         Return MsgBoxResult.Yes
     End Function
 
-    Private Sub SelectFileInWindowsExplorer(strFullPath As String)
-        If Not String.IsNullOrEmpty(strFullPath) AndAlso IO.File.Exists(strFullPath) Then
-            Dim pidlList As IntPtr = NativeMethod.NativeMethods.ILCreateFromPathW(strFullPath)
-
-            If Not pidlList.Equals(IntPtr.Zero) Then
-                Try
-                    NativeMethod.NativeMethods.SHOpenFolderAndSelectItems(pidlList, 0, IntPtr.Zero, 0)
-                Finally
-                    NativeMethod.NativeMethods.ILFree(pidlList)
-                End Try
-            End If
-        End If
-    End Sub
-
     Private Function ConvertChecksumTypeToString(checksumType As HashAlgorithmName) As String
         Select Case checksumType
             Case HashAlgorithmName.MD5
