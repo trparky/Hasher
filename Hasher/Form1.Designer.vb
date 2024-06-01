@@ -657,6 +657,7 @@ Partial Class Form1
         '
         'listFiles
         '
+        Me.listFiles.AllowDrop = True
         Me.listFiles.AllowUserToAddRows = False
         Me.listFiles.AllowUserToOrderColumns = True
         Me.listFiles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _

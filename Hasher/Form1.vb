@@ -1574,7 +1574,7 @@ Public Class Form1
         End Using
     End Sub
 
-    Private Sub ListFiles_DragDrop(sender As Object, e As DragEventArgs)
+    Private Sub ListFiles_DragDrop(sender As Object, e As DragEventArgs) Handles listFiles.DragDrop
         If boolBackgroundThreadWorking Then Exit Sub
         For Each strItem As String In e.Data.GetData(DataFormats.FileDrop)
             If IO.File.Exists(strItem) Or IO.Directory.Exists(strItem) Then
@@ -1590,7 +1590,7 @@ Public Class Form1
         If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
     End Sub
 
-    Private Sub ListFiles_DragEnter(sender As Object, e As DragEventArgs)
+    Private Sub ListFiles_DragEnter(sender As Object, e As DragEventArgs) Handles listFiles.DragEnter
         e.Effect = If(e.Data.GetDataPresent(DataFormats.FileDrop), DragDropEffects.All, DragDropEffects.None)
     End Sub
 
