@@ -21,8 +21,8 @@ Public Class Form1
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
     Private boolClosingWindow As Boolean = False
-    Private sortOrderForListFiles As SortOrder = SortOrder.Ascending ' Define soSortOrder at class level
-    Private sortOrderForVerifyHashesListFiles As SortOrder = SortOrder.Ascending ' Define soSortOrder at class level
+    Private sortOrderForListFiles As SortOrder = SortOrder.Descending ' Define soSortOrder at class level
+    Private sortOrderForVerifyHashesListFiles As SortOrder = SortOrder.Descending ' Define soSortOrder at class level
     Private boolDoneLoading As Boolean = False
     Private Property PipeServer As NamedPipeServerStream = Nothing
     Private ReadOnly strNamedPipeServerName As String = $"hasher_{GetSHA256HashOfString(Environment.UserName).Substring(0, 10)}"
