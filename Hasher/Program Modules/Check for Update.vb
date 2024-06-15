@@ -215,21 +215,21 @@ Namespace checkForUpdates
 
                     memoryStream.Position = 0
 
-                    Using fileStream As New FileStream("updater.exe", FileMode.OpenOrCreate)
+                    Using fileStream As New FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updater.exe"), FileMode.OpenOrCreate)
                         memoryStream.CopyTo(fileStream)
                     End Using
                 End Using
 
                 Dim startInfo As New ProcessStartInfo With {
-                    .FileName = "updater.exe",
+                    .FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updater.exe"),
                     .Arguments = $"--programcode={programCode}"
                 }
-                If Not CheckFolderPermissionsByACLs(New FileInfo(strEXEPath).DirectoryName) Then startInfo.Verb = "runas"
+                If Not CheckFolderPermissionsByACLs(AppDomain.CurrentDomain.BaseDirectory) Then startInfo.Verb = "runas"
                 Process.Start(startInfo)
 
                 Process.GetCurrentProcess.Kill()
             Catch ex As Exception
-                Dim strCrashFile As String = Path.Combine(New FileInfo(Process.GetCurrentProcess.MainModule.FileName).DirectoryName, "Hasher Crash Details.log")
+                Dim strCrashFile As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Free SysLog Crash Details.log")
                 If File.Exists(strCrashFile) Then File.Delete(strCrashFile)
                 File.WriteAllText(strCrashFile, $"{ex.Message} -- {ex.StackTrace}")
 
