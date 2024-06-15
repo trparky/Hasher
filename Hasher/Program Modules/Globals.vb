@@ -1,4 +1,5 @@
-﻿Imports System.Security.Principal
+﻿Imports System.Collections.ObjectModel
+Imports System.Security.Principal
 
 Public Module Globals
     ''' <summary>These two variables, longAllReadBytes and longAllBytes, and used to track overall hashing progress of all files to be processed.</summary>
@@ -11,6 +12,31 @@ Public Module Globals
     Public Const DoubleCRLF As String = vbCrLf & vbCrLf
     Public boolAbortThread As Boolean = False
     Public strEXEPath As String = Process.GetCurrentProcess.MainModule.FileName
+
+    Public Function ParseArguments(args As ReadOnlyCollection(Of String)) As Dictionary(Of String, Object)
+        Dim parsedArguments As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
+        Dim strValue As String
+
+        For Each strArgument As String In args
+            If strArgument.StartsWith("--") Then
+                Dim splitArg As String() = strArgument.Substring(2).Split(New Char() {"="c}, 2)
+                Dim key As String = splitArg(0)
+
+                If splitArg.Length = 2 Then
+                    ' Argument with a value
+                    strValue = splitArg(1)
+                    parsedArguments(key) = strValue
+                Else
+                    ' Boolean flag
+                    parsedArguments(key) = True
+                End If
+            Else
+                Console.WriteLine($"Unrecognized argument format: {strArgument}")
+            End If
+        Next
+
+        Return parsedArguments
+    End Function
 
     Public Sub SelectFileInWindowsExplorer(strFullPath As String)
         If Not String.IsNullOrEmpty(strFullPath) AndAlso IO.File.Exists(strFullPath) Then

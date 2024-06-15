@@ -855,10 +855,13 @@ Public Class Form1
             namedPipeServer.Read(buffer, 0, 500)
 
             Dim strReceivedMessage As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
+            Dim parsedArguments As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
 
-            If strReceivedMessage.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+            parsedArguments = Newtonsoft.Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(strReceivedMessage)
+
+            If parsedArguments.ContainsKey("comparefile") Then
                 MyInvoke(Sub()
-                             Dim strFilePathToBeCompared As String = strReceivedMessage.Replace("--comparefile=", "", StringComparison.OrdinalIgnoreCase)
+                             Dim strFilePathToBeCompared As String = parsedArguments("comparefile")
 
                              If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
                                  txtFile1.Text = strFilePathToBeCompared
@@ -871,8 +874,8 @@ Public Class Form1
                              TabControl1.SelectedIndex = TabNumberCompareFilesTab
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub)
-            ElseIf strReceivedMessage.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
-                AddFileOrDirectoryToHashFileList(strReceivedMessage.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase))
+            ElseIf parsedArguments.ContainsKey("addfile") Then
+                AddFileOrDirectoryToHashFileList(parsedArguments("addfile"))
             End If
 
             namedPipeServer.Dispose()
@@ -884,6 +887,8 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim parsedArguments As Dictionary(Of String, Object) = ParseArguments(My.Application.CommandLineArgs)
+
         ' This function returns a Boolean value indicating if the name pipe server was started or not.
         Dim boolNamedPipeServerStarted As Boolean = StartNamedPipeServer()
         Dim commandLineArgument As String
@@ -893,21 +898,21 @@ Public Class Form1
         propInfo?.SetValue(verifyHashesListFiles, True, Nothing)
         propInfo?.SetValue(listFiles, True, Nothing)
 
-        If My.Application.CommandLineArgs.Count = 1 Then
-            commandLineArgument = My.Application.CommandLineArgs(0).Trim
+        If parsedArguments.Count > 0 Then
+            parsedArguments.ContainsKey("comparefile")
 
-            If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Or commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+            If parsedArguments.ContainsKey("addfile") Or parsedArguments.ContainsKey("comparefile") Then
                 If boolNamedPipeServerStarted Then
                     ' This instance of the program is the first executed instance so it's the host of the named pipe server.
                     ' We still need to process the first incoming file passed to it via command line arguments. After doing
                     ' so, this instance of the program will continue operating as the host of the named pipe server.
-                    If commandLineArgument.StartsWith("--addfile=", StringComparison.OrdinalIgnoreCase) Then
+                    If parsedArguments.ContainsKey("addfile") Then
                         ' We now have to strip off what we don't need.
-                        commandLineArgument = commandLineArgument.Replace("--addfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
+                        commandLineArgument = parsedArguments("addfile")
                         MyInvoke(Sub() AddFileOrDirectoryToHashFileList(commandLineArgument))
-                    ElseIf commandLineArgument.StartsWith("--comparefile=", StringComparison.OrdinalIgnoreCase) Then
+                    ElseIf parsedArguments.ContainsKey("comparefile") Then
                         ' We now have to strip off what we don't need.
-                        commandLineArgument = commandLineArgument.Replace("--comparefile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
+                        commandLineArgument = parsedArguments("comparefile")
                         txtFile1.Text = commandLineArgument
                     End If
                 Else
@@ -915,11 +920,11 @@ Public Class Form1
                     ' for the lack of a better word. However, this instance has received data from Windows Explorer so we
                     ' need to do something with it, namely pass that data to the first running instance via the named
                     ' pipe and then terminate itself.
-                    SendToIPCNamedPipeServer(commandLineArgument) ' This passes the data to the named pipe server.
+                    SendToIPCNamedPipeServer(Newtonsoft.Json.JsonConvert.SerializeObject(parsedArguments)) ' This passes the data to the named pipe server.
                     Process.GetCurrentProcess.Kill() ' This terminates the process.
                 End If
-            ElseIf commandLineArgument.StartsWith("--hashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.Replace("--hashfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
+            ElseIf parsedArguments.ContainsKey("hashfile") Then
+                commandLineArgument = parsedArguments("hashfile")
 
                 If IO.File.Exists(commandLineArgument) Then
                     TabControl1.SelectTab(TabNumberVerifySavedHashesTab)
@@ -927,8 +932,8 @@ Public Class Form1
                     verifyHashesListFiles.Rows.Clear()
                     ProcessExistingHashFile(commandLineArgument)
                 End If
-            ElseIf commandLineArgument.StartsWith("--knownhashfile=", StringComparison.OrdinalIgnoreCase) Then
-                commandLineArgument = commandLineArgument.Replace("--knownhashfile=", "", StringComparison.OrdinalIgnoreCase).Replace(Chr(34), "")
+            ElseIf parsedArguments.ContainsKey("knownhashfile") Then
+                commandLineArgument = parsedArguments("knownhashfile")
                 TabControl1.SelectTab(TabNumberCompareFileAgainstKnownHashTab)
                 txtFileForKnownHash.Text = commandLineArgument
                 txtKnownHash.Select()
