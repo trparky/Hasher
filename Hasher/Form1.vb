@@ -143,7 +143,7 @@ Public Class Form1
                          btnIndividualFilesCopyToClipboard.Enabled = False
                          btnIndividualFilesSaveResultsToDisk.Enabled = False
                      Else
-                         Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of DataGridViewRow).Where(Function(item As DataGridViewRow) item.Cells(2).Value.Equals(strWaitingToBeProcessed)).Count
+                         Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of DataGridViewRow)().OfType(Of MyDataGridViewRow)().Where(Function(item As MyDataGridViewRow) item.Cells(2).Value IsNot Nothing AndAlso item.Cells(2).Value.ToString().Equals(strWaitingToBeProcessed)).Count()
 
                          btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
 
@@ -167,8 +167,8 @@ Public Class Form1
             Exit Sub
         End If
 
-        For Each item As MyDataGridViewRow In listFiles.SelectedRows
-            filesInListFiles.Remove(item.Cells(0).Value)
+        For Each item As DataGridViewRow In listFiles.SelectedRows
+            If TypeOf item.Cells(0).Value Is String Then filesInListFiles.Remove(item.Cells(0).Value)
             listFiles.Rows.Remove(item)
         Next
 
@@ -370,63 +370,69 @@ Public Class Form1
                                                      SyncLock threadLockingObject
                                                          For Each item As DataGridViewRow In listFiles.Rows
                                                              If boolAbortThread Then Throw New MyThreadAbortException()
-                                                             If Not String.IsNullOrWhiteSpace(item.Cells(0).Value) Then
+                                                             If TypeOf item.Cells(0).Value Is String AndAlso Not String.IsNullOrWhiteSpace(item.Cells(0).Value) AndAlso TypeOf item Is MyDataGridViewRow Then
                                                                  myItem = DirectCast(item, MyDataGridViewRow)
                                                                  If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then longAllBytes += myItem.FileSize
                                                              End If
                                                          Next
                                                      End SyncLock
 
+                                                     Dim item2 As MyDataGridViewRow
+
                                                      For Each item As DataGridViewRow In listFiles.Rows
-                                                         If boolAbortThread Then Throw New MyThreadAbortException()
+                                                         If TypeOf item Is MyDataGridViewRow Then
+                                                             If boolAbortThread Then Throw New MyThreadAbortException()
 
-                                                         If Not String.IsNullOrWhiteSpace(item.Cells(0).Value) Then
-                                                             myItem = DirectCast(item, MyDataGridViewRow)
-                                                             currentItem = item
-                                                             intIndexBeingWorkedOn = item.Index
-                                                             itemOnGUI = Nothing
-                                                             MyInvoke(Sub() itemOnGUI = listFiles.Rows(item.Index))
+                                                             item2 = DirectCast(item, MyDataGridViewRow)
 
-                                                             SyncLock threadLockingObject
-                                                                 If Not IO.File.Exists(myItem.FileName) Then longAllBytes -= myItem.FileSize
-                                                             End SyncLock
+                                                             If TypeOf item2.Cells(0).Value Is String AndAlso Not String.IsNullOrWhiteSpace(item2.Cells(0).Value) Then
+                                                                 myItem = DirectCast(item, MyDataGridViewRow)
+                                                                 currentItem = item
+                                                                 intIndexBeingWorkedOn = item2.Index
+                                                                 itemOnGUI = Nothing
+                                                                 MyInvoke(Sub() itemOnGUI = listFiles.Rows(item2.Index))
 
-                                                             If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then
-                                                                 item.Cells(3).Value = strCurrentlyBeingProcessed
+                                                                 SyncLock threadLockingObject
+                                                                     If Not IO.File.Exists(myItem.FileName) Then longAllBytes -= myItem.FileSize
+                                                                 End SyncLock
 
-                                                                 MyInvoke(Sub()
-                                                                              fileCountPercentage = index / listFiles.Rows.Count * 100
-                                                                              lblProcessingFile.Text = $"Now processing file ""{New IO.FileInfo(myItem.FileName).Name}""."
-                                                                              lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Rows.Count)
+                                                                 If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then
+                                                                     item2.Cells(3).Value = strCurrentlyBeingProcessed
 
-                                                                              UpdateDataGridViewRow(itemOnGUI, item)
-                                                                          End Sub)
+                                                                     MyInvoke(Sub()
+                                                                                  fileCountPercentage = index / listFiles.Rows.Count * 100
+                                                                                  lblProcessingFile.Text = $"Now processing file ""{New IO.FileInfo(myItem.FileName).Name}""."
+                                                                                  lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Rows.Count)
 
-                                                                 computeStopwatch = Stopwatch.StartNew
+                                                                                  UpdateDataGridViewRow(itemOnGUI, item)
+                                                                              End Sub)
 
-                                                                 If DoChecksumWithAttachedSubRoutine(myItem.FileName, allTheHashes, subRoutine, exceptionObject) Then
-                                                                     myItem.AllTheHashes = allTheHashes
-                                                                     strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
-                                                                     myItem.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
-                                                                     myItem.ComputeTime = computeStopwatch.Elapsed
-                                                                     myItem.Cells(3).Value = TimespanToHMS(myItem.ComputeTime)
-                                                                     myItem.Hash = strChecksum
-                                                                     myItem.BoolExceptionOccurred = False
-                                                                     myItem.StrCrashData = Nothing
-                                                                 Else
-                                                                     myItem.Cells(2).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                     myItem.Cells(3).Value = ""
-                                                                     myItem.ComputeTime = Nothing
-                                                                     myItem.BoolExceptionOccurred = True
-                                                                     myItem.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
-                                                                     longErroredFiles += 1
+                                                                     computeStopwatch = Stopwatch.StartNew
+
+                                                                     If DoChecksumWithAttachedSubRoutine(myItem.FileName, allTheHashes, subRoutine, exceptionObject) Then
+                                                                         myItem.AllTheHashes = allTheHashes
+                                                                         strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
+                                                                         myItem.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+                                                                         myItem.ComputeTime = computeStopwatch.Elapsed
+                                                                         myItem.Cells(3).Value = TimespanToHMS(myItem.ComputeTime)
+                                                                         myItem.Hash = strChecksum
+                                                                         myItem.BoolExceptionOccurred = False
+                                                                         myItem.StrCrashData = Nothing
+                                                                     Else
+                                                                         myItem.Cells(2).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                         myItem.Cells(3).Value = ""
+                                                                         myItem.ComputeTime = Nothing
+                                                                         myItem.BoolExceptionOccurred = True
+                                                                         myItem.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                         longErroredFiles += 1
+                                                                     End If
+
+                                                                     MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
                                                                  End If
-
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
                                                              End If
-                                                         End If
 
-                                                         index += 1
+                                                             index += 1
+                                                         End If
                                                      Next
 
                                                      GC.Collect()
@@ -467,7 +473,7 @@ Public Class Form1
                                                                       If currentItem IsNot Nothing Then currentItem.Cells(2).Value = strWaitingToBeProcessed
                                                                       UpdateDataGridViewRow(itemOnGUI, currentItem)
 
-                                                                      Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of MyDataGridViewRow).Where(Function(item As MyDataGridViewRow) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count
+                                                                      Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of DataGridViewRow)().OfType(Of MyDataGridViewRow)().Where(Function(item As MyDataGridViewRow) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count()
                                                                       btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
                                                                   End If
 
@@ -521,14 +527,19 @@ Public Class Form1
         Dim folderOfChecksumFile As String = If(strDirectoryName.Length = 3, strDirectoryName, $"{strDirectoryName}\")
         Dim stringBuilder As New Text.StringBuilder()
         Dim strFile As String
+        Dim item2 As MyDataGridViewRow
 
         AddHashFileHeader(stringBuilder, listFiles.Rows.Count)
 
-        For Each item As MyDataGridViewRow In listFiles.Rows
-            If Not String.IsNullOrWhiteSpace(item.Hash) Then
-                strFile = item.FileName
-                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.Replace(folderOfChecksumFile, "", StringComparison.OrdinalIgnoreCase)
-                stringBuilder.AppendLine($"{GetDataFromAllTheHashes(checksumType, item.AllTheHashes)} *{strFile}")
+        For Each item As DataGridViewRow In listFiles.Rows
+            If TypeOf item Is MyDataGridViewRow Then
+                item2 = DirectCast(item, MyDataGridViewRow)
+
+                If Not String.IsNullOrWhiteSpace(item2.Hash) Then
+                    strFile = item2.FileName
+                    If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.Replace(folderOfChecksumFile, "", StringComparison.OrdinalIgnoreCase)
+                    stringBuilder.AppendLine($"{GetDataFromAllTheHashes(checksumType, item2.AllTheHashes)} *{strFile}")
+                End If
             End If
         Next
 
@@ -538,12 +549,17 @@ Public Class Form1
 
     Private Function StrGetIndividualHashesInStringFormat() As String
         Dim stringBuilder As New Text.StringBuilder()
+        Dim item2 As MyDataGridViewRow
 
         AddHashFileHeader(stringBuilder, listFiles.Rows.Count)
 
-        For Each item As MyDataGridViewRow In listFiles.Rows
-            If Not String.IsNullOrWhiteSpace(item.Hash) Then
-                stringBuilder.AppendLine($"{item.Hash} *{item.FileName}")
+        For Each item As DataGridViewRow In listFiles.Rows
+            If TypeOf item Is MyDataGridViewRow Then
+                item2 = DirectCast(item, MyDataGridViewRow)
+
+                If Not String.IsNullOrWhiteSpace(item2.Hash) Then
+                    stringBuilder.AppendLine($"{item2.Hash} *{item2.FileName}")
+                End If
             End If
         Next
 
@@ -731,7 +747,7 @@ Public Class Form1
             Dim dataGridRow As MyDataGridViewRow
 
             For Each item As DataGridViewRow In listFiles.Rows
-                If Not String.IsNullOrWhiteSpace(item.Cells(0).Value) Then
+                If TypeOf item.Cells(0).Value Is String AndAlso Not String.IsNullOrWhiteSpace(item.Cells(0).Value) AndAlso TypeOf item Is MyDataGridViewRow Then
                     dataGridRow = DirectCast(item, MyDataGridViewRow)
                     strChecksum = GetDataFromAllTheHashes(checksumType, dataGridRow.AllTheHashes)
 
@@ -1372,72 +1388,78 @@ Public Class Form1
 
                                                      longTotalFiles = verifyHashesListFiles.Rows.Count
 
-                                                     For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
+                                                     Dim item2 As MyDataGridViewRow
+
+                                                     For Each item As DataGridViewRow In verifyHashesListFiles.Rows
                                                          If boolAbortThread Then Throw New MyThreadAbortException
-                                                         currentItem = item
-                                                         intIndexBeingWorkedOn = item.Index
-                                                         fileCountPercentage = index / intFileCount * 100
-                                                         MyInvoke(Sub()
-                                                                      lblVerifyHashStatusProcessingFile.Text = GenerateProcessingFileString(index, intFileCount)
-                                                                      itemOnGUI = Nothing
-                                                                      itemOnGUI = verifyHashesListFiles.Rows(item.Index)
-                                                                  End Sub)
 
-                                                         If item.BoolFileExists Then
-                                                             strChecksum = item.Hash
-                                                             strFileName = item.FileName
-
-                                                             item.Cells(3).Value = strCurrentlyBeingProcessed
-
+                                                         If TypeOf item Is MyDataGridViewRow Then
+                                                             item2 = DirectCast(item, MyDataGridViewRow)
+                                                             currentItem = item2
+                                                             intIndexBeingWorkedOn = item2.Index
+                                                             fileCountPercentage = index / intFileCount * 100
                                                              MyInvoke(Sub()
-                                                                          lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
-                                                                          UpdateDataGridViewRow(itemOnGUI, item)
+                                                                          lblVerifyHashStatusProcessingFile.Text = GenerateProcessingFileString(index, intFileCount)
+                                                                          itemOnGUI = Nothing
+                                                                          If TypeOf verifyHashesListFiles.Rows(item2.Index) Is MyDataGridViewRow Then itemOnGUI = verifyHashesListFiles.Rows(item2.Index)
                                                                       End Sub)
 
-                                                             computeStopwatch = Stopwatch.StartNew
+                                                             If item2.BoolFileExists Then
+                                                                 strChecksum = item2.Hash
+                                                                 strFileName = item2.FileName
 
-                                                             If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exceptionObject) Then
-                                                                 strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
-                                                                 item.AllTheHashes = allTheHashes
+                                                                 item2.Cells(3).Value = strCurrentlyBeingProcessed
 
-                                                                 If strChecksum.Equals(item.Hash, StringComparison.OrdinalIgnoreCase) Then
-                                                                     item.ColorType = ColorType.Valid
-                                                                     item.MyColor = validColor
-                                                                     item.Cells(2).Value = "Valid Checksum"
-                                                                     item.ComputeTime = computeStopwatch.Elapsed
-                                                                     item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                     item.Cells(4).Value = strDisplayValidChecksumString
-                                                                     longFilesThatPassedVerification += 1
-                                                                     item.BoolValidHash = True
-                                                                     item.MyColor = My.Settings.validColor
+                                                                 MyInvoke(Sub()
+                                                                              lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
+                                                                              UpdateDataGridViewRow(itemOnGUI, item2)
+                                                                          End Sub)
+
+                                                                 computeStopwatch = Stopwatch.StartNew
+
+                                                                 If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exceptionObject) Then
+                                                                     strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
+                                                                     item2.AllTheHashes = allTheHashes
+
+                                                                     If strChecksum.Equals(item2.Hash, StringComparison.OrdinalIgnoreCase) Then
+                                                                         item2.ColorType = ColorType.Valid
+                                                                         item2.MyColor = validColor
+                                                                         item2.Cells(2).Value = "Valid Checksum"
+                                                                         item2.ComputeTime = computeStopwatch.Elapsed
+                                                                         item2.Cells(3).Value = TimespanToHMS(item2.ComputeTime)
+                                                                         item2.Cells(4).Value = strDisplayValidChecksumString
+                                                                         longFilesThatPassedVerification += 1
+                                                                         item2.BoolValidHash = True
+                                                                         item2.MyColor = My.Settings.validColor
+                                                                     Else
+                                                                         item2.ColorType = ColorType.NotValid
+                                                                         item2.MyColor = notValidColor
+                                                                         item2.Cells(2).Value = "Incorrect Checksum"
+                                                                         item2.ComputeTime = computeStopwatch.Elapsed
+                                                                         item2.Cells(3).Value = TimespanToHMS(item2.ComputeTime)
+                                                                         item2.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
+                                                                         longFilesThatDidNotPassVerification += 1
+                                                                         item2.BoolValidHash = False
+                                                                         item2.MyColor = My.Settings.notValidColor
+                                                                     End If
+
+                                                                     item2.BoolExceptionOccurred = False
+                                                                     item2.StrCrashData = Nothing
                                                                  Else
-                                                                     item.ColorType = ColorType.NotValid
-                                                                     item.MyColor = notValidColor
-                                                                     item.Cells(2).Value = "Incorrect Checksum"
-                                                                     item.ComputeTime = computeStopwatch.Elapsed
-                                                                     item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                     item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
-                                                                     longFilesThatDidNotPassVerification += 1
-                                                                     item.BoolValidHash = False
-                                                                     item.MyColor = My.Settings.notValidColor
+                                                                     item2.ColorType = ColorType.NotFound
+                                                                     item2.MyColor = fileNotFoundColor
+                                                                     item2.Cells(2).Value = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                     item2.BoolExceptionOccurred = True
+                                                                     item2.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                     longFilesThatWereNotFound += 1
                                                                  End If
 
-                                                                 item.BoolExceptionOccurred = False
-                                                                 item.StrCrashData = Nothing
+                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item2))
+
+                                                                 index += 1
                                                              Else
-                                                                 item.ColorType = ColorType.NotFound
-                                                                 item.MyColor = fileNotFoundColor
-                                                                 item.Cells(2).Value = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                 item.BoolExceptionOccurred = True
-                                                                 item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
-                                                                 longFilesThatWereNotFound += 1
+                                                                 item2.BoolValidHash = False
                                                              End If
-
-                                                             MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
-
-                                                             index += 1
-                                                         Else
-                                                             item.BoolValidHash = False
                                                          End If
                                                      Next
 
@@ -1714,18 +1736,20 @@ Public Class Form1
                 Exit Sub
             End If
 
-            Dim MyDataGridRow As MyDataGridViewRow = DirectCast(listFiles.SelectedRows(0), MyDataGridViewRow)
+            If TypeOf listFiles.SelectedRows(0) Is MyDataGridViewRow Then
+                Dim MyDataGridRow As MyDataGridViewRow = DirectCast(listFiles.SelectedRows(0), MyDataGridViewRow)
 
-            globalAllTheHashes = MyDataGridRow.AllTheHashes
-            listFilesContextMenuFileName.Text = $"File Name: {MyDataGridRow.FileName}"
+                globalAllTheHashes = MyDataGridRow.AllTheHashes
+                listFilesContextMenuFileName.Text = $"File Name: {MyDataGridRow.FileName}"
 
-            With MyDataGridRow.AllTheHashes
-                listFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
-                listFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
-                listFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
-                listFilesContextMenuSHA384.Text = $"SHA384: {If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)}"
-                listFilesContextMenuSHA512.Text = $"SHA512: {If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)}"
-            End With
+                With MyDataGridRow.AllTheHashes
+                    listFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
+                    listFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
+                    listFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
+                    listFilesContextMenuSHA384.Text = $"SHA384: {If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)}"
+                    listFilesContextMenuSHA512.Text = $"SHA512: {If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)}"
+                End With
+            End If
         End If
     End Sub
 
@@ -2358,13 +2382,18 @@ Public Class Form1
         My.Settings.boolDisplayHashesInUpperCase = chkDisplayHashesInUpperCase.Checked
 
         If listFiles.Rows.Count <> 0 Then
-            For Each item As MyDataGridViewRow In listFiles.Rows
-                item.Cells(2).Value = If(boolDisplayHashesInUpperCase, item.Hash.ToUpper, item.Hash.ToLower)
+            Dim item2 As MyDataGridViewRow
+
+            For Each item As DataGridViewRow In listFiles.Rows
+                If TypeOf item.Cells(2).Value Is MyDataGridViewRow Then
+                    item2 = DirectCast(item, MyDataGridViewRow)
+                    item2.Cells(2).Value = If(boolDisplayHashesInUpperCase, item2.Hash.ToUpper, item2.Hash.ToLower)
+                End If
             Next
         End If
         If txtHashResults.Rows.Count <> 0 Then
             For Each item As DataGridViewRow In txtHashResults.Rows
-                item.Cells(1).Value = If(boolDisplayHashesInUpperCase, item.Cells(1).Value.ToUpper, item.Cells(1).Value.ToLower)
+                If TypeOf item.Cells(1).Value Is String Then item.Cells(1).Value = If(boolDisplayHashesInUpperCase, item.Cells(1).Value.ToUpper, item.Cells(1).Value.ToLower)
             Next
         End If
 
@@ -2425,22 +2454,33 @@ Public Class Form1
         lblFileNotFoundColor.BackColor = Color.LightGray
         fileNotFoundColor = Color.LightGray
 
+        Dim item2 As MyDataGridViewRow
+
         If verifyHashesListFiles.Rows.Count <> 0 Then
-            For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
-                If item.ColorType = ColorType.NotFound Then
-                    item.MyColor = Color.LightGray
-                ElseIf item.ColorType = ColorType.NotValid Then
-                    item.MyColor = Color.Pink
-                ElseIf item.ColorType = ColorType.Valid Then
-                    item.MyColor = Color.LightGreen
+            For Each item As DataGridViewRow In verifyHashesListFiles.Rows
+                If TypeOf item Is MyDataGridViewRow Then
+                    item2 = DirectCast(item, MyDataGridViewRow)
+
+                    If item2.ColorType = ColorType.NotFound Then
+                        item2.MyColor = Color.LightGray
+                    ElseIf item2.ColorType = ColorType.NotValid Then
+                        item2.MyColor = Color.Pink
+                    ElseIf item2.ColorType = ColorType.Valid Then
+                        item2.MyColor = Color.LightGreen
+                    End If
                 End If
             Next
         End If
     End Sub
 
     Private Sub UpdateColorsInList(ColorType As ColorType, NewColor As Color)
-        For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
-            If item.ColorType = ColorType Then item.MyColor = NewColor
+        Dim item2 As MyDataGridViewRow
+
+        For Each item As DataGridViewRow In verifyHashesListFiles.Rows
+            If TypeOf item Is MyDataGridViewRow Then
+                item2 = DirectCast(item, MyDataGridViewRow)
+                If item2.ColorType = ColorType Then item2.MyColor = NewColor
+            End If
         Next
     End Sub
 
@@ -2596,34 +2636,38 @@ Public Class Form1
                                                    End Select
 
                                                    Dim itemToBeAdded As MyDataGridViewRow
+                                                   Dim item2 As MyDataGridViewRow
 
-                                                   For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
-                                                       intLineCounter += 1
-                                                       MyInvoke(Sub()
-                                                                    VerifyHashProgressBar.Value = intLineCounter / verifyHashesListFiles.Rows.Count * 100
-                                                                    ProgressForm.SetTaskbarProgressBarValue(VerifyHashProgressBar.Value)
-                                                                    lblVerifyHashStatus.Text = $"Processing item {MyToString(intLineCounter)} of {MyToString(verifyHashesListFiles.Rows.Count)} ({VerifyHashProgressBar.Value}%)."
-                                                                End Sub)
+                                                   For Each item As DataGridViewRow In verifyHashesListFiles.Rows
+                                                       If TypeOf item Is MyDataGridViewRow Then
+                                                           item2 = DirectCast(item, MyDataGridViewRow)
+                                                           intLineCounter += 1
+                                                           MyInvoke(Sub()
+                                                                        VerifyHashProgressBar.Value = intLineCounter / verifyHashesListFiles.Rows.Count * 100
+                                                                        ProgressForm.SetTaskbarProgressBarValue(VerifyHashProgressBar.Value)
+                                                                        lblVerifyHashStatus.Text = $"Processing item {MyToString(intLineCounter)} of {MyToString(verifyHashesListFiles.Rows.Count)} ({VerifyHashProgressBar.Value}%)."
+                                                                    End Sub)
 
-                                                       If Not filesInListFiles.Contains(item.FileName.Trim.ToLower) And IO.File.Exists(item.FileName) Then
-                                                           filesInListFiles.Add(item.FileName.Trim.ToLower)
+                                                           If Not filesInListFiles.Contains(item2.FileName.Trim.ToLower) And IO.File.Exists(item2.FileName) Then
+                                                               filesInListFiles.Add(item2.FileName.Trim.ToLower)
 
-                                                           itemToBeAdded = New MyDataGridViewRow() With {
-                                                               .FileSize = New IO.FileInfo(item.FileName).Length,
-                                                               .FileName = item.FileName
-                                                           }
-                                                           With itemToBeAdded
-                                                               .CreateCells(listFiles)
-                                                               strHashString = GetDataFromAllTheHashes(checksumType, item.AllTheHashes)
-                                                               .Cells(0).Value = item.FileName
-                                                               .Cells(1).Value = FileSizeToHumanSize(itemToBeAdded.FileSize)
-                                                               .Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strHashString.ToUpper, strHashString.ToLower)
-                                                               .Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                               .AllTheHashes = item.AllTheHashes
-                                                               .Hash = strHashString
-                                                           End With
+                                                               itemToBeAdded = New MyDataGridViewRow() With {
+                                                                   .FileSize = New IO.FileInfo(item2.FileName).Length,
+                                                                   .FileName = item2.FileName
+                                                               }
+                                                               With itemToBeAdded
+                                                                   .CreateCells(listFiles)
+                                                                   strHashString = GetDataFromAllTheHashes(checksumType, item2.AllTheHashes)
+                                                                   .Cells(0).Value = item2.FileName
+                                                                   .Cells(1).Value = FileSizeToHumanSize(itemToBeAdded.FileSize)
+                                                                   .Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strHashString.ToUpper, strHashString.ToLower)
+                                                                   .Cells(3).Value = TimespanToHMS(item2.ComputeTime)
+                                                                   .AllTheHashes = item2.AllTheHashes
+                                                                   .Hash = strHashString
+                                                               End With
 
-                                                           listOfDataGridRows.Add(itemToBeAdded)
+                                                               listOfDataGridRows.Add(itemToBeAdded)
+                                                           End If
                                                        End If
                                                    Next
 
@@ -2687,7 +2731,7 @@ Public Class Form1
                 verifyListFilesContextMenuLine1.Visible = False
             End If
 
-            If verifyHashesListFiles.SelectedRows.Count = 1 Then
+            If verifyHashesListFiles.SelectedRows.Count = 1 AndAlso TypeOf verifyHashesListFiles.SelectedRows(0) Is MyDataGridViewRow Then
                 Dim MyDataGridRow As MyDataGridViewRow = DirectCast(verifyHashesListFiles.SelectedRows(0), MyDataGridViewRow)
 
                 globalAllTheHashes = MyDataGridRow.AllTheHashes
@@ -2725,34 +2769,36 @@ Public Class Form1
     End Sub
 
     Private Sub ViewChecksumDifferenceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ViewChecksumDifferenceToolStripMenuItem.Click
-        Dim selectedItem As MyDataGridViewRow = verifyHashesListFiles.SelectedRows(0)
-        Dim stringBuilder As New Text.StringBuilder()
+        If TypeOf verifyHashesListFiles.SelectedRows(0) Is MyDataGridViewRow Then
+            Dim selectedItem As MyDataGridViewRow = verifyHashesListFiles.SelectedRows(0)
+            Dim stringBuilder As New Text.StringBuilder()
 
-        stringBuilder.AppendLine("Hash/Checksum Contained in Checksum File")
-        With selectedItem.Hash
-            stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, .ToUpper, .ToLower))
-        End With
-        stringBuilder.AppendLine()
-        stringBuilder.AppendLine("Newly Computed Hash/Checksum")
-        With GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.AllTheHashes)
-            stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, .ToUpper, .ToLower))
-        End With
-
-        Using frmChecksumDifference As New FrmChecksumDifference With {.Icon = Icon, .StartPosition = FormStartPosition.CenterParent}
-            frmChecksumDifference.lblMainLabel.Text = stringBuilder.ToString.Trim
-
-            Dim size As New Size(frmChecksumDifference.lblMainLabel.Size.Width + 40, frmChecksumDifference.Size.Height)
-
-            With frmChecksumDifference
-                .Size = size
-                .MinimumSize = size
-                .MaximumSize = size
+            stringBuilder.AppendLine("Hash/Checksum Contained in Checksum File")
+            With selectedItem.Hash
+                stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, .ToUpper, .ToLower))
+            End With
+            stringBuilder.AppendLine()
+            stringBuilder.AppendLine("Newly Computed Hash/Checksum")
+            With GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.AllTheHashes)
+                stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, .ToUpper, .ToLower))
             End With
 
-            frmChecksumDifference.ShowDialog(Me)
-        End Using
+            Using frmChecksumDifference As New FrmChecksumDifference With {.Icon = Icon, .StartPosition = FormStartPosition.CenterParent}
+                frmChecksumDifference.lblMainLabel.Text = stringBuilder.ToString.Trim
 
-        stringBuilder = Nothing
+                Dim size As New Size(frmChecksumDifference.lblMainLabel.Size.Width + 40, frmChecksumDifference.Size.Height)
+
+                With frmChecksumDifference
+                    .Size = size
+                    .MinimumSize = size
+                    .MaximumSize = size
+                End With
+
+                frmChecksumDifference.ShowDialog(Me)
+            End Using
+
+            stringBuilder = Nothing
+        End If
     End Sub
 
     Private Sub TxtTextToHash_KeyUp(sender As Object, e As KeyEventArgs) Handles txtTextToHash.KeyUp
@@ -2822,25 +2868,29 @@ Public Class Form1
                                                      Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
                                                      Dim intFileCount As Integer = 0
                                                      Dim exceptionObject As Exception = Nothing
+                                                     Dim item2 As MyDataGridViewRow
 
-                                                     For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
-                                                         MyInvoke(Sub() itemOnGUI = verifyHashesListFiles.Rows(item.Index))
-                                                         If Not item.BoolValidHash Then
-                                                             If IO.File.Exists(item.FileName) Then
-                                                                 item.BoolFileExists = True
-                                                                 item.FileSize = New IO.FileInfo(item.FileName).Length
-                                                                 item.Cells(1).Value = FileSizeToHumanSize(item.FileSize)
-                                                                 item.Cells(2).Value = ""
-                                                                 item.Cells(3).Value = ""
-                                                                 item.Cells(4).Value = strWaitingToBeProcessed
-                                                                 item.MyColor = Color.FromKnownColor(KnownColor.Window)
+                                                     For Each item As DataGridViewRow In verifyHashesListFiles.Rows
+                                                         If TypeOf item Is MyDataGridViewRow Then
+                                                             item2 = DirectCast(item, MyDataGridViewRow)
+                                                             MyInvoke(Sub() itemOnGUI = verifyHashesListFiles.Rows(item2.Index))
+                                                             If Not item2.BoolValidHash Then
+                                                                 If IO.File.Exists(item2.FileName) Then
+                                                                     item2.BoolFileExists = True
+                                                                     item2.FileSize = New IO.FileInfo(item2.FileName).Length
+                                                                     item2.Cells(1).Value = FileSizeToHumanSize(item2.FileSize)
+                                                                     item2.Cells(2).Value = ""
+                                                                     item2.Cells(3).Value = ""
+                                                                     item2.Cells(4).Value = strWaitingToBeProcessed
+                                                                     item2.MyColor = Color.FromKnownColor(KnownColor.Window)
 
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
+                                                                     MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item2))
 
-                                                                 longAllBytes += item.FileSize
-                                                                 intFileCount += 1
-                                                             Else
-                                                                 item.BoolFileExists = False
+                                                                     longAllBytes += item2.FileSize
+                                                                     intFileCount += 1
+                                                                 Else
+                                                                     item2.BoolFileExists = False
+                                                                 End If
                                                              End If
                                                          End If
                                                      Next
@@ -2848,99 +2898,106 @@ Public Class Form1
                                                      If chkSortByFileSizeAfterLoadingHashFile.Checked Then MyInvoke(Sub() SortLogsByFileSize(1, sortOrderForListFiles, listFiles))
                                                      index = 1
 
-                                                     For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
-                                                         currentItem = item
-                                                         MyInvoke(Sub()
-                                                                      itemOnGUI = verifyHashesListFiles.Rows(item.Index)
-                                                                      lblVerifyHashStatusProcessingFile.Text = GenerateProcessingFileString(index, intFileCount)
-                                                                  End Sub)
+                                                     For Each item As DataGridViewRow In verifyHashesListFiles.Rows
+                                                         If TypeOf item Is MyDataGridViewRow Then
+                                                             item2 = DirectCast(item, MyDataGridViewRow)
+                                                             currentItem = item2
+                                                             MyInvoke(Sub()
+                                                                          itemOnGUI = verifyHashesListFiles.Rows(item2.Index)
+                                                                          lblVerifyHashStatusProcessingFile.Text = GenerateProcessingFileString(index, intFileCount)
+                                                                      End Sub)
 
-                                                         If Not item.BoolValidHash Then
-                                                             strChecksum = item.Hash
-                                                             strFileName = item.FileName
+                                                             If Not item2.BoolValidHash Then
+                                                                 strChecksum = item2.Hash
+                                                                 strFileName = item2.FileName
 
-                                                             If IO.File.Exists(strFileName) Then
-                                                                 subRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                                                  Try
-                                                                                      MyInvoke(Sub()
-                                                                                                   percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
-                                                                                                   VerifyHashProgressBar.Value = percentage
-                                                                                                   SyncLock threadLockingObject
-                                                                                                       allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                       lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
-                                                                                                       If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
-                                                                                                   End SyncLock
-                                                                                                   lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
-                                                                                                   If chkShowFileProgressInFileList.Checked Then
-                                                                                                       currentItem.Cells(4).Value = lblProcessingFileVerify.Text
-                                                                                                       itemOnGUI.Cells(4).Value = currentItem.Cells(4).Value
-                                                                                                   End If
-                                                                                                   ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
-                                                                                                   verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
-                                                                                               End Sub)
-                                                                                  Catch ex As Exception
-                                                                                  End Try
-                                                                              End Sub
+                                                                 If IO.File.Exists(strFileName) Then
+                                                                     subRoutine = Sub(size As Long, totalBytesRead As Long)
+                                                                                      Try
+                                                                                          MyInvoke(Sub()
+                                                                                                       percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
+                                                                                                       VerifyHashProgressBar.Value = percentage
+                                                                                                       SyncLock threadLockingObject
+                                                                                                           allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
+                                                                                                           lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
+                                                                                                           If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
+                                                                                                       End SyncLock
+                                                                                                       lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
+                                                                                                       If chkShowFileProgressInFileList.Checked Then
+                                                                                                           currentItem.Cells(4).Value = lblProcessingFileVerify.Text
+                                                                                                           itemOnGUI.Cells(4).Value = currentItem.Cells(4).Value
+                                                                                                       End If
+                                                                                                       ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
+                                                                                                       verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
+                                                                                                   End Sub)
+                                                                                      Catch ex As Exception
+                                                                                      End Try
+                                                                                  End Sub
 
-                                                                 item.Cells(3).Value = strCurrentlyBeingProcessed
+                                                                     item2.Cells(3).Value = strCurrentlyBeingProcessed
 
-                                                                 MyInvoke(Sub()
-                                                                              lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
-                                                                              UpdateDataGridViewRow(itemOnGUI, item)
-                                                                          End Sub)
+                                                                     MyInvoke(Sub()
+                                                                                  lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
+                                                                                  UpdateDataGridViewRow(itemOnGUI, item)
+                                                                              End Sub)
 
-                                                                 computeStopwatch = Stopwatch.StartNew
+                                                                     computeStopwatch = Stopwatch.StartNew
 
-                                                                 If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exceptionObject) Then
-                                                                     strChecksum = GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes)
-                                                                     item.AllTheHashes = allTheHashes
+                                                                     If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exceptionObject) Then
+                                                                         strChecksum = GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes)
+                                                                         item2.AllTheHashes = allTheHashes
 
-                                                                     If strChecksum.Equals(item.Hash, StringComparison.OrdinalIgnoreCase) Then
-                                                                         item.MyColor = validColor
-                                                                         item.Cells(2).Value = "Valid Checksum"
-                                                                         item.ComputeTime = computeStopwatch.Elapsed
-                                                                         item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                         item.Cells(4).Value = strDisplayValidChecksumString
-                                                                         longFilesThatPassedVerification += 1
-                                                                         item.BoolValidHash = True
+                                                                         If strChecksum.Equals(item2.Hash, StringComparison.OrdinalIgnoreCase) Then
+                                                                             item2.MyColor = validColor
+                                                                             item2.Cells(2).Value = "Valid Checksum"
+                                                                             item2.ComputeTime = computeStopwatch.Elapsed
+                                                                             item2.Cells(3).Value = TimespanToHMS(item2.ComputeTime)
+                                                                             item2.Cells(4).Value = strDisplayValidChecksumString
+                                                                             longFilesThatPassedVerification += 1
+                                                                             item2.BoolValidHash = True
+                                                                         Else
+                                                                             item2.MyColor = notValidColor
+                                                                             item2.Cells(2).Value = "Incorrect Checksum"
+                                                                             item2.ComputeTime = computeStopwatch.Elapsed
+                                                                             item2.Cells(3).Value = TimespanToHMS(item2.ComputeTime)
+                                                                             item2.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes).ToLower)
+                                                                             item2.BoolValidHash = False
+                                                                         End If
+
+                                                                         item2.BoolExceptionOccurred = False
+                                                                         item2.StrCrashData = Nothing
                                                                      Else
-                                                                         item.MyColor = notValidColor
-                                                                         item.Cells(2).Value = "Incorrect Checksum"
-                                                                         item.ComputeTime = computeStopwatch.Elapsed
-                                                                         item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                         item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes).ToLower)
-                                                                         item.BoolValidHash = False
+                                                                         item2.MyColor = fileNotFoundColor
+                                                                         item2.Cells(2).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                         item2.Cells(4).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                         item2.BoolExceptionOccurred = True
+                                                                         item2.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                         item2.BoolValidHash = False
+
+                                                                         SyncLock threadLockingObject
+                                                                             longAllBytes -= item2.FileSize
+                                                                         End SyncLock
                                                                      End If
 
-                                                                     item.BoolExceptionOccurred = False
-                                                                     item.StrCrashData = Nothing
-                                                                 Else
-                                                                     item.MyColor = fileNotFoundColor
-                                                                     item.Cells(2).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                     item.Cells(4).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                     item.BoolExceptionOccurred = True
-                                                                     item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
-                                                                     item.BoolValidHash = False
+                                                                     subRoutine = Nothing
 
-                                                                     SyncLock threadLockingObject
-                                                                         longAllBytes -= item.FileSize
-                                                                     End SyncLock
+                                                                     MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
+
+                                                                     index += 1
                                                                  End If
-
-                                                                 subRoutine = Nothing
-
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
-
-                                                                 index += 1
+                                                             Else
+                                                                 item2.BoolValidHash = False
                                                              End If
-                                                         Else
-                                                             item.BoolValidHash = False
                                                          End If
+
                                                      Next
 
                                                      MyInvoke(Sub()
-                                                                  For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
-                                                                      If item.BoolFileExists Then item.MyColor = item.MyColor
+                                                                  For Each item As DataGridViewRow In verifyHashesListFiles.Rows
+                                                                      item2 = DirectCast(item, MyDataGridViewRow)
+                                                                      If TypeOf item Is MyDataGridViewRow Then
+                                                                          If item2.BoolFileExists Then item2.MyColor = item2.MyColor
+                                                                      End If
                                                                   Next
 
                                                                   btnTransferToHashIndividualFilesTab.Enabled = True
