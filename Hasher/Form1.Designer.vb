@@ -1326,7 +1326,7 @@ Partial Class Form1
         'pictureBoxVerifyAgainstResults
         '
         Me.pictureBoxVerifyAgainstResults.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pictureBoxVerifyAgainstResults.Location = New System.Drawing.Point(973, 10)
+        Me.pictureBoxVerifyAgainstResults.Location = New System.Drawing.Point(1543, 10)
         Me.pictureBoxVerifyAgainstResults.Name = "pictureBoxVerifyAgainstResults"
         Me.pictureBoxVerifyAgainstResults.Size = New System.Drawing.Size(64, 64)
         Me.pictureBoxVerifyAgainstResults.TabIndex = 35
@@ -1336,11 +1336,11 @@ Partial Class Form1
         '
         Me.lblCompareFileAgainstKnownHashType.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblCompareFileAgainstKnownHashType.AutoSize = True
-        Me.lblCompareFileAgainstKnownHashType.Location = New System.Drawing.Point(830, 42)
+        Me.lblCompareFileAgainstKnownHashType.Location = New System.Drawing.Point(1432, 41)
         Me.lblCompareFileAgainstKnownHashType.Name = "lblCompareFileAgainstKnownHashType"
-        Me.lblCompareFileAgainstKnownHashType.Size = New System.Drawing.Size(192, 13)
+        Me.lblCompareFileAgainstKnownHashType.Size = New System.Drawing.Size(105, 13)
         Me.lblCompareFileAgainstKnownHashType.TabIndex = 34
-        Me.lblCompareFileAgainstKnownHashType.Text = "lblCompareFileAgainstKnownHashType"
+        Me.lblCompareFileAgainstKnownHashType.Text = "Hash Type: SHA512"
         '
         'compareAgainstKnownHashProgressBar
         '
@@ -1348,7 +1348,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.compareAgainstKnownHashProgressBar.Location = New System.Drawing.Point(158, 83)
         Me.compareAgainstKnownHashProgressBar.Name = "compareAgainstKnownHashProgressBar"
-        Me.compareAgainstKnownHashProgressBar.Size = New System.Drawing.Size(879, 23)
+        Me.compareAgainstKnownHashProgressBar.Size = New System.Drawing.Size(1449, 23)
         Me.compareAgainstKnownHashProgressBar.TabIndex = 33
         Me.compareAgainstKnownHashProgressBar.Visible = False
         '
@@ -1379,7 +1379,7 @@ Partial Class Form1
         Me.txtKnownHash.Location = New System.Drawing.Point(99, 38)
         Me.txtKnownHash.MaxLength = 128
         Me.txtKnownHash.Name = "txtKnownHash"
-        Me.txtKnownHash.Size = New System.Drawing.Size(724, 20)
+        Me.txtKnownHash.Size = New System.Drawing.Size(1326, 20)
         Me.txtKnownHash.TabIndex = 9
         '
         'Label8
@@ -1396,7 +1396,7 @@ Partial Class Form1
         '
         Me.btnBrowseFileForCompareKnownHash.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnBrowseFileForCompareKnownHash.Image = Global.Hasher.My.Resources.Resources.folder_explore
-        Me.btnBrowseFileForCompareKnownHash.Location = New System.Drawing.Point(829, 10)
+        Me.btnBrowseFileForCompareKnownHash.Location = New System.Drawing.Point(1431, 9)
         Me.btnBrowseFileForCompareKnownHash.Name = "btnBrowseFileForCompareKnownHash"
         Me.btnBrowseFileForCompareKnownHash.Size = New System.Drawing.Size(25, 23)
         Me.btnBrowseFileForCompareKnownHash.TabIndex = 7
@@ -1412,7 +1412,7 @@ Partial Class Form1
         Me.txtFileForKnownHash.Location = New System.Drawing.Point(48, 12)
         Me.txtFileForKnownHash.Name = "txtFileForKnownHash"
         Me.txtFileForKnownHash.ReadOnly = True
-        Me.txtFileForKnownHash.Size = New System.Drawing.Size(775, 20)
+        Me.txtFileForKnownHash.Size = New System.Drawing.Size(1377, 20)
         Me.txtFileForKnownHash.TabIndex = 6
         '
         'Label7
