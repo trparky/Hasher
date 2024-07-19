@@ -12,6 +12,7 @@ Namespace My
             If IO.File.Exists("updater.exe") Then
                 SearchForProcessAndKillIt("updater.exe", False)
                 IO.File.Delete("updater.exe")
+                If IO.File.Exists("updater.pdb") Then IO.File.Delete("updater.pdb")
             End If
 
             If Application.CommandLineArgs.Count = 1 Then
