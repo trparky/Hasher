@@ -100,7 +100,7 @@ Public Class Form1
                 .BoolValidHash = item.BoolValidHash
                 .StrCrashData = item.StrCrashData
                 .BoolExceptionOccurred = item.BoolExceptionOccurred
-                .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor}
+                .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor, .ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor)}
             End If
         End With
     End Sub
@@ -1409,7 +1409,6 @@ Public Class Form1
                                                                      item.Cells(4).Value = strDisplayValidChecksumString
                                                                      longFilesThatPassedVerification += 1
                                                                      item.BoolValidHash = True
-                                                                     item.MyColor = My.Settings.validColor
                                                                  Else
                                                                      item.ColorType = ColorType.NotValid
                                                                      item.MyColor = notValidColor
@@ -1419,7 +1418,6 @@ Public Class Form1
                                                                      item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
                                                                      longFilesThatDidNotPassVerification += 1
                                                                      item.BoolValidHash = False
-                                                                     item.MyColor = My.Settings.notValidColor
                                                                  End If
 
                                                                  item.BoolExceptionOccurred = False

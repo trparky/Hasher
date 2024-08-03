@@ -13,6 +13,11 @@ Public Module Globals
     Public boolAbortThread As Boolean = False
     Public strEXEPath As String = Process.GetCurrentProcess.MainModule.FileName
 
+    Public Function GetGoodTextColorBasedUponBackgroundColor(input As Color) As Color
+        Dim intCombinedTotal As Short = Integer.Parse(input.R.ToString) + Integer.Parse(input.G.ToString) + Integer.Parse(input.B.ToString)
+        Return If((intCombinedTotal / 3) < 128, Color.White, Color.Black)
+    End Function
+
     Public Function ParseArguments(args As ReadOnlyCollection(Of String)) As Dictionary(Of String, Object)
         Dim parsedArguments As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
         Dim strValue As String
