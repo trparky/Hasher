@@ -82,7 +82,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub UpdateDataGridViewRow(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow)
+    Private Sub UpdateDataGridViewRow(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow, Optional boolUpdateColor As Boolean = True)
         With itemOnGUI
             If item IsNot Nothing Then
                 For i As Short = 1 To item.Cells.Count - 1
@@ -99,7 +99,7 @@ Public Class Form1
                 .BoolValidHash = item.BoolValidHash
                 .StrCrashData = item.StrCrashData
                 .BoolExceptionOccurred = item.BoolExceptionOccurred
-                .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor, .ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor)}
+                If boolUpdateColor Then .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor, .ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor)}
             End If
         End With
     End Sub
@@ -398,7 +398,7 @@ Public Class Form1
                                                                               lblProcessingFile.Text = $"Now processing file ""{New IO.FileInfo(myItem.FileName).Name}""."
                                                                               lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Rows.Count)
 
-                                                                              UpdateDataGridViewRow(itemOnGUI, item)
+                                                                              UpdateDataGridViewRow(itemOnGUI, item, False)
                                                                           End Sub)
 
                                                                  computeStopwatch = Stopwatch.StartNew
@@ -421,7 +421,7 @@ Public Class Form1
                                                                      longErroredFiles += 1
                                                                  End If
 
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
+                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item, False))
                                                              End If
                                                          End If
 
@@ -464,7 +464,7 @@ Public Class Form1
                                                                       Text = strWindowTitle
 
                                                                       If currentItem IsNot Nothing Then currentItem.Cells(2).Value = strWaitingToBeProcessed
-                                                                      UpdateDataGridViewRow(itemOnGUI, currentItem)
+                                                                      UpdateDataGridViewRow(itemOnGUI, currentItem, False)
 
                                                                       Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of MyDataGridViewRow).Where(Function(item As MyDataGridViewRow) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count
                                                                       btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
