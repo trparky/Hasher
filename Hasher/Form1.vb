@@ -60,7 +60,6 @@ Public Class Form1
     Private Const TabNumberSettingsTab As Integer = 6
 
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([0-9a-f]+) \*?(.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
-    Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[a-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
     Private Function GenerateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
         Return $"Processing file {MyToString(intCurrentFile)} of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")}."
@@ -1315,7 +1314,7 @@ Public Class Form1
                                                                  strChecksum = regExMatchObject.Groups(1).Value
                                                                  strFileName = regExMatchObject.Groups(2).Value
 
-                                                                 If Not hashLineFilePathChecker.IsMatch(strFileName) Then
+                                                                 If Not IO.Path.IsPathRooted(strFileName) Then
                                                                      strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
                                                                  End If
 
