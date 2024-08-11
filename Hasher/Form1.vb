@@ -60,7 +60,6 @@ Public Class Form1
     Private Const TabNumberSettingsTab As Integer = 6
 
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([0-9a-f]+) \*?(.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
-    Private ReadOnly hashLineFilePathChecker As New Text.RegularExpressions.Regex("\A[a-z]{1}:.*\Z", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
     Private Function GenerateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
         Return $"Processing file {MyToString(intCurrentFile)} of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")}."
@@ -83,7 +82,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub UpdateDataGridViewRow(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow)
+    Private Sub UpdateDataGridViewRow(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow, Optional boolUpdateColor As Boolean = True)
         With itemOnGUI
             If item IsNot Nothing Then
                 For i As Short = 1 To item.Cells.Count - 1
@@ -100,7 +99,7 @@ Public Class Form1
                 .BoolValidHash = item.BoolValidHash
                 .StrCrashData = item.StrCrashData
                 .BoolExceptionOccurred = item.BoolExceptionOccurred
-                .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor}
+                If boolUpdateColor Then .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor, .ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor)}
             End If
         End With
     End Sub
@@ -399,7 +398,7 @@ Public Class Form1
                                                                               lblProcessingFile.Text = $"Now processing file ""{New IO.FileInfo(myItem.FileName).Name}""."
                                                                               lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Rows.Count)
 
-                                                                              UpdateDataGridViewRow(itemOnGUI, item)
+                                                                              UpdateDataGridViewRow(itemOnGUI, item, False)
                                                                           End Sub)
 
                                                                  computeStopwatch = Stopwatch.StartNew
@@ -422,7 +421,7 @@ Public Class Form1
                                                                      longErroredFiles += 1
                                                                  End If
 
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
+                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item, False))
                                                              End If
                                                          End If
 
@@ -465,7 +464,7 @@ Public Class Form1
                                                                       Text = strWindowTitle
 
                                                                       If currentItem IsNot Nothing Then currentItem.Cells(2).Value = strWaitingToBeProcessed
-                                                                      UpdateDataGridViewRow(itemOnGUI, currentItem)
+                                                                      UpdateDataGridViewRow(itemOnGUI, currentItem, False)
 
                                                                       Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of MyDataGridViewRow).Where(Function(item As MyDataGridViewRow) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count
                                                                       btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
@@ -1315,7 +1314,7 @@ Public Class Form1
                                                                  strChecksum = regExMatchObject.Groups(1).Value
                                                                  strFileName = regExMatchObject.Groups(2).Value
 
-                                                                 If Not hashLineFilePathChecker.IsMatch(strFileName) Then
+                                                                 If Not IO.Path.IsPathRooted(strFileName) Then
                                                                      strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
                                                                  End If
 
@@ -1409,7 +1408,6 @@ Public Class Form1
                                                                      item.Cells(4).Value = strDisplayValidChecksumString
                                                                      longFilesThatPassedVerification += 1
                                                                      item.BoolValidHash = True
-                                                                     item.MyColor = My.Settings.validColor
                                                                  Else
                                                                      item.ColorType = ColorType.NotValid
                                                                      item.MyColor = notValidColor
@@ -1419,7 +1417,6 @@ Public Class Form1
                                                                      item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
                                                                      longFilesThatDidNotPassVerification += 1
                                                                      item.BoolValidHash = False
-                                                                     item.MyColor = My.Settings.notValidColor
                                                                  End If
 
                                                                  item.BoolExceptionOccurred = False
