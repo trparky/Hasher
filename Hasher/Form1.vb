@@ -1390,7 +1390,7 @@ Public Class Form1
 
                                                              MyInvoke(Sub()
                                                                           lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
-                                                                          UpdateDataGridViewRow(itemOnGUI, item)
+                                                                          UpdateDataGridViewRow(itemOnGUI, item, False)
                                                                       End Sub)
 
                                                              computeStopwatch = Stopwatch.StartNew
