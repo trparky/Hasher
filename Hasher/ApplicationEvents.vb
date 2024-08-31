@@ -1,4 +1,5 @@
-﻿Imports Microsoft.VisualBasic.ApplicationServices
+﻿Imports CrashReporterDotNET
+Imports Microsoft.VisualBasic.ApplicationServices
 
 Namespace My
     ' The following events are available for MyApplication:
@@ -8,7 +9,27 @@ Namespace My
     ' StartupNextInstance: Raised when launching a single-instance application and the application is already active. 
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     Partial Friend Class MyApplication
+        Private _reportCrash As ReportCrash
+
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
+            AddHandler Windows.Forms.Application.ThreadException, Sub(exSender, args) SendReport(args.Exception, "I crashed!")
+            AddHandler AppDomain.CurrentDomain.UnhandledException, Sub(exSender, args)
+                                                                       SendReport(DirectCast(args.ExceptionObject, Exception), "I crashed!")
+                                                                   End Sub
+
+            _reportCrash = New ReportCrash("5v22h1sh@anonaddy.me") With {
+                .Silent = True,
+                .ShowScreenshotTab = True,
+                .IncludeScreenshot = False,
+                .AnalyzeWithDoctorDump = True,
+                .DoctorDumpSettings = New DoctorDumpSettings With {
+                    .ApplicationID = New Guid("59d4eea9-54b4-4d62-aa42-c85141e4aa7b"),
+                    .OpenReportInBrowser = True
+                }
+            }
+
+            _reportCrash.RetryFailedReports()
+
             If IO.File.Exists("updater.exe") Then
                 SearchForProcessAndKillIt("updater.exe", False)
                 IO.File.Delete("updater.exe")
@@ -24,6 +45,18 @@ Namespace My
                     Process.GetCurrentProcess.Kill()
                 End If
             End If
+        End Sub
+
+        Public Sub SendReport(exception As Exception, Optional developerMessage As String = "")
+            _reportCrash.DeveloperMessage = developerMessage
+            _reportCrash.Silent = False
+            _reportCrash.Send(exception)
+        End Sub
+
+        Public Sub SendReportSilently(exception As Exception, Optional developerMessage As String = "")
+            _reportCrash.DeveloperMessage = developerMessage
+            _reportCrash.Silent = True
+            _reportCrash.Send(exception)
         End Sub
     End Class
 End Namespace
