@@ -995,7 +995,7 @@ Public Class Form1
         roundPercentages.Value = My.Settings.roundPercentages
         btnSetRoundFileSizes.Enabled = False
         btnSetRoundPercentages.Enabled = False
-        Location = My.Settings.windowLocation
+        Location = VerifyWindowLocation(My.Settings.windowLocation, Me)
 
         If Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\Classes\.md5\Shell\Verify with Hasher", False) Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
         If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher", False) IsNot Nothing Then btnAssociate.Enabled = False
