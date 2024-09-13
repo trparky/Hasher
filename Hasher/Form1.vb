@@ -2196,34 +2196,25 @@ Public Class Form1
     End Function
 
     Private Function GetHashOfString(inputString As String) As AllTheHashes
-        Dim md5Engine As HashAlgorithm = New MD5CryptoServiceProvider
-        Dim sha160Engine As HashAlgorithm = New SHA1CryptoServiceProvider
-        Dim sha256Engine As HashAlgorithm = New SHA256CryptoServiceProvider
-        Dim sha384Engine As HashAlgorithm = New SHA384CryptoServiceProvider
-        Dim sha512Engine As HashAlgorithm = New SHA512CryptoServiceProvider
-        Dim byteArray As Byte() = System.Text.Encoding.UTF8.GetBytes(inputString)
+        Using md5Engine As HashAlgorithm = New MD5CryptoServiceProvider, sha160Engine As HashAlgorithm = New SHA1CryptoServiceProvider, sha256Engine As HashAlgorithm = New SHA256CryptoServiceProvider, sha384Engine As HashAlgorithm = New SHA384CryptoServiceProvider, sha512Engine As HashAlgorithm = New SHA512CryptoServiceProvider
+            Dim byteArray As Byte() = System.Text.Encoding.UTF8.GetBytes(inputString)
 
-        md5Engine.ComputeHash(byteArray)
-        sha160Engine.ComputeHash(byteArray)
-        sha256Engine.ComputeHash(byteArray)
-        sha384Engine.ComputeHash(byteArray)
-        sha512Engine.ComputeHash(byteArray)
+            md5Engine.ComputeHash(byteArray)
+            sha160Engine.ComputeHash(byteArray)
+            sha256Engine.ComputeHash(byteArray)
+            sha384Engine.ComputeHash(byteArray)
+            sha512Engine.ComputeHash(byteArray)
 
-        Dim allTheHashes As New AllTheHashes With {
-            .Md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", ""),
-            .Sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", ""),
-            .Sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", ""),
-            .Sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", ""),
-            .Sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
-        }
+            Dim allTheHashes As New AllTheHashes With {
+                .Md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", ""),
+                .Sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", ""),
+                .Sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", ""),
+                .Sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", ""),
+                .Sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
+            }
 
-        md5Engine.Dispose()
-        sha160Engine.Dispose()
-        sha256Engine.Dispose()
-        sha384Engine.Dispose()
-        sha512Engine.Dispose()
-
-        Return allTheHashes
+            Return allTheHashes
+        End Using
     End Function
 
     Private Sub ListFiles_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles listFiles.ColumnWidthChanged
