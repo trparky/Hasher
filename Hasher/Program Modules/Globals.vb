@@ -13,6 +13,21 @@ Public Module Globals
     Public boolAbortThread As Boolean = False
     Public strEXEPath As String = Process.GetCurrentProcess.MainModule.FileName
 
+    Public Function VerifyWindowLocation(point As Point, ByRef window As Form) As Point
+        Dim screen As Screen = Screen.FromPoint(point) ' Get the screen based on the new window location
+
+        Dim windowBounds As New Rectangle(point.X, point.Y, window.Width, window.Height)
+        Dim screenBounds As Rectangle = screen.WorkingArea
+
+        ' Ensure the window is at least partially on the screen
+        If windowBounds.IntersectsWith(screenBounds) Then
+            Return point
+        Else
+            ' Adjust the window to a default location if it is completely off-screen
+            Return New Point(screenBounds.Left, screenBounds.Top)
+        End If
+    End Function
+
     Public Function GetGoodTextColorBasedUponBackgroundColor(input As Color) As Color
         Dim intCombinedTotal As Short = Integer.Parse(input.R.ToString) + Integer.Parse(input.G.ToString) + Integer.Parse(input.B.ToString)
         Return If((intCombinedTotal / 3) < 128, Color.White, Color.Black)
