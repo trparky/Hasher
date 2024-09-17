@@ -898,8 +898,6 @@ Public Class Form1
         propInfo?.SetValue(listFiles, True, Nothing)
 
         If parsedArguments.Count > 0 Then
-            parsedArguments.ContainsKey("comparefile")
-
             If parsedArguments.ContainsKey("addfile") Or parsedArguments.ContainsKey("comparefile") Then
                 If boolNamedPipeServerStarted Then
                     ' This instance of the program is the first executed instance so it's the host of the named pipe server.
