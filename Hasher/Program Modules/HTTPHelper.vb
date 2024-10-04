@@ -202,7 +202,7 @@ End Class
 
 ''' <summary>Allows you to easily POST and upload files to a remote HTTP server without you, the programmer, knowing anything about how it all works. This class does it all for you. It handles adding a User Agent String, additional HTTP Request Headers, string data to your HTTP POST data, and files to be uploaded in the HTTP POST data.</summary>
 Public Class HttpHelper
-    Private Const classVersion As String = "1.339"
+    Private Const classVersion As String = "1.342"
 
     Private strUserAgentString As String = Nothing
     Private boolUseProxy As Boolean = False
@@ -956,25 +956,12 @@ beginAgain:
             Return True
         Catch ex As Threading.ThreadAbortException
             AbortDownloadStatusUpdaterThread()
-
             If httpWebRequest IsNot Nothing Then httpWebRequest.Abort()
-
-            If memStream IsNot Nothing Then
-                memStream.Close() ' Closes the file stream.
-                memStream.Dispose() ' Disposes the file stream.
-            End If
-
-            If memStream IsNot Nothing Then memStream.Dispose() ' Disposes the file stream.
             Return False
         Catch ex As Exception
             AbortDownloadStatusUpdaterThread()
 
             lastException = ex
-            If memStream IsNot Nothing Then
-                memStream.Close() ' Closes the file stream.
-                memStream.Dispose() ' Disposes the file stream.
-            End If
-            If memStream IsNot Nothing Then memStream.Dispose() ' Disposes the file stream.
 
             If Not throwExceptionIfError Then Return False
 
@@ -1003,6 +990,8 @@ beginAgain:
             End If
 
             Return False
+        Finally
+            memStream?.Dispose()
         End Try
     End Function
 
@@ -1018,117 +1007,102 @@ beginAgain:
     ''' <exception cref="SslErrorException">If this function throws an sslErrorException, an error occurred while negotiating an SSL connection.</exception>
     ''' <exception cref="DnsLookupError">If this function throws a dnsLookupError exception it means that the domain name wasn't able to be resolved properly.</exception>
     Public Function DownloadFile(fileDownloadURL As String, localFileName As String, throwExceptionIfLocalFileExists As Boolean, Optional throwExceptionIfError As Boolean = True) As Boolean
-        Dim fileWriteStream As FileStream = Nothing
-        Dim httpWebRequest As Net.HttpWebRequest = Nothing
-        currentFileSize = 0
-        Dim amountDownloaded As Double
+        Using fileWriteStream As New FileStream(localFileName, FileMode.Create)
+            Dim httpWebRequest As Net.HttpWebRequest = Nothing
+            currentFileSize = 0
+            Dim amountDownloaded As Double
 
-        Try
-            If urlPreProcessor IsNot Nothing Then fileDownloadURL = urlPreProcessor(fileDownloadURL)
-            lastAccessedURL = fileDownloadURL
+            Try
+                If urlPreProcessor IsNot Nothing Then fileDownloadURL = urlPreProcessor(fileDownloadURL)
+                lastAccessedURL = fileDownloadURL
 
-            If File.Exists(localFileName) Then
-                If throwExceptionIfLocalFileExists Then
-                    lastException = New LocalFileAlreadyExistsException($"The local file found at ""{localFileName}"" already exists.")
-                    Throw lastException
-                Else
-                    File.Delete(localFileName)
+                If File.Exists(localFileName) Then
+                    If throwExceptionIfLocalFileExists Then
+                        lastException = New LocalFileAlreadyExistsException($"The local file found at ""{localFileName}"" already exists.")
+                        Throw lastException
+                    Else
+                        File.Delete(localFileName)
+                    End If
                 End If
-            End If
 
-            ' We create a new data buffer to hold the stream of data from the web server.
-            Dim dataBuffer As Byte() = New Byte(intDownloadBufferSize) {}
+                ' We create a new data buffer to hold the stream of data from the web server.
+                Dim dataBuffer As Byte() = New Byte(intDownloadBufferSize) {}
 
-            httpWebRequest = DirectCast(Net.WebRequest.Create(fileDownloadURL), Net.HttpWebRequest)
+                httpWebRequest = DirectCast(Net.WebRequest.Create(fileDownloadURL), Net.HttpWebRequest)
 
-            ConfigureProxy(httpWebRequest)
-            AddParametersToWebRequest(httpWebRequest)
+                ConfigureProxy(httpWebRequest)
+                AddParametersToWebRequest(httpWebRequest)
 
-            Dim webResponse As Net.WebResponse = httpWebRequest.GetResponse() ' We now get the web response.
-            CaptureSSLInfo(fileDownloadURL, httpWebRequest)
+                Dim webResponse As Net.WebResponse = httpWebRequest.GetResponse() ' We now get the web response.
+                CaptureSSLInfo(fileDownloadURL, httpWebRequest)
 
-            ' Gets the size of the remote file on the web server.
-            remoteFileSizeInput = webResponse.ContentLength
+                ' Gets the size of the remote file on the web server.
+                remoteFileSizeInput = webResponse.ContentLength
 
-            Dim responseStream As Stream = webResponse.GetResponseStream() ' Gets the response stream.
-            fileWriteStream = New FileStream(localFileName, FileMode.Create) ' Creates a file write stream.
+                Dim responseStream As Stream = webResponse.GetResponseStream() ' Gets the response stream.
+                Dim lngBytesReadFromInternet As Long = responseStream.Read(dataBuffer, 0, dataBuffer.Length) ' Reads some data from the HTTP stream into our data buffer.
 
-            Dim lngBytesReadFromInternet As Long = responseStream.Read(dataBuffer, 0, dataBuffer.Length) ' Reads some data from the HTTP stream into our data buffer.
+                ' We keep looping until all of the data has been downloaded.
+                While lngBytesReadFromInternet <> 0
+                    ' We calculate the current file size by adding the amount of data that we've so far
+                    ' downloaded from the server repeatedly to a variable called "currentFileSize".
+                    currentFileSize += lngBytesReadFromInternet
 
-            ' We keep looping until all of the data has been downloaded.
-            While lngBytesReadFromInternet <> 0
-                ' We calculate the current file size by adding the amount of data that we've so far
-                ' downloaded from the server repeatedly to a variable called "currentFileSize".
-                currentFileSize += lngBytesReadFromInternet
+                    fileWriteStream.Write(dataBuffer, 0, lngBytesReadFromInternet) ' Writes the data directly to disk.
 
-                fileWriteStream.Write(dataBuffer, 0, lngBytesReadFromInternet) ' Writes the data directly to disk.
+                    amountDownloaded = currentFileSize / remoteFileSizeInput * 100
+                    httpDownloadProgressPercentage = CType(Math.Round(amountDownloaded, 0), Short) ' Update the download percentage value.
+                    DownloadStatusUpdateInvoker()
 
-                amountDownloaded = currentFileSize / remoteFileSizeInput * 100
-                httpDownloadProgressPercentage = CType(Math.Round(amountDownloaded, 0), Short) ' Update the download percentage value.
-                DownloadStatusUpdateInvoker()
+                    lngBytesReadFromInternet = responseStream.Read(dataBuffer, 0, dataBuffer.Length) ' Reads more data into our data buffer.
+                End While
 
-                lngBytesReadFromInternet = responseStream.Read(dataBuffer, 0, dataBuffer.Length) ' Reads more data into our data buffer.
-            End While
+                If downloadStatusUpdaterThread IsNot Nothing And boolRunDownloadStatusUpdatePluginInSeparateThread Then
+                    downloadStatusUpdaterThread.Abort()
+                    downloadStatusUpdaterThread = Nothing
+                End If
 
-            fileWriteStream.Close() ' Closes the file stream.
-            fileWriteStream.Dispose() ' Disposes the file stream.
+                AbortDownloadStatusUpdaterThread()
 
-            If downloadStatusUpdaterThread IsNot Nothing And boolRunDownloadStatusUpdatePluginInSeparateThread Then
-                downloadStatusUpdaterThread.Abort()
-                downloadStatusUpdaterThread = Nothing
-            End If
-
-            AbortDownloadStatusUpdaterThread()
-
-            Return True
-        Catch ex As Threading.ThreadAbortException
-            AbortDownloadStatusUpdaterThread()
-
-            If httpWebRequest IsNot Nothing Then httpWebRequest.Abort()
-
-            If fileWriteStream IsNot Nothing Then
-                fileWriteStream.Close() ' Closes the file stream.
-                fileWriteStream.Dispose() ' Disposes the file stream.
-            End If
-
-            Return False
-        Catch ex As Exception
-            AbortDownloadStatusUpdaterThread()
-
-            lastException = ex
-            If fileWriteStream IsNot Nothing Then
-                fileWriteStream.Close() ' Closes the file stream.
-                fileWriteStream.Dispose() ' Disposes the file stream.
-            End If
-
-            If Not throwExceptionIfError Then Return False
-
-            If customErrorHandler IsNot Nothing Then
-                customErrorHandler.DynamicInvoke(ex, Me)
-                ' Since we handled the exception with an injected custom error handler, we can now exit the function with the return of a False value.
+                Return True
+            Catch ex As Threading.ThreadAbortException
+                AbortDownloadStatusUpdaterThread()
+                httpWebRequest?.Abort()
                 Return False
-            End If
+            Catch ex As Exception
+                AbortDownloadStatusUpdaterThread()
 
-            If TypeOf ex Is Net.WebException Then
-                Dim ex2 As Net.WebException = DirectCast(ex, Net.WebException)
+                lastException = ex
 
-                If ex2.Status = Net.WebExceptionStatus.ProtocolError Then
-                    Throw HandleWebExceptionProtocolError(fileDownloadURL, ex2)
-                ElseIf ex2.Status = Net.WebExceptionStatus.TrustFailure Then
-                    lastException = New SslErrorException("There was an error establishing an SSL connection.", ex2)
-                    Throw lastException
-                ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
-                    Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
-                    lastException = New DnsLookupError($"There was an error while looking up the DNS records for the domain name ""{strDomainName}"".", ex2)
+                If Not throwExceptionIfError Then Return False
+
+                If customErrorHandler IsNot Nothing Then
+                    customErrorHandler.DynamicInvoke(ex, Me)
+                    ' Since we handled the exception with an injected custom error handler, we can now exit the function with the return of a False value.
+                    Return False
+                End If
+
+                If TypeOf ex Is Net.WebException Then
+                    Dim ex2 As Net.WebException = DirectCast(ex, Net.WebException)
+
+                    If ex2.Status = Net.WebExceptionStatus.ProtocolError Then
+                        Throw HandleWebExceptionProtocolError(fileDownloadURL, ex2)
+                    ElseIf ex2.Status = Net.WebExceptionStatus.TrustFailure Then
+                        lastException = New SslErrorException("There was an error establishing an SSL connection.", ex2)
+                        Throw lastException
+                    ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
+                        Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
+                        lastException = New DnsLookupError($"There was an error while looking up the DNS records for the domain name ""{strDomainName}"".", ex2)
+                        Throw lastException
+                    End If
+
+                    lastException = New Net.WebException(ex.Message, ex2)
                     Throw lastException
                 End If
 
-                lastException = New Net.WebException(ex.Message, ex2)
-                Throw lastException
-            End If
-
-            Return False
-        End Try
+                Return False
+            End Try
+        End Using
     End Function
 
     ''' <summary>Performs an HTTP Request for data from a web server.</summary>
@@ -1160,22 +1134,18 @@ beginAgain:
             AddParametersToWebRequest(httpWebRequest)
             AddPostDataToWebRequest(httpWebRequest)
 
-            Dim httpWebResponse As Net.WebResponse = httpWebRequest.GetResponse()
-            CaptureSSLInfo(url, httpWebRequest)
+            Using httpWebResponse As Net.WebResponse = httpWebRequest.GetResponse()
+                CaptureSSLInfo(url, httpWebRequest)
 
-            Dim httpInStream As New StreamReader(httpWebResponse.GetResponseStream())
-            Dim httpTextOutput As String = httpInStream.ReadToEnd.Trim()
-            httpResponseHeaders = httpWebResponse.Headers
+                Using httpInStream As New StreamReader(httpWebResponse.GetResponseStream())
+                    Dim httpTextOutput As String = httpInStream.ReadToEnd.Trim()
+                    httpResponseHeaders = httpWebResponse.Headers
 
-            httpInStream.Close()
-            httpInStream.Dispose()
+                    httpResponseText = ConvertLineFeeds(httpTextOutput).Trim()
 
-            httpWebResponse.Close()
-            httpWebResponse.Dispose()
-
-            httpResponseText = ConvertLineFeeds(httpTextOutput).Trim()
-
-            Return True
+                    Return True
+                End Using
+            End Using
         Catch ex As Exception
             If ex.GetType.Equals(GetType(Threading.ThreadAbortException)) Then
                 If httpWebRequest IsNot Nothing Then httpWebRequest.Abort()
@@ -1240,22 +1210,18 @@ beginAgain:
             AddParametersToWebRequest(httpWebRequest)
             AddPostDataToWebRequest(httpWebRequest)
 
-            Dim httpWebResponse As Net.WebResponse = httpWebRequest.GetResponse()
-            CaptureSSLInfo(url, httpWebRequest)
+            Using httpWebResponse As Net.WebResponse = httpWebRequest.GetResponse()
+                CaptureSSLInfo(url, httpWebRequest)
 
-            Dim httpInStream As New StreamReader(httpWebResponse.GetResponseStream())
-            Dim httpTextOutput As String = httpInStream.ReadToEnd.Trim()
-            httpResponseHeaders = httpWebResponse.Headers
+                Using httpInStream As New StreamReader(httpWebResponse.GetResponseStream())
+                    Dim httpTextOutput As String = httpInStream.ReadToEnd.Trim()
+                    httpResponseHeaders = httpWebResponse.Headers
 
-            httpInStream.Close()
-            httpInStream.Dispose()
+                    httpResponseText = ConvertLineFeeds(httpTextOutput).Trim()
 
-            httpWebResponse.Close()
-            httpWebResponse.Dispose()
-
-            httpResponseText = ConvertLineFeeds(httpTextOutput).Trim()
-
-            Return True
+                    Return True
+                End Using
+            End Using
         Catch ex As Exception
             If ex.GetType.Equals(GetType(Threading.ThreadAbortException)) Then
                 If httpWebRequest IsNot Nothing Then httpWebRequest.Abort()
@@ -1332,68 +1298,56 @@ beginAgain:
             httpWebRequest.Method = "POST"
 
             If postData.Count <> 0 Then
-                Dim httpRequestWriter As Stream = httpWebRequest.GetRequestStream()
-                Dim header As String, fileInfo As FileInfo, formFileObjectInstance As FormFile
-                Dim bytes As Byte(), buffer As Byte(), fileStream As FileStream, data As String
+                Using httpRequestWriter As Stream = httpWebRequest.GetRequestStream()
+                    Dim header As String, fileInfo As FileInfo, formFileObjectInstance As FormFile
+                    Dim bytes As Byte(), data As String
 
-                For Each entry As KeyValuePair(Of String, Object) In postData
-                    httpRequestWriter.Write(boundaryBytes, 0, boundaryBytes.Length)
+                    For Each entry As KeyValuePair(Of String, Object) In postData
+                        httpRequestWriter.Write(boundaryBytes, 0, boundaryBytes.Length)
 
-                    If TypeOf entry.Value Is FormFile Then
-                        formFileObjectInstance = DirectCast(entry.Value, FormFile)
+                        If TypeOf entry.Value Is FormFile Then
+                            formFileObjectInstance = DirectCast(entry.Value, FormFile)
 
-                        If String.IsNullOrEmpty(formFileObjectInstance.RemoteFileName) Then
-                            fileInfo = New FileInfo(formFileObjectInstance.LocalFilePath)
+                            If String.IsNullOrEmpty(formFileObjectInstance.RemoteFileName) Then
+                                fileInfo = New FileInfo(formFileObjectInstance.LocalFilePath)
 
-                            header = $"Content-Disposition: form-data; name=""{entry.Key}""; filename=""{fileInfo.Name}"""
-                            header &= $"{vbCrLf}Content-Type: {formFileObjectInstance.ContentType}{vbCrLf}{vbCrLf}"
+                                header = $"Content-Disposition: form-data; name=""{entry.Key}""; filename=""{fileInfo.Name}"""
+                                header &= $"{vbCrLf}Content-Type: {formFileObjectInstance.ContentType}{vbCrLf}{vbCrLf}"
+                            Else
+                                header = $"Content-Disposition: form-data; name=""{entry.Key}""; filename=""{formFileObjectInstance.RemoteFileName}"""
+                                header &= $"{vbCrLf}Content-Type: {formFileObjectInstance.ContentType}{vbCrLf}{vbCrLf}"
+                            End If
+
+                            bytes = Text.Encoding.UTF8.GetBytes(header)
+                            httpRequestWriter.Write(bytes, 0, bytes.Length)
+
+                            Using fileStream = New FileStream(formFileObjectInstance.LocalFilePath, FileMode.Open)
+                                fileStream.CopyTo(httpRequestWriter)
+                            End Using
                         Else
-                            header = $"Content-Disposition: form-data; name=""{entry.Key}""; filename=""{formFileObjectInstance.RemoteFileName}"""
-                            header &= $"{vbCrLf}Content-Type: {formFileObjectInstance.ContentType}{vbCrLf}{vbCrLf}"
+                            data = $"Content-Disposition: form-data; name=""{entry.Key}""{vbCrLf}{vbCrLf}{entry.Value}"
+                            bytes = Text.Encoding.UTF8.GetBytes(data)
+                            httpRequestWriter.Write(bytes, 0, bytes.Length)
                         End If
+                    Next
 
-                        bytes = Text.Encoding.UTF8.GetBytes(header)
-                        httpRequestWriter.Write(bytes, 0, bytes.Length)
-
-                        fileStream = New FileStream(formFileObjectInstance.LocalFilePath, FileMode.Open)
-                        buffer = New Byte(32768) {}
-
-                        While fileStream.Read(buffer, 0, buffer.Length) <> 0
-                            httpRequestWriter.Write(buffer, 0, buffer.Length)
-                        End While
-
-                        fileStream.Close()
-                        fileStream.Dispose()
-                        fileStream = Nothing
-                    Else
-                        data = $"Content-Disposition: form-data; name=""{entry.Key}""{vbCrLf}{vbCrLf}{entry.Value}"
-                        bytes = Text.Encoding.UTF8.GetBytes(data)
-                        httpRequestWriter.Write(bytes, 0, bytes.Length)
-                    End If
-                Next
-
-                Dim trailer As Byte() = Text.Encoding.ASCII.GetBytes($"{vbCrLf}--{boundary}--{vbCrLf}")
-                httpRequestWriter.Write(trailer, 0, trailer.Length)
-                httpRequestWriter.Close()
-                httpRequestWriter.Dispose()
+                    Dim trailer As Byte() = Text.Encoding.ASCII.GetBytes($"{vbCrLf}--{boundary}--{vbCrLf}")
+                    httpRequestWriter.Write(trailer, 0, trailer.Length)
+                End Using
             End If
 
-            Dim httpWebResponse As Net.WebResponse = httpWebRequest.GetResponse()
-            CaptureSSLInfo(url, httpWebRequest)
+            Using httpWebResponse As Net.WebResponse = httpWebRequest.GetResponse()
+                CaptureSSLInfo(url, httpWebRequest)
 
-            Dim httpInStream As New StreamReader(httpWebResponse.GetResponseStream())
-            Dim httpTextOutput As String = httpInStream.ReadToEnd.Trim()
-            httpResponseHeaders = httpWebResponse.Headers
+                Using httpInStream As New StreamReader(httpWebResponse.GetResponseStream())
+                    Dim httpTextOutput As String = httpInStream.ReadToEnd.Trim()
+                    httpResponseHeaders = httpWebResponse.Headers
 
-            httpInStream.Close()
-            httpInStream.Dispose()
+                    httpResponseText = ConvertLineFeeds(httpTextOutput).Trim()
 
-            httpWebResponse.Close()
-            httpWebResponse.Dispose()
-
-            httpResponseText = ConvertLineFeeds(httpTextOutput).Trim()
-
-            Return True
+                    Return True
+                End Using
+            End Using
         Catch ex As Exception
             If ex.GetType.Equals(GetType(Threading.ThreadAbortException)) Then
                 If httpWebRequest IsNot Nothing Then httpWebRequest.Abort()
@@ -1444,10 +1398,9 @@ beginAgain:
             httpWebRequest.ContentType = "application/x-www-form-urlencoded"
             httpWebRequest.ContentLength = postDataString.Length
 
-            Dim httpRequestWriter = New StreamWriter(httpWebRequest.GetRequestStream())
-            httpRequestWriter.Write(postDataString)
-            httpRequestWriter.Close()
-            httpRequestWriter.Dispose()
+            Using httpRequestWriter = New StreamWriter(httpWebRequest.GetRequestStream())
+                httpRequestWriter.Write(postDataString)
+            End Using
         End If
     End Sub
 
