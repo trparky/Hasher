@@ -1263,7 +1263,6 @@ Public Class Form1
                                                      Dim intLineCounter As Integer = 0
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim strReadingHashFileMessage As String = "Reading hash file and creating DataGridView item objects... Please wait."
-                                                     Dim boolFileExists As Boolean
                                                      Dim intFileCount As Integer = 0
                                                      Dim strLineInFile As String
                                                      Dim listOfDataGridRows As New List(Of MyDataGridViewRow)
@@ -1296,6 +1295,9 @@ Public Class Form1
                                                      If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= $" ({MyToString(newDataInFileArray.Count)} {If(newDataInFileArray.Count = 1, "entry", "entries")} in hash file)")
 
                                                      Parallel.ForEach(newDataInFileArray, Sub(strLineInFile2 As String)
+                                                                                              Dim strChecksum2, strFileName2 As String
+                                                                                              Dim boolFileExists As Boolean
+
                                                                                               If boolAbortThread Then Throw New MyThreadAbortException
                                                                                               intLineCounter += 1
                                                                                               MyInvoke(Sub()
@@ -1308,14 +1310,14 @@ Public Class Form1
                                                                                                   Dim regExMatchObject As Text.RegularExpressions.Match = hashLineParser.Match(strLineInFile2)
 
                                                                                                   If regExMatchObject.Success Then
-                                                                                                      strChecksum = regExMatchObject.Groups(1).Value
-                                                                                                      strFileName = regExMatchObject.Groups(2).Value
+                                                                                                      strChecksum2 = regExMatchObject.Groups(1).Value
+                                                                                                      strFileName2 = regExMatchObject.Groups(2).Value
 
-                                                                                                      If Not IO.Path.IsPathRooted(strFileName) Then
-                                                                                                          strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
+                                                                                                      If Not IO.Path.IsPathRooted(strFileName2) Then
+                                                                                                          strFileName2 = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName2)
                                                                                                       End If
 
-                                                                                                      listOfDataGridRows.Add(CreateMyDataGridRowForHashFileEntry(strFileName, strChecksum, longFilesThatWereNotFound, boolFileExists, verifyHashesListFiles))
+                                                                                                      listOfDataGridRows.Add(CreateMyDataGridRowForHashFileEntry(strFileName2, strChecksum2, longFilesThatWereNotFound, boolFileExists, verifyHashesListFiles))
                                                                                                       If boolFileExists Then intFileCount += 1
                                                                                                   End If
 
