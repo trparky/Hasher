@@ -2,7 +2,6 @@
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
-Imports Microsoft.VisualBasic.Logging
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
