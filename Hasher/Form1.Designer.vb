@@ -670,6 +670,7 @@ Partial Class Form1
         Me.listFiles.Location = New System.Drawing.Point(160, 20)
         Me.listFiles.Name = "listFiles"
         Me.listFiles.ReadOnly = True
+        Me.listFiles.RowHeadersVisible = False
         Me.listFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.listFiles.Size = New System.Drawing.Size(1444, 234)
         Me.listFiles.TabIndex = 26
@@ -841,6 +842,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(163, 28)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
         Me.verifyHashesListFiles.ReadOnly = True
+        Me.verifyHashesListFiles.RowHeadersVisible = False
         Me.verifyHashesListFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.verifyHashesListFiles.Size = New System.Drawing.Size(1441, 413)
         Me.verifyHashesListFiles.TabIndex = 28
