@@ -2,7 +2,6 @@
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
-Imports Microsoft.VisualBasic.Logging
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -59,7 +58,8 @@ Public Class Form1
     Private Const TabNumberCompareFileAgainstKnownHashTab As Integer = 5
     Private Const TabNumberSettingsTab As Integer = 6
 
-    Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("([0-9a-f]+) \*?(.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+    Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128}) \*?(?<filename>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+    Private ReadOnly PFSenseHashLineParser As New Text.RegularExpressions.Regex("SHA256 \((?<filename>.+)\) = (?<checksum>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
     Private Function GenerateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
         Return $"Processing file {MyToString(intCurrentFile)} of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")}."
@@ -1080,17 +1080,19 @@ Public Class Form1
                                                      Dim percentage As Double
 
                                                      Parallel.ForEach(filesInDirectory, Sub(filedata As FastDirectoryEnumerator.FileData)
-                                                                                            If boolAbortThread Then Throw New MyThreadAbortException()
-                                                                                            intFileIndexNumber += 1
-                                                                                            MyInvoke(Sub()
-                                                                                                         percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
-                                                                                                         IndividualFilesProgressBar.Value = percentage
-                                                                                                         ProgressForm.SetTaskbarProgressBarValue(percentage)
-                                                                                                         lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
-                                                                                                     End Sub)
-                                                                                            If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
-                                                                                                If IO.File.Exists(filedata.Path) Then collectionOfDataGridRows.Add(CreateFilesDataGridObject(filedata.Path, filedata.Size, listFiles))
-                                                                                            End If
+                                                                                            SyncLock collectionOfDataGridRows
+                                                                                                If boolAbortThread Then Throw New MyThreadAbortException()
+                                                                                                Threading.Interlocked.Increment(intFileIndexNumber)
+                                                                                                MyInvoke(Sub()
+                                                                                                             percentage = intFileIndexNumber / intTotalNumberOfFiles * 100
+                                                                                                             IndividualFilesProgressBar.Value = percentage
+                                                                                                             ProgressForm.SetTaskbarProgressBarValue(percentage)
+                                                                                                             lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
+                                                                                                         End Sub)
+                                                                                                If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
+                                                                                                    If IO.File.Exists(filedata.Path) Then collectionOfDataGridRows.Add(CreateFilesDataGridObject(filedata.Path, filedata.Size, listFiles))
+                                                                                                End If
+                                                                                            End SyncLock
                                                                                         End Sub)
 
                                                      filesInDirectory = Nothing
@@ -1215,6 +1217,15 @@ Public Class Form1
         Return MyDataGridRow
     End Function
 
+    Private Function IsRegexMatch(regex As Text.RegularExpressions.Regex, strHashLine As String, ByRef match As Text.RegularExpressions.Match) As Boolean
+        match = regex.Match(strHashLine)
+        Return match.Success
+    End Function
+
+    Private Function IsRegexMatch(regex As Text.RegularExpressions.Regex, strHashLine As String) As Boolean
+        Return regex.Match(strHashLine).Success
+    End Function
+
     Private Sub ProcessExistingHashFile(strPathToChecksumFile As String)
         strLastHashFileLoaded = strPathToChecksumFile
         lblVerifyFileNameLabel.Text = $"File Name: {strPathToChecksumFile}"
@@ -1241,6 +1252,7 @@ Public Class Form1
                 checksumType = HashAlgorithmName.SHA384
             Case ".sha512"
                 checksumType = HashAlgorithmName.SHA512
+            Case ".checksum"
             Case Else
                 MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                 Exit Sub
@@ -1295,34 +1307,38 @@ Public Class Form1
                                                      If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= $" ({MyToString(newDataInFileArray.Count)} {If(newDataInFileArray.Count = 1, "entry", "entries")} in hash file)")
 
                                                      Parallel.ForEach(newDataInFileArray, Sub(strLineInFile2 As String)
-                                                                                              Dim strChecksum2, strFileName2 As String
-                                                                                              Dim boolFileExists As Boolean
+                                                                                              SyncLock listOfDataGridRows
+                                                                                                  Dim strChecksum2, strFileName2 As String
+                                                                                                  Dim boolFileExists As Boolean
 
-                                                                                              If boolAbortThread Then Throw New MyThreadAbortException
-                                                                                              intLineCounter += 1
-                                                                                              MyInvoke(Sub()
-                                                                                                           VerifyHashProgressBar.Value = intLineCounter / newDataInFileArray.LongCount * 100
-                                                                                                           ProgressForm.SetTaskbarProgressBarValue(VerifyHashProgressBar.Value)
-                                                                                                           lblVerifyHashStatus.Text = $"{strReadingHashFileMessage} Processing item {MyToString(intLineCounter)} of {MyToString(newDataInFileArray.LongCount)} ({MyRoundingFunction(VerifyHashProgressBar.Value, byteRoundPercentages)}%)."
-                                                                                                       End Sub)
+                                                                                                  If boolAbortThread Then Throw New MyThreadAbortException
+                                                                                                  Threading.Interlocked.Increment(intLineCounter)
+                                                                                                  MyInvoke(Sub()
+                                                                                                               VerifyHashProgressBar.Value = intLineCounter / newDataInFileArray.LongCount * 100
+                                                                                                               ProgressForm.SetTaskbarProgressBarValue(VerifyHashProgressBar.Value)
+                                                                                                               lblVerifyHashStatus.Text = $"{strReadingHashFileMessage} Processing item {MyToString(intLineCounter)} of {MyToString(newDataInFileArray.LongCount)} ({MyRoundingFunction(VerifyHashProgressBar.Value, byteRoundPercentages)}%)."
+                                                                                                           End Sub)
 
-                                                                                              If Not String.IsNullOrEmpty(strLineInFile2) Then
-                                                                                                  Dim regExMatchObject As Text.RegularExpressions.Match = hashLineParser.Match(strLineInFile2)
+                                                                                                  If Not String.IsNullOrEmpty(strLineInFile2) Then
+                                                                                                      Dim regExMatchObject As Text.RegularExpressions.Match = Nothing
 
-                                                                                                  If regExMatchObject.Success Then
-                                                                                                      strChecksum2 = regExMatchObject.Groups(1).Value
-                                                                                                      strFileName2 = regExMatchObject.Groups(2).Value
+                                                                                                      If IsRegexMatch(hashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(PFSenseHashLineParser, strLineInFile2, regExMatchObject) Then
+                                                                                                          If IsRegexMatch(PFSenseHashLineParser, strLineInFile2) Then
+                                                                                                              checksumType = HashAlgorithmName.SHA256
+                                                                                                          End If
 
-                                                                                                      If Not IO.Path.IsPathRooted(strFileName2) Then
-                                                                                                          strFileName2 = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName2)
+                                                                                                          strChecksum2 = regExMatchObject.Groups("checksum").Value
+                                                                                                          strFileName2 = regExMatchObject.Groups("filename").Value
+
+                                                                                                          If Not IO.Path.IsPathRooted(strFileName2) Then
+                                                                                                              strFileName2 = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName2)
+                                                                                                          End If
+
+                                                                                                          listOfDataGridRows.Add(CreateMyDataGridRowForHashFileEntry(strFileName2, strChecksum2, longFilesThatWereNotFound, boolFileExists, verifyHashesListFiles))
+                                                                                                          If boolFileExists Then intFileCount += 1
                                                                                                       End If
-
-                                                                                                      listOfDataGridRows.Add(CreateMyDataGridRowForHashFileEntry(strFileName2, strChecksum2, longFilesThatWereNotFound, boolFileExists, verifyHashesListFiles))
-                                                                                                      If boolFileExists Then intFileCount += 1
                                                                                                   End If
-
-                                                                                                  regExMatchObject = Nothing
-                                                                                              End If
+                                                                                              End SyncLock
                                                                                           End Sub)
 
                                                      MyInvoke(Sub()
