@@ -76,15 +76,15 @@ Namespace FileAssociation
             End Using
         End Sub
 
-        Public Sub DeleteAssociationWithAllFiles() '
+        Public Sub DeleteAssociationWithAllFiles()
             Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell", True)
-                selectedKey.DeleteSubKeyTree("Compare Two Files")
-                selectedKey.DeleteSubKeyTree("Hash with Hasher")
-                selectedKey.DeleteSubKeyTree("Verify against known hash with Hasher")
+                If selectedKey.OpenSubKey("Compare Two Files") IsNot Nothing Then selectedKey.DeleteSubKeyTree("Compare Two Files")
+                If selectedKey.OpenSubKey("Hash with Hasher") IsNot Nothing Then selectedKey.DeleteSubKeyTree("Hash with Hasher")
+                If selectedKey.OpenSubKey("Verify against known hash with Hasher") IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify against known hash with Hasher")
             End Using
 
             Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\Folder\Shell", True)
-                selectedKey.DeleteSubKeyTree("Hash with Hasher")
+                If selectedKey.OpenSubKey("Hash with Hasher") IsNot Nothing Then selectedKey.DeleteSubKeyTree("Hash with Hasher")
             End Using
         End Sub
 
