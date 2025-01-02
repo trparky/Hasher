@@ -391,9 +391,8 @@ Public Class Form1
                                                              End SyncLock
 
                                                              If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then
-                                                                 item.Cells(3).Value = strCurrentlyBeingProcessed
-
                                                                  MyInvoke(Sub()
+                                                                              item.Cells(3).Value = strCurrentlyBeingProcessed
                                                                               fileCountPercentage = index / listFiles.Rows.Count * 100
                                                                               lblProcessingFile.Text = $"Now processing file ""{New IO.FileInfo(myItem.FileName).Name}""."
                                                                               lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Rows.Count)
@@ -404,21 +403,25 @@ Public Class Form1
                                                                  computeStopwatch = Stopwatch.StartNew
 
                                                                  If DoChecksumWithAttachedSubRoutine(myItem.FileName, allTheHashes, subRoutine, exceptionObject) Then
-                                                                     myItem.AllTheHashes = allTheHashes
-                                                                     strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
-                                                                     myItem.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
-                                                                     myItem.ComputeTime = computeStopwatch.Elapsed
-                                                                     myItem.Cells(3).Value = TimespanToHMS(myItem.ComputeTime)
-                                                                     myItem.Hash = strChecksum
-                                                                     myItem.BoolExceptionOccurred = False
-                                                                     myItem.StrCrashData = Nothing
+                                                                     Invoke(Sub()
+                                                                                myItem.AllTheHashes = allTheHashes
+                                                                                strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
+                                                                                myItem.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+                                                                                myItem.ComputeTime = computeStopwatch.Elapsed
+                                                                                myItem.Cells(3).Value = TimespanToHMS(myItem.ComputeTime)
+                                                                                myItem.Hash = strChecksum
+                                                                                myItem.BoolExceptionOccurred = False
+                                                                                myItem.StrCrashData = Nothing
+                                                                            End Sub)
                                                                  Else
-                                                                     myItem.Cells(2).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                     myItem.Cells(3).Value = ""
-                                                                     myItem.ComputeTime = Nothing
-                                                                     myItem.BoolExceptionOccurred = True
-                                                                     myItem.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
-                                                                     longErroredFiles += 1
+                                                                     Invoke(Sub()
+                                                                                myItem.Cells(2).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                                myItem.Cells(3).Value = ""
+                                                                                myItem.ComputeTime = Nothing
+                                                                                myItem.BoolExceptionOccurred = True
+                                                                                myItem.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                                longErroredFiles += 1
+                                                                            End Sub)
                                                                  End If
 
                                                                  MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item, False))
