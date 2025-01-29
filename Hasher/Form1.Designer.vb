@@ -188,6 +188,7 @@ Partial Class Form1
         Me.btnRemoveFileAssociations = New System.Windows.Forms.Button()
         Me.lblFileCountOnHashIndividualFilesTab = New System.Windows.Forms.Label()
         Me.chkHideCheckForUpdatesButton = New System.Windows.Forms.CheckBox()
+        Me.ChkAutoScroll = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
@@ -1430,6 +1431,7 @@ Partial Class Form1
         'tabSettings
         '
         Me.tabSettings.BackColor = System.Drawing.SystemColors.Control
+        Me.tabSettings.Controls.Add(Me.ChkAutoScroll)
         Me.tabSettings.Controls.Add(Me.chkHideCheckForUpdatesButton)
         Me.tabSettings.Controls.Add(Me.btnRemoveSystemLevelFileAssociations)
         Me.tabSettings.Controls.Add(Me.chkClearBeforeTransferringFromVerifyToHash)
@@ -1927,6 +1929,17 @@ Partial Class Form1
         Me.chkHideCheckForUpdatesButton.UseVisualStyleBackColor = True
         Me.chkHideCheckForUpdatesButton.Visible = False
         '
+        'ChkAutoScroll
+        '
+        Me.ChkAutoScroll.AutoSize = True
+        Me.ChkAutoScroll.Location = New System.Drawing.Point(15, 383)
+        Me.ChkAutoScroll.Name = "ChkAutoScroll"
+        Me.ChkAutoScroll.Size = New System.Drawing.Size(77, 17)
+        Me.ChkAutoScroll.TabIndex = 55
+        Me.ChkAutoScroll.Text = "Auto Scroll"
+        Me.ChkAutoScroll.UseVisualStyleBackColor = True
+        Me.ToolTip.SetToolTip(Me.ChkAutoScroll, "Looks pretty but will cause performance degradations.")
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -2137,4 +2150,5 @@ Partial Class Form1
     Friend WithEvents btnRemoveSystemLevelFileAssociations As Button
     Friend WithEvents lblFileCountOnHashIndividualFilesTab As Label
     Friend WithEvents chkHideCheckForUpdatesButton As CheckBox
+    Friend WithEvents ChkAutoScroll As CheckBox
 End Class

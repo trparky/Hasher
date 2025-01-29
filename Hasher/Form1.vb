@@ -2,6 +2,7 @@
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
+Imports Microsoft.VisualBasic.Logging
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -272,6 +273,10 @@ Public Class Form1
         End Select
     End Function
 
+    Private Sub ChkAutoScroll_Click(sender As Object, e As EventArgs) Handles ChkAutoScroll.Click
+        My.Settings.boolAutoScroll = ChkAutoScroll.Checked
+    End Sub
+
     Private Sub BtnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
         If btnComputeHash.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
             If workingThread IsNot Nothing Then
@@ -421,7 +426,10 @@ Public Class Form1
                                                                      longErroredFiles += 1
                                                                  End If
 
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item, False))
+                                                                 MyInvoke(Sub()
+                                                                              If ChkAutoScroll.Checked Then listFiles.FirstDisplayedScrollingRowIndex = myItem.Index
+                                                                              UpdateDataGridViewRow(itemOnGUI, item, False)
+                                                                          End Sub)
                                                              End If
                                                          End If
 
@@ -993,6 +1001,7 @@ Public Class Form1
         roundPercentages.Value = My.Settings.roundPercentages
         btnSetRoundFileSizes.Enabled = False
         btnSetRoundPercentages.Enabled = False
+        ChkAutoScroll.Checked = My.Settings.boolAutoScroll
         Location = VerifyWindowLocation(My.Settings.windowLocation, Me)
 
         If Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\Classes\.md5\Shell\Verify with Hasher", False) Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
@@ -1445,7 +1454,10 @@ Public Class Form1
                                                                  longFilesThatWereNotFound += 1
                                                              End If
 
-                                                             MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
+                                                             MyInvoke(Sub()
+                                                                          If ChkAutoScroll.Checked Then verifyHashesListFiles.FirstDisplayedScrollingRowIndex = item.Index
+                                                                          UpdateDataGridViewRow(itemOnGUI, item)
+                                                                      End Sub)
 
                                                              index += 1
                                                          Else
