@@ -668,6 +668,7 @@ Partial Class Form1
         Me.listFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.listFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFileName, Me.colFileSize, Me.colChecksum, Me.colComputeTime})
         Me.listFiles.ContextMenuStrip = Me.listFilesContextMenu
+        Me.listFiles.DefaultCellStyle.WrapMode = DataGridViewTriState.True
         Me.listFiles.Location = New System.Drawing.Point(160, 20)
         Me.listFiles.Name = "listFiles"
         Me.listFiles.ReadOnly = True
@@ -840,6 +841,7 @@ Partial Class Form1
         Me.verifyHashesListFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2, Me.colNewHash})
         Me.verifyHashesListFiles.ContextMenuStrip = Me.verifyListFilesContextMenu
+        Me.verifyHashesListFiles.DefaultCellStyle.WrapMode = DataGridViewTriState.True
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(163, 28)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
         Me.verifyHashesListFiles.ReadOnly = True
