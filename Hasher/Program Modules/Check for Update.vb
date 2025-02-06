@@ -128,18 +128,6 @@ Namespace checkForUpdates
             httpHelper.AddHTTPHeader("PROGRAM_VERSION", versionString)
             httpHelper.AddHTTPHeader("OPERATING_SYSTEM", GetFullOSVersionString())
 
-            httpHelper.SetURLPreProcessor = Function(strURLInput As String) As String
-                                                Try
-                                                    If Not strURLInput.Trim.StartsWith("http", StringComparison.OrdinalIgnoreCase) Then
-                                                        Return $"https://{strURLInput}"
-                                                    Else
-                                                        Return strURLInput
-                                                    End If
-                                                Catch ex As Exception
-                                                    Return strURLInput
-                                                End Try
-                                            End Function
-
             Return httpHelper
         End Function
 
