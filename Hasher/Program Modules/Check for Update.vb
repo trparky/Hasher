@@ -23,9 +23,9 @@ Namespace checkForUpdates
 
     Class CheckForUpdatesClass
         ' Change these variables whenever you import this module into a program's code to handle software updates.
-        Private Const updaterURL As String = "www.toms-world.org/download/updater.exe"
-        Private Const updaterSHA256URL As String = "www.toms-world.org/download/updater.exe.sha2"
-        Private Const programUpdateCheckerXMLFile As String = "www.toms-world.org/updates/hasher_update.xml"
+        Private Const updaterURL As String = "https://www.toms-world.org/download/updater.exe"
+        Private Const updaterSHA256URL As String = "https://www.toms-world.org/download/updater.exe.sha2"
+        Private Const programUpdateCheckerXMLFile As String = "https://www.toms-world.org/updates/hasher_update.xml"
         Private Const programCode As String = "hasher"
         ' Change these variables whenever you import this module into a program's code to handle software updates.
 
