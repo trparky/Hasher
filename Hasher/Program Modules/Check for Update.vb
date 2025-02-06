@@ -127,7 +127,6 @@ Namespace checkForUpdates
             httpHelper.AddHTTPHeader("PROGRAM_NAME", strProgramName)
             httpHelper.AddHTTPHeader("PROGRAM_VERSION", versionString)
             httpHelper.AddHTTPHeader("OPERATING_SYSTEM", GetFullOSVersionString())
-            If File.Exists("dontcount") Then httpHelper.AddHTTPCookie("dontcount", "True", "www.toms-world.org", False)
 
             httpHelper.SetURLPreProcessor = Function(strURLInput As String) As String
                                                 Try
