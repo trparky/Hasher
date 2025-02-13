@@ -2,6 +2,7 @@
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
+Imports Microsoft.VisualBasic.Logging
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -99,7 +100,7 @@ Public Class Form1
                 .BoolValidHash = item.BoolValidHash
                 .StrCrashData = item.StrCrashData
                 .BoolExceptionOccurred = item.BoolExceptionOccurred
-                If boolUpdateColor Then .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor, .ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor)}
+                If boolUpdateColor Then .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor, .ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor), .WrapMode = DataGridViewTriState.True}
             End If
         End With
     End Sub
@@ -186,6 +187,8 @@ Public Class Form1
             .Cells(1).Value = FileSizeToHumanSize(itemToBeAdded.FileSize)
             .Cells(2).Value = strWaitingToBeProcessed
             .Cells(3).Value = ""
+            .DefaultCellStyle.Padding = New Padding(0, 2, 0, 2)
+            .DefaultCellStyle.WrapMode = DataGridViewTriState.True
         End With
 
         Return itemToBeAdded
@@ -202,6 +205,7 @@ Public Class Form1
             .Cells(1).Value = FileSizeToHumanSize(itemToBeAdded.FileSize)
             .Cells(2).Value = strWaitingToBeProcessed
             .Cells(3).Value = ""
+            .DefaultCellStyle.Padding = New Padding(0, 2, 0, 2)
         End With
 
         Return itemToBeAdded
@@ -218,6 +222,7 @@ Public Class Form1
             .Cells(1).Value = FileSizeToHumanSize(itemToBeAdded.FileSize)
             .Cells(2).Value = strWaitingToBeProcessed
             .Cells(3).Value = ""
+            .DefaultCellStyle.Padding = New Padding(0, 2, 0, 2)
         End With
 
         Return itemToBeAdded
@@ -271,6 +276,10 @@ Public Class Form1
                 Return Nothing
         End Select
     End Function
+
+    Private Sub ChkAutoScroll_Click(sender As Object, e As EventArgs) Handles ChkAutoScroll.Click
+        My.Settings.boolAutoScroll = ChkAutoScroll.Checked
+    End Sub
 
     Private Sub BtnComputeHash_Click(sender As Object, e As EventArgs) Handles btnComputeHash.Click
         If btnComputeHash.Text = "Abort Processing" AndAlso MsgBox("Are you sure you want to abort processing?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText) = MsgBoxResult.Yes Then
@@ -391,9 +400,8 @@ Public Class Form1
                                                              End SyncLock
 
                                                              If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then
-                                                                 item.Cells(3).Value = strCurrentlyBeingProcessed
-
                                                                  MyInvoke(Sub()
+                                                                              item.Cells(3).Value = strCurrentlyBeingProcessed
                                                                               fileCountPercentage = index / listFiles.Rows.Count * 100
                                                                               lblProcessingFile.Text = $"Now processing file ""{New IO.FileInfo(myItem.FileName).Name}""."
                                                                               lblIndividualFilesStatusProcessingFile.Text = GenerateProcessingFileString(index, listFiles.Rows.Count)
@@ -404,24 +412,31 @@ Public Class Form1
                                                                  computeStopwatch = Stopwatch.StartNew
 
                                                                  If DoChecksumWithAttachedSubRoutine(myItem.FileName, allTheHashes, subRoutine, exceptionObject) Then
-                                                                     myItem.AllTheHashes = allTheHashes
-                                                                     strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
-                                                                     myItem.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
-                                                                     myItem.ComputeTime = computeStopwatch.Elapsed
-                                                                     myItem.Cells(3).Value = TimespanToHMS(myItem.ComputeTime)
-                                                                     myItem.Hash = strChecksum
-                                                                     myItem.BoolExceptionOccurred = False
-                                                                     myItem.StrCrashData = Nothing
+                                                                     Invoke(Sub()
+                                                                                myItem.AllTheHashes = allTheHashes
+                                                                                strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
+                                                                                myItem.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+                                                                                myItem.ComputeTime = computeStopwatch.Elapsed
+                                                                                myItem.Cells(3).Value = TimespanToHMS(myItem.ComputeTime)
+                                                                                myItem.Hash = strChecksum
+                                                                                myItem.BoolExceptionOccurred = False
+                                                                                myItem.StrCrashData = Nothing
+                                                                            End Sub)
                                                                  Else
-                                                                     myItem.Cells(2).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                     myItem.Cells(3).Value = ""
-                                                                     myItem.ComputeTime = Nothing
-                                                                     myItem.BoolExceptionOccurred = True
-                                                                     myItem.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
-                                                                     longErroredFiles += 1
+                                                                     Invoke(Sub()
+                                                                                myItem.Cells(2).Value = If(exceptionObject.GetType IsNot Nothing, $"(An error occurred while calculating checksum, {exceptionObject.GetType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                                myItem.Cells(3).Value = ""
+                                                                                myItem.ComputeTime = Nothing
+                                                                                myItem.BoolExceptionOccurred = True
+                                                                                myItem.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                                longErroredFiles += 1
+                                                                            End Sub)
                                                                  End If
 
-                                                                 MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item, False))
+                                                                 MyInvoke(Sub()
+                                                                              If ChkAutoScroll.Checked Then listFiles.FirstDisplayedScrollingRowIndex = myItem.Index
+                                                                              UpdateDataGridViewRow(itemOnGUI, item, False)
+                                                                          End Sub)
                                                              End If
                                                          End If
 
@@ -993,7 +1008,11 @@ Public Class Form1
         roundPercentages.Value = My.Settings.roundPercentages
         btnSetRoundFileSizes.Enabled = False
         btnSetRoundPercentages.Enabled = False
+        ChkAutoScroll.Checked = My.Settings.boolAutoScroll
         Location = VerifyWindowLocation(My.Settings.windowLocation, Me)
+
+        listFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders
+        verifyHashesListFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders
 
         If Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\Classes\.md5\Shell\Verify with Hasher", False) Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
         If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher", False) IsNot Nothing Then btnAssociate.Enabled = False
@@ -1053,6 +1072,8 @@ Public Class Form1
                                                      boolBackgroundThreadWorking = True
 
                                                      MyInvoke(Sub()
+                                                                  listFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
+                                                                  verifyHashesListFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
                                                                   btnAddFilesInFolder.Text = "Abort Adding Files"
                                                                   btnAddIndividualFiles.Enabled = False
                                                                   btnRemoveSelectedFiles.Enabled = False
@@ -1143,6 +1164,8 @@ Public Class Form1
                                                                                                 btnAddIndividualFiles.Enabled = True
                                                                                                 btnRemoveSelectedFiles.Enabled = True
                                                                                                 btnRemoveAllFiles.Enabled = True
+                                                                                                listFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders
+                                                                                                verifyHashesListFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders
 
                                                                                                 If listFiles.Rows.Count <> 0 Then
                                                                                                     radioSHA256.Enabled = True
@@ -1206,12 +1229,14 @@ Public Class Form1
                 .Cells(1).Value = ""
                 .Cells(2).Value = "Doesn't Exist"
                 .Cells(3).Value = ""
-                .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = My.Settings.fileNotFoundColor}
+                .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = My.Settings.fileNotFoundColor, .WrapMode = DataGridViewTriState.True}
                 .BoolFileExists = False
                 .MyColor = Color.LightGray
                 longFilesThatWereNotFound += 1
                 boolFileExists = True
             End If
+
+            .DefaultCellStyle.Padding = New Padding(0, 2, 0, 2)
         End With
 
         Return MyDataGridRow
@@ -1445,7 +1470,10 @@ Public Class Form1
                                                                  longFilesThatWereNotFound += 1
                                                              End If
 
-                                                             MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
+                                                             MyInvoke(Sub()
+                                                                          If ChkAutoScroll.Checked Then verifyHashesListFiles.FirstDisplayedScrollingRowIndex = item.Index
+                                                                          UpdateDataGridViewRow(itemOnGUI, item)
+                                                                      End Sub)
 
                                                              index += 1
                                                          Else
@@ -2190,6 +2218,13 @@ Public Class Form1
 
     Private Sub Form1_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
         My.Settings.windowSize = Size
+        listFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders
+        verifyHashesListFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders
+    End Sub
+
+    Private Sub Form1_ResizeBegin(sender As Object, e As EventArgs) Handles Me.ResizeBegin
+        listFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
+        verifyHashesListFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
     End Sub
 
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles Me.Resize
@@ -2624,6 +2659,7 @@ Public Class Form1
                                                                .Cells(3).Value = TimespanToHMS(item.ComputeTime)
                                                                .AllTheHashes = item.AllTheHashes
                                                                .Hash = strHashString
+                                                               .DefaultCellStyle.Padding = New Padding(0, 2, 0, 2)
                                                            End With
 
                                                            listOfDataGridRows.Add(itemToBeAdded)
@@ -2837,6 +2873,7 @@ Public Class Form1
                                                                  item.Cells(3).Value = ""
                                                                  item.Cells(4).Value = strWaitingToBeProcessed
                                                                  item.MyColor = Color.FromKnownColor(KnownColor.Window)
+                                                                 item.DefaultCellStyle.Padding = New Padding(0, 2, 0, 2)
 
                                                                  MyInvoke(Sub() UpdateDataGridViewRow(itemOnGUI, item))
 
