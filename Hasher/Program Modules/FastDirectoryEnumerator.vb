@@ -211,7 +211,7 @@ Namespace FastDirectoryEnumerator
                         Catch
                         End Try
                     End If
-                    If m_currentContext.SubdirectoriesToProcess IsNot Nothing AndAlso m_currentContext.SubdirectoriesToProcess.Count > 0 Then
+                    If m_currentContext.SubdirectoriesToProcess IsNot Nothing AndAlso m_currentContext.SubdirectoriesToProcess.Any() Then
                         Dim subDir As String = m_currentContext.SubdirectoriesToProcess.Pop()
                         m_contextStack.Push(m_currentContext)
                         m_path = subDir
@@ -219,7 +219,7 @@ Namespace FastDirectoryEnumerator
                         m_currentContext = New SearchContext(m_path)
                         flag = MoveNext()
                         Return flag
-                    ElseIf m_contextStack.Count > 0 Then
+                    ElseIf m_contextStack.Any() Then
                         m_currentContext = m_contextStack.Pop()
                         m_path = m_currentContext.Path
                         If m_hndFindFile IsNot Nothing Then
