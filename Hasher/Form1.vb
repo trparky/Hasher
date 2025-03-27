@@ -1110,7 +1110,7 @@ Public Class Form1
                                                                                                              ProgressForm.SetTaskbarProgressBarValue(percentage)
                                                                                                              lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
                                                                                                          End Sub)
-                                                                                                If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
+                                                                                                If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) AndAlso (filedata.Attributes And IO.FileAttributes.Hidden) <> IO.FileAttributes.Hidden Then
                                                                                                     If IO.File.Exists(filedata.Path) Then collectionOfDataGridRows.Add(CreateFilesDataGridObject(filedata.Path, filedata.Size, listFiles))
                                                                                                 End If
                                                                                             End SyncLock
