@@ -1435,9 +1435,8 @@ Public Class Form1
                                                              strChecksum = item.Hash
                                                              strFileName = item.FileName
 
-                                                             item.Cells(3).Value = strCurrentlyBeingProcessed
-
                                                              MyInvoke(Sub()
+                                                                          item.Cells(3).Value = strCurrentlyBeingProcessed
                                                                           lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
                                                                           UpdateDataGridViewRow(itemOnGUI, item, False)
                                                                       End Sub)
@@ -1449,34 +1448,40 @@ Public Class Form1
                                                                  item.AllTheHashes = allTheHashes
 
                                                                  If strChecksum.Equals(item.Hash, StringComparison.OrdinalIgnoreCase) Then
-                                                                     item.ColorType = ColorType.Valid
-                                                                     item.MyColor = validColor
-                                                                     item.Cells(2).Value = "Valid Checksum"
-                                                                     item.ComputeTime = computeStopwatch.Elapsed
-                                                                     item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                     item.Cells(4).Value = strDisplayValidChecksumString
-                                                                     longFilesThatPassedVerification += 1
-                                                                     item.BoolValidHash = True
+                                                                     MyInvoke(Sub()
+                                                                                  item.ColorType = ColorType.Valid
+                                                                                  item.MyColor = validColor
+                                                                                  item.Cells(2).Value = "Valid Checksum"
+                                                                                  item.ComputeTime = computeStopwatch.Elapsed
+                                                                                  item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
+                                                                                  item.Cells(4).Value = strDisplayValidChecksumString
+                                                                                  longFilesThatPassedVerification += 1
+                                                                                  item.BoolValidHash = True
+                                                                              End Sub)
                                                                  Else
-                                                                     item.ColorType = ColorType.NotValid
-                                                                     item.MyColor = notValidColor
-                                                                     item.Cells(2).Value = "Incorrect Checksum"
-                                                                     item.ComputeTime = computeStopwatch.Elapsed
-                                                                     item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                     item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
-                                                                     longFilesThatDidNotPassVerification += 1
-                                                                     item.BoolValidHash = False
+                                                                     MyInvoke(Sub()
+                                                                                  item.ColorType = ColorType.NotValid
+                                                                                  item.MyColor = notValidColor
+                                                                                  item.Cells(2).Value = "Incorrect Checksum"
+                                                                                  item.ComputeTime = computeStopwatch.Elapsed
+                                                                                  item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
+                                                                                  item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
+                                                                                  longFilesThatDidNotPassVerification += 1
+                                                                                  item.BoolValidHash = False
+                                                                              End Sub)
                                                                  End If
 
                                                                  item.BoolExceptionOccurred = False
                                                                  item.StrCrashData = Nothing
                                                              Else
-                                                                 item.ColorType = ColorType.NotFound
-                                                                 item.MyColor = fileNotFoundColor
-                                                                 item.Cells(2).Value = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                 item.BoolExceptionOccurred = True
-                                                                 item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
-                                                                 longFilesThatWereNotFound += 1
+                                                                 MyInvoke(Sub()
+                                                                              item.ColorType = ColorType.NotFound
+                                                                              item.MyColor = fileNotFoundColor
+                                                                              item.Cells(2).Value = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                              item.BoolExceptionOccurred = True
+                                                                              item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                              longFilesThatWereNotFound += 1
+                                                                          End Sub)
                                                              End If
 
                                                              MyInvoke(Sub()
