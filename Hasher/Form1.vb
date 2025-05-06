@@ -100,7 +100,16 @@ Public Class Form1
                 .BoolValidHash = item.BoolValidHash
                 .StrCrashData = item.StrCrashData
                 .BoolExceptionOccurred = item.BoolExceptionOccurred
-                If boolUpdateColor Then .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor, .ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor), .WrapMode = DataGridViewTriState.True}
+
+                If boolUpdateColor Then
+                    Dim currentStyle As DataGridViewCellStyle = item.DefaultCellStyle
+
+                    currentStyle.BackColor = item.MyColor
+                    currentStyle.ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor)
+                    currentStyle.WrapMode = DataGridViewTriState.True
+
+                    .DefaultCellStyle = currentStyle
+                End If
             End If
         End With
     End Sub
