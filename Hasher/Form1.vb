@@ -100,6 +100,7 @@ Public Class Form1
                 .BoolValidHash = item.BoolValidHash
                 .StrCrashData = item.StrCrashData
                 .BoolExceptionOccurred = item.BoolExceptionOccurred
+                .DefaultCellStyle.Padding = item.DefaultCellStyle.Padding
 
                 If boolUpdateColor Then
                     Dim currentStyle As DataGridViewCellStyle = item.DefaultCellStyle
