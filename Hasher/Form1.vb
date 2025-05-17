@@ -1340,8 +1340,10 @@ Public Class Form1
 
                                                      If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= $" ({MyToString(newDataInFileArray.Count)} {If(newDataInFileArray.Count = 1, "entry", "entries")} in hash file)")
 
-                                                     Parallel.ForEach(newDataInFileArray, Sub(strLineInFile2 As String)
+                                                     Parallel.ForEach(newDataInFileArray, Sub(strLineInFile2 As String, state As ParallelLoopState)
                                                                                               SyncLock listOfDataGridRows
+                                                                                                  If boolAbortThread Then state.Break()
+
                                                                                                   Dim strChecksum2, strFileName2 As String
                                                                                                   Dim boolFileExists As Boolean
 
@@ -1374,6 +1376,8 @@ Public Class Form1
                                                                                                   End If
                                                                                               End SyncLock
                                                                                           End Sub)
+
+                                                     If boolAbortThread Then Throw New MyThreadAbortException
 
                                                      MyInvoke(Sub()
                                                                   verifyHashesListFiles.Rows.AddRange(listOfDataGridRows.ToArray)
