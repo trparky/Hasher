@@ -31,6 +31,7 @@ Public Class Checksums
             Using md5Engine As New MD5CryptoServiceProvider(), sha160Engine As New SHA1CryptoServiceProvider(), sha256Engine As New SHA256CryptoServiceProvider(), sha384Engine As New SHA384CryptoServiceProvider(), sha512Engine As New SHA512CryptoServiceProvider()
                 ' Read data from file in chunks and update hash engines
                 Do
+                    If boolAbortThread Then Throw New MyThreadAbortException
                     intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length)
                     If intBytesRead <= 0 Then Exit Do
 

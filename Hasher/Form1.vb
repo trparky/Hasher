@@ -2,7 +2,6 @@
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
-Imports Microsoft.VisualBasic.Logging
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -100,7 +99,17 @@ Public Class Form1
                 .BoolValidHash = item.BoolValidHash
                 .StrCrashData = item.StrCrashData
                 .BoolExceptionOccurred = item.BoolExceptionOccurred
-                If boolUpdateColor Then .DefaultCellStyle = New DataGridViewCellStyle() With {.BackColor = item.MyColor, .ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor), .WrapMode = DataGridViewTriState.True}
+                .DefaultCellStyle.Padding = item.DefaultCellStyle.Padding
+
+                If boolUpdateColor Then
+                    Dim currentStyle As DataGridViewCellStyle = item.DefaultCellStyle
+
+                    currentStyle.BackColor = item.MyColor
+                    currentStyle.ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor)
+                    currentStyle.WrapMode = DataGridViewTriState.True
+
+                    .DefaultCellStyle = currentStyle
+                End If
             End If
         End With
     End Sub
@@ -912,7 +921,7 @@ Public Class Form1
         propInfo?.SetValue(verifyHashesListFiles, True, Nothing)
         propInfo?.SetValue(listFiles, True, Nothing)
 
-        If parsedArguments.Count > 0 Then
+        If parsedArguments.Any() Then
             If parsedArguments.ContainsKey("addfile") Or parsedArguments.ContainsKey("comparefile") Then
                 If boolNamedPipeServerStarted Then
                     ' This instance of the program is the first executed instance so it's the host of the named pipe server.
@@ -1110,7 +1119,7 @@ Public Class Form1
                                                                                                              ProgressForm.SetTaskbarProgressBarValue(percentage)
                                                                                                              lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
                                                                                                          End Sub)
-                                                                                                If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) Then
+                                                                                                If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) AndAlso (filedata.Attributes And IO.FileAttributes.Hidden) <> IO.FileAttributes.Hidden Then
                                                                                                     If IO.File.Exists(filedata.Path) Then collectionOfDataGridRows.Add(CreateFilesDataGridObject(filedata.Path, filedata.Size, listFiles))
                                                                                                 End If
                                                                                             End SyncLock
@@ -1331,8 +1340,10 @@ Public Class Form1
 
                                                      If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= $" ({MyToString(newDataInFileArray.Count)} {If(newDataInFileArray.Count = 1, "entry", "entries")} in hash file)")
 
-                                                     Parallel.ForEach(newDataInFileArray, Sub(strLineInFile2 As String)
+                                                     Parallel.ForEach(newDataInFileArray, Sub(strLineInFile2 As String, state As ParallelLoopState)
                                                                                               SyncLock listOfDataGridRows
+                                                                                                  If boolAbortThread Then state.Break()
+
                                                                                                   Dim strChecksum2, strFileName2 As String
                                                                                                   Dim boolFileExists As Boolean
 
@@ -1365,6 +1376,8 @@ Public Class Form1
                                                                                                   End If
                                                                                               End SyncLock
                                                                                           End Sub)
+
+                                                     If boolAbortThread Then Throw New MyThreadAbortException
 
                                                      MyInvoke(Sub()
                                                                   verifyHashesListFiles.Rows.AddRange(listOfDataGridRows.ToArray)
@@ -1426,9 +1439,8 @@ Public Class Form1
                                                              strChecksum = item.Hash
                                                              strFileName = item.FileName
 
-                                                             item.Cells(3).Value = strCurrentlyBeingProcessed
-
                                                              MyInvoke(Sub()
+                                                                          item.Cells(3).Value = strCurrentlyBeingProcessed
                                                                           lblVerifyHashStatus.Text = $"Now processing file ""{New IO.FileInfo(strFileName).Name}""."
                                                                           UpdateDataGridViewRow(itemOnGUI, item, False)
                                                                       End Sub)
@@ -1440,34 +1452,40 @@ Public Class Form1
                                                                  item.AllTheHashes = allTheHashes
 
                                                                  If strChecksum.Equals(item.Hash, StringComparison.OrdinalIgnoreCase) Then
-                                                                     item.ColorType = ColorType.Valid
-                                                                     item.MyColor = validColor
-                                                                     item.Cells(2).Value = "Valid Checksum"
-                                                                     item.ComputeTime = computeStopwatch.Elapsed
-                                                                     item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                     item.Cells(4).Value = strDisplayValidChecksumString
-                                                                     longFilesThatPassedVerification += 1
-                                                                     item.BoolValidHash = True
+                                                                     MyInvoke(Sub()
+                                                                                  item.ColorType = ColorType.Valid
+                                                                                  item.MyColor = validColor
+                                                                                  item.Cells(2).Value = "Valid Checksum"
+                                                                                  item.ComputeTime = computeStopwatch.Elapsed
+                                                                                  item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
+                                                                                  item.Cells(4).Value = strDisplayValidChecksumString
+                                                                                  longFilesThatPassedVerification += 1
+                                                                                  item.BoolValidHash = True
+                                                                              End Sub)
                                                                  Else
-                                                                     item.ColorType = ColorType.NotValid
-                                                                     item.MyColor = notValidColor
-                                                                     item.Cells(2).Value = "Incorrect Checksum"
-                                                                     item.ComputeTime = computeStopwatch.Elapsed
-                                                                     item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                     item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
-                                                                     longFilesThatDidNotPassVerification += 1
-                                                                     item.BoolValidHash = False
+                                                                     MyInvoke(Sub()
+                                                                                  item.ColorType = ColorType.NotValid
+                                                                                  item.MyColor = notValidColor
+                                                                                  item.Cells(2).Value = "Incorrect Checksum"
+                                                                                  item.ComputeTime = computeStopwatch.Elapsed
+                                                                                  item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
+                                                                                  item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
+                                                                                  longFilesThatDidNotPassVerification += 1
+                                                                                  item.BoolValidHash = False
+                                                                              End Sub)
                                                                  End If
 
                                                                  item.BoolExceptionOccurred = False
                                                                  item.StrCrashData = Nothing
                                                              Else
-                                                                 item.ColorType = ColorType.NotFound
-                                                                 item.MyColor = fileNotFoundColor
-                                                                 item.Cells(2).Value = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
-                                                                 item.BoolExceptionOccurred = True
-                                                                 item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
-                                                                 longFilesThatWereNotFound += 1
+                                                                 MyInvoke(Sub()
+                                                                              item.ColorType = ColorType.NotFound
+                                                                              item.MyColor = fileNotFoundColor
+                                                                              item.Cells(2).Value = If(exType IsNot Nothing, $"(An error occurred while calculating checksum, {exType})", "(An error occurred while calculating checksum, unknown exception type)")
+                                                                              item.BoolExceptionOccurred = True
+                                                                              item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
+                                                                              longFilesThatWereNotFound += 1
+                                                                          End Sub)
                                                              End If
 
                                                              MyInvoke(Sub()
