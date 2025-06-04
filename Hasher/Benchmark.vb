@@ -33,16 +33,16 @@
                                                      Dim percentage As Double
                                                      Dim strChecksum As String = Nothing
                                                      Dim index As Integer = 1
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
-                                                                                        Try
-                                                                                            Invoke(Sub()
-                                                                                                       percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                       ProgressBar.Value = percentage
-                                                                                                       lblStatus.Text = $"{strFileNameLine}{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({Math.Round(percentage, byteRoundPercentages)}%) have been processed with a {intBufferSize} MB buffer size."
-                                                                                                   End Sub)
-                                                                                        Catch ex As Exception
-                                                                                        End Try
-                                                                                    End Sub
+                                                     Dim subRoutine As New ChecksumStatusUpdaterDelegate(Sub(size As Long, totalBytesRead As Long)
+                                                                                                             Try
+                                                                                                                 Invoke(Sub()
+                                                                                                                            percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                                            ProgressBar.Value = percentage
+                                                                                                                            lblStatus.Text = $"{strFileNameLine}{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({Math.Round(percentage, byteRoundPercentages)}%) have been processed with a {intBufferSize} MB buffer size."
+                                                                                                                        End Sub)
+                                                                                                             Catch ex As Exception
+                                                                                                             End Try
+                                                                                                         End Sub)
 
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim computeStopwatch As Stopwatch

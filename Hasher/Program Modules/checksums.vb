@@ -1,17 +1,19 @@
 Imports System.Security.Cryptography
 
 Public Class Checksums
-    Private ReadOnly checksumStatusUpdater As [Delegate]
+    Private ReadOnly checksumStatusUpdater As ChecksumStatusUpdaterDelegate
 
-    ''' <summary>This allows you to set up a function to be run while your checksum is being processed. This function can be used to update things on the GUI during a checksum.</summary>
+    ''' <summary>
+    ''' This allows you to set up a function to be run while your checksum is being processed. This function can be used to update things on the GUI during a checksum.
+    ''' </summary>
     ''' <example>
     ''' A VB.NET Example...
-    ''' Dim checksums As New checksum(Function(ByVal checksumStatusDetails As checksumStatusDetails)
-    ''' End Function)
+    ''' Dim checksums As New Checksums(Sub(ByVal checksumStatusDetails As checksumStatusDetails)
+    ''' End Sub)
     ''' OR A C# Example...
-    ''' checksum checksums = new checksum((checksumStatusDetails checksumStatusDetails) => { });
+    ''' Checksums checksums = new Checksums((checksumStatusDetails checksumStatusDetails) => { });
     ''' </example>
-    Public Sub New(ByRef inputDelegate As [Delegate])
+    Public Sub New(inputDelegate As ChecksumStatusUpdaterDelegate)
         checksumStatusUpdater = inputDelegate
     End Sub
 
@@ -48,8 +50,8 @@ Public Class Checksums
                         longAllReadBytes += intBytesRead
                     End SyncLock
 
-                    ' Call the status updating delegate
-                    checksumStatusUpdater.DynamicInvoke(longFileSize, longTotalBytesRead)
+                    ' Directly invoke the delegate
+                    checksumStatusUpdater(longFileSize, longTotalBytesRead)
 
                     ' Check for thread abort
                     If boolAbortThread Then Throw New MyThreadAbortException()
@@ -82,3 +84,6 @@ Public Structure AllTheHashes
     Public Property Sha384 As String
     Public Property Sha512 As String
 End Structure
+
+' Strongly typed delegate
+Public Delegate Sub ChecksumStatusUpdaterDelegate(fileSize As Long, bytesRead As Long)

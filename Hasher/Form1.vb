@@ -122,7 +122,7 @@ Public Class Form1
         Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
     End Function
 
-    Private Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef allTheHashes As AllTheHashes, subRoutine As [Delegate], ByRef exceptionObject As Exception) As Boolean
+    Private Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef allTheHashes As AllTheHashes, subRoutine As ChecksumStatusUpdaterDelegate, ByRef exceptionObject As Exception) As Boolean
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New Checksums(subRoutine)
@@ -337,30 +337,30 @@ Public Class Form1
                                                          longAllBytes = 0
                                                      End SyncLock
 
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
-                                                                                        Try
-                                                                                            MyInvoke(Sub()
-                                                                                                         percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
-                                                                                                         IndividualFilesProgressBar.Value = percentage
+                                                     Dim subRoutine As New ChecksumStatusUpdaterDelegate(Sub(size As Long, totalBytesRead As Long)
+                                                                                                             Try
+                                                                                                                 MyInvoke(Sub()
+                                                                                                                              percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
+                                                                                                                              IndividualFilesProgressBar.Value = percentage
 
-                                                                                                         SyncLock threadLockingObject
-                                                                                                             allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                             lblHashIndividualFilesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
-                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
-                                                                                                         End SyncLock
+                                                                                                                              SyncLock threadLockingObject
+                                                                                                                                  allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
+                                                                                                                                  lblHashIndividualFilesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                                  If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
+                                                                                                                              End SyncLock
 
-                                                                                                         ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
-                                                                                                         hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
-                                                                                                         lblIndividualFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                              ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
+                                                                                                                              hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
+                                                                                                                              lblIndividualFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
 
-                                                                                                         If chkShowFileProgressInFileList.Checked Then
-                                                                                                             currentItem.Cells(2).Value = lblIndividualFilesStatus.Text
-                                                                                                             itemOnGUI.Cells(2).Value = currentItem.Cells(2).Value
-                                                                                                         End If
-                                                                                                     End Sub)
-                                                                                        Catch ex As Exception
-                                                                                        End Try
-                                                                                    End Sub
+                                                                                                                              If chkShowFileProgressInFileList.Checked Then
+                                                                                                                                  currentItem.Cells(2).Value = lblIndividualFilesStatus.Text
+                                                                                                                                  itemOnGUI.Cells(2).Value = currentItem.Cells(2).Value
+                                                                                                                              End If
+                                                                                                                          End Sub)
+                                                                                                             Catch ex As Exception
+                                                                                                             End Try
+                                                                                                         End Sub)
 
                                                      MyInvoke(Sub()
                                                                   radioMD5.Enabled = False
@@ -1400,27 +1400,27 @@ Public Class Form1
                                                      Dim fileCountPercentage As Double
                                                      Dim exceptionObject As Exception = Nothing
 
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
-                                                                                        Try
-                                                                                            MyInvoke(Sub()
-                                                                                                         percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
-                                                                                                         VerifyHashProgressBar.Value = percentage
-                                                                                                         SyncLock threadLockingObject
-                                                                                                             allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                             lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
-                                                                                                             If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
-                                                                                                         End SyncLock
-                                                                                                         lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
-                                                                                                         If chkShowFileProgressInFileList.Checked Then
-                                                                                                             currentItem.Cells(4).Value = lblProcessingFileVerify.Text
-                                                                                                             itemOnGUI.Cells(4).Value = currentItem.Cells(4).Value
-                                                                                                         End If
-                                                                                                         ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
-                                                                                                         verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
-                                                                                                     End Sub)
-                                                                                        Catch ex As Exception
-                                                                                        End Try
-                                                                                    End Sub
+                                                     Dim subRoutine As New ChecksumStatusUpdaterDelegate(Sub(size As Long, totalBytesRead As Long)
+                                                                                                             Try
+                                                                                                                 MyInvoke(Sub()
+                                                                                                                              percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
+                                                                                                                              VerifyHashProgressBar.Value = percentage
+                                                                                                                              SyncLock threadLockingObject
+                                                                                                                                  allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
+                                                                                                                                  lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                                  If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
+                                                                                                                              End SyncLock
+                                                                                                                              lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                              If chkShowFileProgressInFileList.Checked Then
+                                                                                                                                  currentItem.Cells(4).Value = lblProcessingFileVerify.Text
+                                                                                                                                  itemOnGUI.Cells(4).Value = currentItem.Cells(4).Value
+                                                                                                                              End If
+                                                                                                                              ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
+                                                                                                                              verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
+                                                                                                                          End Sub)
+                                                                                                             Catch ex As Exception
+                                                                                                             End Try
+                                                                                                         End Sub)
 
                                                      longTotalFiles = verifyHashesListFiles.Rows.Count
 
@@ -1892,23 +1892,23 @@ Public Class Form1
                                                      Dim exceptionObject1 As Exception = Nothing
                                                      Dim exceptionObject2 As Exception = Nothing
 
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
-                                                                                        Try
-                                                                                            MyInvoke(Sub()
-                                                                                                         percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
-                                                                                                         compareFilesProgressBar.Value = percentage
-                                                                                                         SyncLock threadLockingObject
-                                                                                                             allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                         End SyncLock
-                                                                                                         ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
-                                                                                                         CompareFilesAllFilesProgress.Value = allBytesPercentage
-                                                                                                         lblCompareFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
-                                                                                                         lblCompareFilesAllFilesStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
-                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
-                                                                                                     End Sub)
-                                                                                        Catch ex As Exception
-                                                                                        End Try
-                                                                                    End Sub
+                                                     Dim subRoutine As New ChecksumStatusUpdaterDelegate(Sub(size As Long, totalBytesRead As Long)
+                                                                                                             Try
+                                                                                                                 MyInvoke(Sub()
+                                                                                                                              percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
+                                                                                                                              compareFilesProgressBar.Value = percentage
+                                                                                                                              SyncLock threadLockingObject
+                                                                                                                                  allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
+                                                                                                                              End SyncLock
+                                                                                                                              ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
+                                                                                                                              CompareFilesAllFilesProgress.Value = allBytesPercentage
+                                                                                                                              lblCompareFilesStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                              lblCompareFilesAllFilesStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                              If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
+                                                                                                                          End Sub)
+                                                                                                             Catch ex As Exception
+                                                                                                             End Try
+                                                                                                         End Sub)
 
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
 
@@ -2156,18 +2156,18 @@ Public Class Form1
 
                                                      Dim strChecksum As String = Nothing
                                                      Dim percentage As Double
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
-                                                                                        Try
-                                                                                            MyInvoke(Sub()
-                                                                                                         percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
-                                                                                                         compareAgainstKnownHashProgressBar.Value = percentage
-                                                                                                         ProgressForm.SetTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
-                                                                                                         lblCompareAgainstKnownHashStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
-                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(percentage, byteRoundPercentages)}% Completed)"
-                                                                                                     End Sub)
-                                                                                        Catch ex As Exception
-                                                                                        End Try
-                                                                                    End Sub
+                                                     Dim subRoutine As New ChecksumStatusUpdaterDelegate(Sub(size As Long, totalBytesRead As Long)
+                                                                                                             Try
+                                                                                                                 MyInvoke(Sub()
+                                                                                                                              percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
+                                                                                                                              compareAgainstKnownHashProgressBar.Value = percentage
+                                                                                                                              ProgressForm.SetTaskbarProgressBarValue(compareAgainstKnownHashProgressBar.Value)
+                                                                                                                              lblCompareAgainstKnownHashStatus.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                              If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(percentage, byteRoundPercentages)}% Completed)"
+                                                                                                                          End Sub)
+                                                                                                             Catch ex As Exception
+                                                                                                             End Try
+                                                                                                         End Sub)
 
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim allTheHashes As AllTheHashes = Nothing
@@ -2873,7 +2873,7 @@ Public Class Form1
 
                                                      Dim strChecksumInFile As String = Nothing
                                                      Dim percentage, allBytesPercentage As Double
-                                                     Dim subRoutine As [Delegate]
+                                                     Dim subRoutine As ChecksumStatusUpdaterDelegate
                                                      Dim computeStopwatch As Stopwatch
                                                      Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
@@ -2918,27 +2918,27 @@ Public Class Form1
                                                              strFileName = item.FileName
 
                                                              If IO.File.Exists(strFileName) Then
-                                                                 subRoutine = Sub(size As Long, totalBytesRead As Long)
-                                                                                  Try
-                                                                                      MyInvoke(Sub()
-                                                                                                   percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
-                                                                                                   VerifyHashProgressBar.Value = percentage
-                                                                                                   SyncLock threadLockingObject
-                                                                                                       allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                       lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
-                                                                                                       If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
-                                                                                                   End SyncLock
-                                                                                                   lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
-                                                                                                   If chkShowFileProgressInFileList.Checked Then
-                                                                                                       currentItem.Cells(4).Value = lblProcessingFileVerify.Text
-                                                                                                       itemOnGUI.Cells(4).Value = currentItem.Cells(4).Value
-                                                                                                   End If
-                                                                                                   ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
-                                                                                                   verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
-                                                                                               End Sub)
-                                                                                  Catch ex As Exception
-                                                                                  End Try
-                                                                              End Sub
+                                                                 subRoutine = New ChecksumStatusUpdaterDelegate(Sub(size As Long, totalBytesRead As Long)
+                                                                                                                    Try
+                                                                                                                        MyInvoke(Sub()
+                                                                                                                                     percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
+                                                                                                                                     VerifyHashProgressBar.Value = percentage
+                                                                                                                                     SyncLock threadLockingObject
+                                                                                                                                         allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
+                                                                                                                                         lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
+                                                                                                                                     End SyncLock
+                                                                                                                                     lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                                     If chkShowFileProgressInFileList.Checked Then
+                                                                                                                                         currentItem.Cells(4).Value = lblProcessingFileVerify.Text
+                                                                                                                                         itemOnGUI.Cells(4).Value = currentItem.Cells(4).Value
+                                                                                                                                     End If
+                                                                                                                                     ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
+                                                                                                                                     verifyIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
+                                                                                                                                 End Sub)
+                                                                                                                    Catch ex As Exception
+                                                                                                                    End Try
+                                                                                                                End Sub)
 
                                                                  item.Cells(3).Value = strCurrentlyBeingProcessed
 
