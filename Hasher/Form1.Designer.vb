@@ -1538,7 +1538,7 @@ Partial Class Form1
         Me.chkShowFileProgressInFileList.Size = New System.Drawing.Size(165, 17)
         Me.chkShowFileProgressInFileList.TabIndex = 42
         Me.chkShowFileProgressInFileList.Text = "Show File Progress in File List"
-        Me.ToolTip.SetToolTip(Me.chkShowFileProgressInFileList, "Enables the option to show the progress of reading a file in the file list.")
+        Me.ToolTip.SetToolTip(Me.chkShowFileProgressInFileList, "Enables the option to show the progress of reading a file in the file list." & vbCrLf & "Looks pretty but will cause performance degradations.")
         Me.chkShowFileProgressInFileList.UseVisualStyleBackColor = True
         '
         'defaultHashType
