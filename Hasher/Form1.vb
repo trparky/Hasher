@@ -1434,6 +1434,11 @@ Public Class Form1
 
                                                      longTotalFiles = verifyHashesListFiles.Rows.Count
 
+                                                     MyInvoke(Sub()
+                                                                  verifyHashesListFiles.BeginEdit(True)
+                                                                  verifyHashesListFiles.SuspendLayout()
+                                                              End Sub, verifyHashesListFiles)
+
                                                      For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
                                                          If boolAbortThread Then Throw New MyThreadAbortException
                                                          currentItem = item
@@ -1510,6 +1515,11 @@ Public Class Form1
                                                              item.BoolValidHash = False
                                                          End If
                                                      Next
+
+                                                     MyInvoke(Sub()
+                                                                  verifyHashesListFiles.EndEdit()
+                                                                  verifyHashesListFiles.ResumeLayout()
+                                                              End Sub, verifyHashesListFiles)
 
                                                      GC.Collect()
 
