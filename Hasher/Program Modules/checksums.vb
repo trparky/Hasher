@@ -1,7 +1,9 @@
+Imports System.Buffers
 Imports System.Security.Cryptography
 
 Public Class Checksums
     Private ReadOnly checksumStatusUpdater As ChecksumStatusUpdaterDelegate
+    Public localPool As ArrayPool(Of Byte)
 
     ''' <summary>
     ''' This allows you to set up a function to be run while your checksum is being processed. This function can be used to update things on the GUI during a checksum.
@@ -13,7 +15,8 @@ Public Class Checksums
     ''' OR A C# Example...
     ''' Checksums checksums = new Checksums((checksumStatusDetails checksumStatusDetails) => { });
     ''' </example>
-    Public Sub New(inputDelegate As ChecksumStatusUpdaterDelegate)
+    Public Sub New(inputDelegate As ChecksumStatusUpdaterDelegate, ByRef pool As ArrayPool(Of Byte))
+        localPool = pool
         checksumStatusUpdater = inputDelegate
     End Sub
 
@@ -23,7 +26,7 @@ Public Class Checksums
         intBufferSize = If(longFileSize = 0, 1, Math.Min(intBufferSize, longFileSize))
 
         ' Initialize byte buffer and variables for tracking progress
-        Dim byteDataBuffer As Byte() = New Byte(intBufferSize - 1) {}
+        Dim byteDataBuffer As Byte() = localPool.Rent(intBufferSize)
         Dim longTotalBytesRead As Long = 0
         Dim intBytesRead As Integer
 
@@ -63,6 +66,8 @@ Public Class Checksums
                 sha256Engine.TransformFinalBlock(byteDataBuffer, 0, 0)
                 sha384Engine.TransformFinalBlock(byteDataBuffer, 0, 0)
                 sha512Engine.TransformFinalBlock(byteDataBuffer, 0, 0)
+
+                localPool.Return(byteDataBuffer, clearArray:=True)
 
                 ' Return the results in the AllTheHashes object
                 Return New AllTheHashes With {

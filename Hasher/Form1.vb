@@ -1,4 +1,5 @@
-﻿Imports System.ComponentModel
+﻿Imports System.Buffers
+Imports System.ComponentModel
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
@@ -12,6 +13,8 @@ Public Class Form1
 #Else
     Private Const strWindowTitle As String = "Hasher"
 #End If
+
+    Private pool As ArrayPool(Of Byte) = ArrayPool(Of Byte).Shared
 
     Private Const strMessageBoxTitleText As String = "Hasher"
     Private intBufferSize As Integer = My.Settings.shortBufferSize * 1024 * 1024
@@ -125,7 +128,7 @@ Public Class Form1
     Private Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef allTheHashes As AllTheHashes, subRoutine As ChecksumStatusUpdaterDelegate, ByRef exceptionObject As Exception) As Boolean
         Try
             If IO.File.Exists(strFile) Then
-                Dim checksums As New Checksums(subRoutine)
+                Dim checksums As New Checksums(subRoutine, pool)
                 allTheHashes = checksums.PerformFileHash(strFile, intBufferSize)
                 Return True
             Else
