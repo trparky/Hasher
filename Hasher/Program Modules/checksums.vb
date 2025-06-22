@@ -48,10 +48,8 @@ Public Class Checksums
                     sha512Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
 
                     ' Update progress
-                    longTotalBytesRead += intBytesRead
-                    SyncLock threadLockingObject
-                        longAllReadBytes += intBytesRead
-                    End SyncLock
+                    Threading.Interlocked.Add(longTotalBytesRead, intBytesRead)
+                    Threading.Interlocked.Add(longAllReadBytes, intBytesRead)
 
                     ' Directly invoke the delegate
                     checksumStatusUpdater(longFileSize, longTotalBytesRead)
