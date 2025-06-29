@@ -63,6 +63,7 @@ Public Class Form1
 
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128}) \*?(?<filename>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
     Private ReadOnly PFSenseHashLineParser As New Text.RegularExpressions.Regex("SHA256 \((?<filename>.+)\) = (?<checksum>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+    Private ReadOnly HashFileWithNoFilename As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128})", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
     Private Function GenerateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
         Return $"Processing file {MyToString(intCurrentFile)} of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")}."
@@ -1275,6 +1276,7 @@ Public Class Form1
         Dim checksumType As HashAlgorithmName
         Dim checksumFileInfo As New IO.FileInfo(strPathToChecksumFile)
         Dim strChecksumFileExtension, strDirectoryThatContainsTheChecksumFile As String
+        Dim strHashFileNameWithoutExtension As String = IO.Path.GetFileNameWithoutExtension(strPathToChecksumFile)
 
         strLastDirectoryWorkedOn = checksumFileInfo.DirectoryName
         strChecksumFileExtension = checksumFileInfo.Extension
@@ -1366,13 +1368,17 @@ Public Class Form1
                                                                                                   If Not String.IsNullOrEmpty(strLineInFile2) Then
                                                                                                       Dim regExMatchObject As Text.RegularExpressions.Match = Nothing
 
-                                                                                                      If IsRegexMatch(hashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(PFSenseHashLineParser, strLineInFile2, regExMatchObject) Then
+                                                                                                      If IsRegexMatch(hashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(PFSenseHashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(HashFileWithNoFilename, strLineInFile2, regExMatchObject) Then
                                                                                                           If IsRegexMatch(PFSenseHashLineParser, strLineInFile2) Then
                                                                                                               checksumType = HashAlgorithmName.SHA256
                                                                                                           End If
 
                                                                                                           strChecksum2 = regExMatchObject.Groups("checksum").Value
                                                                                                           strFileName2 = regExMatchObject.Groups("filename").Value
+
+                                                                                                          If String.IsNullOrWhiteSpace(strFileName2) Then
+                                                                                                              strFileName2 = strHashFileNameWithoutExtension
+                                                                                                          End If
 
                                                                                                           If Not IO.Path.IsPathRooted(strFileName2) Then
                                                                                                               strFileName2 = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName2)
