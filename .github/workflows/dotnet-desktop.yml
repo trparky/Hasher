@@ -3,7 +3,7 @@ name: Build & Release on Tag in Main
 on:
   push:
     tags:
-      - 'v*'  # Only tags that start with 'v', like v4.2.2
+      - 'v*'  # Only triggers for tags like v4.2.2
 
 jobs:
   build-and-release:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Required to check branch ancestry
+          fetch-depth: 0  # Required for branch ancestry check
 
       - name: Ensure tag is on main branch
         run: |
@@ -48,6 +48,9 @@ jobs:
 
       - name: Restore NuGet packages
         run: nuget restore "./Hasher.sln"
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3
 
       - name: Build solution
         run: msbuild "./Hasher.sln" /m /p:Configuration=Release
