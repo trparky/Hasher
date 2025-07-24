@@ -1,9 +1,12 @@
-﻿Public Class Benchmark
+﻿Imports System.Buffers
+
+Public Class Benchmark
     Private workingThread As Threading.Thread
     Private boolBackgroundThreadWorking As Boolean = False
     Private boolClosingWindow As Boolean
     Public shortBufferSize As Short
     Public boolSetBufferSize As Boolean = False
+    Private pool As ArrayPool(Of Byte) = ArrayPool(Of Byte).Shared
 
     Private Sub Benchmark_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Icon = Icon.ExtractAssociatedIcon(Reflection.Assembly.GetExecutingAssembly().Location)
@@ -33,16 +36,16 @@
                                                      Dim percentage As Double
                                                      Dim strChecksum As String = Nothing
                                                      Dim index As Integer = 1
-                                                     Dim subRoutine As [Delegate] = Sub(size As Long, totalBytesRead As Long)
-                                                                                        Try
-                                                                                            Invoke(Sub()
-                                                                                                       percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
-                                                                                                       ProgressBar.Value = percentage
-                                                                                                       lblStatus.Text = $"{strFileNameLine}{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({Math.Round(percentage, byteRoundPercentages)}%) have been processed with a {intBufferSize} MB buffer size."
-                                                                                                   End Sub)
-                                                                                        Catch ex As Exception
-                                                                                        End Try
-                                                                                    End Sub
+                                                     Dim subRoutine As New ChecksumStatusUpdaterDelegate(Sub(size As Long, totalBytesRead As Long)
+                                                                                                             Try
+                                                                                                                 Invoke(Sub()
+                                                                                                                            percentage = If(totalBytesRead <> 0 And size <> 0, totalBytesRead / size * 100, 0)
+                                                                                                                            ProgressBar.Value = percentage
+                                                                                                                            lblStatus.Text = $"{strFileNameLine}{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({Math.Round(percentage, byteRoundPercentages)}%) have been processed with a {intBufferSize} MB buffer size."
+                                                                                                                        End Sub)
+                                                                                                             Catch ex As Exception
+                                                                                                             End Try
+                                                                                                         End Sub)
 
                                                      Dim stopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim computeStopwatch As Stopwatch
@@ -101,10 +104,10 @@
         End If
     End Sub
 
-    Private Shared Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef strChecksum As String, subRoutine As [Delegate], intBufferSize As Integer) As Boolean
+    Private Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef strChecksum As String, subRoutine As [Delegate], intBufferSize As Integer) As Boolean
         Try
             If IO.File.Exists(strFile) Then
-                Dim checksums As New Checksums(subRoutine)
+                Dim checksums As New Checksums(subRoutine, pool)
                 strChecksum = checksums.PerformFileHash(strFile, intBufferSize).Sha256
                 Return True
             Else
