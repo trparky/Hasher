@@ -89,6 +89,10 @@ Namespace FileAssociation
         End Sub
 
         Public Sub AddAssociationWithAllFiles()
+            If Registry.CurrentUser.OpenSubKey("Software\Classes\*") Is Nothing Then
+                Registry.CurrentUser.OpenSubKey("Software\Classes", True).CreateSubKey("*")
+            End If
+
             If Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell") Is Nothing Then
                 Registry.CurrentUser.OpenSubKey("Software\Classes\*", True).CreateSubKey("Shell")
             End If
