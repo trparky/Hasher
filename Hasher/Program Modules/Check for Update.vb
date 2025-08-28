@@ -97,23 +97,13 @@ Namespace checkForUpdates
             Return ProcessUpdateXMLResponse.noUpdateNeeded
         End Function
 
-        Private Shared Function CheckFolderPermissionsByACLs(folderPath As String) As Boolean
+        Private Function CanWriteToFolder(folderPath As String) As Boolean
             Try
-                Dim directoryACLs As DirectorySecurity = Directory.GetAccessControl(folderPath)
-                Dim directoryAccessRights As FileSystemAccessRule
-
-                For Each rule As AuthorizationRule In directoryACLs.GetAccessRules(True, True, GetType(SecurityIdentifier))
-                    If rule.IdentityReference.Value.Equals(WindowsIdentity.GetCurrent.User.Value, StringComparison.OrdinalIgnoreCase) Then
-                        directoryAccessRights = DirectCast(rule, FileSystemAccessRule)
-
-                        If directoryAccessRights.AccessControlType = AccessControlType.Allow AndAlso directoryAccessRights.FileSystemRights = (FileSystemRights.Read Or FileSystemRights.Modify Or FileSystemRights.Write Or FileSystemRights.FullControl) Then
-                            Return True
-                        End If
-                    End If
-                Next
-
-                Return False
-            Catch ex As Exception
+                Dim testFile As String = IO.Path.Combine(folderPath, Guid.NewGuid().ToString() & ".tmp")
+                File.WriteAllText(testFile, "test")
+                File.Delete(testFile)
+                Return True
+            Catch
                 Return False
             End Try
         End Function
@@ -211,7 +201,7 @@ Namespace checkForUpdates
                     .FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updater.exe"),
                     .Arguments = $"--programcode={programCode}"
                 }
-                If Not CheckFolderPermissionsByACLs(AppDomain.CurrentDomain.BaseDirectory) Then startInfo.Verb = "runas"
+                If Not CanWriteToFolder(AppDomain.CurrentDomain.BaseDirectory) Then startInfo.Verb = "runas"
                 Process.Start(startInfo)
 
                 Process.GetCurrentProcess.Kill()
