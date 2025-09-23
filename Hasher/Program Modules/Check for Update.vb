@@ -98,14 +98,36 @@ Namespace checkForUpdates
         End Function
 
         Private Function CanWriteToFolder(folderPath As String) As Boolean
-            Try
-                Dim testFile As String = IO.Path.Combine(folderPath, Guid.NewGuid().ToString() & ".tmp")
-                File.WriteAllText(testFile, "test")
-                File.Delete(testFile)
-                Return True
-            Catch
+            ' Checks to see if the specified folder exists.
+            If Directory.Exists(folderPath) Then
+                Dim strTestFilePath As String = Nothing
+
+                Try
+                    ' Create the path for the temporary file
+                    strTestFilePath = Path.Combine(folderPath, Guid.NewGuid().ToString() & ".tmp")
+
+                    ' Try writing a test message to the file
+                    File.WriteAllText(strTestFilePath, "test")
+
+                    ' If writing succeeds, return true
+                    Return True
+                Catch ex As Exception
+                    ' Something went wrong, we return false.
+                    Return False
+                Finally
+                    ' Ensure the temporary file is deleted if it was created
+                    If Not String.IsNullOrWhiteSpace(strTestFilePath) AndAlso File.Exists(strTestFilePath) Then
+                        Try
+                            File.Delete(strTestFilePath) ' Delete it.
+                        Catch ex As Exception
+                            ' Handle any exceptions that occur during file deletion.
+                        End Try
+                    End If
+                End Try
+            Else
+                ' The directory doesn't exist, so we return false.
                 Return False
-            End Try
+            End If
         End Function
 
         Public Shared Function CreateNewHTTPHelperObject() As HttpHelper
