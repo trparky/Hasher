@@ -1375,8 +1375,8 @@ Public Class Form1
                                                                                                               checksumType = HashAlgorithmName.SHA256
                                                                                                           End If
 
-                                                                                                          strChecksum2 = regExMatchObject.Groups("checksum").Value
-                                                                                                          strFileName2 = regExMatchObject.Groups("filename").Value
+                                                                                                          strChecksum2 = regExMatchObject.Groups("checksum").Value.Trim
+                                                                                                          strFileName2 = regExMatchObject.Groups("filename").Value.Trim
 
                                                                                                           If String.IsNullOrWhiteSpace(strFileName2) Then
                                                                                                               strFileName2 = strHashFileNameWithoutExtension
