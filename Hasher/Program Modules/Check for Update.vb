@@ -97,25 +97,37 @@ Namespace checkForUpdates
             Return ProcessUpdateXMLResponse.noUpdateNeeded
         End Function
 
-        Private Shared Function CheckFolderPermissionsByACLs(folderPath As String) As Boolean
-            Try
-                Dim directoryACLs As DirectorySecurity = Directory.GetAccessControl(folderPath)
-                Dim directoryAccessRights As FileSystemAccessRule
+        Private Function CanWriteToFolder(folderPath As String) As Boolean
+            ' Checks to see if the specified folder exists.
+            If Directory.Exists(folderPath) Then
+                Dim strTestFilePath As String = Nothing
 
-                For Each rule As AuthorizationRule In directoryACLs.GetAccessRules(True, True, GetType(SecurityIdentifier))
-                    If rule.IdentityReference.Value.Equals(WindowsIdentity.GetCurrent.User.Value, StringComparison.OrdinalIgnoreCase) Then
-                        directoryAccessRights = DirectCast(rule, FileSystemAccessRule)
+                Try
+                    ' Create the path for the temporary file
+                    strTestFilePath = Path.Combine(folderPath, Guid.NewGuid().ToString() & ".tmp")
 
-                        If directoryAccessRights.AccessControlType = AccessControlType.Allow AndAlso directoryAccessRights.FileSystemRights = (FileSystemRights.Read Or FileSystemRights.Modify Or FileSystemRights.Write Or FileSystemRights.FullControl) Then
-                            Return True
-                        End If
+                    ' Try writing a test message to the file
+                    File.WriteAllText(strTestFilePath, "test")
+
+                    ' If writing succeeds, return true
+                    Return True
+                Catch ex As Exception
+                    ' Something went wrong, we return false.
+                    Return False
+                Finally
+                    ' Ensure the temporary file is deleted if it was created
+                    If Not String.IsNullOrWhiteSpace(strTestFilePath) AndAlso File.Exists(strTestFilePath) Then
+                        Try
+                            File.Delete(strTestFilePath) ' Delete it.
+                        Catch ex As Exception
+                            ' Handle any exceptions that occur during file deletion.
+                        End Try
                     End If
-                Next
-
+                End Try
+            Else
+                ' The directory doesn't exist, so we return false.
                 Return False
-            Catch ex As Exception
-                Return False
-            End Try
+            End If
         End Function
 
         Public Shared Function CreateNewHTTPHelperObject() As HttpHelper
@@ -211,7 +223,7 @@ Namespace checkForUpdates
                     .FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updater.exe"),
                     .Arguments = $"--programcode={programCode}"
                 }
-                If Not CheckFolderPermissionsByACLs(AppDomain.CurrentDomain.BaseDirectory) Then startInfo.Verb = "runas"
+                If Not CanWriteToFolder(AppDomain.CurrentDomain.BaseDirectory) Then startInfo.Verb = "runas"
                 Process.Start(startInfo)
 
                 Process.GetCurrentProcess.Kill()
