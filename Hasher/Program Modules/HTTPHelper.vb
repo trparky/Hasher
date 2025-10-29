@@ -883,7 +883,7 @@ beginAgain:
                     lastException = New SslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
-                    Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
+                    Dim strDomainName As String = System.Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", System.Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New DnsLookupError($"There was an error while looking up the DNS records for the domain name ""{strDomainName}"".", ex2)
                     Throw lastException
                 End If
@@ -983,7 +983,7 @@ beginAgain:
                     lastException = New SslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
-                    Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
+                    Dim strDomainName As String = System.Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", System.Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New DnsLookupError($"There was an error while looking up the DNS records for the domain name ""{strDomainName}"".", ex2)
                     Throw lastException
                 End If
@@ -1092,7 +1092,7 @@ beginAgain:
                         lastException = New SslErrorException("There was an error establishing an SSL connection.", ex2)
                         Throw lastException
                     ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
-                        Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
+                        Dim strDomainName As String = System.Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", System.Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                         lastException = New DnsLookupError($"There was an error while looking up the DNS records for the domain name ""{strDomainName}"".", ex2)
                         Throw lastException
                     End If
@@ -1171,7 +1171,7 @@ beginAgain:
                     lastException = New SslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
-                    Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
+                    Dim strDomainName As String = System.Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", System.Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New DnsLookupError($"There was an error while looking up the DNS records for the domain name ""{strDomainName}"".", ex2)
                     Throw lastException
                 End If
@@ -1247,7 +1247,7 @@ beginAgain:
                     lastException = New SslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
-                    Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
+                    Dim strDomainName As String = System.Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", System.Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New DnsLookupError($"There was an error while looking up the DNS records for the domain name ""{strDomainName}"".", ex2)
                     Throw lastException
                 End If
@@ -1372,7 +1372,7 @@ beginAgain:
                     lastException = New SslErrorException("There was an error establishing an SSL connection.", ex2)
                     Throw lastException
                 ElseIf ex2.Status = Net.WebExceptionStatus.NameResolutionFailure Then
-                    Dim strDomainName As String = Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
+                    Dim strDomainName As String = System.Text.RegularExpressions.Regex.Match(lastAccessedURL, "(?:http(?:s){0,1}://){0,1}(.*)/", System.Text.RegularExpressions.RegexOptions.Singleline).Groups(1).Value
                     lastException = New DnsLookupError($"There was an error while looking up the DNS records for the domain name ""{strDomainName}"".", ex2)
                     Throw lastException
                 End If

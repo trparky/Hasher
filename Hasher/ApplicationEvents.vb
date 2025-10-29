@@ -12,7 +12,7 @@ Namespace My
         Private _reportCrash As ReportCrash
 
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
-            AddHandler Windows.Forms.Application.ThreadException, Sub(exSender, args) SendReport(args.Exception, "I crashed!")
+            AddHandler System.Windows.Forms.Application.ThreadException, Sub(exSender, args) SendReport(args.Exception, "I crashed!")
             AddHandler AppDomain.CurrentDomain.UnhandledException, Sub(exSender, args)
                                                                        SendReport(DirectCast(args.ExceptionObject, Exception), "I crashed!")
                                                                    End Sub

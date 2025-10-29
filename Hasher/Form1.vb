@@ -3,6 +3,7 @@ Imports System.ComponentModel
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
+Imports Microsoft.AspNetCore.Mvc.Formatters
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -61,9 +62,9 @@ Public Class Form1
     Private Const TabNumberCompareFileAgainstKnownHashTab As Integer = 5
     Private Const TabNumberSettingsTab As Integer = 6
 
-    Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128}) \*?(?<filename>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
-    Private ReadOnly PFSenseHashLineParser As New Text.RegularExpressions.Regex("SHA256 \((?<filename>.+)\) = (?<checksum>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
-    Private ReadOnly HashFileWithNoFilename As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128})", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+    Private ReadOnly hashLineParser As New System.Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128}) \*?(?<filename>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+    Private ReadOnly PFSenseHashLineParser As New System.Text.RegularExpressions.Regex("SHA256 \((?<filename>.+)\) = (?<checksum>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+    Private ReadOnly HashFileWithNoFilename As New System.Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128})", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
     Private Function GenerateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
         Return $"Processing file {MyToString(intCurrentFile)} of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")}."
@@ -550,7 +551,7 @@ Public Class Form1
     Private Function StrGetIndividualHashesInStringFormat(strPathOfChecksumFile As String, checksumType As HashAlgorithmName) As String
         Dim strDirectoryName As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName
         Dim folderOfChecksumFile As String = If(strDirectoryName.Length = 3, strDirectoryName, $"{strDirectoryName}\")
-        Dim stringBuilder As New Text.StringBuilder()
+        Dim stringBuilder As New System.Text.StringBuilder()
         Dim strFile As String
 
         AddHashFileHeader(stringBuilder, listFiles.Rows.Count)
@@ -568,7 +569,7 @@ Public Class Form1
     End Function
 
     Private Function StrGetIndividualHashesInStringFormat() As String
-        Dim stringBuilder As New Text.StringBuilder()
+        Dim stringBuilder As New System.Text.StringBuilder()
 
         AddHashFileHeader(stringBuilder, listFiles.Rows.Count)
 
@@ -582,7 +583,7 @@ Public Class Form1
         Return stringBuilder.ToString()
     End Function
 
-    Private Sub AddEndOfHashLines(ByRef stringBuilder As Text.StringBuilder)
+    Private Sub AddEndOfHashLines(ByRef stringBuilder As System.Text.StringBuilder)
         stringBuilder.AppendLine("'")
         stringBuilder.AppendLine("' End of hash data.")
         stringBuilder.AppendLine("'")
@@ -721,7 +722,7 @@ Public Class Form1
     End Sub
 
     Private Function ShowHashFileWrittenWindow(BoolAskUserOpenInExplorer As Boolean, fileName As String, checksumtype As HashAlgorithmName) As MsgBoxResult
-        Dim StringBuilder As New Text.StringBuilder()
+        Dim StringBuilder As New System.Text.StringBuilder()
         StringBuilder.AppendLine("Your hash results have been written to disk.")
         StringBuilder.AppendLine()
         StringBuilder.AppendLine($"File Name: {fileName}")
@@ -1261,12 +1262,12 @@ Public Class Form1
         Return MyDataGridRow
     End Function
 
-    Private Function IsRegexMatch(regex As Text.RegularExpressions.Regex, strHashLine As String, ByRef match As Text.RegularExpressions.Match) As Boolean
+    Private Function IsRegexMatch(regex As System.Text.RegularExpressions.Regex, strHashLine As String, ByRef match As System.Text.RegularExpressions.Match) As Boolean
         match = regex.Match(strHashLine)
         Return match.Success
     End Function
 
-    Private Function IsRegexMatch(regex As Text.RegularExpressions.Regex, strHashLine As String) As Boolean
+    Private Function IsRegexMatch(regex As System.Text.RegularExpressions.Regex, strHashLine As String) As Boolean
         Return regex.Match(strHashLine).Success
     End Function
 
@@ -1368,7 +1369,7 @@ Public Class Form1
                                                                                                            End Sub, lblVerifyHashStatus)
 
                                                                                                   If Not String.IsNullOrEmpty(strLineInFile2) Then
-                                                                                                      Dim regExMatchObject As Text.RegularExpressions.Match = Nothing
+                                                                                                      Dim regExMatchObject As System.Text.RegularExpressions.Match = Nothing
 
                                                                                                       If IsRegexMatch(hashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(PFSenseHashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(HashFileWithNoFilename, strLineInFile2, regExMatchObject) Then
                                                                                                           If IsRegexMatch(PFSenseHashLineParser, strLineInFile2) Then
@@ -1548,7 +1549,7 @@ Public Class Form1
                                                                   Text = strWindowTitle
                                                                   verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
 
-                                                                  Dim sbMessageBoxText As New Text.StringBuilder
+                                                                  Dim sbMessageBoxText As New System.Text.StringBuilder
 
                                                                   If longFilesThatWereNotFound = 0 And longFilesThatDidNotPassVerification = 0 Then
                                                                       If longFilesThatPassedVerification = longTotalFiles Then
@@ -1741,7 +1742,7 @@ Public Class Form1
     End Sub
 
     Private Sub BtnCopyTextHashResultsToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyTextHashResultsToClipboard.Click
-        Dim strHash As New Text.StringBuilder
+        Dim strHash As New System.Text.StringBuilder
         strHash.AppendLine($"MD5: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes).ToLower)}")
         strHash.AppendLine($"SHA1/SHA160: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes).ToLower)}")
         strHash.AppendLine($"SHA256: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes).ToLower)}")
@@ -1822,7 +1823,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub AddHashFileHeader(ByRef stringBuilder As Text.StringBuilder, intFileCount As Integer)
+    Private Sub AddHashFileHeader(ByRef stringBuilder As System.Text.StringBuilder, intFileCount As Integer)
         stringBuilder.AppendLine("'")
         stringBuilder.AppendLine($"' Hash file generated by Hasher, version {checkForUpdates.versionString}. Written by Tom Parkison.")
         stringBuilder.AppendLine("' Web Site: https://www.toms-world.org/blog/hasher")
@@ -1869,7 +1870,7 @@ Public Class Form1
         Dim File2FileInfo As New IO.FileInfo(txtFile2.Text)
 
         If File1FileInfo.Length <> File2FileInfo.Length And Not ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.Checked Then
-            Dim stringBuilder As New Text.StringBuilder
+            Dim stringBuilder As New System.Text.StringBuilder
             stringBuilder.AppendLine("Both files are different file sizes, so we're going to assume that they're different. OK?")
             stringBuilder.AppendLine()
             stringBuilder.AppendLine($"File #1 Size: {FileSizeToHumanSize(File1FileInfo.Length)}")
@@ -2825,7 +2826,7 @@ Public Class Form1
 
     Private Sub ViewChecksumDifferenceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ViewChecksumDifferenceToolStripMenuItem.Click
         Dim selectedItem As MyDataGridViewRow = verifyHashesListFiles.SelectedRows(0)
-        Dim stringBuilder As New Text.StringBuilder()
+        Dim stringBuilder As New System.Text.StringBuilder()
 
         stringBuilder.AppendLine("Hash/Checksum Contained in Checksum File")
         With selectedItem.Hash
@@ -3054,7 +3055,7 @@ Public Class Form1
                                                                   Text = strWindowTitle
                                                                   verifyHashesListFiles.Size = New Size(verifyHashesListFiles.Size.Width, verifyHashesListFiles.Size.Height + 72)
 
-                                                                  Dim sbMessageBoxText As New Text.StringBuilder
+                                                                  Dim sbMessageBoxText As New System.Text.StringBuilder
                                                                   Dim intFilesThatDidNotPassVerification As Integer = 0
 
                                                                   If intFilesNotFound = 0 Then
@@ -3308,8 +3309,8 @@ Public Class Form1
 
                                                        ' We do some parsing of the incoming data, we do that by searching for the full SHA1 String in the web
                                                        ' data but this is all being done client-side; again none of this is happening on the server side.
-                                                       Dim regexObject As New Text.RegularExpressions.Regex("(?:" & strFullSHA1String.Substring(5) & ")+:([0-9]+)")
-                                                       Dim regexMatchResults As Text.RegularExpressions.MatchCollection = regexObject.Matches(strWebData) ' Use the above Regex object to do some searching.
+                                                       Dim regexObject As New System.Text.RegularExpressions.Regex("(?:" & strFullSHA1String.Substring(5) & ")+:([0-9]+)")
+                                                       Dim regexMatchResults As System.Text.RegularExpressions.MatchCollection = regexObject.Matches(strWebData) ' Use the above Regex object to do some searching.
 
                                                        ' Do we have some results?
                                                        If regexMatchResults.Count > 0 Then
