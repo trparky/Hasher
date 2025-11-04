@@ -219,6 +219,8 @@ Namespace checkForUpdates
                     End Using
                 End Using
 
+                SaveApplicationSettingsToFile(strPathToConfigBackupFile)
+
                 Dim startInfo As New ProcessStartInfo With {
                     .FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updater.exe"),
                     .Arguments = $"--programcode={programCode}"
