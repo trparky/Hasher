@@ -12,6 +12,7 @@ Public Module Globals
     Public Const DoubleCRLF As String = vbCrLf & vbCrLf
     Public boolAbortThread As Boolean = False
     Public strEXEPath As String = Process.GetCurrentProcess.MainModule.FileName
+    Public strPathToConfigBackupFile As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "hasher_config_backup.json")
 
     Public Function VerifyWindowLocation(point As Point, ByRef window As Form) As Point
         Dim screen As Screen = Screen.FromPoint(point) ' Get the screen based on the new window location

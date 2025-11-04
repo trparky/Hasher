@@ -12,6 +12,19 @@ Namespace My
         Private _reportCrash As ReportCrash
 
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
+            If My.Settings.FirstRun Then
+                If IO.File.Exists(strPathToConfigBackupFile) Then
+                    If Not LoadApplicationSettingsFromFile(strPathToConfigBackupFile, "Hasher") Then
+                        MsgBox("There was an error loading the previous configuration, the program will launch with a clean config.", MsgBoxStyle.Critical, "Error loading configuration")
+                    End If
+                End If
+
+                My.Settings.FirstRun = False
+                My.Settings.Save()
+            Else
+                If IO.File.Exists(strPathToConfigBackupFile) Then IO.File.Delete(strPathToConfigBackupFile)
+            End If
+
             AddHandler Windows.Forms.Application.ThreadException, Sub(exSender, args) SendReport(args.Exception, "I crashed!")
             AddHandler AppDomain.CurrentDomain.UnhandledException, Sub(exSender, args)
                                                                        SendReport(DirectCast(args.ExceptionObject, Exception), "I crashed!")
