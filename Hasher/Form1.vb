@@ -3197,7 +3197,7 @@ Public Class Form1
             OpenFileDialogBox.Title = "Open Settings JSON File"
             OpenFileDialogBox.Filter = "JSON File|*.json"
 
-            If OpenFileDialogBox.ShowDialog = DialogResult.OK AndAlso LoadApplicationSettingsFromFile(OpenFileDialogBox.FileName) Then
+            If OpenFileDialogBox.ShowDialog = DialogResult.OK AndAlso LoadApplicationSettingsFromFile(OpenFileDialogBox.FileName, "Hasher") Then
                 My.Settings.Save()
                 MsgBox("Hasher will now close and restart itself for the imported settings to take effect.", MsgBoxStyle.Information, strMessageBoxTitleText)
                 Process.Start(strEXEPath)
