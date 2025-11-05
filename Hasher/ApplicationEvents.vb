@@ -6,22 +6,31 @@ Namespace My
     ' Startup: Raised when the application starts, before the startup form is created.
     ' Shutdown: Raised after all application forms are closed.  This event is not raised if the application terminates abnormally.
     ' UnhandledException: Raised if the application encounters an unhandled exception.
-    ' StartupNextInstance: Raised when launching a single-instance application and the application is already active. 
+    ' StartupNextInstance: Raised when launching a single-instance application and the application is already active.
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     Partial Friend Class MyApplication
         Private _reportCrash As ReportCrash
 
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
             If My.Settings.FirstRun Then
-                If IO.File.Exists(strPathToConfigBackupFile) Then
-                    If Not LoadApplicationSettingsFromFile(strPathToConfigBackupFile, "Hasher") Then
-                        MsgBox("There was an error loading the previous configuration, the program will launch with a clean config.", MsgBoxStyle.Critical, "Error loading configuration")
-                    End If
-                End If
+	            Try
+                    ' Check if backup file exists
+	                If IO.File.Exists(strPathToConfigBackupFile) Then
+	                    ' Attempt to load the settings from the backup file
+	                    If Not LoadApplicationSettingsFromFile(strPathToConfigBackupFile, "Hasher") Then
+	                        MsgBox("There was an error loading the previous configuration, the program will launch with a clean config.", MsgBoxStyle.Critical, "Error Loading Configuration")
+	                    End If
+	                End If
+                Catch ex As Exception
+                    ' Log or show a message for any unexpected errors during file processing
+                    MsgBox($"An unexpected error occurred: {ex.Message}", MsgBoxStyle.Critical, "Error")
+            	End Try
 
+                ' Mark as not the first run
                 My.Settings.FirstRun = False
                 My.Settings.Save()
             Else
+                ' If not the first run, delete the backup file if it exists
                 If IO.File.Exists(strPathToConfigBackupFile) Then IO.File.Delete(strPathToConfigBackupFile)
             End If
 
