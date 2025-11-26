@@ -29,6 +29,9 @@ Namespace My
                 ' Mark as not the first run
                 My.Settings.FirstRun = False
                 My.Settings.Save()
+
+                ' Delete the backup file if it exists
+                If IO.File.Exists(strPathToConfigBackupFile) Then IO.File.Delete(strPathToConfigBackupFile)
             Else
                 ' If not the first run, delete the backup file if it exists
                 If IO.File.Exists(strPathToConfigBackupFile) Then IO.File.Delete(strPathToConfigBackupFile)
