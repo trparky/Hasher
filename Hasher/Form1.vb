@@ -86,6 +86,17 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub UpdateGridViewRowColor(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow)
+        With itemOnGUI
+            If item IsNot Nothing Then
+                Dim currentStyle As DataGridViewCellStyle = item.DefaultCellStyle
+                currentStyle.BackColor = item.MyColor
+                currentStyle.ForeColor = GetGoodTextColorBasedUponBackgroundColor(item.MyColor)
+                .DefaultCellStyle = currentStyle
+            End If
+        End With
+    End Sub
+
     Private Sub UpdateDataGridViewRow(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow, Optional boolUpdateColor As Boolean = True)
         With itemOnGUI
             If item IsNot Nothing Then
@@ -1518,13 +1529,21 @@ Public Class Form1
 
                                                              MyInvoke(Sub()
                                                                           If ChkAutoScroll.Checked Then verifyHashesListFiles.FirstDisplayedScrollingRowIndex = item.Index
-                                                                          UpdateDataGridViewRow(itemOnGUI, item)
+                                                                          UpdateDataGridViewRow(itemOnGUI, item, False)
                                                                       End Sub, verifyHashesListFiles)
 
                                                              index += 1
                                                          Else
                                                              item.BoolValidHash = False
                                                          End If
+                                                     Next
+
+                                                     For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
+                                                         MyInvoke(Sub()
+                                                                      itemOnGUI = Nothing
+                                                                      itemOnGUI = verifyHashesListFiles.Rows(item.Index)
+                                                                      UpdateGridViewRowColor(itemOnGUI, item)
+                                                                  End Sub, verifyHashesListFiles)
                                                      Next
 
                                                      MyInvoke(Sub()
