@@ -1380,9 +1380,13 @@ Public Class Form1
                                                      If Not boolHasherFileType Then
                                                          dataInFileArray = IO.File.ReadAllLines(strPathToChecksumFile)
                                                      Else
-                                                         Using fileStream As New IO.StreamReader(strPathToChecksumFile)
-                                                             collectionOfHashes = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of MyHash))(fileStream.ReadToEnd.Trim)
-                                                         End Using
+                                                         Try
+                                                             Using fileStream As New IO.StreamReader(strPathToChecksumFile)
+                                                                 collectionOfHashes = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of MyHash))(fileStream.ReadToEnd.Trim, New Newtonsoft.Json.JsonSerializerSettings With {.MissingMemberHandling = Newtonsoft.Json.MissingMemberHandling.Error})
+                                                             End Using
+                                                         Catch ex As Exception
+                                                             Throw New MyThreadAbortException
+                                                         End Try
                                                      End If
 
                                                      MyInvoke(Sub()
