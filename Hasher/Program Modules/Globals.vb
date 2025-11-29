@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Security.Principal
+Imports System.Windows.Input
 
 Public Module Globals
     ''' <summary>These two variables, longAllReadBytes and longAllBytes, and used to track overall hashing progress of all files to be processed.</summary>
@@ -52,7 +53,7 @@ Public Module Globals
                     parsedArguments(key) = True
                 End If
             Else
-                Console.WriteLine($"Unrecognized argument format: {strArgument}")
+                If Not parsedArguments.ContainsKey("hashfile") Then parsedArguments("hashfile") = strArgument.Replace("""", "")
             End If
         Next
 
