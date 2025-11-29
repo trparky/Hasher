@@ -558,6 +558,29 @@ Public Class Form1
         lblHashIndividualFilesTotalStatus.Visible = False
     End Sub
 
+    Private Function GetMyHashArray(strPathOfChecksumFile As String) As List(Of MyHash)
+        Dim strDirectoryName As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName
+        Dim folderOfChecksumFile As String = If(strDirectoryName.Length = 3, strDirectoryName, $"{strDirectoryName}\")
+
+        Dim myHashList As New List(Of MyHash)
+
+        For Each item As MyDataGridViewRow In listFiles.Rows
+            If chkSaveChecksumFilesWithRelativePaths.Checked Then
+                myHashList.Add(New MyHash With {
+                    .FileName = item.FileName.Replace(folderOfChecksumFile, "", StringComparison.OrdinalIgnoreCase),
+                    .FileHash = item.AllTheHashes.Sha512
+                })
+            Else
+                myHashList.Add(New MyHash With {
+                    .FileName = item.FileName,
+                    .FileHash = item.AllTheHashes.Sha512
+                })
+            End If
+        Next
+
+        Return myHashList
+    End Function
+
     Private Function StrGetIndividualHashesInStringFormat(strPathOfChecksumFile As String, checksumType As HashAlgorithmName) As String
         Dim strDirectoryName As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName
         Dim folderOfChecksumFile As String = If(strDirectoryName.Length = 3, strDirectoryName, $"{strDirectoryName}\")
@@ -615,7 +638,7 @@ Public Class Form1
 
     Private Sub BtnIndividualFilesSaveResultsToDisk_Click(sender As Object, e As EventArgs) Handles btnIndividualFilesSaveResultsToDisk.Click
         Using SaveFileDialog As New SaveFileDialog
-            SaveFileDialog.Filter = "MD5 File|*.md5|SHA1 File|*.sha1|SHA256 File|*.sha256|SHA384 File|*.sha384|SHA512 File|*.sha512"
+            SaveFileDialog.Filter = "MD5 File|*.md5|SHA1 File|*.sha1|SHA256 File|*.sha256|SHA384 File|*.sha384|SHA512 File|*.sha512|Hasher File|*.hasher"
             SaveFileDialog.InitialDirectory = strLastDirectoryWorkedOn
             SaveFileDialog.Title = "Save Hash Results to Disk"
             SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
@@ -637,6 +660,8 @@ Public Class Form1
                     Case ".sha384"
                         SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
                     Case ".sha512"
+                        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
+                    Case ".hasher"
                         SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
                 End Select
 
@@ -674,7 +699,7 @@ Public Class Form1
                 If chkAutoAddExtension.Checked Then
                     strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
 
-                    If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
+                    If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".hasher", StringComparison.OrdinalIgnoreCase) Then
                         Select Case SaveFileDialog.FilterIndex
                             Case ChecksumFilterIndexMD5
                                 SaveFileDialog.FileName &= ".md5"
@@ -686,6 +711,8 @@ Public Class Form1
                                 SaveFileDialog.FileName &= ".sha384"
                             Case ChecksumFilterIndexSHA512
                                 SaveFileDialog.FileName &= ".sha512"
+                            Case ChecksumFilterIndexSHA512
+                                SaveFileDialog.FileName &= ".hasher"
                         End Select
                     End If
 
@@ -711,11 +738,19 @@ Public Class Form1
                         checksumType = HashAlgorithmName.SHA384
                     Case ".sha512"
                         checksumType = HashAlgorithmName.SHA512
+                    Case ".hasher"
+                        checksumType = HashAlgorithmName.SHA512
                 End Select
 
-                Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
-                    streamWriter.Write(StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
-                End Using
+                If strFileExtension.Equals(".hasher", StringComparison.OrdinalIgnoreCase) Then
+                    Using fileStream As New IO.StreamWriter(SaveFileDialog.FileName)
+                        fileStream.Write(Newtonsoft.Json.JsonConvert.SerializeObject(GetMyHashArray(SaveFileDialog.FileName), Newtonsoft.Json.Formatting.Indented))
+                    End Using
+                Else
+                    Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
+                        streamWriter.Write(StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
+                    End Using
+                End If
 
                 Dim openInExplorerMsgBoxResult As MsgBoxResult
 
@@ -1290,6 +1325,7 @@ Public Class Form1
         Dim checksumFileInfo As New IO.FileInfo(strPathToChecksumFile)
         Dim strChecksumFileExtension, strDirectoryThatContainsTheChecksumFile As String
         Dim strHashFileNameWithoutExtension As String = IO.Path.GetFileNameWithoutExtension(strPathToChecksumFile)
+        Dim boolHasherFileType As Boolean = False
 
         strLastDirectoryWorkedOn = checksumFileInfo.DirectoryName
         strChecksumFileExtension = checksumFileInfo.Extension
@@ -1308,7 +1344,9 @@ Public Class Form1
                 checksumType = HashAlgorithmName.SHA384
             Case ".sha512"
                 checksumType = HashAlgorithmName.SHA512
-            Case ".checksum"
+            Case ".hasher"
+                boolHasherFileType = True
+                checksumType = HashAlgorithmName.SHA512
             Case Else
                 MsgBox("Invalid Hash File Type.", MsgBoxStyle.Critical, strMessageBoxTitleText)
                 Exit Sub
@@ -1327,7 +1365,7 @@ Public Class Form1
                                                      Dim longFilesThatDidNotPassVerification As Long = 0
                                                      Dim longFilesThatWereNotFound As Long = 0
                                                      Dim longTotalFiles As Long
-                                                     Dim dataInFileArray As String() = IO.File.ReadAllLines(strPathToChecksumFile)
+                                                     Dim dataInFileArray As String() = Nothing
                                                      Dim intLineCounter As Integer = 0
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim strReadingHashFileMessage As String = "Reading hash file and creating DataGridView item objects... Please wait."
@@ -1337,6 +1375,15 @@ Public Class Form1
                                                      Dim intIndexBeingWorkedOn As Integer
                                                      Dim currentItem As MyDataGridViewRow = Nothing
                                                      Dim exType As Type = Nothing
+                                                     Dim collectionOfHashes As New List(Of MyHash)
+
+                                                     If Not boolHasherFileType Then
+                                                         dataInFileArray = IO.File.ReadAllLines(strPathToChecksumFile)
+                                                     Else
+                                                         Using fileStream As New IO.StreamReader(strPathToChecksumFile)
+                                                             collectionOfHashes = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of MyHash))(fileStream.ReadToEnd.Trim)
+                                                         End Using
+                                                     End If
 
                                                      MyInvoke(Sub()
                                                                   btnRetestFailedFiles.Visible = False
@@ -1356,53 +1403,87 @@ Public Class Form1
                                                          longAllBytes = 0
                                                      End SyncLock
 
-                                                     Dim newDataInFileArray As List(Of String) = dataInFileArray.ToList.Where(Function(strLineInFile2 As String)
-                                                                                                                                  Return Not strLineInFile2.Trim.StartsWith("'")
-                                                                                                                              End Function).ToList
+                                                     If boolHasherFileType Then
+                                                         checksumType = HashAlgorithmName.SHA512
 
-                                                     If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= $" ({MyToString(newDataInFileArray.Count)} {If(newDataInFileArray.Count = 1, "entry", "entries")} in hash file)", Me)
+                                                         Parallel.ForEach(collectionOfHashes, Sub(MyHash As MyHash, state As ParallelLoopState)
+                                                                                                  SyncLock listOfDataGridRows
+                                                                                                      If boolAbortThread Then state.Break()
 
-                                                     Parallel.ForEach(newDataInFileArray, Sub(strLineInFile2 As String, state As ParallelLoopState)
-                                                                                              SyncLock listOfDataGridRows
-                                                                                                  If boolAbortThread Then state.Break()
+                                                                                                      Dim strChecksum2, strFileName2 As String
+                                                                                                      Dim boolFileExists As Boolean
 
-                                                                                                  Dim strChecksum2, strFileName2 As String
-                                                                                                  Dim boolFileExists As Boolean
+                                                                                                      If boolAbortThread Then Throw New MyThreadAbortException
+                                                                                                      Threading.Interlocked.Increment(intLineCounter)
 
-                                                                                                  If boolAbortThread Then Throw New MyThreadAbortException
-                                                                                                  Threading.Interlocked.Increment(intLineCounter)
+                                                                                                      MyInvoke(Sub()
+                                                                                                                   VerifyHashProgressBar.Value = intLineCounter / collectionOfHashes.LongCount * 100
+                                                                                                                   ProgressForm.SetTaskbarProgressBarValue(VerifyHashProgressBar.Value)
+                                                                                                                   lblVerifyHashStatus.Text = $"{strReadingHashFileMessage} Processing item {MyToString(intLineCounter)} of {MyToString(collectionOfHashes.LongCount)} ({MyRoundingFunction(VerifyHashProgressBar.Value, byteRoundPercentages)}%)."
+                                                                                                               End Sub, lblVerifyHashStatus)
 
-                                                                                                  MyInvoke(Sub()
-                                                                                                               VerifyHashProgressBar.Value = intLineCounter / newDataInFileArray.LongCount * 100
-                                                                                                               ProgressForm.SetTaskbarProgressBarValue(VerifyHashProgressBar.Value)
-                                                                                                               lblVerifyHashStatus.Text = $"{strReadingHashFileMessage} Processing item {MyToString(intLineCounter)} of {MyToString(newDataInFileArray.LongCount)} ({MyRoundingFunction(VerifyHashProgressBar.Value, byteRoundPercentages)}%)."
-                                                                                                           End Sub, lblVerifyHashStatus)
+                                                                                                      strChecksum2 = MyHash.FileHash
+                                                                                                      strFileName2 = MyHash.FileName
 
-                                                                                                  If Not String.IsNullOrEmpty(strLineInFile2) Then
-                                                                                                      Dim regExMatchObject As Text.RegularExpressions.Match = Nothing
-
-                                                                                                      If IsRegexMatch(hashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(PFSenseHashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(HashFileWithNoFilename, strLineInFile2, regExMatchObject) Then
-                                                                                                          If IsRegexMatch(PFSenseHashLineParser, strLineInFile2) Then
-                                                                                                              checksumType = HashAlgorithmName.SHA256
-                                                                                                          End If
-
-                                                                                                          strChecksum2 = regExMatchObject.Groups("checksum").Value.Trim
-                                                                                                          strFileName2 = regExMatchObject.Groups("filename").Value.Trim
-
-                                                                                                          If String.IsNullOrWhiteSpace(strFileName2) Then
-                                                                                                              strFileName2 = strHashFileNameWithoutExtension
-                                                                                                          End If
-
-                                                                                                          If Not IO.Path.IsPathRooted(strFileName2) Then
-                                                                                                              strFileName2 = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName2)
-                                                                                                          End If
-
-                                                                                                          listOfDataGridRows.Add(CreateMyDataGridRowForHashFileEntry(strFileName2, strChecksum2, longFilesThatWereNotFound, boolFileExists, verifyHashesListFiles))
-                                                                                                          If boolFileExists Then intFileCount += 1
+                                                                                                      If Not IO.Path.IsPathRooted(strFileName2) Then
+                                                                                                          strFileName2 = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName2)
                                                                                                       End If
-                                                                                                  End If
-                                                                                              End SyncLock
-                                                                                          End Sub)
+
+                                                                                                      listOfDataGridRows.Add(CreateMyDataGridRowForHashFileEntry(strFileName2, strChecksum2, longFilesThatWereNotFound, boolFileExists, verifyHashesListFiles))
+                                                                                                      If boolFileExists Then intFileCount += 1
+                                                                                                  End SyncLock
+                                                                                              End Sub)
+                                                     Else
+                                                         Dim newDataInFileArray As List(Of String) = dataInFileArray.ToList.Where(Function(strLineInFile2 As String)
+                                                                                                                                      Return Not strLineInFile2.Trim.StartsWith("'")
+                                                                                                                                  End Function).ToList
+
+                                                         If ChkIncludeEntryCountInFileNameHeader.Checked Then MyInvoke(Sub() lblVerifyFileNameLabel.Text &= $" ({MyToString(newDataInFileArray.Count)} {If(newDataInFileArray.Count = 1, "entry", "entries")} in hash file)", Me)
+
+                                                         Parallel.ForEach(newDataInFileArray, Sub(strLineInFile2 As String, state As ParallelLoopState)
+                                                                                                  SyncLock listOfDataGridRows
+                                                                                                      If boolAbortThread Then state.Break()
+
+                                                                                                      Dim strChecksum2, strFileName2 As String
+                                                                                                      Dim boolFileExists As Boolean
+
+                                                                                                      If boolAbortThread Then Throw New MyThreadAbortException
+                                                                                                      Threading.Interlocked.Increment(intLineCounter)
+
+                                                                                                      MyInvoke(Sub()
+                                                                                                                   VerifyHashProgressBar.Value = intLineCounter / newDataInFileArray.LongCount * 100
+                                                                                                                   ProgressForm.SetTaskbarProgressBarValue(VerifyHashProgressBar.Value)
+                                                                                                                   lblVerifyHashStatus.Text = $"{strReadingHashFileMessage} Processing item {MyToString(intLineCounter)} of {MyToString(newDataInFileArray.LongCount)} ({MyRoundingFunction(VerifyHashProgressBar.Value, byteRoundPercentages)}%)."
+                                                                                                               End Sub, lblVerifyHashStatus)
+
+                                                                                                      If Not String.IsNullOrEmpty(strLineInFile2) Then
+                                                                                                          Dim regExMatchObject As Text.RegularExpressions.Match = Nothing
+
+                                                                                                          If IsRegexMatch(hashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(PFSenseHashLineParser, strLineInFile2, regExMatchObject) OrElse IsRegexMatch(HashFileWithNoFilename, strLineInFile2, regExMatchObject) Then
+                                                                                                              If IsRegexMatch(PFSenseHashLineParser, strLineInFile2) Then
+                                                                                                                  checksumType = HashAlgorithmName.SHA256
+                                                                                                              End If
+
+                                                                                                              strChecksum2 = regExMatchObject.Groups("checksum").Value.Trim
+                                                                                                              strFileName2 = regExMatchObject.Groups("filename").Value.Trim
+
+                                                                                                              If String.IsNullOrWhiteSpace(strFileName2) Then
+                                                                                                                  strFileName2 = strHashFileNameWithoutExtension
+                                                                                                              End If
+
+                                                                                                              If Not IO.Path.IsPathRooted(strFileName2) Then
+                                                                                                                  strFileName2 = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName2)
+                                                                                                              End If
+
+                                                                                                              listOfDataGridRows.Add(CreateMyDataGridRowForHashFileEntry(strFileName2, strChecksum2, longFilesThatWereNotFound, boolFileExists, verifyHashesListFiles))
+                                                                                                              If boolFileExists Then intFileCount += 1
+                                                                                                          End If
+                                                                                                      End If
+                                                                                                  End SyncLock
+                                                                                              End Sub)
+
+                                                         newDataInFileArray = Nothing
+                                                     End If
 
                                                      If boolAbortThread Then Throw New MyThreadAbortException
 
@@ -1415,7 +1496,6 @@ Public Class Form1
                                                                   lblVerifyHashStatusProcessingFile.Visible = True
                                                               End Sub, Me)
 
-                                                     newDataInFileArray = Nothing
                                                      strLineInFile = Nothing
                                                      listOfDataGridRows = Nothing
 
@@ -1680,7 +1760,7 @@ Public Class Form1
             lblVerifyFileNameLabel.Text = "File Name: (None Selected for Processing)"
 
             OpenFileDialog.Title = "Select a hash file to verify..."
-            OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160"
+            OpenFileDialog.Filter = "Checksum File|*.md5;*.sha1;*.sha256;*.sha384;*.sha512;*.ripemd160;*.hasher|Hasher File|*.hasher"
             OpenFileDialog.Multiselect = True
 
             If OpenFileDialog.ShowDialog() = DialogResult.OK Then

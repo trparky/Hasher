@@ -166,3 +166,7 @@ Public Class ColumnOrder
     Public ColumnName As String
     Public ColumnIndex As Integer
 End Class
+
+Public Class MyHash
+    Public FileName, FileHash As String
+End Class
