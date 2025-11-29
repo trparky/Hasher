@@ -83,9 +83,12 @@ Namespace FileAssociation
                 If selectedKey.OpenSubKey("Verify against known hash with Hasher") IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify against known hash with Hasher")
             End Using
 
-            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\Folder\Shell", True)
-                If selectedKey.OpenSubKey("Hash with Hasher") IsNot Nothing Then selectedKey.DeleteSubKeyTree("Hash with Hasher")
-            End Using
+            Try
+                Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\Folder\Shell", True)
+                    If selectedKey.OpenSubKey("Hash with Hasher") IsNot Nothing Then selectedKey.DeleteSubKeyTree("Hash with Hasher")
+                End Using
+            Catch ex As Exception
+            End Try
         End Sub
 
         Public Sub AddAssociationWithAllFiles()
