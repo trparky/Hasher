@@ -1077,10 +1077,10 @@ Public Class Form1
         listFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders
         verifyHashesListFiles.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders
 
-        If Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\Classes\.md5\Shell\Verify with Hasher", False) Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
-        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher", False) IsNot Nothing Then btnAssociate.Enabled = False
+        If Microsoft.Win32.Registry.LocalMachine.OpenSubKey("Software\Classes\.hasher\Shell\Verify with Hasher", False) Is Nothing Then btnRemoveSystemLevelFileAssociations.Visible = False
+        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.hasher\Shell\Verify with Hasher", False) IsNot Nothing Then btnAssociate.Enabled = False
         If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\*\Shell\Compare Two Files", False) IsNot Nothing Then btnAddHasherToAllFiles.Enabled = False
-        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.sha256\Shell\Verify with Hasher", False) Is Nothing Then btnRemoveFileAssociations.Enabled = False
+        If Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software\Classes\.hasher\Shell\Verify with Hasher", False) Is Nothing Then btnRemoveFileAssociations.Enabled = False
 
         If My.Settings.defaultHash < 0 Or My.Settings.defaultHash > 4 Then My.Settings.defaultHash = Byte.Parse(2)
         defaultHashType.SelectedIndex = My.Settings.defaultHash
@@ -2500,6 +2500,7 @@ Public Class Form1
         FileAssociation.SelfCreateAssociation(".sha256", "Checksum File")
         FileAssociation.SelfCreateAssociation(".sha384", "Checksum File")
         FileAssociation.SelfCreateAssociation(".sha512", "Checksum File")
+        FileAssociation.SelfCreateAssociation(".hasher", "Checksum File")
 
         MsgBox("File association complete.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
