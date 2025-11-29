@@ -74,6 +74,9 @@ Namespace FileAssociation
             Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.sha512\Shell", True)
                 If selectedKey IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify with Hasher", False)
             End Using
+            Using selectedKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Classes\.hasher\Shell", True)
+                If selectedKey IsNot Nothing Then selectedKey.DeleteSubKeyTree("Verify with Hasher", False)
+            End Using
         End Sub
 
         Public Sub DeleteAssociationWithAllFiles()
