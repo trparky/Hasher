@@ -4,6 +4,7 @@ Imports System.Security.Cryptography
 Public Class Checksums
     Private ReadOnly checksumStatusUpdater As ChecksumStatusUpdaterDelegate
     Public localPool As ArrayPool(Of Byte)
+    Private Const updateStep As Long = 1024L * 1024L ' 1 MB
 
     ''' <summary>
     ''' This allows you to set up a function to be run while your checksum is being processed. This function can be used to update things on the GUI during a checksum.
@@ -29,6 +30,7 @@ Public Class Checksums
         Dim byteDataBuffer As Byte() = localPool.Rent(intBufferSize)
         Dim longTotalBytesRead As Long = 0
         Dim intBytesRead As Integer
+        Dim lastUpdate As Long = Environment.TickCount
 
         ' Open file for reading
         Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
@@ -51,12 +53,16 @@ Public Class Checksums
                     Threading.Interlocked.Add(longTotalBytesRead, intBytesRead)
                     Threading.Interlocked.Add(longAllReadBytes, intBytesRead)
 
-                    ' Directly invoke the delegate
-                    checksumStatusUpdater(longFileSize, longTotalBytesRead)
+                    If Environment.TickCount - lastUpdate >= 500 Then ' every 500 ms
+                        lastUpdate = Environment.TickCount
+                        checksumStatusUpdater(longFileSize, longTotalBytesRead)
+                    End If
 
                     ' Check for thread abort
                     If boolAbortThread Then Throw New MyThreadAbortException()
                 Loop
+
+                checksumStatusUpdater(longFileSize, longTotalBytesRead)
 
                 ' Finalize hash calculations
                 md5Engine.TransformFinalBlock(byteDataBuffer, 0, 0)
