@@ -187,6 +187,7 @@ Partial Class Form1
         Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnRemoveFileAssociations = New System.Windows.Forms.Button()
         Me.lblFileCountOnHashIndividualFilesTab = New System.Windows.Forms.Label()
+        Me.BtnConvertSHA512File = New System.Windows.Forms.Button()
         Me.chkHideCheckForUpdatesButton = New System.Windows.Forms.CheckBox()
         Me.ChkAutoScroll = New System.Windows.Forms.CheckBox()
         Me.TabControl1.SuspendLayout()
@@ -234,6 +235,7 @@ Partial Class Form1
         'tabWelcome
         '
         Me.tabWelcome.BackColor = System.Drawing.SystemColors.Control
+        Me.tabWelcome.Controls.Add(Me.BtnConvertSHA512File)
         Me.tabWelcome.Controls.Add(Me.btnDonate)
         Me.tabWelcome.Controls.Add(Me.btnCheckForUpdates)
         Me.tabWelcome.Controls.Add(Me.lblWelcomeText)
@@ -1905,6 +1907,15 @@ Partial Class Form1
         Me.ToolTip.SetToolTip(Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes, resources.GetString("ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.ToolTip"))
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes.UseVisualStyleBackColor = True
         '
+        'BtnConvertSHA512File
+        '
+        Me.BtnConvertSHA512File.Location = New System.Drawing.Point(188, 74)
+        Me.BtnConvertSHA512File.Name = "BtnConvertSHA512File"
+        Me.BtnConvertSHA512File.Size = New System.Drawing.Size(196, 39)
+        Me.BtnConvertSHA512File.TabIndex = 10
+        Me.BtnConvertSHA512File.Text = "Convert SHA512 File to Hasher File"
+        Me.BtnConvertSHA512File.UseVisualStyleBackColor = True
+        '
         'btnRemoveFileAssociations
         '
         Me.btnRemoveFileAssociations.Location = New System.Drawing.Point(439, 406)
@@ -2156,4 +2167,5 @@ Partial Class Form1
     Friend WithEvents lblFileCountOnHashIndividualFilesTab As Label
     Friend WithEvents chkHideCheckForUpdatesButton As CheckBox
     Friend WithEvents ChkAutoScroll As CheckBox
+    Friend WithEvents BtnConvertSHA512File As Button
 End Class

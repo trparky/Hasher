@@ -3640,4 +3640,53 @@ Public Class Form1
             End If
         End If
     End Sub
+
+    Private Sub BtnConvertSHA512File_Click(sender As Object, e As EventArgs) Handles BtnConvertSHA512File.Click
+        Using OpenFileDialog As New OpenFileDialog
+            OpenFileDialog.Title = "Select a SHA512 hash file to convert..."
+            OpenFileDialog.Filter = "SHA512 Checksum File|*.sha512"
+
+            If OpenFileDialog.ShowDialog() = DialogResult.OK Then
+                Dim dataInFileArray As String() = IO.File.ReadAllLines(OpenFileDialog.FileName)
+                Dim strHashFileNameWithoutExtension As String = IO.Path.GetFileNameWithoutExtension(OpenFileDialog.FileName)
+                Dim strDirectoryThatContainsTheChecksumFile As String = IO.Path.GetDirectoryName(OpenFileDialog.FileName)
+
+                Dim regExMatchObject As Text.RegularExpressions.Match = Nothing
+                Dim strChecksum, strFileName As String
+
+                Dim listOfChecksums As New List(Of MyHash)
+
+                For Each strLineInFile As String In dataInFileArray
+                    If Not strLineInFile.StartsWith("'") Then
+                        If IsRegexMatch(hashLineParser, strLineInFile, regExMatchObject) Then
+                            strChecksum = regExMatchObject.Groups("checksum").Value.Trim
+                            strFileName = regExMatchObject.Groups("filename").Value.Trim
+
+                            If Not IO.Path.IsPathRooted(strChecksum) Then
+                                strFileName = IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strFileName)
+                            End If
+
+                            If chkSaveChecksumFilesWithRelativePaths.Checked Then
+                                listOfChecksums.Add(New MyHash With {
+                                    .FileName = strFileName.Replace(strDirectoryThatContainsTheChecksumFile & "\", "", StringComparison.OrdinalIgnoreCase),
+                                    .FileHash = strChecksum
+                                })
+                            Else
+                                listOfChecksums.Add(New MyHash With {
+                                    .FileName = strFileName,
+                                    .FileHash = strChecksum
+                                })
+                            End If
+                        End If
+                    End If
+                Next
+
+                Using fileStream As New IO.StreamWriter(IO.Path.Combine(strDirectoryThatContainsTheChecksumFile, strHashFileNameWithoutExtension & ".hasher"))
+                    fileStream.Write(Newtonsoft.Json.JsonConvert.SerializeObject(listOfChecksums, Newtonsoft.Json.Formatting.Indented))
+                End Using
+
+                MsgBox("Conversion complete! The new .hasher file has been created in the same directory as the original SHA512 file.", MsgBoxStyle.Information, strMessageBoxTitleText)
+            End If
+        End Using
+    End Sub
 End Class
