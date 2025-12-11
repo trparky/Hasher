@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Security.Principal
+Imports System.Windows.Input
 
 Public Module Globals
     ''' <summary>These two variables, longAllReadBytes and longAllBytes, and used to track overall hashing progress of all files to be processed.</summary>
@@ -12,6 +13,7 @@ Public Module Globals
     Public Const DoubleCRLF As String = vbCrLf & vbCrLf
     Public boolAbortThread As Boolean = False
     Public strEXEPath As String = Process.GetCurrentProcess.MainModule.FileName
+    Public strPathToConfigBackupFile As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "hasher_config_backup.json")
 
     Public Function VerifyWindowLocation(point As Point, ByRef window As Form) As Point
         Dim screen As Screen = Screen.FromPoint(point) ' Get the screen based on the new window location
@@ -51,7 +53,7 @@ Public Module Globals
                     parsedArguments(key) = True
                 End If
             Else
-                Console.WriteLine($"Unrecognized argument format: {strArgument}")
+                If Not parsedArguments.ContainsKey("hashfile") Then parsedArguments("hashfile") = strArgument.Replace("""", "")
             End If
         Next
 
@@ -99,7 +101,7 @@ Public Module Globals
         ElseIf size > (2 ^ 50) And size <= (2 ^ 60) Then
             result = $"{MyRoundingFunction(size / (2 ^ 50), shortRoundNumber)} PBs"
         ElseIf size > (2 ^ 60) And size <= (2 ^ 70) Then
-            result = $"{MyRoundingFunction(size / (2 ^ 50), shortRoundNumber)} EBs"
+            result = $"{MyRoundingFunction(size / (2 ^ 60), shortRoundNumber)} EBs"
         Else
             result = "(None)"
         End If
