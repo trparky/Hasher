@@ -558,6 +558,24 @@ Public Class Form1
         lblHashIndividualFilesTotalStatus.Visible = False
     End Sub
 
+    Private Function GetRelativePath(basePath As String, targetPath As String) As String
+        'Convert file paths to URI
+        Dim baseUri As New Uri(IO.Path.GetFullPath(basePath))
+        Dim targetUri As New Uri(IO.Path.GetFullPath(targetPath))
+
+        'If base is a file, use its directory
+        If Not basePath.EndsWith(IO.Path.DirectorySeparatorChar) AndAlso IO.File.Exists(basePath) Then
+            baseUri = New Uri(IO.Path.GetDirectoryName(basePath) & IO.Path.DirectorySeparatorChar)
+        End If
+
+        'Make the relative URI
+        Dim relativeUri As Uri = baseUri.MakeRelativeUri(targetUri)
+
+        'Convert to OS path format and return
+        Dim relPath As String = Uri.UnescapeDataString(relativeUri.ToString())
+        Return relPath.Replace("/"c, IO.Path.DirectorySeparatorChar)
+    End Function
+
     Private Function StrGetIndividualHashesInStringFormat(strPathOfChecksumFile As String, checksumType As HashAlgorithmName) As String
         Dim strDirectoryName As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName
         Dim folderOfChecksumFile As String = If(strDirectoryName.Length = 3, strDirectoryName, $"{strDirectoryName}\")
@@ -569,7 +587,7 @@ Public Class Form1
         For Each item As MyDataGridViewRow In listFiles.Rows
             If Not String.IsNullOrWhiteSpace(item.Hash) Then
                 strFile = item.FileName
-                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = strFile.Replace(folderOfChecksumFile, "", StringComparison.OrdinalIgnoreCase)
+                If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = GetRelativePath(strPathOfChecksumFile, strFile)
                 stringBuilder.AppendLine($"{GetDataFromAllTheHashes(checksumType, item.AllTheHashes)} *{strFile}")
             End If
         Next
