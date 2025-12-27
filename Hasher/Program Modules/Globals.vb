@@ -15,6 +15,28 @@ Public Module Globals
     Public strEXEPath As String = Process.GetCurrentProcess.MainModule.FileName
     Public strPathToConfigBackupFile As String = IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "hasher_config_backup.json")
 
+    Public Sub WriteFileAtomically(path As String, contents As String)
+        Dim tmpPath As String = path & ".tmp"
+
+        Try
+            IO.File.WriteAllText(tmpPath, contents, System.Text.Encoding.UTF8)
+
+            If IO.File.Exists(path) Then
+                IO.File.Replace(tmpPath, path, Nothing)
+            Else
+                IO.File.Move(tmpPath, path)
+            End If
+        Catch
+            ' Fail silently
+        Finally
+            Try
+                If IO.File.Exists(tmpPath) Then IO.File.Delete(tmpPath)
+            Catch
+                ' Fail silently
+            End Try
+        End Try
+    End Sub
+
     Public Function VerifyWindowLocation(point As Point, ByRef window As Form) As Point
         Dim screen As Screen = Screen.FromPoint(point) ' Get the screen based on the new window location
 

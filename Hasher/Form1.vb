@@ -731,9 +731,7 @@ Public Class Form1
                         checksumType = HashAlgorithmName.SHA512
                 End Select
 
-                Using streamWriter As New IO.StreamWriter(SaveFileDialog.FileName, False, System.Text.Encoding.UTF8)
-                    streamWriter.Write(StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
-                End Using
+                WriteFileAtomically(SaveFileDialog.FileName, StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
 
                 Dim openInExplorerMsgBoxResult As MsgBoxResult
 

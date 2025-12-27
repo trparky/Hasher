@@ -29,9 +29,7 @@ Public Module SaveAppSettings
             End If
         Next
 
-        Using streamWriter As New IO.StreamWriter(strFileName)
-            streamWriter.Write(Newtonsoft.Json.JsonConvert.SerializeObject(exportedSettingsArray))
-        End Using
+        WriteFileAtomically(strFileName, Newtonsoft.Json.JsonConvert.SerializeObject(exportedSettingsArray))
     End Sub
 
     Public Function LoadApplicationSettingsFromFile(strFileName As String, strMessageBoxTitle As String) As Boolean
