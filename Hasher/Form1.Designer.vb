@@ -252,7 +252,7 @@ Partial Class Form1
         Me.btnDonate.Name = "btnDonate"
         Me.btnDonate.Size = New System.Drawing.Size(163, 39)
         Me.btnDonate.TabIndex = 9
-        Me.btnDonate.Text = "Donate Money to Developer"
+        Me.btnDonate.Text = "Donate Money to Developer" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "via ""Buy Me A Coffee"""
         Me.btnDonate.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnDonate.UseVisualStyleBackColor = True
         '
