@@ -252,7 +252,7 @@ Partial Class Form1
         Me.btnDonate.Name = "btnDonate"
         Me.btnDonate.Size = New System.Drawing.Size(163, 39)
         Me.btnDonate.TabIndex = 9
-        Me.btnDonate.Text = "Donate Money to Developer"
+        Me.btnDonate.Text = "Donate Money to Developer" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "via ""Buy Me A Coffee"""
         Me.btnDonate.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnDonate.UseVisualStyleBackColor = True
         '
@@ -275,7 +275,7 @@ Partial Class Form1
         Me.lblWelcomeText.Size = New System.Drawing.Size(315, 52)
         Me.lblWelcomeText.TabIndex = 0
         Me.lblWelcomeText.Text = "Welcome to Hasher, the only hash program you need." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Hasher version {0}" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Written" &
-    " by Tom Parkison. Copyright Thomas Parkison 2018-2024."
+    " by Tom Parkison. Copyright Thomas Parkison 2018-2030."
         '
         'tabHashText
         '
