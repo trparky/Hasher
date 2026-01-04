@@ -34,55 +34,67 @@ Public Class Checksums
 
         ' Open file for reading
         Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
-            ' Using statements automatically handle disposal of hash engines
-            Using md5Engine As New MD5CryptoServiceProvider(), sha160Engine As New SHA1CryptoServiceProvider(), sha256Engine As New SHA256CryptoServiceProvider(), sha384Engine As New SHA384CryptoServiceProvider(), sha512Engine As New SHA512CryptoServiceProvider()
+            Using md5Engine As New MD5Cng(), sha160Engine As New SHA1Cng(), sha256Engine As New SHA256Cng(), sha384Engine As New SHA384Cng(), sha512Engine As New SHA512Cng()
                 ' Read data from file in chunks and update hash engines
-                Do
-                    If boolAbortThread Then Throw New MyThreadAbortException
+                While True
+                    ' Check for thread abort
+                    If boolAbortThread Then Throw New MyThreadAbortException()
+
                     intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length)
-                    If intBytesRead <= 0 Then Exit Do
 
-                    ' Update hash algorithms with read data
-                    md5Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
-                    sha160Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
-                    sha256Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
-                    sha384Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
-                    sha512Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, byteDataBuffer, 0)
+                    If intBytesRead <= 0 Then Exit While
 
-                    ' Update progress
-                    Threading.Interlocked.Add(longTotalBytesRead, intBytesRead)
+                    md5Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
+                    sha160Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
+                    sha256Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
+                    sha384Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
+                    sha512Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
+
+                    longTotalBytesRead += intBytesRead
                     Threading.Interlocked.Add(longAllReadBytes, intBytesRead)
 
                     If Environment.TickCount - lastUpdate >= 500 Then ' every 500 ms
                         lastUpdate = Environment.TickCount
                         checksumStatusUpdater(longFileSize, longTotalBytesRead)
                     End If
-
-                    ' Check for thread abort
-                    If boolAbortThread Then Throw New MyThreadAbortException()
-                Loop
+                End While
 
                 checksumStatusUpdater(longFileSize, longTotalBytesRead)
 
-                ' Finalize hash calculations
-                md5Engine.TransformFinalBlock(byteDataBuffer, 0, 0)
-                sha160Engine.TransformFinalBlock(byteDataBuffer, 0, 0)
-                sha256Engine.TransformFinalBlock(byteDataBuffer, 0, 0)
-                sha384Engine.TransformFinalBlock(byteDataBuffer, 0, 0)
-                sha512Engine.TransformFinalBlock(byteDataBuffer, 0, 0)
+                localPool.Return(byteDataBuffer, clearArray:=False)
 
-                localPool.Return(byteDataBuffer, clearArray:=True)
+                md5Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
+                sha160Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
+                sha256Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
+                sha384Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
+                sha512Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
 
-                ' Return the results in the AllTheHashes object
                 Return New AllTheHashes With {
-                    .Md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", ""),
-                    .Sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", ""),
-                    .Sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", ""),
-                    .Sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", ""),
-                    .Sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
+                    .Md5 = BytesToHex(md5Engine.Hash),
+                    .Sha160 = BytesToHex(sha160Engine.Hash),
+                    .Sha256 = BytesToHex(sha256Engine.Hash),
+                    .Sha384 = BytesToHex(sha384Engine.Hash),
+                    .Sha512 = BytesToHex(sha512Engine.Hash)
                 }
             End Using
         End Using
+    End Function
+
+    Private Function BytesToHex(bytes As Byte()) As String
+        Dim chars(bytes.Length * 2 - 1) As Char
+        Dim idx As Integer = 0
+
+        For Each b In bytes
+            Dim hi = b >> 4
+            Dim lo = b And &HF
+
+            chars(idx) = ChrW(If(hi < 10, 48 + hi, 87 + hi))
+            idx += 1
+            chars(idx) = ChrW(If(lo < 10, 48 + lo, 87 + lo))
+            idx += 1
+        Next
+
+        Return New String(chars)
     End Function
 End Class
 
