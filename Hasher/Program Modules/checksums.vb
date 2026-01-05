@@ -21,7 +21,7 @@ Public Class Checksums
         checksumStatusUpdater = inputDelegate
     End Sub
 
-    Public Function PerformFileHash(strFileName As String, intBufferSize As Integer) As AllTheHashes
+    Public Function PerformFileHash(strFileName As String, intBufferSize As Integer, hashType As HashAlgorithmName) As String
         ' Get file size and adjust buffer size accordingly
         Dim longFileSize As Long = New IO.FileInfo(strFileName).Length
         intBufferSize = If(longFileSize = 0, 1, Math.Min(intBufferSize, longFileSize))
@@ -31,56 +31,57 @@ Public Class Checksums
         Dim longTotalBytesRead As Long = 0
         Dim intBytesRead As Integer
         Dim lastUpdate As Long = Environment.TickCount
+        Dim hashEngine As HashAlgorithm
+
+        If hashType = HashAlgorithmName.MD5 Then
+            hashEngine = New MD5Cng()
+        ElseIf hashType = HashAlgorithmName.SHA1 Then
+            hashEngine = New SHA1Cng()
+        ElseIf hashType = HashAlgorithmName.SHA256 Then
+            hashEngine = New SHA256Cng()
+        ElseIf hashType = HashAlgorithmName.SHA384 Then
+            hashEngine = New SHA384Cng()
+        ElseIf hashType = HashAlgorithmName.SHA512 Then
+            hashEngine = New SHA512Cng()
+        Else
+            hashEngine = New SHA256Cng()
+        End If
 
         ' Open file for reading
         Using stream As New IO.FileStream(strFileName, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read, intBufferSize, IO.FileOptions.SequentialScan)
-            Using md5Engine As New MD5Cng(), sha160Engine As New SHA1Cng(), sha256Engine As New SHA256Cng(), sha384Engine As New SHA384Cng(), sha512Engine As New SHA512Cng()
-                ' Read data from file in chunks and update hash engines
-                While True
-                    ' Check for thread abort
-                    If boolAbortThread Then Throw New MyThreadAbortException()
+            ' Read data from file in chunks and update hash engines
+            While True
+                ' Check for thread abort
+                If boolAbortThread Then Throw New MyThreadAbortException()
 
-                    intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length)
+                intBytesRead = stream.Read(byteDataBuffer, 0, byteDataBuffer.Length)
 
-                    If intBytesRead <= 0 Then Exit While
+                If intBytesRead <= 0 Then Exit While
 
-                    md5Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
-                    sha160Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
-                    sha256Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
-                    sha384Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
-                    sha512Engine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
+                hashEngine.TransformBlock(byteDataBuffer, 0, intBytesRead, Nothing, 0)
 
-                    longTotalBytesRead += intBytesRead
-                    Threading.Interlocked.Add(longAllReadBytes, intBytesRead)
+                longTotalBytesRead += intBytesRead
+                Threading.Interlocked.Add(longAllReadBytes, intBytesRead)
 
-                    If Environment.TickCount - lastUpdate >= 500 Then ' every 500 ms
-                        lastUpdate = Environment.TickCount
-                        checksumStatusUpdater(longFileSize, longTotalBytesRead)
-                    End If
-                End While
+                If Environment.TickCount - lastUpdate >= 500 Then ' every 500 ms
+                    lastUpdate = Environment.TickCount
+                    checksumStatusUpdater(longFileSize, longTotalBytesRead)
+                End If
+            End While
 
-                checksumStatusUpdater(longFileSize, longTotalBytesRead)
+            checksumStatusUpdater(longFileSize, longTotalBytesRead)
 
-                localPool.Return(byteDataBuffer, clearArray:=False)
+            localPool.Return(byteDataBuffer, clearArray:=False)
 
-                md5Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
-                sha160Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
-                sha256Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
-                sha384Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
-                sha512Engine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
+            hashEngine.TransformFinalBlock(Array.Empty(Of Byte)(), 0, 0)
+            Dim strHash As String = BytesToHex(hashEngine.Hash)
+            hashEngine.dispose()
 
-                Return New AllTheHashes With {
-                    .Md5 = BytesToHex(md5Engine.Hash),
-                    .Sha160 = BytesToHex(sha160Engine.Hash),
-                    .Sha256 = BytesToHex(sha256Engine.Hash),
-                    .Sha384 = BytesToHex(sha384Engine.Hash),
-                    .Sha512 = BytesToHex(sha512Engine.Hash)
-                }
-            End Using
+            Return strHash
         End Using
     End Function
 
-    Private Function BytesToHex(bytes As Byte()) As String
+    Public Shared Function BytesToHex(bytes As Byte()) As String
         Dim chars(bytes.Length * 2 - 1) As Char
         Dim idx As Integer = 0
 
@@ -97,14 +98,6 @@ Public Class Checksums
         Return New String(chars)
     End Function
 End Class
-
-Public Structure AllTheHashes
-    Public Property Md5 As String
-    Public Property Sha160 As String
-    Public Property Sha256 As String
-    Public Property Sha384 As String
-    Public Property Sha512 As String
-End Structure
 
 ' Strongly typed delegate
 Public Delegate Sub ChecksumStatusUpdaterDelegate(fileSize As Long, bytesRead As Long)

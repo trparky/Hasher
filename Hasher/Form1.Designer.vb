@@ -70,11 +70,7 @@ Partial Class Form1
         Me.listFilesContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.listFilesContextMenuFileName = New System.Windows.Forms.ToolStripMenuItem()
         Me.listFilesContextMenuLine = New System.Windows.Forms.ToolStripSeparator()
-        Me.listFilesContextMenuMD5 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.listFilesContextMenuSHA160 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.listFilesContextMenuSHA256 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.listFilesContextMenuSHA384 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.listFilesContextMenuSHA512 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.listFilesContextMenuChecksum = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnRemoveSelectedFiles = New System.Windows.Forms.Button()
         Me.btnRemoveAllFiles = New System.Windows.Forms.Button()
         Me.btnAddFilesInFolder = New System.Windows.Forms.Button()
@@ -93,11 +89,7 @@ Partial Class Form1
         Me.verifyListFilesContextMenuLine1 = New System.Windows.Forms.ToolStripSeparator()
         Me.verifyListFilesContextMenuFileName = New System.Windows.Forms.ToolStripMenuItem()
         Me.verifyListFilesContextMenuLine2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.verifyListFilesContextMenuMD5 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.verifyListFilesContextMenuSHA160 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.verifyListFilesContextMenuSHA256 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.verifyListFilesContextMenuSHA384 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.verifyListFilesContextMenuSHA512 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.verifyListFilesContextMenuChecksum = New System.Windows.Forms.ToolStripMenuItem()
         Me.verifySavedHashesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.VerifyHashProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblVerifyHashStatusProcessingFile = New System.Windows.Forms.Label()
@@ -555,7 +547,7 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep2.Name = "lblHashIndividualFilesStep2"
         Me.lblHashIndividualFilesStep2.Size = New System.Drawing.Size(459, 13)
         Me.lblHashIndividualFilesStep2.TabIndex = 18
-        Me.lblHashIndividualFilesStep2.Text = "Step 3: Select your hash type for display and copying to the Windows Clipboard"
+        Me.lblHashIndividualFilesStep2.Text = "Step 3: Select your hash type"
         '
         'btnIndividualFilesSaveResultsToDisk
         '
@@ -594,7 +586,7 @@ Partial Class Form1
         '
         Me.radioMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioMD5.AutoSize = True
-        Me.radioMD5.Location = New System.Drawing.Point(503, 375)
+        Me.radioMD5.Location = New System.Drawing.Point(704, 375)
         Me.radioMD5.Name = "radioMD5"
         Me.radioMD5.Size = New System.Drawing.Size(296, 17)
         Me.radioMD5.TabIndex = 11
@@ -605,22 +597,24 @@ Partial Class Form1
         '
         Me.radioSHA512.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA512.AutoSize = True
-        Me.radioSHA512.Location = New System.Drawing.Point(164, 375)
+        Me.radioSHA512.Location = New System.Drawing.Point(365, 375)
         Me.radioSHA512.Name = "radioSHA512"
         Me.radioSHA512.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA512.TabIndex = 10
         Me.radioSHA512.Text = "SHA-512"
+        Me.ToolTip.SetToolTip(Me.radioSHA512, "Very secure, but again, slower than SHA-256.")
         Me.radioSHA512.UseVisualStyleBackColor = True
         '
         'radioSHA384
         '
         Me.radioSHA384.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA384.AutoSize = True
-        Me.radioSHA384.Location = New System.Drawing.Point(90, 375)
+        Me.radioSHA384.Location = New System.Drawing.Point(291, 375)
         Me.radioSHA384.Name = "radioSHA384"
         Me.radioSHA384.Size = New System.Drawing.Size(68, 17)
         Me.radioSHA384.TabIndex = 9
         Me.radioSHA384.Text = "SHA-384"
+        Me.ToolTip.SetToolTip(Me.radioSHA384, "More secure, but slower than SHA-256.")
         Me.radioSHA384.UseVisualStyleBackColor = True
         '
         'radioSHA256
@@ -630,17 +624,17 @@ Partial Class Form1
         Me.radioSHA256.Checked = True
         Me.radioSHA256.Location = New System.Drawing.Point(16, 375)
         Me.radioSHA256.Name = "radioSHA256"
-        Me.radioSHA256.Size = New System.Drawing.Size(68, 17)
+        Me.radioSHA256.Size = New System.Drawing.Size(269, 17)
         Me.radioSHA256.TabIndex = 8
         Me.radioSHA256.TabStop = True
-        Me.radioSHA256.Text = "SHA-256"
+        Me.radioSHA256.Text = "SHA-256 (Recommended, fastest on modern CPUs)"
         Me.radioSHA256.UseVisualStyleBackColor = True
         '
         'radioSHA1
         '
         Me.radioSHA1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.radioSHA1.AutoSize = True
-        Me.radioSHA1.Location = New System.Drawing.Point(238, 375)
+        Me.radioSHA1.Location = New System.Drawing.Point(439, 375)
         Me.radioSHA1.Name = "radioSHA1"
         Me.radioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.radioSHA1.TabIndex = 7
@@ -712,7 +706,7 @@ Partial Class Form1
         '
         'listFilesContextMenu
         '
-        Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.listFilesContextMenuFileName, Me.listFilesContextMenuLine, Me.listFilesContextMenuMD5, Me.listFilesContextMenuSHA160, Me.listFilesContextMenuSHA256, Me.listFilesContextMenuSHA384, Me.listFilesContextMenuSHA512})
+        Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.listFilesContextMenuFileName, Me.listFilesContextMenuLine, Me.listFilesContextMenuChecksum})
         Me.listFilesContextMenu.Name = "ContextMenuStrip1"
         Me.listFilesContextMenu.Size = New System.Drawing.Size(131, 142)
         '
@@ -727,35 +721,11 @@ Partial Class Form1
         Me.listFilesContextMenuLine.Name = "listFilesContextMenuLine"
         Me.listFilesContextMenuLine.Size = New System.Drawing.Size(127, 6)
         '
-        'listFilesContextMenuMD5
+        'listFilesContextMenuChecksum
         '
-        Me.listFilesContextMenuMD5.Name = "listFilesContextMenuMD5"
-        Me.listFilesContextMenuMD5.Size = New System.Drawing.Size(130, 22)
-        Me.listFilesContextMenuMD5.Text = "MD5:"
-        '
-        'listFilesContextMenuSHA160
-        '
-        Me.listFilesContextMenuSHA160.Name = "listFilesContextMenuSHA160"
-        Me.listFilesContextMenuSHA160.Size = New System.Drawing.Size(130, 22)
-        Me.listFilesContextMenuSHA160.Text = "SHA160:"
-        '
-        'listFilesContextMenuSHA256
-        '
-        Me.listFilesContextMenuSHA256.Name = "listFilesContextMenuSHA256"
-        Me.listFilesContextMenuSHA256.Size = New System.Drawing.Size(130, 22)
-        Me.listFilesContextMenuSHA256.Text = "SHA256:"
-        '
-        'listFilesContextMenuSHA384
-        '
-        Me.listFilesContextMenuSHA384.Name = "listFilesContextMenuSHA384"
-        Me.listFilesContextMenuSHA384.Size = New System.Drawing.Size(130, 22)
-        Me.listFilesContextMenuSHA384.Text = "SHA384:"
-        '
-        'listFilesContextMenuSHA512
-        '
-        Me.listFilesContextMenuSHA512.Name = "listFilesContextMenuSHA512"
-        Me.listFilesContextMenuSHA512.Size = New System.Drawing.Size(130, 22)
-        Me.listFilesContextMenuSHA512.Text = "SHA512:"
+        Me.listFilesContextMenuChecksum.Name = "listFilesContextMenuChecksum"
+        Me.listFilesContextMenuChecksum.Size = New System.Drawing.Size(130, 22)
+        Me.listFilesContextMenuChecksum.Text = "Checksum:"
         '
         'btnRemoveSelectedFiles
         '
@@ -894,7 +864,7 @@ Partial Class Form1
         '
         'verifyListFilesContextMenu
         '
-        Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem, Me.verifyListFilesContextMenuLine1, Me.verifyListFilesContextMenuFileName, Me.verifyListFilesContextMenuLine2, Me.verifyListFilesContextMenuMD5, Me.verifyListFilesContextMenuSHA160, Me.verifyListFilesContextMenuSHA256, Me.verifyListFilesContextMenuSHA384, Me.verifyListFilesContextMenuSHA512})
+        Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem, Me.verifyListFilesContextMenuLine1, Me.verifyListFilesContextMenuFileName, Me.verifyListFilesContextMenuLine2, Me.verifyListFilesContextMenuChecksum})
         Me.verifyListFilesContextMenu.Name = "verifyListFilesContextMenu"
         Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 170)
         '
@@ -920,35 +890,11 @@ Partial Class Form1
         Me.verifyListFilesContextMenuLine2.Name = "verifyListFilesContextMenuLine2"
         Me.verifyListFilesContextMenuLine2.Size = New System.Drawing.Size(212, 6)
         '
-        'verifyListFilesContextMenuMD5
+        'verifyListFilesContextMenuChecksum
         '
-        Me.verifyListFilesContextMenuMD5.Name = "verifyListFilesContextMenuMD5"
-        Me.verifyListFilesContextMenuMD5.Size = New System.Drawing.Size(215, 22)
-        Me.verifyListFilesContextMenuMD5.Text = "MD5:"
-        '
-        'verifyListFilesContextMenuSHA160
-        '
-        Me.verifyListFilesContextMenuSHA160.Name = "verifyListFilesContextMenuSHA160"
-        Me.verifyListFilesContextMenuSHA160.Size = New System.Drawing.Size(215, 22)
-        Me.verifyListFilesContextMenuSHA160.Text = "SHA160:"
-        '
-        'verifyListFilesContextMenuSHA256
-        '
-        Me.verifyListFilesContextMenuSHA256.Name = "verifyListFilesContextMenuSHA256"
-        Me.verifyListFilesContextMenuSHA256.Size = New System.Drawing.Size(215, 22)
-        Me.verifyListFilesContextMenuSHA256.Text = "SHA256:"
-        '
-        'verifyListFilesContextMenuSHA384
-        '
-        Me.verifyListFilesContextMenuSHA384.Name = "verifyListFilesContextMenuSHA384"
-        Me.verifyListFilesContextMenuSHA384.Size = New System.Drawing.Size(215, 22)
-        Me.verifyListFilesContextMenuSHA384.Text = "SHA384:"
-        '
-        'verifyListFilesContextMenuSHA512
-        '
-        Me.verifyListFilesContextMenuSHA512.Name = "verifyListFilesContextMenuSHA512"
-        Me.verifyListFilesContextMenuSHA512.Size = New System.Drawing.Size(215, 22)
-        Me.verifyListFilesContextMenuSHA512.Text = "SHA512:"
+        Me.verifyListFilesContextMenuChecksum.Name = "verifyListFilesContextMenuChecksum"
+        Me.verifyListFilesContextMenuChecksum.Size = New System.Drawing.Size(215, 22)
+        Me.verifyListFilesContextMenuChecksum.Text = "Checksum:"
         '
         'verifySavedHashesTableLayoutControl
         '
@@ -1197,7 +1143,7 @@ Partial Class Form1
         'compareRadioMD5
         '
         Me.compareRadioMD5.AutoSize = True
-        Me.compareRadioMD5.Location = New System.Drawing.Point(548, 131)
+        Me.compareRadioMD5.Location = New System.Drawing.Point(749, 131)
         Me.compareRadioMD5.Name = "compareRadioMD5"
         Me.compareRadioMD5.Size = New System.Drawing.Size(296, 17)
         Me.compareRadioMD5.TabIndex = 26
@@ -1208,22 +1154,24 @@ Partial Class Form1
         '
         Me.compareRadioSHA512.AutoSize = True
         Me.compareRadioSHA512.Checked = True
-        Me.compareRadioSHA512.Location = New System.Drawing.Point(166, 131)
+        Me.compareRadioSHA512.Location = New System.Drawing.Point(367, 131)
         Me.compareRadioSHA512.Name = "compareRadioSHA512"
         Me.compareRadioSHA512.Size = New System.Drawing.Size(111, 17)
         Me.compareRadioSHA512.TabIndex = 25
         Me.compareRadioSHA512.TabStop = True
         Me.compareRadioSHA512.Text = "SHA-512 (Default)"
+        Me.ToolTip.SetToolTip(Me.compareRadioSHA512, "Very secure, but again, slower than SHA-256.")
         Me.compareRadioSHA512.UseVisualStyleBackColor = True
         '
         'compareRadioSHA384
         '
         Me.compareRadioSHA384.AutoSize = True
-        Me.compareRadioSHA384.Location = New System.Drawing.Point(92, 131)
+        Me.compareRadioSHA384.Location = New System.Drawing.Point(293, 131)
         Me.compareRadioSHA384.Name = "compareRadioSHA384"
         Me.compareRadioSHA384.Size = New System.Drawing.Size(68, 17)
         Me.compareRadioSHA384.TabIndex = 24
         Me.compareRadioSHA384.Text = "SHA-384"
+        Me.ToolTip.SetToolTip(Me.compareRadioSHA384, "More secure, but slower than SHA-256.")
         Me.compareRadioSHA384.UseVisualStyleBackColor = True
         '
         'compareRadioSHA256
@@ -1231,15 +1179,15 @@ Partial Class Form1
         Me.compareRadioSHA256.AutoSize = True
         Me.compareRadioSHA256.Location = New System.Drawing.Point(18, 131)
         Me.compareRadioSHA256.Name = "compareRadioSHA256"
-        Me.compareRadioSHA256.Size = New System.Drawing.Size(68, 17)
+        Me.compareRadioSHA256.Size = New System.Drawing.Size(269, 17)
         Me.compareRadioSHA256.TabIndex = 23
-        Me.compareRadioSHA256.Text = "SHA-256"
+        Me.compareRadioSHA256.Text = "SHA-256 (Recommended, fastest on modern CPUs)"
         Me.compareRadioSHA256.UseVisualStyleBackColor = True
         '
         'compareRadioSHA1
         '
         Me.compareRadioSHA1.AutoSize = True
-        Me.compareRadioSHA1.Location = New System.Drawing.Point(283, 131)
+        Me.compareRadioSHA1.Location = New System.Drawing.Point(484, 131)
         Me.compareRadioSHA1.Name = "compareRadioSHA1"
         Me.compareRadioSHA1.Size = New System.Drawing.Size(259, 17)
         Me.compareRadioSHA1.TabIndex = 22
@@ -2135,16 +2083,8 @@ Partial Class Form1
     Friend WithEvents BtnSaveSettingsToFile As Button
     Friend WithEvents BtnLoadSettingsFromFile As Button
     Friend WithEvents chkClearBeforeTransferringFromVerifyToHash As CheckBox
-    Friend WithEvents listFilesContextMenuMD5 As ToolStripMenuItem
-    Friend WithEvents listFilesContextMenuSHA160 As ToolStripMenuItem
-    Friend WithEvents listFilesContextMenuSHA256 As ToolStripMenuItem
-    Friend WithEvents listFilesContextMenuSHA384 As ToolStripMenuItem
-    Friend WithEvents listFilesContextMenuSHA512 As ToolStripMenuItem
-    Friend WithEvents verifyListFilesContextMenuMD5 As ToolStripMenuItem
-    Friend WithEvents verifyListFilesContextMenuSHA160 As ToolStripMenuItem
-    Friend WithEvents verifyListFilesContextMenuSHA256 As ToolStripMenuItem
-    Friend WithEvents verifyListFilesContextMenuSHA384 As ToolStripMenuItem
-    Friend WithEvents verifyListFilesContextMenuSHA512 As ToolStripMenuItem
+    Friend WithEvents listFilesContextMenuChecksum As ToolStripMenuItem
+    Friend WithEvents verifyListFilesContextMenuChecksum As ToolStripMenuItem
     Friend WithEvents listFilesContextMenuFileName As ToolStripMenuItem
     Friend WithEvents verifyListFilesContextMenuFileName As ToolStripMenuItem
     Friend WithEvents listFilesContextMenuLine As ToolStripSeparator

@@ -1,4 +1,5 @@
 ﻿Imports System.Buffers
+Imports System.Security.Cryptography
 
 Public Class Benchmark
     Private workingThread As Threading.Thread
@@ -108,7 +109,7 @@ Public Class Benchmark
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New Checksums(subRoutine, pool)
-                strChecksum = checksums.PerformFileHash(strFile, intBufferSize).Sha256
+                strChecksum = checksums.PerformFileHash(strFile, intBufferSize, HashAlgorithmName.SHA256)
                 Return True
             Else
                 Return False
