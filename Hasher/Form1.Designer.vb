@@ -1091,7 +1091,7 @@ Partial Class Form1
         'pictureBoxCompareFiles
         '
         Me.pictureBoxCompareFiles.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pictureBoxCompareFiles.Location = New System.Drawing.Point(969, 14)
+        Me.pictureBoxCompareFiles.Location = New System.Drawing.Point(1543, 14)
         Me.pictureBoxCompareFiles.Name = "pictureBoxCompareFiles"
         Me.pictureBoxCompareFiles.Size = New System.Drawing.Size(64, 64)
         Me.pictureBoxCompareFiles.TabIndex = 36
@@ -1250,7 +1250,7 @@ Partial Class Form1
         '
         Me.btnCompareFilesBrowseFile2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCompareFilesBrowseFile2.Image = Global.Hasher.My.Resources.Resources.folder_explore
-        Me.btnCompareFilesBrowseFile2.Location = New System.Drawing.Point(938, 60)
+        Me.btnCompareFilesBrowseFile2.Location = New System.Drawing.Point(1512, 60)
         Me.btnCompareFilesBrowseFile2.Name = "btnCompareFilesBrowseFile2"
         Me.btnCompareFilesBrowseFile2.Size = New System.Drawing.Size(25, 23)
         Me.btnCompareFilesBrowseFile2.TabIndex = 5
@@ -1261,7 +1261,7 @@ Partial Class Form1
         '
         Me.btnCompareFilesBrowseFile1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCompareFilesBrowseFile1.Image = Global.Hasher.My.Resources.Resources.folder_explore
-        Me.btnCompareFilesBrowseFile1.Location = New System.Drawing.Point(938, 9)
+        Me.btnCompareFilesBrowseFile1.Location = New System.Drawing.Point(1512, 9)
         Me.btnCompareFilesBrowseFile1.Name = "btnCompareFilesBrowseFile1"
         Me.btnCompareFilesBrowseFile1.Size = New System.Drawing.Size(25, 23)
         Me.btnCompareFilesBrowseFile1.TabIndex = 4
@@ -1287,7 +1287,7 @@ Partial Class Form1
         Me.txtFile2.Location = New System.Drawing.Point(67, 62)
         Me.txtFile2.Name = "txtFile2"
         Me.txtFile2.ReadOnly = True
-        Me.txtFile2.Size = New System.Drawing.Size(865, 20)
+        Me.txtFile2.Size = New System.Drawing.Size(1439, 20)
         Me.txtFile2.TabIndex = 2
         '
         'txtFile1
@@ -1299,7 +1299,7 @@ Partial Class Form1
         Me.txtFile1.Location = New System.Drawing.Point(67, 11)
         Me.txtFile1.Name = "txtFile1"
         Me.txtFile1.ReadOnly = True
-        Me.txtFile1.Size = New System.Drawing.Size(865, 20)
+        Me.txtFile1.Size = New System.Drawing.Size(1439, 20)
         Me.txtFile1.TabIndex = 1
         '
         'Label4
