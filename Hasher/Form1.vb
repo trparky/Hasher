@@ -754,7 +754,7 @@ Public Class Form1
             Dim dataGridRow As MyDataGridViewRow
             For Each item As DataGridViewRow In listFiles.Rows
                 dataGridRow = DirectCast(item, MyDataGridViewRow)
-                dataGridRow.Cells(2).Value = Nothing
+                dataGridRow.Cells(2).Value = strWaitingToBeProcessed
                 dataGridRow.Hash = Nothing
                 dataGridRow = Nothing
             Next
