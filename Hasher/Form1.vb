@@ -3,6 +3,7 @@ Imports System.ComponentModel
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
+Imports System.Threading
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -338,10 +339,8 @@ Public Class Form1
                                                          hashType = HashAlgorithmName.SHA256
                                                      End If
 
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      Dim subRoutine As New ChecksumStatusUpdaterDelegate(Sub(size As Long, totalBytesRead As Long)
                                                                                                              Try
@@ -397,7 +396,7 @@ Public Class Form1
                                                              If boolAbortThread Then Throw New MyThreadAbortException()
                                                              If Not String.IsNullOrWhiteSpace(item.Cells(0).Value) Then
                                                                  myItem = DirectCast(item, MyDataGridViewRow)
-                                                                 If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then longAllBytes += myItem.FileSize
+                                                             If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then Interlocked.Add(longAllBytes, myItem.FileSize)
                                                              End If
                                                          Next
                                                      End SyncLock
@@ -412,9 +411,7 @@ Public Class Form1
                                                              itemOnGUI = Nothing
                                                              MyInvoke(Sub() itemOnGUI = listFiles.Rows(item.Index), Me)
 
-                                                             SyncLock threadLockingObject
-                                                                 If Not IO.File.Exists(myItem.FileName) Then longAllBytes -= myItem.FileSize
-                                                             End SyncLock
+                                                             If Not IO.File.Exists(myItem.FileName) Then Interlocked.Add(longAllBytes, -myItem.FileSize)
 
                                                              If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then
                                                                  MyInvoke(Sub()
@@ -503,10 +500,9 @@ Public Class Form1
                                                      boolAbortThread = False
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
@@ -1225,9 +1221,7 @@ Public Class Form1
         With MyDataGridRow
             If IO.File.Exists(strFileName) Then
                 .FileSize = New IO.FileInfo(strFileName).Length
-                SyncLock threadLockingObject
-                    longAllBytes += .FileSize
-                End SyncLock
+                Interlocked.Add(longAllBytes, .FileSize)
                 .Cells(0).Value = strFileName
                 .Cells(1).Value = FileSizeToHumanSize(MyDataGridRow.FileSize)
                 .Cells(2).Value = ""
@@ -1334,10 +1328,8 @@ Public Class Form1
                                                                   lblVerifyHashStatusProcessingFile.Text = Nothing
                                                               End Sub, Me)
 
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      Dim newDataInFileArray As List(Of String) = dataInFileArray.ToList.Where(Function(strLineInFile2 As String)
                                                                                                                                   Return Not strLineInFile2.Trim.StartsWith("'")
@@ -1617,10 +1609,9 @@ Public Class Form1
                                                      boolAbortThread = False
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
@@ -1869,13 +1860,11 @@ Public Class Form1
             Exit Sub
         End If
 
-        SyncLock threadLockingObject
-            longAllBytes = 0
-            longAllReadBytes = 0
+        Interlocked.Exchange(longAllBytes, 0)
+        Interlocked.Exchange(longAllReadBytes, 0)
 
-            longAllBytes += File1FileInfo.Length
-            longAllBytes += File2FileInfo.Length
-        End SyncLock
+        Interlocked.Add(longAllBytes, File1FileInfo.Length)
+        Interlocked.Add(longAllBytes, File2FileInfo.Length)
 
         btnCompareFilesBrowseFile1.Enabled = False
         btnCompareFilesBrowseFile2.Enabled = False
@@ -2027,10 +2016,9 @@ Public Class Form1
                                                  Finally
                                                      boolAbortThread = False
                                                      intCurrentlyActiveTab = TabNumberNull
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
                                                  End Try
                                              End Sub) With {
             .Priority = GetThreadPriority(),
@@ -2854,10 +2842,8 @@ Public Class Form1
                                                                   lblVerifyHashStatusProcessingFile.Text = Nothing
                                                               End Sub, Me)
 
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      MyInvoke(Sub()
                                                                   Text = strWindowTitle
@@ -2971,9 +2957,7 @@ Public Class Form1
                                                                      item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
                                                                      item.BoolValidHash = False
 
-                                                                     SyncLock threadLockingObject
-                                                                         longAllBytes -= item.FileSize
-                                                                     End SyncLock
+                                                                     Interlocked.Add(longAllBytes, -item.FileSize)
                                                                  End If
 
                                                                  subRoutine = Nothing
@@ -3062,10 +3046,9 @@ Public Class Form1
                                                  Finally
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
