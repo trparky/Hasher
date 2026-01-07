@@ -756,6 +756,7 @@ Public Class Form1
             For Each item As DataGridViewRow In listFiles.Rows
                 dataGridRow = DirectCast(item, MyDataGridViewRow)
                 dataGridRow.Cells(2).Value = strWaitingToBeProcessed
+                dataGridRow.Cells(3).Value = ""
                 dataGridRow.Hash = Nothing
                 dataGridRow = Nothing
             Next
