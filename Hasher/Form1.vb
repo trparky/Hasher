@@ -463,11 +463,6 @@ Public Class Form1
                                                      MyInvoke(Sub()
                                                                   btnIndividualFilesCopyToClipboard.Enabled = True
                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = True
-                                                                  radioMD5.Enabled = True
-                                                                  radioSHA1.Enabled = True
-                                                                  radioSHA256.Enabled = True
-                                                                  radioSHA384.Enabled = True
-                                                                  radioSHA512.Enabled = True
 
                                                                   Text = strWindowTitle
                                                                   ResetHashIndividualFilesProgress()
@@ -518,6 +513,12 @@ Public Class Form1
                                                                       btnComputeHash.Text = "Compute Hash"
                                                                       ProgressForm.SetTaskbarProgressBarValue(0)
                                                                       hashIndividualFilesAllFilesProgressBar.Value = 0
+
+                                                                      radioMD5.Enabled = True
+                                                                      radioSHA1.Enabled = True
+                                                                      radioSHA256.Enabled = True
+                                                                      radioSHA384.Enabled = True
+                                                                      radioSHA512.Enabled = True
                                                                   End If
                                                               End Sub, Me)
                                                  End Try
