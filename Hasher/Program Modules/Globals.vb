@@ -5,8 +5,6 @@ Imports System.Windows.Input
 Public Module Globals
     ''' <summary>These two variables, longAllReadBytes and longAllBytes, and used to track overall hashing progress of all files to be processed.</summary>
     Public longAllReadBytes, longAllBytes As Long
-    ''' <summary>Protects longAllReadBytes and longAllBytes from being accessed by two threads at the same time. Use this with a SyncLock code block.</summary>
-    Public ReadOnly threadLockingObject As New Object()
     ''' <summary>Stores the value of the setting for roundNumbers locally.</summary>
     Public byteRoundFileSizes As Byte = My.Settings.roundFileSizes
     Public byteRoundPercentages As Byte = My.Settings.roundPercentages

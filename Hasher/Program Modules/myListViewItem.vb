@@ -8,7 +8,6 @@ Public Class MyDataGridViewRow
     Public Property MyColor As Color
     Public Property BoolFileExists As Boolean
     Public Property ComputeTime As TimeSpan
-    Public Property AllTheHashes As AllTheHashes
     Public Property BoolValidHash As Boolean
     Public Property ColorType As ColorType
     Public Property BoolExceptionOccurred As Boolean = False
@@ -29,7 +28,6 @@ Public Class MyDataGridViewRow
             .MyColor = Me.MyColor
             .BoolFileExists = Me.BoolFileExists
             .ComputeTime = Me.ComputeTime
-            .AllTheHashes = Me.AllTheHashes
             .BoolValidHash = Me.BoolValidHash
             .ColorType = Me.ColorType
             .BoolExceptionOccurred = Me.BoolExceptionOccurred

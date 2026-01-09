@@ -3,6 +3,7 @@ Imports System.ComponentModel
 Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
+Imports System.Threading
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -32,10 +33,9 @@ Public Class Form1
     Private boolDidWePerformAPreviousHash As Boolean = False
     Private validColor, notValidColor, fileNotFoundColor As Color
     Private intCurrentlyActiveTab As Integer = -1
-    Private compareFilesAllTheHashes1 As AllTheHashes = Nothing
-    Private compareFilesAllTheHashes2 As AllTheHashes = Nothing
-    Private hashTextAllTheHashes As AllTheHashes = Nothing
-    Private globalAllTheHashes As AllTheHashes = Nothing
+    Private compareFilesHash1 As String = Nothing
+    Private compareFilesHash2 As String = Nothing
+    Private strGlobalHash As String
     Private checksumTypeForChecksumCompareWindow As HashAlgorithmName
     Private strLastHashFileLoaded As String = Nothing
 
@@ -45,12 +45,6 @@ Public Class Form1
     Private Const strColumnTitleChecksumSHA384 As String = "Hash/Checksum (SHA384)"
     Private Const strColumnTitleChecksumSHA512 As String = "Hash/Checksum (SHA512)"
     Private Const strHashChecksumToBeComputed As String = "Hash/Checksum: (To Be Computed)"
-
-    Private Const ChecksumFilterIndexMD5 As Integer = 1
-    Private Const ChecksumFilterIndexSHA160 As Integer = 2
-    Private Const ChecksumFilterIndexSHA256 As Integer = 3
-    Private Const ChecksumFilterIndexSHA384 As Integer = 4
-    Private Const ChecksumFilterIndexSHA512 As Integer = 5
 
     Private Const TabNumberNull As Integer = -1
     Private Const TabNumberWelcomeTab As Integer = 0
@@ -110,7 +104,6 @@ Public Class Form1
                 .MyColor = item.MyColor
                 .BoolFileExists = item.BoolFileExists
                 .ComputeTime = item.ComputeTime
-                .AllTheHashes = item.AllTheHashes
                 .BoolValidHash = item.BoolValidHash
                 .StrCrashData = item.StrCrashData
                 .BoolExceptionOccurred = item.BoolExceptionOccurred
@@ -137,11 +130,11 @@ Public Class Form1
         Return If(chkUseCommasInNumbers.Checked, input.ToString("N0"), input.ToString)
     End Function
 
-    Private Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef allTheHashes As AllTheHashes, subRoutine As ChecksumStatusUpdaterDelegate, ByRef exceptionObject As Exception) As Boolean
+    Private Function DoChecksumWithAttachedSubRoutine(strFile As String, ByRef strHash As String, subRoutine As ChecksumStatusUpdaterDelegate, ByRef exceptionObject As Exception, hashType As HashAlgorithmName) As Boolean
         Try
             If IO.File.Exists(strFile) Then
                 Dim checksums As New Checksums(subRoutine, pool)
-                allTheHashes = checksums.PerformFileHash(strFile, intBufferSize)
+                strHash = checksums.PerformFileHash(strFile, intBufferSize, hashType)
                 Return True
             Else
                 Return False
@@ -284,23 +277,6 @@ Public Class Form1
         End Using
     End Sub
 
-    Private Function GetDataFromAllTheHashes(checksum As HashAlgorithmName, allTheHashes As AllTheHashes) As String
-        Select Case checksum
-            Case HashAlgorithmName.MD5
-                Return allTheHashes.Md5
-            Case HashAlgorithmName.SHA1
-                Return allTheHashes.Sha160
-            Case HashAlgorithmName.SHA256
-                Return allTheHashes.Sha256
-            Case HashAlgorithmName.SHA384
-                Return allTheHashes.Sha384
-            Case HashAlgorithmName.SHA512
-                Return allTheHashes.Sha512
-            Case Else
-                Return Nothing
-        End Select
-    End Function
-
     Private Sub ChkAutoScroll_Click(sender As Object, e As EventArgs) Handles ChkAutoScroll.Click
         My.Settings.boolAutoScroll = ChkAutoScroll.Checked
     End Sub
@@ -340,19 +316,31 @@ Public Class Form1
                                                  Try
                                                      boolBackgroundThreadWorking = True
                                                      Dim percentage, allBytesPercentage As Double
-                                                     Dim strChecksum As String = Nothing
                                                      Dim checksumType As HashAlgorithmName
                                                      Dim index As Integer = 1
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
                                                      Dim computeStopwatch As Stopwatch
-                                                     Dim allTheHashes As AllTheHashes = Nothing
+                                                     Dim strHash As String = Nothing
                                                      Dim fileCountPercentage As Double
                                                      Dim exceptionObject As Exception = Nothing
+                                                     Dim hashType As HashAlgorithmName
 
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+                                                     If radioMD5.Checked Then
+                                                         hashType = HashAlgorithmName.MD5
+                                                     ElseIf radioSHA1.Checked Then
+                                                         hashType = HashAlgorithmName.SHA1
+                                                     ElseIf radioSHA256.Checked Then
+                                                         hashType = HashAlgorithmName.SHA256
+                                                     ElseIf radioSHA384.Checked Then
+                                                         hashType = HashAlgorithmName.SHA384
+                                                     ElseIf radioSHA512.Checked Then
+                                                         hashType = HashAlgorithmName.SHA512
+                                                     Else
+                                                         hashType = HashAlgorithmName.SHA256
+                                                     End If
+
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      Dim subRoutine As New ChecksumStatusUpdaterDelegate(Sub(size As Long, totalBytesRead As Long)
                                                                                                              Try
@@ -360,11 +348,9 @@ Public Class Form1
                                                                                                                               percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                                               IndividualFilesProgressBar.Value = percentage
 
-                                                                                                                              SyncLock threadLockingObject
-                                                                                                                                  allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                                                  lblHashIndividualFilesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
-                                                                                                                                  If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
-                                                                                                                              End SyncLock
+                                                                                                                              allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
+                                                                                                                              lblHashIndividualFilesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                              If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
 
                                                                                                                               ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
                                                                                                                               hashIndividualFilesAllFilesProgressBar.Value = allBytesPercentage
@@ -403,15 +389,13 @@ Public Class Form1
 
                                                      Dim myItem As MyDataGridViewRow
 
-                                                     SyncLock threadLockingObject
-                                                         For Each item As DataGridViewRow In listFiles.Rows
-                                                             If boolAbortThread Then Throw New MyThreadAbortException()
-                                                             If Not String.IsNullOrWhiteSpace(item.Cells(0).Value) Then
-                                                                 myItem = DirectCast(item, MyDataGridViewRow)
-                                                                 If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then longAllBytes += myItem.FileSize
-                                                             End If
-                                                         Next
-                                                     End SyncLock
+                                                     For Each item As DataGridViewRow In listFiles.Rows
+                                                         If boolAbortThread Then Throw New MyThreadAbortException()
+                                                         If Not String.IsNullOrWhiteSpace(item.Cells(0).Value) Then
+                                                             myItem = DirectCast(item, MyDataGridViewRow)
+                                                             If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then Interlocked.Add(longAllBytes, myItem.FileSize)
+                                                         End If
+                                                     Next
 
                                                      For Each item As DataGridViewRow In listFiles.Rows
                                                          If boolAbortThread Then Throw New MyThreadAbortException()
@@ -423,9 +407,7 @@ Public Class Form1
                                                              itemOnGUI = Nothing
                                                              MyInvoke(Sub() itemOnGUI = listFiles.Rows(item.Index), Me)
 
-                                                             SyncLock threadLockingObject
-                                                                 If Not IO.File.Exists(myItem.FileName) Then longAllBytes -= myItem.FileSize
-                                                             End SyncLock
+                                                             If Not IO.File.Exists(myItem.FileName) Then Interlocked.Add(longAllBytes, -myItem.FileSize)
 
                                                              If String.IsNullOrWhiteSpace(myItem.Hash) And IO.File.Exists(myItem.FileName) Then
                                                                  MyInvoke(Sub()
@@ -439,14 +421,12 @@ Public Class Form1
 
                                                                  computeStopwatch = Stopwatch.StartNew
 
-                                                                 If DoChecksumWithAttachedSubRoutine(myItem.FileName, allTheHashes, subRoutine, exceptionObject) Then
+                                                                 If DoChecksumWithAttachedSubRoutine(myItem.FileName, strHash, subRoutine, exceptionObject, hashType) Then
                                                                      MyInvoke(Sub()
-                                                                                  myItem.AllTheHashes = allTheHashes
-                                                                                  strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
-                                                                                  myItem.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
+                                                                                  myItem.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strHash.ToUpper, strHash.ToLower)
                                                                                   myItem.ComputeTime = computeStopwatch.Elapsed
                                                                                   myItem.Cells(3).Value = TimespanToHMS(myItem.ComputeTime)
-                                                                                  myItem.Hash = strChecksum
+                                                                                  myItem.Hash = strHash
                                                                                   myItem.BoolExceptionOccurred = False
                                                                                   myItem.StrCrashData = Nothing
                                                                               End Sub, listFiles)
@@ -476,11 +456,6 @@ Public Class Form1
                                                      MyInvoke(Sub()
                                                                   btnIndividualFilesCopyToClipboard.Enabled = True
                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = True
-                                                                  radioMD5.Enabled = True
-                                                                  radioSHA1.Enabled = True
-                                                                  radioSHA256.Enabled = True
-                                                                  radioSHA384.Enabled = True
-                                                                  radioSHA512.Enabled = True
 
                                                                   Text = strWindowTitle
                                                                   ResetHashIndividualFilesProgress()
@@ -509,7 +484,7 @@ Public Class Form1
                                                                       If currentItem IsNot Nothing Then currentItem.Cells(2).Value = strWaitingToBeProcessed
                                                                       UpdateDataGridViewRow(itemOnGUI, currentItem, False)
 
-                                                                      Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of MyDataGridViewRow).Where(Function(item As MyDataGridViewRow) String.IsNullOrWhiteSpace(item.AllTheHashes.Sha160)).Count
+                                                                      Dim intNumberOfItemsWithoutHash As Integer = listFiles.Rows.Cast(Of MyDataGridViewRow).Where(Function(item As MyDataGridViewRow) String.IsNullOrWhiteSpace(item.Hash)).Count
                                                                       btnComputeHash.Enabled = intNumberOfItemsWithoutHash > 0
                                                                   End If
 
@@ -521,16 +496,21 @@ Public Class Form1
                                                      boolAbortThread = False
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
                                                                       btnComputeHash.Text = "Compute Hash"
                                                                       ProgressForm.SetTaskbarProgressBarValue(0)
                                                                       hashIndividualFilesAllFilesProgressBar.Value = 0
+
+                                                                      radioMD5.Enabled = True
+                                                                      radioSHA1.Enabled = True
+                                                                      radioSHA256.Enabled = True
+                                                                      radioSHA384.Enabled = True
+                                                                      radioSHA512.Enabled = True
                                                                   End If
                                                               End Sub, Me)
                                                  End Try
@@ -576,7 +556,7 @@ Public Class Form1
         Return relPath.Replace("/"c, IO.Path.DirectorySeparatorChar)
     End Function
 
-    Private Function StrGetIndividualHashesInStringFormat(strPathOfChecksumFile As String, checksumType As HashAlgorithmName) As String
+    Private Function StrGetIndividualHashesInStringFormat(strPathOfChecksumFile As String) As String
         Dim strDirectoryName As String = New IO.FileInfo(strPathOfChecksumFile).DirectoryName
         Dim folderOfChecksumFile As String = If(strDirectoryName.Length = 3, strDirectoryName, $"{strDirectoryName}\")
         Dim stringBuilder As New Text.StringBuilder()
@@ -588,7 +568,7 @@ Public Class Form1
             If Not String.IsNullOrWhiteSpace(item.Hash) Then
                 strFile = item.FileName
                 If chkSaveChecksumFilesWithRelativePaths.Checked Then strFile = GetRelativePath(strPathOfChecksumFile, strFile)
-                stringBuilder.AppendLine($"{GetDataFromAllTheHashes(checksumType, item.AllTheHashes)} *{strFile}")
+                stringBuilder.AppendLine($"{item.Hash} *{strFile}")
             End If
         Next
 
@@ -633,53 +613,32 @@ Public Class Form1
 
     Private Sub BtnIndividualFilesSaveResultsToDisk_Click(sender As Object, e As EventArgs) Handles btnIndividualFilesSaveResultsToDisk.Click
         Using SaveFileDialog As New SaveFileDialog
-            SaveFileDialog.Filter = "MD5 File|*.md5|SHA1 File|*.sha1|SHA256 File|*.sha256|SHA384 File|*.sha384|SHA512 File|*.sha512"
+            If radioMD5.Checked Then
+                SaveFileDialog.Filter = "MD5 File|*.md5"
+            ElseIf radioSHA1.Checked Then
+                SaveFileDialog.Filter = "SHA1 File|*.sha1"
+            ElseIf radioSHA256.Checked Then
+                SaveFileDialog.Filter = "SHA256 File|*.sha256"
+            ElseIf radioSHA384.Checked Then
+                SaveFileDialog.Filter = "SHA384 File|*.sha384"
+            ElseIf radioSHA512.Checked Then
+                SaveFileDialog.Filter = "SHA512 File|*.sha512"
+            End If
+
             SaveFileDialog.InitialDirectory = strLastDirectoryWorkedOn
             SaveFileDialog.Title = "Save Hash Results to Disk"
-            SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
             If chkAutoAddExtension.Checked Then SaveFileDialog.OverwritePrompt = False ' We handle this in our own code below.
 
             Dim strFileExtension As String
             Dim checksumType As HashAlgorithmName
 
-            If Not String.IsNullOrWhiteSpace(strLastHashFileLoaded) Then
-                strFileExtension = New IO.FileInfo(strLastHashFileLoaded).Extension
-
-                Select Case strFileExtension.Trim().ToLower()
-                    Case ".md5"
-                        SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
-                    Case ".sha1"
-                        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
-                    Case ".sha256"
-                        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
-                    Case ".sha384"
-                        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
-                    Case ".sha512"
-                        SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
-                End Select
-
-                SaveFileDialog.FileName = strLastHashFileLoaded
-            Else
-                If radioMD5.Checked Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5
-                ElseIf radioSHA1.Checked Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160
-                ElseIf radioSHA256.Checked Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA256
-                ElseIf radioSHA384.Checked Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA384
-                ElseIf radioSHA512.Checked Then
-                    SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA512
-                End If
-            End If
-
             If SaveFileDialog.ShowDialog() = DialogResult.OK Then
-                If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Or SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
+                If radioMD5.Checked Or radioSHA1.Checked Then
                     Dim MsgBoxQuestionResult As MsgBoxResult
 
-                    If SaveFileDialog.FilterIndex = ChecksumFilterIndexMD5 Then
+                    If radioMD5.Checked Then
                         MsgBoxQuestionResult = MsgBox($"MD5 is not recommended for hashing files.{DoubleCRLF}Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
-                    ElseIf SaveFileDialog.FilterIndex = ChecksumFilterIndexSHA160 Then
+                    ElseIf radioSHA1.Checked Then
                         MsgBoxQuestionResult = MsgBox($"SHA1 is not recommended for hashing files.{DoubleCRLF}Are you sure you want to use this hash type?", MsgBoxStyle.Question + MsgBoxStyle.YesNo, strMessageBoxTitleText)
                     End If
 
@@ -693,16 +652,16 @@ Public Class Form1
                     strFileExtension = New IO.FileInfo(SaveFileDialog.FileName).Extension
 
                     If Not strFileExtension.Equals(".md5", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha1", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha256", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha384", StringComparison.OrdinalIgnoreCase) And Not strFileExtension.Equals(".sha512", StringComparison.OrdinalIgnoreCase) Then
-                        Select Case SaveFileDialog.FilterIndex
-                            Case ChecksumFilterIndexMD5
+                        Select Case SaveFileDialog.Filter
+                            Case "MD5 File|*.md5"
                                 SaveFileDialog.FileName &= ".md5"
-                            Case ChecksumFilterIndexSHA160
+                            Case "SHA1 File|*.sha1"
                                 SaveFileDialog.FileName &= ".sha1"
-                            Case ChecksumFilterIndexSHA256
+                            Case "SHA256 File|*.sha256"
                                 SaveFileDialog.FileName &= ".sha256"
-                            Case ChecksumFilterIndexSHA384
+                            Case "SHA384 File|*.sha384"
                                 SaveFileDialog.FileName &= ".sha384"
-                            Case ChecksumFilterIndexSHA512
+                            Case "SHA384 File|*.sha512"
                                 SaveFileDialog.FileName &= ".sha512"
                         End Select
                     End If
@@ -731,7 +690,7 @@ Public Class Form1
                         checksumType = HashAlgorithmName.SHA512
                 End Select
 
-                WriteFileAtomically(SaveFileDialog.FileName, StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName, checksumType))
+                WriteFileAtomically(SaveFileDialog.FileName, StrGetIndividualHashesInStringFormat(SaveFileDialog.FileName))
 
                 Dim openInExplorerMsgBoxResult As MsgBoxResult
 
@@ -783,50 +742,50 @@ Public Class Form1
         End Select
     End Function
 
-    Private Sub UpdateChecksumsInListFiles(checksumType As HashAlgorithmName)
+    Private Sub ClearChecksumsInListFiles()
         If listFiles.Rows.Count <> 0 Then
-            Dim strChecksum As String
             Dim dataGridRow As MyDataGridViewRow
-
             For Each item As DataGridViewRow In listFiles.Rows
-                If Not String.IsNullOrWhiteSpace(item.Cells(0).Value) Then
-                    dataGridRow = DirectCast(item, MyDataGridViewRow)
-                    strChecksum = GetDataFromAllTheHashes(checksumType, dataGridRow.AllTheHashes)
-
-                    If Not String.IsNullOrWhiteSpace(strChecksum) Then
-                        dataGridRow.Hash = strChecksum
-                        dataGridRow.Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
-                    End If
-
-                    dataGridRow = Nothing
-                End If
+                dataGridRow = DirectCast(item, MyDataGridViewRow)
+                dataGridRow.Cells(2).Value = strWaitingToBeProcessed
+                dataGridRow.Cells(3).Value = ""
+                dataGridRow.Hash = Nothing
+                dataGridRow = Nothing
             Next
         End If
     End Sub
 
+    Private Sub ResetGUIItemsWithHashRadioButtons(strColumnTitle As String)
+        ClearChecksumsInListFiles()
+        colChecksum.HeaderText = strColumnTitle
+        btnIndividualFilesCopyToClipboard.Enabled = False
+        btnIndividualFilesSaveResultsToDisk.Enabled = False
+        btnComputeHash.Enabled = True
+    End Sub
+
     Private Sub RadioMD5_Click(sender As Object, e As EventArgs) Handles radioMD5.Click
-        UpdateChecksumsInListFiles(HashAlgorithmName.MD5)
-        colChecksum.HeaderText = strColumnTitleChecksumMD5
+        ClearChecksumsInListFiles()
+        ResetGUIItemsWithHashRadioButtons(strColumnTitleChecksumMD5)
     End Sub
 
     Private Sub RadioSHA1_Click(sender As Object, e As EventArgs) Handles radioSHA1.Click
-        UpdateChecksumsInListFiles(HashAlgorithmName.SHA1)
-        colChecksum.HeaderText = strColumnTitleChecksumSHA160
+        ClearChecksumsInListFiles()
+        ResetGUIItemsWithHashRadioButtons(strColumnTitleChecksumSHA160)
     End Sub
 
     Private Sub RadioSHA256_Click(sender As Object, e As EventArgs) Handles radioSHA256.Click
-        UpdateChecksumsInListFiles(HashAlgorithmName.SHA256)
-        colChecksum.HeaderText = strColumnTitleChecksumSHA256
+        ClearChecksumsInListFiles()
+        ResetGUIItemsWithHashRadioButtons(strColumnTitleChecksumSHA256)
     End Sub
 
     Private Sub RadioSHA384_Click(sender As Object, e As EventArgs) Handles radioSHA384.Click
-        UpdateChecksumsInListFiles(HashAlgorithmName.SHA384)
-        colChecksum.HeaderText = strColumnTitleChecksumSHA384
+        ClearChecksumsInListFiles()
+        ResetGUIItemsWithHashRadioButtons(strColumnTitleChecksumSHA384)
     End Sub
 
     Private Sub RadioSHA512_Click(sender As Object, e As EventArgs) Handles radioSHA512.Click
-        UpdateChecksumsInListFiles(HashAlgorithmName.SHA512)
-        colChecksum.HeaderText = strColumnTitleChecksumSHA512
+        ClearChecksumsInListFiles()
+        ResetGUIItemsWithHashRadioButtons(strColumnTitleChecksumSHA512)
     End Sub
 
     Private Sub LaunchURLInWebBrowser(url As String, Optional errorMessage As String = "An error occurred when trying the URL In your Default browser. The URL has been copied to your Windows Clipboard for you to paste into the address bar in the web browser of your choice.")
@@ -1258,9 +1217,7 @@ Public Class Form1
         With MyDataGridRow
             If IO.File.Exists(strFileName) Then
                 .FileSize = New IO.FileInfo(strFileName).Length
-                SyncLock threadLockingObject
-                    longAllBytes += .FileSize
-                End SyncLock
+                Interlocked.Add(longAllBytes, .FileSize)
                 .Cells(0).Value = strFileName
                 .Cells(1).Value = FileSizeToHumanSize(MyDataGridRow.FileSize)
                 .Cells(2).Value = ""
@@ -1367,10 +1324,8 @@ Public Class Form1
                                                                   lblVerifyHashStatusProcessingFile.Text = Nothing
                                                               End Sub, Me)
 
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      Dim newDataInFileArray As List(Of String) = dataInFileArray.ToList.Where(Function(strLineInFile2 As String)
                                                                                                                                   Return Not strLineInFile2.Trim.StartsWith("'")
@@ -1438,7 +1393,6 @@ Public Class Form1
                                                      Dim strChecksumInFile As String = Nothing
                                                      Dim percentage, allBytesPercentage As Double
                                                      Dim computeStopwatch As Stopwatch
-                                                     Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
                                                      Dim fileCountPercentage As Double
                                                      Dim exceptionObject As Exception = Nothing
@@ -1449,11 +1403,9 @@ Public Class Form1
                                                                                                                               percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                                               VerifyHashProgressBar.Value = percentage
 
-                                                                                                                              SyncLock threadLockingObject
-                                                                                                                                  allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                                                  lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
-                                                                                                                                  If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
-                                                                                                                              End SyncLock
+                                                                                                                              allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
+                                                                                                                              lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                              If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
 
                                                                                                                               lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
                                                                                                                               ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
@@ -1502,10 +1454,7 @@ Public Class Form1
 
                                                              computeStopwatch = Stopwatch.StartNew
 
-                                                             If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exceptionObject) Then
-                                                                 strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
-                                                                 item.AllTheHashes = allTheHashes
-
+                                                             If DoChecksumWithAttachedSubRoutine(strFileName, strChecksum, subRoutine, exceptionObject, checksumType) Then
                                                                  If strChecksum.Equals(item.Hash, StringComparison.OrdinalIgnoreCase) Then
                                                                      MyInvoke(Sub()
                                                                                   item.ColorType = ColorType.Valid
@@ -1524,7 +1473,7 @@ Public Class Form1
                                                                                   item.Cells(2).Value = "Incorrect Checksum"
                                                                                   item.ComputeTime = computeStopwatch.Elapsed
                                                                                   item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                                  item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumType, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumType, allTheHashes).ToLower)
+                                                                                  item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
                                                                                   longFilesThatDidNotPassVerification += 1
                                                                                   item.BoolValidHash = False
                                                                               End Sub, verifyHashesListFiles)
@@ -1654,10 +1603,9 @@ Public Class Form1
                                                      boolAbortThread = False
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
@@ -1738,7 +1686,6 @@ Public Class Form1
         btnCheckHaveIBeenPwned.Enabled = boolEnableButtons
         btnCopyTextHashResultsToClipboard.Enabled = False
         txtHashResults.Rows.Clear()
-        hashTextAllTheHashes = Nothing
     End Sub
 
     Private Function MakeTextHashListViewItem(strHashType As String, strHash As String) As DataGridViewRow
@@ -1752,15 +1699,13 @@ Public Class Form1
     End Function
 
     Private Sub BtnComputeTextHash_Click(sender As Object, e As EventArgs) Handles btnComputeTextHash.Click
-        hashTextAllTheHashes = GetHashOfString(txtTextToHash.Text)
-
         txtHashResults.Rows.Clear()
 
-        txtHashResults.Rows.Add(MakeTextHashListViewItem("MD5", GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes)))
-        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA1/SHA160", GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes)))
-        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA256", GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes)))
-        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA384", GetDataFromAllTheHashes(HashAlgorithmName.SHA384, hashTextAllTheHashes)))
-        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA512", GetDataFromAllTheHashes(HashAlgorithmName.SHA512, hashTextAllTheHashes)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("MD5", GetHashOfString(txtTextToHash.Text, HashAlgorithmName.MD5)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA1/SHA160", GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA1)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA256", GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA256)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA384", GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA384)))
+        txtHashResults.Rows.Add(MakeTextHashListViewItem("SHA512", GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA512)))
 
         btnCopyTextHashResultsToClipboard.Enabled = True
         btnComputeTextHash.Enabled = False
@@ -1777,11 +1722,11 @@ Public Class Form1
 
     Private Sub BtnCopyTextHashResultsToClipboard_Click(sender As Object, e As EventArgs) Handles btnCopyTextHashResultsToClipboard.Click
         Dim strHash As New Text.StringBuilder
-        strHash.AppendLine($"MD5: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.MD5, hashTextAllTheHashes).ToLower)}")
-        strHash.AppendLine($"SHA1/SHA160: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA1, hashTextAllTheHashes).ToLower)}")
-        strHash.AppendLine($"SHA256: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA256, hashTextAllTheHashes).ToLower)}")
-        strHash.AppendLine($"SHA384: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA384, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA384, hashTextAllTheHashes).ToLower)}")
-        strHash.AppendLine($"SHA512: {If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(HashAlgorithmName.SHA512, hashTextAllTheHashes).ToUpper, GetDataFromAllTheHashes(HashAlgorithmName.SHA512, hashTextAllTheHashes).ToLower)}")
+        strHash.AppendLine($"MD5: {If(chkDisplayHashesInUpperCase.Checked, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.MD5).ToUpper, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.MD5).ToLower)}")
+        strHash.AppendLine($"SHA1/SHA160: {If(chkDisplayHashesInUpperCase.Checked, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA1).ToUpper, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA1).ToLower)}")
+        strHash.AppendLine($"SHA256: {If(chkDisplayHashesInUpperCase.Checked, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA256).ToUpper, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA256).ToLower)}")
+        strHash.AppendLine($"SHA384: {If(chkDisplayHashesInUpperCase.Checked, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA384).ToUpper, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA384).ToLower)}")
+        strHash.AppendLine($"SHA512: {If(chkDisplayHashesInUpperCase.Checked, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA512).ToUpper, GetHashOfString(txtTextToHash.Text, HashAlgorithmName.SHA512).ToLower)}")
 
         If CopyTextToWindowsClipboard(strHash.ToString.Trim) Then MsgBox("Your hash results have been copied to the Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
     End Sub
@@ -1844,15 +1789,10 @@ Public Class Form1
 
             Dim MyDataGridRow As MyDataGridViewRow = DirectCast(listFiles.SelectedRows(0), MyDataGridViewRow)
 
-            globalAllTheHashes = MyDataGridRow.AllTheHashes
             listFilesContextMenuFileName.Text = $"File Name: {MyDataGridRow.FileName}"
 
-            With MyDataGridRow.AllTheHashes
-                listFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
-                listFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
-                listFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
-                listFilesContextMenuSHA384.Text = $"SHA384: {If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)}"
-                listFilesContextMenuSHA512.Text = $"SHA512: {If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)}"
+            With MyDataGridRow
+                listFilesContextMenuChecksum.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Hash.ToUpper, .Hash.ToLower)}"
             End With
         End If
     End Sub
@@ -1914,13 +1854,11 @@ Public Class Form1
             Exit Sub
         End If
 
-        SyncLock threadLockingObject
-            longAllBytes = 0
-            longAllReadBytes = 0
+        Interlocked.Exchange(longAllBytes, 0)
+        Interlocked.Exchange(longAllReadBytes, 0)
 
-            longAllBytes += File1FileInfo.Length
-            longAllBytes += File2FileInfo.Length
-        End SyncLock
+        Interlocked.Add(longAllBytes, File1FileInfo.Length)
+        Interlocked.Add(longAllBytes, File2FileInfo.Length)
 
         btnCompareFilesBrowseFile1.Enabled = False
         btnCompareFilesBrowseFile2.Enabled = False
@@ -1970,9 +1908,7 @@ Public Class Form1
                                                                                                                               percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                                               compareFilesProgressBar.Value = percentage
 
-                                                                                                                              SyncLock threadLockingObject
-                                                                                                                                  allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                                              End SyncLock
+                                                                                                                              allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
 
                                                                                                                               ProgressForm.SetTaskbarProgressBarValue(allBytesPercentage)
                                                                                                                               CompareFilesAllFilesProgress.Value = allBytesPercentage
@@ -1988,26 +1924,8 @@ Public Class Form1
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
 
                                                      If boolAbortThread Then Throw New MyThreadAbortException()
-                                                     If DoChecksumWithAttachedSubRoutine(txtFile1.Text, compareFilesAllTheHashes1, subRoutine, exceptionObject1) AndAlso DoChecksumWithAttachedSubRoutine(txtFile2.Text, compareFilesAllTheHashes2, subRoutine, exceptionObject2) Then
+                                                     If DoChecksumWithAttachedSubRoutine(txtFile1.Text, strChecksum1, subRoutine, exceptionObject1, checksumType) AndAlso DoChecksumWithAttachedSubRoutine(txtFile2.Text, strChecksum2, subRoutine, exceptionObject2, checksumType) Then
                                                          boolSuccessful = True
-
-                                                         Select Case checksumType
-                                                             Case HashAlgorithmName.MD5
-                                                                 strChecksum1 = compareFilesAllTheHashes1.Md5
-                                                                 strChecksum2 = compareFilesAllTheHashes2.Md5
-                                                             Case HashAlgorithmName.SHA1
-                                                                 strChecksum1 = compareFilesAllTheHashes1.Sha160
-                                                                 strChecksum2 = compareFilesAllTheHashes2.Sha160
-                                                             Case HashAlgorithmName.SHA256
-                                                                 strChecksum1 = compareFilesAllTheHashes1.Sha256
-                                                                 strChecksum2 = compareFilesAllTheHashes2.Sha256
-                                                             Case HashAlgorithmName.SHA384
-                                                                 strChecksum1 = compareFilesAllTheHashes1.Sha384
-                                                                 strChecksum2 = compareFilesAllTheHashes2.Sha384
-                                                             Case HashAlgorithmName.SHA512
-                                                                 strChecksum1 = compareFilesAllTheHashes1.Sha512
-                                                                 strChecksum2 = compareFilesAllTheHashes2.Sha512
-                                                         End Select
 
                                                          MyInvoke(Sub()
                                                                       lblFile1Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)}"
@@ -2090,10 +2008,9 @@ Public Class Form1
                                                  Finally
                                                      boolAbortThread = False
                                                      intCurrentlyActiveTab = TabNumberNull
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
                                                  End Try
                                              End Sub) With {
             .Priority = GetThreadPriority(),
@@ -2247,10 +2164,8 @@ Public Class Form1
                                                                                                          End Sub)
 
                                                      Dim myStopWatch As Stopwatch = Stopwatch.StartNew
-                                                     Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim exceptionObject As Exception = Nothing
-                                                     Dim boolSuccessful As Boolean = DoChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, allTheHashes, subRoutine, exceptionObject)
-                                                     strChecksum = GetDataFromAllTheHashes(checksumType, allTheHashes)
+                                                     Dim boolSuccessful As Boolean = DoChecksumWithAttachedSubRoutine(txtFileForKnownHash.Text, strChecksum, subRoutine, exceptionObject, checksumType)
 
                                                      MyInvoke(Sub()
                                                                   txtFileForKnownHash.Enabled = True
@@ -2340,26 +2255,28 @@ Public Class Form1
         End Using
     End Function
 
-    Private Function GetHashOfString(inputString As String) As AllTheHashes
-        Using md5Engine As HashAlgorithm = New MD5CryptoServiceProvider, sha160Engine As HashAlgorithm = New SHA1CryptoServiceProvider, sha256Engine As HashAlgorithm = New SHA256CryptoServiceProvider, sha384Engine As HashAlgorithm = New SHA384CryptoServiceProvider, sha512Engine As HashAlgorithm = New SHA512CryptoServiceProvider
-            Dim byteArray As Byte() = System.Text.Encoding.UTF8.GetBytes(inputString)
+    Private Function GetHashOfString(inputString As String, hashType As HashAlgorithmName) As String
+        Dim hashEngine As HashAlgorithm
 
-            md5Engine.ComputeHash(byteArray)
-            sha160Engine.ComputeHash(byteArray)
-            sha256Engine.ComputeHash(byteArray)
-            sha384Engine.ComputeHash(byteArray)
-            sha512Engine.ComputeHash(byteArray)
+        If hashType = HashAlgorithmName.MD5 Then
+            hashEngine = New MD5Cng()
+        ElseIf hashType = HashAlgorithmName.SHA1 Then
+            hashEngine = New SHA1Cng()
+        ElseIf hashType = HashAlgorithmName.SHA256 Then
+            hashEngine = New SHA256Cng()
+        ElseIf hashType = HashAlgorithmName.SHA384 Then
+            hashEngine = New SHA384Cng()
+        ElseIf hashType = HashAlgorithmName.SHA512 Then
+            hashEngine = New SHA512Cng()
+        Else
+            hashEngine = New SHA256Cng()
+        End If
 
-            Dim allTheHashes As New AllTheHashes With {
-                .Md5 = BitConverter.ToString(md5Engine.Hash).ToLower().Replace("-", ""),
-                .Sha160 = BitConverter.ToString(sha160Engine.Hash).ToLower().Replace("-", ""),
-                .Sha256 = BitConverter.ToString(sha256Engine.Hash).ToLower().Replace("-", ""),
-                .Sha384 = BitConverter.ToString(sha384Engine.Hash).ToLower().Replace("-", ""),
-                .Sha512 = BitConverter.ToString(sha512Engine.Hash).ToLower().Replace("-", "")
-            }
-
-            Return allTheHashes
-        End Using
+        Dim byteArray As Byte() = System.Text.Encoding.UTF8.GetBytes(inputString)
+        hashEngine.ComputeHash(byteArray)
+        Dim strHash As String = Checksums.BytesToHex(hashEngine.Hash)
+        hashEngine.Dispose()
+        Return strHash
     End Function
 
     Private Sub ListFiles_ColumnWidthChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles listFiles.ColumnWidthChanged
@@ -2664,14 +2581,11 @@ Public Class Form1
     End Sub
 
     Private Sub FillInChecksumLabelsOnCompareFilesTab(checksumType As HashAlgorithmName)
-        Dim strChecksum1 As String = GetDataFromAllTheHashes(checksumType, compareFilesAllTheHashes1)
-        Dim strChecksum2 As String = GetDataFromAllTheHashes(checksumType, compareFilesAllTheHashes2)
-
-        If Not String.IsNullOrWhiteSpace(strChecksum1) AndAlso Not String.IsNullOrWhiteSpace(strChecksum2) Then
-            lblFile1Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, strChecksum1.ToUpper, strChecksum1.ToLower)}"
-            lblFile2Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, strChecksum2.ToUpper, strChecksum2.ToLower)}"
-            ToolTip.SetToolTip(lblFile1Hash, strChecksum1)
-            ToolTip.SetToolTip(lblFile2Hash, strChecksum2)
+        If Not String.IsNullOrWhiteSpace(compareFilesHash1) AndAlso Not String.IsNullOrWhiteSpace(compareFilesHash2) Then
+            lblFile1Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, compareFilesHash1.ToUpper, compareFilesHash1.ToLower)}"
+            lblFile2Hash.Text = $"Hash/Checksum: {If(chkDisplayHashesInUpperCase.Checked, compareFilesHash2.ToUpper, compareFilesHash2.ToLower)}"
+            ToolTip.SetToolTip(lblFile1Hash, compareFilesHash1)
+            ToolTip.SetToolTip(lblFile2Hash, compareFilesHash2)
         End If
     End Sub
 
@@ -2712,22 +2626,7 @@ Public Class Form1
                                                    boolBackgroundThreadWorking = True
                                                    Dim listOfDataGridRows As New List(Of MyDataGridViewRow)
                                                    Dim intLineCounter As Integer = 0
-                                                   Dim strHashString As String
-                                                   Dim checksumType As HashAlgorithmName
-
-                                                   Select Case My.Settings.defaultHash
-                                                       Case Byte.Parse(0)
-                                                           checksumType = HashAlgorithmName.MD5
-                                                       Case Byte.Parse(1)
-                                                           checksumType = HashAlgorithmName.SHA1
-                                                       Case Byte.Parse(2)
-                                                           checksumType = HashAlgorithmName.SHA256
-                                                       Case Byte.Parse(3)
-                                                           checksumType = HashAlgorithmName.SHA384
-                                                       Case Byte.Parse(4)
-                                                           checksumType = HashAlgorithmName.SHA512
-                                                   End Select
-
+                                                   Dim checksumType As HashAlgorithmName = checksumTypeForChecksumCompareWindow
                                                    Dim itemToBeAdded As MyDataGridViewRow
 
                                                    For Each item As MyDataGridViewRow In verifyHashesListFiles.Rows
@@ -2747,19 +2646,34 @@ Public Class Form1
                                                            }
                                                            With itemToBeAdded
                                                                .CreateCells(listFiles)
-                                                               strHashString = GetDataFromAllTheHashes(checksumType, item.AllTheHashes)
                                                                .Cells(0).Value = item.FileName
                                                                .Cells(1).Value = FileSizeToHumanSize(itemToBeAdded.FileSize)
-                                                               .Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, strHashString.ToUpper, strHashString.ToLower)
+                                                               .Cells(2).Value = If(chkDisplayHashesInUpperCase.Checked, item.Hash.ToUpper, item.Hash.ToLower)
                                                                .Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                               .AllTheHashes = item.AllTheHashes
-                                                               .Hash = strHashString
+                                                               .Hash = item.Hash
                                                                .DefaultCellStyle.Padding = New Padding(0, 2, 0, 2)
                                                            End With
 
                                                            listOfDataGridRows.Add(itemToBeAdded)
                                                        End If
                                                    Next
+
+                                                   If checksumType = HashAlgorithmName.MD5 Then
+                                                       colChecksum.HeaderText = strColumnTitleChecksumMD5
+                                                       radioMD5.Checked = True
+                                                   ElseIf checksumType = HashAlgorithmName.SHA1 Then
+                                                       colChecksum.HeaderText = strColumnTitleChecksumSHA160
+                                                       radioSHA1.Checked = True
+                                                   ElseIf checksumType = HashAlgorithmName.SHA256 Then
+                                                       colChecksum.HeaderText = strColumnTitleChecksumSHA256
+                                                       radioSHA256.Checked = True
+                                                   ElseIf checksumType = HashAlgorithmName.SHA384 Then
+                                                       colChecksum.HeaderText = strColumnTitleChecksumSHA384
+                                                       radioSHA384.Checked = True
+                                                   ElseIf checksumType = HashAlgorithmName.SHA512 Then
+                                                       colChecksum.HeaderText = strColumnTitleChecksumSHA512
+                                                       radioSHA512.Checked = True
+                                                   End If
 
                                                    MyInvoke(Sub()
                                                                 boolBackgroundThreadWorking = False
@@ -2824,34 +2738,21 @@ Public Class Form1
             If verifyHashesListFiles.SelectedRows.Count = 1 Then
                 Dim MyDataGridRow As MyDataGridViewRow = DirectCast(verifyHashesListFiles.SelectedRows(0), MyDataGridViewRow)
 
-                globalAllTheHashes = MyDataGridRow.AllTheHashes
                 verifyListFilesContextMenuFileName.Text = $"File Name: {MyDataGridRow.FileName}"
 
-                With MyDataGridRow.AllTheHashes
+                With MyDataGridRow
                     ' We should only need to check this to avoid a NullReferenceException.
-                    If String.IsNullOrWhiteSpace(.Sha512) Then
+                    If String.IsNullOrWhiteSpace(.Hash) Then
                         If Not MyDataGridRow.BoolFileExists Then
                             ' Shows file not found error
-                            verifyListFilesContextMenuMD5.Text = "MD5: (Error, File Doesn't Exist)"
-                            verifyListFilesContextMenuSHA160.Text = "SHA160: (Error, File Doesn't Exist)"
-                            verifyListFilesContextMenuSHA256.Text = "SHA256: (Error, File Doesn't Exist)"
-                            verifyListFilesContextMenuSHA384.Text = "SHA384: (Error, File Doesn't Exist)"
-                            verifyListFilesContextMenuSHA512.Text = "SHA512: (Error, File Doesn't Exist)"
+                            verifyListFilesContextMenuChecksum.Text = "Checksum: (Error, File Doesn't Exist)"
                         Else
                             ' Shows general error
-                            verifyListFilesContextMenuMD5.Text = "MD5: (Error)"
-                            verifyListFilesContextMenuSHA160.Text = "SHA160: (Error)"
-                            verifyListFilesContextMenuSHA256.Text = "SHA256: (Error)"
-                            verifyListFilesContextMenuSHA384.Text = "SHA384: (Error)"
-                            verifyListFilesContextMenuSHA512.Text = "SHA512: (Error)"
+                            verifyListFilesContextMenuChecksum.Text = "Checksum: (Error)"
                         End If
                     Else
                         ' Everything is good.
-                        verifyListFilesContextMenuMD5.Text = $"MD5: {If(chkDisplayHashesInUpperCase.Checked, .Md5.ToUpper, .Md5.ToLower)}"
-                        verifyListFilesContextMenuSHA160.Text = $"SHA160: {If(chkDisplayHashesInUpperCase.Checked, .Sha160.ToUpper, .Sha160.ToLower)}"
-                        verifyListFilesContextMenuSHA256.Text = $"SHA256: {If(chkDisplayHashesInUpperCase.Checked, .Sha256.ToUpper, .Sha256.ToLower)}"
-                        verifyListFilesContextMenuSHA384.Text = $"SHA384: {If(chkDisplayHashesInUpperCase.Checked, .Sha384.ToUpper, .Sha384.ToLower)}"
-                        verifyListFilesContextMenuSHA512.Text = $"SHA512: {If(chkDisplayHashesInUpperCase.Checked, .Sha512.ToUpper, .Sha512.ToLower)}"
+                        verifyListFilesContextMenuChecksum.Text = $"Checksum: {If(chkDisplayHashesInUpperCase.Checked, .Hash.ToUpper, .Hash.ToLower)}"
                     End If
                 End With
             End If
@@ -2868,9 +2769,7 @@ Public Class Form1
         End With
         stringBuilder.AppendLine()
         stringBuilder.AppendLine("Newly Computed Hash/Checksum")
-        With GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, selectedItem.AllTheHashes)
-            stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, .ToUpper, .ToLower))
-        End With
+        stringBuilder.AppendLine(If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower))
 
         Using frmChecksumDifference As New FrmChecksumDifference With {.Icon = Icon, .StartPosition = FormStartPosition.CenterParent}
             frmChecksumDifference.lblMainLabel.Text = stringBuilder.ToString.Trim
@@ -2935,10 +2834,8 @@ Public Class Form1
                                                                   lblVerifyHashStatusProcessingFile.Text = Nothing
                                                               End Sub, Me)
 
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      MyInvoke(Sub()
                                                                   Text = strWindowTitle
@@ -2952,7 +2849,6 @@ Public Class Form1
                                                      Dim percentage, allBytesPercentage As Double
                                                      Dim subRoutine As ChecksumStatusUpdaterDelegate
                                                      Dim computeStopwatch As Stopwatch
-                                                     Dim allTheHashes As AllTheHashes = Nothing
                                                      Dim strDisplayValidChecksumString As String = If(chkDisplayValidChecksumString.Checked, "Valid Checksum", "")
                                                      Dim intFileCount As Integer = 0
                                                      Dim exceptionObject As Exception = Nothing
@@ -3001,11 +2897,11 @@ Public Class Form1
                                                                                                                         MyInvoke(Sub()
                                                                                                                                      percentage = If(totalBytesRead = 0 Or size = 0, 0, totalBytesRead / size * 100) ' This fixes a possible divide by zero exception.
                                                                                                                                      VerifyHashProgressBar.Value = percentage
-                                                                                                                                     SyncLock threadLockingObject
-                                                                                                                                         allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
-                                                                                                                                         lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
-                                                                                                                                         If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
-                                                                                                                                     End SyncLock
+
+                                                                                                                                     allBytesPercentage = If(longAllReadBytes = 0 Or longAllBytes = 0, 100, longAllReadBytes / longAllBytes * 100)
+                                                                                                                                     lblVerifyHashesTotalStatus.Text = $"{FileSizeToHumanSize(longAllReadBytes)} of {FileSizeToHumanSize(longAllBytes)} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}%) has been processed."
+                                                                                                                                     If chkShowPercentageInWindowTitleBar.Checked Then Text = $"{strWindowTitle} ({MyRoundingFunction(allBytesPercentage, byteRoundPercentages)}% Completed)"
+
                                                                                                                                      lblProcessingFileVerify.Text = $"{FileSizeToHumanSize(totalBytesRead)} of {FileSizeToHumanSize(size)} ({MyRoundingFunction(percentage, byteRoundPercentages)}%) has been processed."
                                                                                                                                      If chkShowFileProgressInFileList.Checked Then
                                                                                                                                          currentItem.Cells(4).Value = lblProcessingFileVerify.Text
@@ -3025,10 +2921,7 @@ Public Class Form1
 
                                                                  computeStopwatch = Stopwatch.StartNew
 
-                                                                 If DoChecksumWithAttachedSubRoutine(strFileName, allTheHashes, subRoutine, exceptionObject) Then
-                                                                     strChecksum = GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes)
-                                                                     item.AllTheHashes = allTheHashes
-
+                                                                 If DoChecksumWithAttachedSubRoutine(strFileName, strChecksum, subRoutine, exceptionObject, checksumTypeForChecksumCompareWindow) Then
                                                                      If strChecksum.Equals(item.Hash, StringComparison.OrdinalIgnoreCase) Then
                                                                          item.MyColor = validColor
                                                                          item.Cells(2).Value = "Valid Checksum"
@@ -3042,7 +2935,7 @@ Public Class Form1
                                                                          item.Cells(2).Value = "Incorrect Checksum"
                                                                          item.ComputeTime = computeStopwatch.Elapsed
                                                                          item.Cells(3).Value = TimespanToHMS(item.ComputeTime)
-                                                                         item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes).ToUpper, GetDataFromAllTheHashes(checksumTypeForChecksumCompareWindow, allTheHashes).ToLower)
+                                                                         item.Cells(4).Value = If(chkDisplayHashesInUpperCase.Checked, strChecksum.ToUpper, strChecksum.ToLower)
                                                                          item.BoolValidHash = False
                                                                      End If
 
@@ -3056,9 +2949,7 @@ Public Class Form1
                                                                      item.StrCrashData = $"{exceptionObject.Message}{vbCrLf}{exceptionObject.StackTrace}"
                                                                      item.BoolValidHash = False
 
-                                                                     SyncLock threadLockingObject
-                                                                         longAllBytes -= item.FileSize
-                                                                     End SyncLock
+                                                                     Interlocked.Add(longAllBytes, -item.FileSize)
                                                                  End If
 
                                                                  subRoutine = Nothing
@@ -3147,10 +3038,9 @@ Public Class Form1
                                                  Finally
                                                      itemOnGUI = Nothing
                                                      intCurrentlyActiveTab = TabNumberNull
-                                                     SyncLock threadLockingObject
-                                                         longAllReadBytes = 0
-                                                         longAllBytes = 0
-                                                     End SyncLock
+
+                                                     Interlocked.Exchange(longAllReadBytes, 0)
+                                                     Interlocked.Exchange(longAllBytes, 0)
 
                                                      MyInvoke(Sub()
                                                                   If Not boolClosingWindow Then
@@ -3245,68 +3135,23 @@ Public Class Form1
         My.Settings.boolClearBeforeTransferringFromVerifyToHash = chkClearBeforeTransferringFromVerifyToHash.Checked
     End Sub
 
-    Private Sub SetClipboardDataFromGlobalAllTheHashes(checksum As HashAlgorithmName)
+    Private Sub SetClipboardDataFromGlobalAllTheHashes()
         Try
             Dim boolResult As Boolean = False
+            boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, strGlobalHash.ToUpper, strGlobalHash.ToLower))
 
-            Select Case checksum
-                Case HashAlgorithmName.MD5
-                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Md5.ToUpper, globalAllTheHashes.Md5.ToLower))
-                Case HashAlgorithmName.SHA1
-                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha160.ToUpper, globalAllTheHashes.Sha160.ToLower))
-                Case HashAlgorithmName.SHA256
-                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha256.ToUpper, globalAllTheHashes.Sha256.ToLower))
-                Case HashAlgorithmName.SHA384
-                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha384.ToUpper, globalAllTheHashes.Sha384.ToLower))
-                Case HashAlgorithmName.SHA512
-                    boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, globalAllTheHashes.Sha512.ToUpper, globalAllTheHashes.Sha512.ToLower))
-            End Select
-
-            globalAllTheHashes = Nothing
             If boolResult Then MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
         Catch ex As Exception
             MsgBox("Unable to copy the checksum to the Windows Clipboard.", MsgBoxStyle.Critical, strMessageBoxTitleText)
         End Try
     End Sub
 
-    Private Sub ListFilesContextMenuMD5_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuMD5.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.MD5)
+    Private Sub listFilesContextMenuChecksum_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuChecksum.Click
+        SetClipboardDataFromGlobalAllTheHashes()
     End Sub
 
-    Private Sub ListFilesContextMenuSHA160_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuSHA160.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.SHA1)
-    End Sub
-
-    Private Sub ListFilesContextMenuSHA256_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuSHA256.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.SHA256)
-    End Sub
-
-    Private Sub ListFilesContextMenuSHA384_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuSHA384.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.SHA384)
-    End Sub
-
-    Private Sub ListFilesContextMenuSHA512_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuSHA512.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.SHA512)
-    End Sub
-
-    Private Sub VerifyListFilesContextMenuMD5_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuMD5.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.MD5)
-    End Sub
-
-    Private Sub VerifyListFilesContextMenuSHA160_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuSHA160.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.SHA1)
-    End Sub
-
-    Private Sub VerifyListFilesContextMenuSHA256_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuSHA256.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.SHA256)
-    End Sub
-
-    Private Sub VerifyListFilesContextMenuSHA384_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuSHA384.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.SHA384)
-    End Sub
-
-    Private Sub VerifyListFilesContextMenuSHA512_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuSHA512.Click
-        SetClipboardDataFromGlobalAllTheHashes(HashAlgorithmName.SHA512)
+    Private Sub verifyListFilesContextMenuChecksum_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuChecksum.Click
+        SetClipboardDataFromGlobalAllTheHashes()
     End Sub
 
     Private Function SaveColumnOrders(columns As DataGridViewColumnCollection) As Specialized.StringCollection
@@ -3466,11 +3311,11 @@ Public Class Form1
                     .StartPosition = FormStartPosition.CenterParent
 
                     Dim checksumsToDisplay As New List(Of ListViewItem) From {
-                        CreateChecksumViewerListViewItem("MD5", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Md5.ToUpper, selectedItem.AllTheHashes.Md5.ToLower)),
-                        CreateChecksumViewerListViewItem("SHA1", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Sha160.ToUpper, selectedItem.AllTheHashes.Sha160.ToLower)),
-                        CreateChecksumViewerListViewItem("SHA256", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Sha256.ToUpper, selectedItem.AllTheHashes.Sha256.ToLower)),
-                        CreateChecksumViewerListViewItem("SHA384", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Sha384.ToUpper, selectedItem.AllTheHashes.Sha384.ToLower)),
-                        CreateChecksumViewerListViewItem("SHA512", If(chkDisplayHashesInUpperCase.Checked, selectedItem.AllTheHashes.Sha512.ToUpper, selectedItem.AllTheHashes.Sha512.ToLower))
+                        CreateChecksumViewerListViewItem("MD5", If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower)),
+                        CreateChecksumViewerListViewItem("SHA1", If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower)),
+                        CreateChecksumViewerListViewItem("SHA256", If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower)),
+                        CreateChecksumViewerListViewItem("SHA384", If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower)),
+                        CreateChecksumViewerListViewItem("SHA512", If(chkDisplayHashesInUpperCase.Checked, selectedItem.Hash.ToUpper, selectedItem.Hash.ToLower))
                     }
 
                     .checksums.Items.AddRange(checksumsToDisplay.ToArray)
