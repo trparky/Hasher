@@ -3135,10 +3135,10 @@ Public Class Form1
         My.Settings.boolClearBeforeTransferringFromVerifyToHash = chkClearBeforeTransferringFromVerifyToHash.Checked
     End Sub
 
-    Private Sub SetClipboardDataFromGlobalAllTheHashes()
+    Private Sub SetClipboardDataFromGlobalAllTheHashes(item As DataGridViewRow)
         Try
-            Dim boolResult As Boolean = False
-            boolResult = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, strGlobalHash.ToUpper, strGlobalHash.ToLower))
+            Dim myDataGridViewRow As MyDataGridViewRow = DirectCast(item, MyDataGridViewRow)
+            Dim boolResult As Boolean = CopyTextToWindowsClipboard(If(chkDisplayHashesInUpperCase.Checked, myDataGridViewRow.Hash.ToUpper, myDataGridViewRow.Hash.ToLower))
 
             If boolResult Then MsgBox("Checksum copied to Windows Clipboard.", MsgBoxStyle.Information, strMessageBoxTitleText)
         Catch ex As Exception
@@ -3147,11 +3147,11 @@ Public Class Form1
     End Sub
 
     Private Sub listFilesContextMenuChecksum_Click(sender As Object, e As EventArgs) Handles listFilesContextMenuChecksum.Click
-        SetClipboardDataFromGlobalAllTheHashes()
+        SetClipboardDataFromGlobalAllTheHashes(listFiles.SelectedRows(0))
     End Sub
 
     Private Sub verifyListFilesContextMenuChecksum_Click(sender As Object, e As EventArgs) Handles verifyListFilesContextMenuChecksum.Click
-        SetClipboardDataFromGlobalAllTheHashes()
+        SetClipboardDataFromGlobalAllTheHashes(verifyHashesListFiles.SelectedRows(0))
     End Sub
 
     Private Function SaveColumnOrders(columns As DataGridViewColumnCollection) As Specialized.StringCollection
