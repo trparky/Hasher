@@ -294,6 +294,8 @@ Public Class Form1
         End If
 
         btnComputeHash.Text = "Abort Processing"
+        btnIndividualFilesCopyToClipboard.Enabled = False
+        btnIndividualFilesSaveResultsToDisk.Enabled = False
         btnAddFilesInFolder.Enabled = False
         btnAddIndividualFiles.Enabled = False
         btnRemoveAllFiles.Enabled = False
@@ -511,6 +513,9 @@ Public Class Form1
                                                                       radioSHA256.Enabled = True
                                                                       radioSHA384.Enabled = True
                                                                       radioSHA512.Enabled = True
+
+                                                                      btnIndividualFilesCopyToClipboard.Enabled = True
+                                                                      btnIndividualFilesSaveResultsToDisk.Enabled = True
                                                                   End If
                                                               End Sub, Me)
                                                  End Try
