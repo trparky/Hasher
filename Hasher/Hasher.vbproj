@@ -108,6 +108,7 @@
     <Compile Include="Exception Viewer.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="Program Modules\Check for Update.vb" />
     <Compile Include="Checksum Difference.Designer.vb">
       <DependentUpon>Checksum Difference.vb</DependentUpon>
