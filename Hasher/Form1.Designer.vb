@@ -546,7 +546,7 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblHashIndividualFilesStep2.Location = New System.Drawing.Point(15, 359)
         Me.lblHashIndividualFilesStep2.Name = "lblHashIndividualFilesStep2"
-        Me.lblHashIndividualFilesStep2.Size = New System.Drawing.Size(459, 13)
+        Me.lblHashIndividualFilesStep2.Size = New System.Drawing.Size(175, 13)
         Me.lblHashIndividualFilesStep2.TabIndex = 18
         Me.lblHashIndividualFilesStep2.Text = "Step 3: Select your hash type"
         '
@@ -867,7 +867,7 @@ Partial Class Form1
         '
         Me.verifyListFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ViewChecksumDifferenceToolStripMenuItem, Me.verifyListFilesContextMenuLine1, Me.verifyListFilesContextMenuFileName, Me.verifyListFilesContextMenuLine2, Me.verifyListFilesContextMenuChecksum})
         Me.verifyListFilesContextMenu.Name = "verifyListFilesContextMenu"
-        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 170)
+        Me.verifyListFilesContextMenu.Size = New System.Drawing.Size(216, 82)
         '
         'ViewChecksumDifferenceToolStripMenuItem
         '
@@ -1062,7 +1062,7 @@ Partial Class Form1
         Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 31.37255!))
         Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 68.62745!))
         Me.compareFilesTableLayoutControl.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.compareFilesTableLayoutControl.Size = New System.Drawing.Size(871, 51)
+        Me.compareFilesTableLayoutControl.Size = New System.Drawing.Size(1441, 51)
         Me.compareFilesTableLayoutControl.TabIndex = 35
         '
         'lblCompareFilesStatus
@@ -1081,7 +1081,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.compareFilesProgressBar.Location = New System.Drawing.Point(3, 19)
         Me.compareFilesProgressBar.Name = "compareFilesProgressBar"
-        Me.compareFilesProgressBar.Size = New System.Drawing.Size(429, 29)
+        Me.compareFilesProgressBar.Size = New System.Drawing.Size(714, 29)
         Me.compareFilesProgressBar.TabIndex = 31
         Me.compareFilesProgressBar.Visible = False
         '
@@ -1090,15 +1090,15 @@ Partial Class Form1
         Me.CompareFilesAllFilesProgress.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CompareFilesAllFilesProgress.Location = New System.Drawing.Point(438, 19)
+        Me.CompareFilesAllFilesProgress.Location = New System.Drawing.Point(723, 19)
         Me.CompareFilesAllFilesProgress.Name = "CompareFilesAllFilesProgress"
-        Me.CompareFilesAllFilesProgress.Size = New System.Drawing.Size(430, 29)
+        Me.CompareFilesAllFilesProgress.Size = New System.Drawing.Size(715, 29)
         Me.CompareFilesAllFilesProgress.TabIndex = 34
         '
         'lblCompareFilesAllFilesStatus
         '
         Me.lblCompareFilesAllFilesStatus.AutoSize = True
-        Me.lblCompareFilesAllFilesStatus.Location = New System.Drawing.Point(438, 0)
+        Me.lblCompareFilesAllFilesStatus.Location = New System.Drawing.Point(723, 0)
         Me.lblCompareFilesAllFilesStatus.Name = "lblCompareFilesAllFilesStatus"
         Me.lblCompareFilesAllFilesStatus.Size = New System.Drawing.Size(142, 13)
         Me.lblCompareFilesAllFilesStatus.TabIndex = 35
