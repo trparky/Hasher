@@ -483,6 +483,7 @@ Partial Class Form1
         Me.lblProcessingFile.Size = New System.Drawing.Size(85, 13)
         Me.lblProcessingFile.TabIndex = 22
         Me.lblProcessingFile.Text = "lblProcessingFile"
+        Me.lblProcessingFile.UseMnemonic = False
         '
         'IndividualFilesProgressBar
         '
@@ -937,6 +938,7 @@ Partial Class Form1
         Me.lblVerifyHashStatusProcessingFile.Size = New System.Drawing.Size(166, 13)
         Me.lblVerifyHashStatusProcessingFile.TabIndex = 18
         Me.lblVerifyHashStatusProcessingFile.Text = "lblVerifyHashStatusProcessingFile"
+        Me.lblVerifyHashStatusProcessingFile.UseMnemonic = False
         '
         'verifyIndividualFilesAllFilesProgressBar
         '
