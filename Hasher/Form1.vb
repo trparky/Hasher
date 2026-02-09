@@ -20,7 +20,6 @@ Public Class Form1
     Private Const strMessageBoxTitleText As String = "Hasher"
     Private intBufferSize As Integer = My.Settings.shortBufferSize * 1024 * 1024
     Private strLastDirectoryWorkedOn As String
-    Private filesInListFiles As New List(Of String)
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
     Private boolClosingWindow As Boolean = False
@@ -58,6 +57,10 @@ Public Class Form1
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128}) \*?(?<filename>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
     Private ReadOnly PFSenseHashLineParser As New Text.RegularExpressions.Regex("SHA256 \((?<filename>.+)\) = (?<checksum>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
     Private ReadOnly HashFileWithNoFilename As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128})", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+
+    Private Function FindFileInListFilesList(strFileName As String) As Boolean
+        Return listFiles.Rows.Cast(Of MyDataGridViewRow).Where(Function(item As MyDataGridViewRow) item.FileName.Trim.Equals(strFileName.Trim, StringComparison.OrdinalIgnoreCase)).Any()
+    End Function
 
     Private Function GenerateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
         Return $"Processing file {MyToString(intCurrentFile)} of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")}."
@@ -174,7 +177,6 @@ Public Class Form1
 
     Private Sub BtnRemoveAllFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveAllFiles.Click
         listFiles.Rows.Clear()
-        filesInListFiles.Clear()
         UpdateFilesListCountHeader()
         strLastHashFileLoaded = Nothing
     End Sub
@@ -185,7 +187,6 @@ Public Class Form1
         End If
 
         For Each item As MyDataGridViewRow In listFiles.SelectedRows
-            filesInListFiles.Remove(item.Cells(0).Value)
             listFiles.Rows.Remove(item)
         Next
 
@@ -193,8 +194,6 @@ Public Class Form1
     End Sub
 
     Private Function CreateListFilesObject(strFileName As String, ByRef dataGrid As DataGridView) As MyDataGridViewRow
-        filesInListFiles.Add(strFileName.Trim.ToLower)
-
         Dim itemToBeAdded As New MyDataGridViewRow()
         With itemToBeAdded
             .CreateCells(dataGrid)
@@ -258,14 +257,14 @@ Public Class Form1
                 ElseIf OpenFileDialog.FileNames.Count = 1 Then
                     strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
 
-                    If Not filesInListFiles.Contains(OpenFileDialog.FileName.Trim.ToLower) AndAlso IO.File.Exists(OpenFileDialog.FileName) Then
+                    If Not FindFileInListFilesList(OpenFileDialog.FileName) AndAlso IO.File.Exists(OpenFileDialog.FileName) Then
                         listFiles.Rows.Add(CreateListFilesObject(OpenFileDialog.FileName, listFiles))
                     End If
                 Else
                     strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileNames(0)).DirectoryName
 
                     For Each strFileName As String In OpenFileDialog.FileNames
-                        If Not filesInListFiles.Contains(strFileName.Trim.ToLower) AndAlso IO.File.Exists(strFileName) Then
+                        If Not FindFileInListFilesList(strFileName) AndAlso IO.File.Exists(strFileName) Then
                             listFiles.Rows.Add(CreateListFilesObject(strFileName, listFiles))
                         End If
                     Next
@@ -834,7 +833,7 @@ Public Class Form1
                 TabControl1.SelectTab(TabNumberHashIndividualFilesTab)
                 NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
 
-                If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
+                If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not FindFileInListFilesList(strReceivedFileName) Then
                     strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
                     If IO.File.Exists(strReceivedFileName) Then listFiles.Rows.Add(CreateListFilesObject(strReceivedFileName, listFiles))
                 Else
@@ -1071,8 +1070,6 @@ Public Class Form1
 
     Private Sub AddFilesFromDirectory(directoryPath As String)
         workingThread = New Threading.Thread(Sub()
-                                                 Dim oldFilesInListFiles As List(Of String) = filesInListFiles
-
                                                  Try
                                                      strLastDirectoryWorkedOn = directoryPath
                                                      Dim collectionOfDataGridRows As New List(Of MyDataGridViewRow)
@@ -1120,7 +1117,7 @@ Public Class Form1
                                                                                                              lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
                                                                                                          End Sub, Me)
 
-                                                                                                If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) AndAlso (filedata.Attributes And IO.FileAttributes.Hidden) <> IO.FileAttributes.Hidden Then
+                                                                                                If Not FindFileInListFilesList(filedata.Path) AndAlso (filedata.Attributes And IO.FileAttributes.Hidden) <> IO.FileAttributes.Hidden Then
                                                                                                     If IO.File.Exists(filedata.Path) Then collectionOfDataGridRows.Add(CreateFilesDataGridObject(filedata.Path, filedata.Size, listFiles))
                                                                                                 End If
                                                                                             End SyncLock
@@ -1151,9 +1148,6 @@ Public Class Form1
                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = False
                                                               End Sub, Me)
                                                  Catch ex As MyThreadAbortException
-                                                     filesInListFiles.Clear()
-                                                     filesInListFiles = oldFilesInListFiles
-
                                                      MyInvoke(Sub()
                                                                   UpdateFilesListCountHeader()
 
@@ -1664,7 +1658,7 @@ Public Class Form1
         If boolBackgroundThreadWorking Then Exit Sub
         For Each strItem As String In e.Data.GetData(DataFormats.FileDrop)
             If IO.File.Exists(strItem) Or IO.Directory.Exists(strItem) Then
-                If Not IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strItem.Trim.ToLower) Then
+                If Not IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) AndAlso Not FindFileInListFilesList(strItem) Then
                     If IO.File.Exists(strItem) Then listFiles.Rows.Add(CreateFilesDataGridObject(strItem, listFiles))
                 Else
                     AddFilesFromDirectory(strItem)
@@ -2624,7 +2618,6 @@ Public Class Form1
 
                                                                 If chkClearBeforeTransferringFromVerifyToHash.Checked Then
                                                                     listFiles.Rows.Clear()
-                                                                    filesInListFiles.Clear()
                                                                 End If
                                                             End Sub, Me)
 
@@ -2642,8 +2635,7 @@ Public Class Form1
                                                                     lblVerifyHashStatus.Text = $"Processing item {MyToString(intLineCounter)} of {MyToString(verifyHashesListFiles.Rows.Count)} ({VerifyHashProgressBar.Value}%)."
                                                                 End Sub, Me)
 
-                                                       If Not filesInListFiles.Contains(item.FileName.Trim.ToLower) And IO.File.Exists(item.FileName) Then
-                                                           filesInListFiles.Add(item.FileName.Trim.ToLower)
+                                                       If Not FindFileInListFilesList(item.FileName) And IO.File.Exists(item.FileName) Then
 
                                                            itemToBeAdded = New MyDataGridViewRow() With {
                                                                .FileSize = New IO.FileInfo(item.FileName).Length,
