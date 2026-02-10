@@ -73,14 +73,24 @@ Public Class Form1
     ''' <param name="input">A strongly-typed delegate.</param>
     ''' <param name="invokeOn">The control that the Delegate will be invoked on.</param>
     Private Sub MyInvoke(input As Action, invokeOn As Control)
+        If input Is Nothing OrElse invokeOn Is Nothing Then Exit Sub
         If boolClosingWindow Then Exit Sub
-        If invokeOn.InvokeRequired() Then
-            ' If InvokeRequired is true, use Invoke to call the action on the UI thread.
-            invokeOn.Invoke(input)
+
+        Try
+            If invokeOn.IsDisposed OrElse Not invokeOn.IsHandleCreated Then Exit Sub
+
+            If invokeOn.InvokeRequired Then
+                ' BeginInvoke avoids blocking and is a bit safer during shutdown.
+                invokeOn.BeginInvoke(input)
         Else
-            ' If not required, just execute the action directly.
+                ' If not required, just execute the action directly.
             input()
         End If
+        Catch ex As ObjectDisposedException
+            ' Ignore: app is closing / control disposed.
+        Catch ex As InvalidOperationException
+            ' Ignore: handle not valid / control not in a valid state for invoke.
+        End Try
     End Sub
 
     Private Sub UpdateGridViewRowColor(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow)
