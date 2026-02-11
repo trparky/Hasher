@@ -20,7 +20,6 @@ Public Class Form1
     Private Const strMessageBoxTitleText As String = "Hasher"
     Private intBufferSize As Integer = My.Settings.shortBufferSize * 1024 * 1024
     Private strLastDirectoryWorkedOn As String
-    Private filesInListFiles As New List(Of String)
     Private boolBackgroundThreadWorking As Boolean = False
     Private workingThread As Threading.Thread
     Private boolClosingWindow As Boolean = False
@@ -59,6 +58,10 @@ Public Class Form1
     Private ReadOnly PFSenseHashLineParser As New Text.RegularExpressions.Regex("SHA256 \((?<filename>.+)\) = (?<checksum>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
     Private ReadOnly HashFileWithNoFilename As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128})", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
 
+    Private Function FindFileInListFilesList(strFileName As String) As Boolean
+        Return listFiles.Rows.Cast(Of MyDataGridViewRow).Where(Function(item As MyDataGridViewRow) item.FileName.Trim.Equals(strFileName.Trim, StringComparison.OrdinalIgnoreCase)).Any()
+    End Function
+
     Private Function GenerateProcessingFileString(intCurrentFile As Integer, intTotalFiles As Integer) As String
         Return $"Processing file {MyToString(intCurrentFile)} of {MyToString(intTotalFiles)} {If(intTotalFiles = 1, "file", "files")}."
     End Function
@@ -70,14 +73,24 @@ Public Class Form1
     ''' <param name="input">A strongly-typed delegate.</param>
     ''' <param name="invokeOn">The control that the Delegate will be invoked on.</param>
     Private Sub MyInvoke(input As Action, invokeOn As Control)
+        If input Is Nothing OrElse invokeOn Is Nothing Then Exit Sub
         If boolClosingWindow Then Exit Sub
-        If invokeOn.InvokeRequired() Then
-            ' If InvokeRequired is true, use Invoke to call the action on the UI thread.
-            invokeOn.Invoke(input)
-        Else
-            ' If not required, just execute the action directly.
-            input()
-        End If
+
+        Try
+            If invokeOn.IsDisposed OrElse Not invokeOn.IsHandleCreated Then Exit Sub
+
+            If invokeOn.InvokeRequired Then
+                ' BeginInvoke avoids blocking and is a bit safer during shutdown.
+                invokeOn.BeginInvoke(input)
+            Else
+                ' If not required, just execute the action directly.
+                input()
+            End If
+        Catch ex As ObjectDisposedException
+            ' Ignore: app is closing / control disposed.
+        Catch ex As InvalidOperationException
+            ' Ignore: handle not valid / control not in a valid state for invoke.
+        End Try
     End Sub
 
     Private Sub UpdateGridViewRowColor(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow)
@@ -174,7 +187,6 @@ Public Class Form1
 
     Private Sub BtnRemoveAllFiles_Click(sender As Object, e As EventArgs) Handles btnRemoveAllFiles.Click
         listFiles.Rows.Clear()
-        filesInListFiles.Clear()
         UpdateFilesListCountHeader()
         strLastHashFileLoaded = Nothing
     End Sub
@@ -185,7 +197,6 @@ Public Class Form1
         End If
 
         For Each item As MyDataGridViewRow In listFiles.SelectedRows
-            filesInListFiles.Remove(item.Cells(0).Value)
             listFiles.Rows.Remove(item)
         Next
 
@@ -193,8 +204,6 @@ Public Class Form1
     End Sub
 
     Private Function CreateListFilesObject(strFileName As String, ByRef dataGrid As DataGridView) As MyDataGridViewRow
-        filesInListFiles.Add(strFileName.Trim.ToLower)
-
         Dim itemToBeAdded As New MyDataGridViewRow()
         With itemToBeAdded
             .CreateCells(dataGrid)
@@ -258,14 +267,14 @@ Public Class Form1
                 ElseIf OpenFileDialog.FileNames.Count = 1 Then
                     strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileName).DirectoryName
 
-                    If Not filesInListFiles.Contains(OpenFileDialog.FileName.Trim.ToLower) AndAlso IO.File.Exists(OpenFileDialog.FileName) Then
+                    If Not FindFileInListFilesList(OpenFileDialog.FileName) AndAlso IO.File.Exists(OpenFileDialog.FileName) Then
                         listFiles.Rows.Add(CreateListFilesObject(OpenFileDialog.FileName, listFiles))
                     End If
                 Else
                     strLastDirectoryWorkedOn = New IO.FileInfo(OpenFileDialog.FileNames(0)).DirectoryName
 
                     For Each strFileName As String In OpenFileDialog.FileNames
-                        If Not filesInListFiles.Contains(strFileName.Trim.ToLower) AndAlso IO.File.Exists(strFileName) Then
+                        If Not FindFileInListFilesList(strFileName) AndAlso IO.File.Exists(strFileName) Then
                             listFiles.Rows.Add(CreateListFilesObject(strFileName, listFiles))
                         End If
                     Next
@@ -834,7 +843,7 @@ Public Class Form1
                 TabControl1.SelectTab(TabNumberHashIndividualFilesTab)
                 NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
 
-                If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strReceivedFileName.Trim.ToLower) Then
+                If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not FindFileInListFilesList(strReceivedFileName) Then
                     strLastDirectoryWorkedOn = New IO.FileInfo(strReceivedFileName).DirectoryName
                     If IO.File.Exists(strReceivedFileName) Then listFiles.Rows.Add(CreateListFilesObject(strReceivedFileName, listFiles))
                 Else
@@ -1071,8 +1080,6 @@ Public Class Form1
 
     Private Sub AddFilesFromDirectory(directoryPath As String)
         workingThread = New Threading.Thread(Sub()
-                                                 Dim oldFilesInListFiles As List(Of String) = filesInListFiles
-
                                                  Try
                                                      strLastDirectoryWorkedOn = directoryPath
                                                      Dim collectionOfDataGridRows As New List(Of MyDataGridViewRow)
@@ -1120,7 +1127,7 @@ Public Class Form1
                                                                                                              lblIndividualFilesStatus.Text = GenerateProcessingFileString(intFileIndexNumber, intTotalNumberOfFiles)
                                                                                                          End Sub, Me)
 
-                                                                                                If Not filesInListFiles.Contains(filedata.Path.Trim.ToLower) AndAlso (filedata.Attributes And IO.FileAttributes.Hidden) <> IO.FileAttributes.Hidden Then
+                                                                                                If Not FindFileInListFilesList(filedata.Path) AndAlso (filedata.Attributes And IO.FileAttributes.Hidden) <> IO.FileAttributes.Hidden Then
                                                                                                     If IO.File.Exists(filedata.Path) Then collectionOfDataGridRows.Add(CreateFilesDataGridObject(filedata.Path, filedata.Size, listFiles))
                                                                                                 End If
                                                                                             End SyncLock
@@ -1151,9 +1158,6 @@ Public Class Form1
                                                                   btnIndividualFilesSaveResultsToDisk.Enabled = False
                                                               End Sub, Me)
                                                  Catch ex As MyThreadAbortException
-                                                     filesInListFiles.Clear()
-                                                     filesInListFiles = oldFilesInListFiles
-
                                                      MyInvoke(Sub()
                                                                   UpdateFilesListCountHeader()
 
@@ -1664,7 +1668,7 @@ Public Class Form1
         If boolBackgroundThreadWorking Then Exit Sub
         For Each strItem As String In e.Data.GetData(DataFormats.FileDrop)
             If IO.File.Exists(strItem) Or IO.Directory.Exists(strItem) Then
-                If Not IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) AndAlso Not filesInListFiles.Contains(strItem.Trim.ToLower) Then
+                If Not IO.File.GetAttributes(strItem).HasFlag(IO.FileAttributes.Directory) AndAlso Not FindFileInListFilesList(strItem) Then
                     If IO.File.Exists(strItem) Then listFiles.Rows.Add(CreateFilesDataGridObject(strItem, listFiles))
                 Else
                     AddFilesFromDirectory(strItem)
@@ -2624,7 +2628,6 @@ Public Class Form1
 
                                                                 If chkClearBeforeTransferringFromVerifyToHash.Checked Then
                                                                     listFiles.Rows.Clear()
-                                                                    filesInListFiles.Clear()
                                                                 End If
                                                             End Sub, Me)
 
@@ -2642,8 +2645,7 @@ Public Class Form1
                                                                     lblVerifyHashStatus.Text = $"Processing item {MyToString(intLineCounter)} of {MyToString(verifyHashesListFiles.Rows.Count)} ({VerifyHashProgressBar.Value}%)."
                                                                 End Sub, Me)
 
-                                                       If Not filesInListFiles.Contains(item.FileName.Trim.ToLower) And IO.File.Exists(item.FileName) Then
-                                                           filesInListFiles.Add(item.FileName.Trim.ToLower)
+                                                       If Not FindFileInListFilesList(item.FileName) And IO.File.Exists(item.FileName) Then
 
                                                            itemToBeAdded = New MyDataGridViewRow() With {
                                                                .FileSize = New IO.FileInfo(item.FileName).Length,
@@ -3176,52 +3178,99 @@ Public Class Form1
     Private Sub BtnCheckHaveIBeenPwned_Click(sender As Object, e As EventArgs) Handles btnCheckHaveIBeenPwned.Click
         ' This whole routine has been documented so that users who aren't even programers can see that there's nothing nefarious going on in this routine.
 
+        ' We create an Action to use in the case that something goes wrong during our API call to HaveIBeenPwned.com, we will call
+        ' this Action in the case of an error to display an error message to the user and re-enable the button on the GUI.
+        Dim failAction As Action = Sub()
+                                       btnCheckHaveIBeenPwned.Enabled = True
+                                       MsgBox("There was an error calling the HaveIBeenPwned.com API. Please try again later.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+                                   End Sub
+
         btnCheckHaveIBeenPwned.Enabled = False ' Disable the button on the GUI.
 
         ' Do all of this work in a background thread so as to keep the GUI active even while work is being done in this routine.
-        Threading.ThreadPool.QueueUserWorkItem(Sub()
-                                                   Dim strFullSHA1String As String = GetSHA160HashOfString(txtTextToHash.Text).ToUpper ' First hash the String.
-                                                   Dim strSHA1ToSearchWith As String = strFullSHA1String.Substring(0, 5) ' Take out only what we want, the first five characters. That's all we send to the server.
-                                                   Dim strWebData As String = Nothing ' Prepare a variable to get data from the web.
+        ThreadPool.QueueUserWorkItem(Sub()
+                                         Try
+                                             Dim strFullSHA1String As String = GetSHA160HashOfString(txtTextToHash.Text).ToUpperInvariant() ' First hash the String.
+                                             Dim strSHA1ToSearchWith As String = strFullSHA1String.Substring(0, 5) ' Take out only what we want, the first five characters. That's all we send to the server.
+                                             Dim strSuffixToMatch As String = strFullSHA1String.Substring(5) ' Take out the rest of the hash to use for matching against the data we get back from the server.
+                                             Dim strWebData As String = Nothing ' Prepare a variable to get data from the web.
 
-                                                   Dim httpHelper As HttpHelper = checkForUpdates.CheckForUpdatesClass.CreateNewHTTPHelperObject() ' Create an HTTPHelper Class instance.
+                                             Dim httpHelper As HttpHelper = checkForUpdates.CheckForUpdatesClass.CreateNewHTTPHelperObject() ' Create an HTTPHelper Class instance.
 
-                                                   ' Call HaveIBeenPwned.com's Password Checking API. Note how we only send the first five characters
-                                                   ' to the server, you can see that by our use of the strSHA1ToSearchWith variable created above.
-                                                   If httpHelper.GetWebData($"https://api.pwnedpasswords.com/range/{strSHA1ToSearchWith}", strWebData, False) Then
-                                                       ' OK, we have a valid HTTP response, now let's do something with it.
+                                             ' Call HaveIBeenPwned.com's Password Checking API. Note how we only send the first five characters
+                                             ' to the server, you can see that by our use of the strSHA1ToSearchWith variable created above.
+                                             If httpHelper.GetWebData($"https://api.pwnedpasswords.com/range/{strSHA1ToSearchWith}", strWebData, False) Then
+                                                 ' OK, we have a valid HTTP response, now let's do something with it.
 
-                                                       ' We do some parsing of the incoming data, we do that by searching for the full SHA1 String in the web
-                                                       ' data but this is all being done client-side; again none of this is happening on the server side.
-                                                       Dim regexObject As New Text.RegularExpressions.Regex("(?:" & strFullSHA1String.Substring(5) & ")+:([0-9]+)")
-                                                       Dim regexMatchResults As Text.RegularExpressions.MatchCollection = regexObject.Matches(strWebData) ' Use the above Regex object to do some searching.
+                                                 ' Now, we take the data and split it up into lines, we do this because the API returns data in a format
+                                                 ' where each line is a different hash that starts with the same five characters that we sent to the
+                                                 ' server, followed by a colon and then the number of times that password has been found in breaches.
+                                                 ' We split it up into lines so that we can do some searching through it more easily.
+                                                 Dim strDataArrayFromHIBP As String() = strWebData.Split({vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries)
 
-                                                       ' Do we have some results?
-                                                       If regexMatchResults.Count > 0 Then
-                                                           ' Yes, that's not good.
+                                                 ' We now create a temporary String Array to hold the data we got back from the web. We do this because the API
+                                                 ' returns data in a format that contains the hash and the number of times it's been found in breaches on each
+                                                 ' line. We split it up into an array so that we can do some searching through it more easily.
+                                                 Dim strLine As String()
 
-                                                           Dim intTimes As Integer = 0 ' Create a variable to use to store the parsed Integer.
+                                                 ' We now create a 64-bit Integer variable to hold the number of times the password has been found in breaches.
+                                                 ' We do this because the API returns data in a format that contains the hash and the number of times it's been
+                                                 ' found in breaches on each line. We parse out the number of times it's been found in breaches into this
+                                                 ' variable so that we can use it later to display to the user.
+                                                 Dim longTimesFoundInBreaches As Long
 
-                                                           ' Try to parse the Integer that's a String into an actual Integer.
-                                                           If Integer.TryParse(regexMatchResults.Item(0).Groups(1).ToString, intTimes) Then
-                                                               ' Parsing worked, let's plug it into the message box text.
-                                                               MyInvoke(Sub() MsgBox($"OH NO!{DoubleCRLF}Your password has been found {MyToString(intTimes)} {If(intTimes = 1, "time", "times")} in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText), Me)
-                                                           Else
-                                                               ' Oops, parsing failed; let's just use a generic message instead of a custom one.
-                                                               MyInvoke(Sub() MsgBox($"OH NO!{DoubleCRLF}Your password has been found in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText), Me)
-                                                           End If
-                                                       Else
-                                                           ' Nope, the password hasn't been breached.
-                                                           MyInvoke(Sub() MsgBox($"Your password has not been found in the HaveIBeenPwned.com database.{DoubleCRLF}Congratulations!", MsgBoxStyle.Information, strMessageBoxTitleText), Me)
-                                                       End If
-                                                   Else
-                                                       ' Something happened during our API call, give the user an error message.
-                                                       MyInvoke(Sub()
-                                                                    btnCheckHaveIBeenPwned.Enabled = True ' Re-enable the button on the GUI.
-                                                                    MsgBox("There was an error calling the HaveIBeenPwned.com API. Please try again later.", MsgBoxStyle.Critical, strMessageBoxTitleText)
-                                                                End Sub, Me)
-                                                   End If
-                                               End Sub)
+                                                 ' We now create Boolean variable to keep track of whether or not we found the password in breaches. We initialize it to False because
+                                                 ' we haven't found it in breaches yet. We will set it to True if we find the password in the breach data we got back from the web.
+                                                 Dim boolPasswordFoundInBreaches As Boolean = False
+
+                                                 ' We now cycle through the data and search for the value of strSuffixToMatch that we created at the very beginning of this routine. If
+                                                 ' we find it, then we know that the password has been breached and we can also parse out how many times it has been found in breaches.
+                                                 For Each strHash As String In strDataArrayFromHIBP
+                                                     ' OK, now we have to trim the data we got back from the web because each line has a potential for some extra whitespace and
+                                                     ' other characters on it that we don't need; we just want the hash and the number of times it's been found in breaches.
+                                                     strHash = strHash.Trim()
+
+                                                     ' Split the line up into the hash and the number of times it's been found in breaches.
+                                                     strLine = strHash.Split(":")
+
+                                                     ' We now check to make sure that the line we got back from the web is in the format we expect, which
+                                                     ' is the hash followed by a colon and then the number of times it's been found in breaches. Each
+                                                     ' entry should split into an Array with two elements.
+                                                     If strLine.Length = 2 Then
+                                                         ' Does the hash on this line match the full SHA1 String that we created at the very beginning of this routine?
+                                                         If strLine(0).Trim().Equals(strSuffixToMatch, StringComparison.OrdinalIgnoreCase) Then
+                                                             ' Yes, the password has been found in breaches, let's parse out how many times it's been found in breaches from
+                                                             ' the data we got back from the web and then break out of the loop since we found what we were looking for.
+
+                                                             ' We set the bool variable we created above to True to indicate that we found the password in breaches.
+                                                             boolPasswordFoundInBreaches = True
+
+                                                             If Long.TryParse(strLine(1), longTimesFoundInBreaches) Then
+                                                                 ' Parsing worked, let's plug it into the message box text.
+                                                                 MyInvoke(Sub() MsgBox($"OH NO!{DoubleCRLF}Your password has been found {MyToString(longTimesFoundInBreaches)} {If(longTimesFoundInBreaches = 1, "time", "times")} in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText), Me)
+                                                             Else
+                                                                 ' Oops, parsing failed; let's just use a generic message instead of a custom one.
+                                                                 MyInvoke(Sub() MsgBox($"OH NO!{DoubleCRLF}Your password has been found in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText), Me)
+                                                             End If
+
+                                                             Exit For
+                                                         End If
+                                                     End If
+                                                 Next
+
+                                                 If Not boolPasswordFoundInBreaches Then
+                                                     ' The password was not found in breaches, let's let the user know that good news.
+                                                     MyInvoke(Sub() MsgBox($"Your password has not been found in the HaveIBeenPwned.com database.{DoubleCRLF}Congratulations!", MsgBoxStyle.Information, strMessageBoxTitleText), Me)
+                                                 End If
+                                             Else
+                                                 ' Something happened during our API call, give the user an error message.
+                                                 MyInvoke(failAction, Me)
+                                             End If
+                                         Catch ex As Exception
+                                             ' Something happened during our API call, give the user an error message.
+                                             MyInvoke(failAction, Me)
+                                         End Try
+                                     End Sub)
 
         ' End of routine.
     End Sub
