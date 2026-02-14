@@ -3202,6 +3202,33 @@ Public Class Form1
                                              If httpHelper.GetWebData($"https://api.pwnedpasswords.com/range/{strSHA1ToSearchWith}", strWebData, False) Then
                                                  ' OK, we have a valid HTTP response, now let's do something with it.
 
+                                                 ' Now we do a quick check to make sure that the data we got back from the web isn't empty
+                                                 ' or null, if it is, then something went wrong and we'll give the user an error message.
+                                                 If String.IsNullOrEmpty(strWebData) Then
+                                                     ' Something happened during our API call, give the user an error message.
+                                                     MyInvoke(failAction, Me)
+
+                                                     ' Re-enable the button on the GUI.
+                                                     btnCheckHaveIBeenPwned.Enabled = True
+
+                                                     ' Exit the routine.
+                                                     Exit Sub
+                                                 End If
+
+                                                 ' Now we do a quick check to see if the suffix we are looking for is even in the data we got back from the web, if it's not,
+                                                 ' then we can just tell the user that their password has not been found in breaches and exit the routine early. This
+                                                 ' is a quick check to avoid having to do more processing on the data we got back from the web if we don't have to.
+                                                 If Not strWebData.CaseInsensitiveContains(strSuffixToMatch & ":") Then
+                                                     ' The password was not found in breaches, let's let the user know that good news.
+                                                     MyInvoke(Sub() MsgBox($"Your password has not been found in the HaveIBeenPwned.com database.{DoubleCRLF}Congratulations!", MsgBoxStyle.Information, strMessageBoxTitleText), Me)
+
+                                                     ' Exit the routine.
+                                                     Exit Sub
+                                                 End If
+
+                                                 ' All initial checks are done, now we have to parse through the data we got back from the web to find the line that
+                                                 ' contains the suffix we are looking for and then parse out how many times it's been found in breaches.
+
                                                  ' Now, we take the data and split it up into lines, we do this because the API returns data in a format
                                                  ' where each line is a different hash that starts with the same five characters that we sent to the
                                                  ' server, followed by a colon and then the number of times that password has been found in breaches.
@@ -3218,10 +3245,6 @@ Public Class Form1
                                                  ' found in breaches on each line. We parse out the number of times it's been found in breaches into this
                                                  ' variable so that we can use it later to display to the user.
                                                  Dim longTimesFoundInBreaches As Long
-
-                                                 ' We now create Boolean variable to keep track of whether or not we found the password in breaches. We initialize it to False because
-                                                 ' we haven't found it in breaches yet. We will set it to True if we find the password in the breach data we got back from the web.
-                                                 Dim boolPasswordFoundInBreaches As Boolean = False
 
                                                  ' We now cycle through the data and search for the value of strSuffixToMatch that we created at the very beginning of this routine. If
                                                  ' we find it, then we know that the password has been breached and we can also parse out how many times it has been found in breaches.
@@ -3242,9 +3265,6 @@ Public Class Form1
                                                              ' Yes, the password has been found in breaches, let's parse out how many times it's been found in breaches from
                                                              ' the data we got back from the web and then break out of the loop since we found what we were looking for.
 
-                                                             ' We set the bool variable we created above to True to indicate that we found the password in breaches.
-                                                             boolPasswordFoundInBreaches = True
-
                                                              If Long.TryParse(strLine(1), longTimesFoundInBreaches) Then
                                                                  ' Parsing worked, let's plug it into the message box text.
                                                                  MyInvoke(Sub() MsgBox($"OH NO!{DoubleCRLF}Your password has been found {MyToString(longTimesFoundInBreaches)} {If(longTimesFoundInBreaches = 1, "time", "times")} in the HaveIBeenPwned.com database, consider changing your password on any accounts that use this password.", MsgBoxStyle.Critical, strMessageBoxTitleText), Me)
@@ -3257,11 +3277,6 @@ Public Class Form1
                                                          End If
                                                      End If
                                                  Next
-
-                                                 If Not boolPasswordFoundInBreaches Then
-                                                     ' The password was not found in breaches, let's let the user know that good news.
-                                                     MyInvoke(Sub() MsgBox($"Your password has not been found in the HaveIBeenPwned.com database.{DoubleCRLF}Congratulations!", MsgBoxStyle.Information, strMessageBoxTitleText), Me)
-                                                 End If
                                              Else
                                                  ' Something happened during our API call, give the user an error message.
                                                  MyInvoke(failAction, Me)
