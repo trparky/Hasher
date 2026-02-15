@@ -46,13 +46,6 @@ Public Class Form1
     Private Const strHashChecksumToBeComputed As String = "Hash/Checksum: (To Be Computed)"
 
     Private Const TabNumberNull As Integer = -1
-    Private Const TabNumberWelcomeTab As Integer = 0
-    Private Const TabNumberHashTextTab As Integer = 1
-    Private Const TabNumberHashIndividualFilesTab As Integer = 2
-    Private Const TabNumberVerifySavedHashesTab As Integer = 3
-    Private Const TabNumberCompareFilesTab As Integer = 4
-    Private Const TabNumberCompareFileAgainstKnownHashTab As Integer = 5
-    Private Const TabNumberSettingsTab As Integer = 6
 
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128}) \*?(?<filename>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
     Private ReadOnly PFSenseHashLineParser As New Text.RegularExpressions.Regex("SHA256 \((?<filename>.+)\) = (?<checksum>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
@@ -316,7 +309,7 @@ Public Class Form1
         lblHashIndividualFilesTotalStatus.Visible = True
         lblIndividualFilesStatus.Visible = True
         lblIndividualFilesStatusProcessingFile.Visible = True
-        intCurrentlyActiveTab = TabNumberHashIndividualFilesTab
+        intCurrentlyActiveTab = tabHashIndividualFiles.TabIndex
 
         Dim longErroredFiles As Long = 0
         Dim itemOnGUI As MyDataGridViewRow = Nothing
@@ -840,7 +833,7 @@ Public Class Form1
         Try
             If boolBackgroundThreadWorking Then Exit Sub
             If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
-                TabControl1.SelectTab(TabNumberHashIndividualFilesTab)
+                TabControl1.SelectTab(tabHashIndividualFiles.TabIndex)
                 NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
 
                 If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not FindFileInListFilesList(strReceivedFileName) Then
@@ -902,7 +895,7 @@ Public Class Form1
                                  txtFile2.Text = strFilePathToBeCompared
                              End If
 
-                             TabControl1.SelectedIndex = TabNumberCompareFilesTab
+                             TabControl1.SelectedIndex = tabCompareFiles.TabIndex
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub, Me)
             ElseIf parsedArguments.ContainsKey("addfile") Then
@@ -956,14 +949,14 @@ Public Class Form1
                 commandLineArgument = parsedArguments("hashfile")
 
                 If IO.File.Exists(commandLineArgument) Then
-                    TabControl1.SelectTab(TabNumberVerifySavedHashesTab)
+                    TabControl1.SelectTab(tabVerifySavedHashes.TabIndex)
                     btnOpenExistingHashFile.Text = "Abort Processing"
                     verifyHashesListFiles.Rows.Clear()
                     ProcessExistingHashFile(commandLineArgument)
                 End If
             ElseIf parsedArguments.ContainsKey("knownhashfile") Then
                 commandLineArgument = parsedArguments("knownhashfile")
-                TabControl1.SelectTab(TabNumberCompareFileAgainstKnownHashTab)
+                TabControl1.SelectTab(tabCompareAgainstKnownHash.TabIndex)
                 txtFileForKnownHash.Text = commandLineArgument
                 txtKnownHash.Select()
             End If
@@ -1277,7 +1270,7 @@ Public Class Form1
         strChecksumFileExtension = checksumFileInfo.Extension
         strDirectoryThatContainsTheChecksumFile = checksumFileInfo.DirectoryName
         checksumFileInfo = Nothing
-        intCurrentlyActiveTab = TabNumberVerifySavedHashesTab
+        intCurrentlyActiveTab = tabVerifySavedHashes.TabIndex
 
         Select Case strChecksumFileExtension.ToLower()
             Case ".md5"
@@ -1741,20 +1734,20 @@ Public Class Form1
     End Sub
 
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
-        If (e.TabPageIndex = TabNumberSettingsTab Or e.TabPageIndex = TabNumberWelcomeTab) AndAlso intCurrentlyActiveTab <> TabNumberNull AndAlso Not TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
+        If (e.TabPageIndex = tabSettings.TabIndex Or e.TabPageIndex = tabWelcome.TabIndex) AndAlso intCurrentlyActiveTab <> TabNumberNull AndAlso Not TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
             TabControl1.TabPages(intCurrentlyActiveTab).Text &= " (Currently Active)"
         ElseIf e.TabPageIndex = intCurrentlyActiveTab AndAlso TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
             Dim strNewTabText As String = TabControl1.TabPages(intCurrentlyActiveTab).Text.Replace(" (Currently Active)", "")
             TabControl1.TabPages(intCurrentlyActiveTab).Text = strNewTabText
         End If
 
-        If e.TabPageIndex = TabNumberCompareFileAgainstKnownHashTab Then
+        If e.TabPageIndex = tabCompareAgainstKnownHash.TabIndex Then
             pictureBoxVerifyAgainstResults.Image = Nothing
             ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "")
             txtFileForKnownHash.Text = Nothing
             txtKnownHash.Text = Nothing
             lblCompareFileAgainstKnownHashType.Text = Nothing
-        ElseIf e.TabPageIndex = TabNumberWelcomeTab Or e.TabPageIndex = TabNumberSettingsTab Or e.TabPageIndex = intCurrentlyActiveTab Then
+        ElseIf e.TabPageIndex = tabWelcome.TabIndex Or e.TabPageIndex = tabSettings.TabIndex Or e.TabPageIndex = intCurrentlyActiveTab Then
             Exit Sub
         End If
 
@@ -1875,7 +1868,7 @@ Public Class Form1
         txtFile2.Enabled = False
         btnCompareFiles.Text = "Abort Processing"
         compareFilesProgressBar.Visible = True
-        intCurrentlyActiveTab = TabNumberCompareFilesTab
+        intCurrentlyActiveTab = tabCompareFiles.TabIndex
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -2136,7 +2129,7 @@ Public Class Form1
         btnCompareAgainstKnownHash.Text = "Abort Processing"
         boolDidWePerformAPreviousHash = True
         compareAgainstKnownHashProgressBar.Visible = True
-        intCurrentlyActiveTab = TabNumberCompareFileAgainstKnownHashTab
+        intCurrentlyActiveTab = tabCompareAgainstKnownHash.TabIndex
 
         workingThread = New Threading.Thread(Sub()
                                                  Try
@@ -2689,7 +2682,7 @@ Public Class Form1
 
                                                                 If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
                                                                 colChecksum.HeaderText = strColumnTitleChecksumSHA256
-                                                                TabControl1.SelectedIndex = TabNumberHashIndividualFilesTab
+                                                                TabControl1.SelectedIndex = tabHashIndividualFiles.TabIndex
                                                                 btnIndividualFilesCopyToClipboard.Enabled = True
                                                                 btnIndividualFilesSaveResultsToDisk.Enabled = True
 
