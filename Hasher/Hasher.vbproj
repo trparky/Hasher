@@ -109,6 +109,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GlobalSuppressions.vb" />
+    <Compile Include="OpenExplorer.Designer.vb">
+      <DependentUpon>OpenExplorer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="OpenExplorer.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Program Modules\Check for Update.vb" />
     <Compile Include="Checksum Difference.Designer.vb">
       <DependentUpon>Checksum Difference.vb</DependentUpon>
@@ -179,6 +185,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenExplorer.resx">
+      <DependentUpon>OpenExplorer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="progressForm.resx">
       <DependentUpon>progressForm.vb</DependentUpon>

@@ -716,22 +716,12 @@ Public Class Form1
     End Sub
 
     Private Function ShowHashFileWrittenWindow(BoolAskUserOpenInExplorer As Boolean, fileName As String, checksumtype As HashAlgorithmName) As MsgBoxResult
-        Dim StringBuilder As New Text.StringBuilder()
-        StringBuilder.AppendLine("Your hash results have been written to disk.")
-        StringBuilder.AppendLine()
-        StringBuilder.AppendLine($"File Name: {fileName}")
-        StringBuilder.AppendLine($"Checksum Type: {ConvertChecksumTypeToString(checksumtype)}")
-        StringBuilder.AppendLine()
+        Dim strMessage As String = If(BoolAskUserOpenInExplorer, "Do you want to open Windows Explorer to the location of the checksum file?", "Windows Explorer will now open to the location of the checksum file.")
 
-        If BoolAskUserOpenInExplorer Then
-            StringBuilder.AppendLine("Do you want to open Windows Explorer to the location of the checksum file?")
-            Return MsgBox(StringBuilder.ToString.Trim, MsgBoxStyle.Question + MsgBoxStyle.YesNo + MsgBoxStyle.DefaultButton2, strMessageBoxTitleText)
-        Else
-            StringBuilder.AppendLine("Windows Explorer will now open to the location of the checksum file.")
-            Return MsgBox(StringBuilder.ToString.Trim, MsgBoxStyle.Information, strMessageBoxTitleText)
-        End If
+        Dim OpenExplorer As New OpenExplorer(fileName, ConvertChecksumTypeToString(checksumtype), strMessage, BoolAskUserOpenInExplorer, Me) With {.StartPosition = FormStartPosition.CenterParent}
+        OpenExplorer.ShowDialog(Me)
 
-        Return MsgBoxResult.Yes
+        Return OpenExplorer.DialogResult
     End Function
 
     Private Function ConvertChecksumTypeToString(checksumType As HashAlgorithmName) As String
