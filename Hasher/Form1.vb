@@ -98,6 +98,8 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateDataGridViewRow(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow, Optional boolUpdateColor As Boolean = True)
+        If itemOnGUI Is Nothing OrElse item Is Nothing Then Exit Sub
+
         With itemOnGUI
             If item IsNot Nothing Then
                 For i As Short = 1 To item.Cells.Count - 1
@@ -364,7 +366,7 @@ Public Class Form1
                                                                                                        MyInvoke(Sub()
                                                                                                                     If chkShowFileProgressInFileList.Checked Then
                                                                                                                         currentItem.Cells(2).Value = lblIndividualFilesStatus.Text
-                                                                                                                        itemOnGUI.Cells(2).Value = currentItem.Cells(2).Value
+                                                                                                                        If itemOnGUI IsNot Nothing Then itemOnGUI.Cells(2).Value = currentItem.Cells(2).Value
                                                                                                                     End If
                                                                                                                 End Sub, listFiles)
                                                                                                    Catch ex As Exception
