@@ -46,6 +46,13 @@ Public Class Form1
     Private Const strHashChecksumToBeComputed As String = "Hash/Checksum: (To Be Computed)"
 
     Private Const TabNumberNull As Integer = -1
+    Private Const TabNumberWelcomeTab As Integer = 0
+    Private Const TabNumberHashTextTab As Integer = 1
+    Private Const TabNumberHashIndividualFilesTab As Integer = 2
+    Private Const TabNumberVerifySavedHashesTab As Integer = 3
+    Private Const TabNumberCompareFilesTab As Integer = 4
+    Private Const TabNumberCompareFileAgainstKnownHashTab As Integer = 5
+    Private Const TabNumberSettingsTab As Integer = 6
 
     Private ReadOnly hashLineParser As New Text.RegularExpressions.Regex("(?<checksum>[0-9a-f]{32,128}) \*?(?<filename>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
     Private ReadOnly PFSenseHashLineParser As New Text.RegularExpressions.Regex("SHA256 \((?<filename>.+)\) = (?<checksum>.+)", System.Text.RegularExpressions.RegexOptions.Compiled + System.Text.RegularExpressions.RegexOptions.IgnoreCase)
@@ -66,24 +73,14 @@ Public Class Form1
     ''' <param name="input">A strongly-typed delegate.</param>
     ''' <param name="invokeOn">The control that the Delegate will be invoked on.</param>
     Private Sub MyInvoke(input As Action, invokeOn As Control)
-        If input Is Nothing OrElse invokeOn Is Nothing Then Exit Sub
         If boolClosingWindow Then Exit Sub
-
-        Try
-            If invokeOn.IsDisposed OrElse Not invokeOn.IsHandleCreated Then Exit Sub
-
-            If invokeOn.InvokeRequired Then
-                ' BeginInvoke avoids blocking and is a bit safer during shutdown.
-                invokeOn.BeginInvoke(input)
-            Else
-                ' If not required, just execute the action directly.
-                input()
-            End If
-        Catch ex As ObjectDisposedException
-            ' Ignore: app is closing / control disposed.
-        Catch ex As InvalidOperationException
-            ' Ignore: handle not valid / control not in a valid state for invoke.
-        End Try
+        If invokeOn.InvokeRequired() Then
+            ' If InvokeRequired is true, use Invoke to call the action on the UI thread.
+            invokeOn.Invoke(input)
+        Else
+            ' If not required, just execute the action directly.
+            input()
+        End If
     End Sub
 
     Private Sub UpdateGridViewRowColor(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow)
@@ -311,7 +308,7 @@ Public Class Form1
         lblHashIndividualFilesTotalStatus.Visible = True
         lblIndividualFilesStatus.Visible = True
         lblIndividualFilesStatusProcessingFile.Visible = True
-        intCurrentlyActiveTab = tabHashIndividualFiles.TabIndex
+        intCurrentlyActiveTab = TabNumberHashIndividualFilesTab
 
         Dim longErroredFiles As Long = 0
         Dim itemOnGUI As MyDataGridViewRow = Nothing
@@ -825,7 +822,7 @@ Public Class Form1
         Try
             If boolBackgroundThreadWorking Then Exit Sub
             If IO.File.Exists(strReceivedFileName) Or IO.Directory.Exists(strReceivedFileName) Then
-                TabControl1.SelectTab(tabHashIndividualFiles.TabIndex)
+                TabControl1.SelectTab(TabNumberHashIndividualFilesTab)
                 NativeMethod.NativeMethods.SetForegroundWindow(Handle.ToInt32())
 
                 If Not IO.File.GetAttributes(strReceivedFileName).HasFlag(IO.FileAttributes.Directory) AndAlso Not FindFileInListFilesList(strReceivedFileName) Then
@@ -887,7 +884,7 @@ Public Class Form1
                                  txtFile2.Text = strFilePathToBeCompared
                              End If
 
-                             TabControl1.SelectedIndex = tabCompareFiles.TabIndex
+                             TabControl1.SelectedIndex = TabNumberCompareFilesTab
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub, Me)
             ElseIf parsedArguments.ContainsKey("addfile") Then
@@ -941,14 +938,14 @@ Public Class Form1
                 commandLineArgument = parsedArguments("hashfile")
 
                 If IO.File.Exists(commandLineArgument) Then
-                    TabControl1.SelectTab(tabVerifySavedHashes.TabIndex)
+                    TabControl1.SelectTab(TabNumberVerifySavedHashesTab)
                     btnOpenExistingHashFile.Text = "Abort Processing"
                     verifyHashesListFiles.Rows.Clear()
                     ProcessExistingHashFile(commandLineArgument)
                 End If
             ElseIf parsedArguments.ContainsKey("knownhashfile") Then
                 commandLineArgument = parsedArguments("knownhashfile")
-                TabControl1.SelectTab(tabCompareAgainstKnownHash.TabIndex)
+                TabControl1.SelectTab(TabNumberCompareFileAgainstKnownHashTab)
                 txtFileForKnownHash.Text = commandLineArgument
                 txtKnownHash.Select()
             End If
@@ -1262,7 +1259,7 @@ Public Class Form1
         strChecksumFileExtension = checksumFileInfo.Extension
         strDirectoryThatContainsTheChecksumFile = checksumFileInfo.DirectoryName
         checksumFileInfo = Nothing
-        intCurrentlyActiveTab = tabVerifySavedHashes.TabIndex
+        intCurrentlyActiveTab = TabNumberVerifySavedHashesTab
 
         Select Case strChecksumFileExtension.ToLower()
             Case ".md5"
@@ -1726,20 +1723,20 @@ Public Class Form1
     End Sub
 
     Private Sub TabControl1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControl1.Selecting
-        If (e.TabPageIndex = tabSettings.TabIndex Or e.TabPageIndex = tabWelcome.TabIndex) AndAlso intCurrentlyActiveTab <> TabNumberNull AndAlso Not TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
+        If (e.TabPageIndex = TabNumberSettingsTab Or e.TabPageIndex = TabNumberWelcomeTab) AndAlso intCurrentlyActiveTab <> TabNumberNull AndAlso Not TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
             TabControl1.TabPages(intCurrentlyActiveTab).Text &= " (Currently Active)"
         ElseIf e.TabPageIndex = intCurrentlyActiveTab AndAlso TabControl1.TabPages(intCurrentlyActiveTab).Text.Contains("Currently Active") Then
             Dim strNewTabText As String = TabControl1.TabPages(intCurrentlyActiveTab).Text.Replace(" (Currently Active)", "")
             TabControl1.TabPages(intCurrentlyActiveTab).Text = strNewTabText
         End If
 
-        If e.TabPageIndex = tabCompareAgainstKnownHash.TabIndex Then
+        If e.TabPageIndex = TabNumberCompareFileAgainstKnownHashTab Then
             pictureBoxVerifyAgainstResults.Image = Nothing
             ToolTip.SetToolTip(pictureBoxVerifyAgainstResults, "")
             txtFileForKnownHash.Text = Nothing
             txtKnownHash.Text = Nothing
             lblCompareFileAgainstKnownHashType.Text = Nothing
-        ElseIf e.TabPageIndex = tabWelcome.TabIndex Or e.TabPageIndex = tabSettings.TabIndex Or e.TabPageIndex = intCurrentlyActiveTab Then
+        ElseIf e.TabPageIndex = TabNumberWelcomeTab Or e.TabPageIndex = TabNumberSettingsTab Or e.TabPageIndex = intCurrentlyActiveTab Then
             Exit Sub
         End If
 
@@ -1860,7 +1857,7 @@ Public Class Form1
         txtFile2.Enabled = False
         btnCompareFiles.Text = "Abort Processing"
         compareFilesProgressBar.Visible = True
-        intCurrentlyActiveTab = tabCompareFiles.TabIndex
+        intCurrentlyActiveTab = TabNumberCompareFilesTab
 
         workingThread = New Thread(Sub()
                                        Try
@@ -2121,7 +2118,7 @@ Public Class Form1
         btnCompareAgainstKnownHash.Text = "Abort Processing"
         boolDidWePerformAPreviousHash = True
         compareAgainstKnownHashProgressBar.Visible = True
-        intCurrentlyActiveTab = tabCompareAgainstKnownHash.TabIndex
+        intCurrentlyActiveTab = TabNumberCompareFileAgainstKnownHashTab
 
         workingThread = New Thread(Sub()
                                        Try
@@ -2674,7 +2671,7 @@ Public Class Form1
 
                                                                 If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
                                                                 colChecksum.HeaderText = strColumnTitleChecksumSHA256
-                                                                TabControl1.SelectedIndex = tabHashIndividualFiles.TabIndex
+                                                                TabControl1.SelectedIndex = TabNumberHashIndividualFilesTab
                                                                 btnIndividualFilesCopyToClipboard.Enabled = True
                                                                 btnIndividualFilesSaveResultsToDisk.Enabled = True
 
@@ -3028,22 +3025,22 @@ Public Class Form1
                                                         If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                     End Sub, Me)
                                        Finally
-                                                     itemOnGUI = Nothing
-                                                     intCurrentlyActiveTab = TabNumberNull
+                                           itemOnGUI = Nothing
+                                           intCurrentlyActiveTab = TabNumberNull
 
-                                                     Interlocked.Exchange(longAllReadBytes, 0)
-                                                     Interlocked.Exchange(longAllBytes, 0)
+                                           Interlocked.Exchange(longAllReadBytes, 0)
+                                           Interlocked.Exchange(longAllBytes, 0)
 
-                                                     MyInvoke(Sub()
-                                                                  If Not boolClosingWindow Then
-                                                                      btnTransferToHashIndividualFilesTab.Enabled = True
-                                                                      btnOpenExistingHashFile.Text = "Open Hash File"
-                                                                      ProgressForm.SetTaskbarProgressBarValue(0)
-                                                                      verifyIndividualFilesAllFilesProgressBar.Value = 0
-                                                                  End If
-                                                              End Sub, Me)
-                                                 End Try
-                                             End Sub) With {
+                                           MyInvoke(Sub()
+                                                        If Not boolClosingWindow Then
+                                                            btnTransferToHashIndividualFilesTab.Enabled = True
+                                                            btnOpenExistingHashFile.Text = "Open Hash File"
+                                                            ProgressForm.SetTaskbarProgressBarValue(0)
+                                                            verifyIndividualFilesAllFilesProgressBar.Value = 0
+                                                        End If
+                                                    End Sub, Me)
+                                       End Try
+                                   End Sub) With {
             .Priority = GetThreadPriority(),
             .Name = "Verify Hash File Working Thread",
             .IsBackground = True
@@ -3302,7 +3299,7 @@ Public Class Form1
                     .Arguments = "-removesystemlevelassociations",
                     .Verb = "runas"
                 }
-                Dim process As Process = Process.Start(startInfo)
+                Dim process As Process = process.Start(startInfo)
                 process.WaitForExit()
                 boolSuccessful = True
             Catch ex As Win32Exception
