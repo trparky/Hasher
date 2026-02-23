@@ -73,24 +73,14 @@ Public Class Form1
     ''' <param name="input">A strongly-typed delegate.</param>
     ''' <param name="invokeOn">The control that the Delegate will be invoked on.</param>
     Private Sub MyInvoke(input As Action, invokeOn As Control)
-        If input Is Nothing OrElse invokeOn Is Nothing Then Exit Sub
         If boolClosingWindow Then Exit Sub
-
-        Try
-            If invokeOn.IsDisposed OrElse Not invokeOn.IsHandleCreated Then Exit Sub
-
-            If invokeOn.InvokeRequired Then
-                ' BeginInvoke avoids blocking and is a bit safer during shutdown.
-                invokeOn.BeginInvoke(input)
-            Else
-                ' If not required, just execute the action directly.
-                input()
-            End If
-        Catch ex As ObjectDisposedException
-            ' Ignore: app is closing / control disposed.
-        Catch ex As InvalidOperationException
-            ' Ignore: handle not valid / control not in a valid state for invoke.
-        End Try
+        If invokeOn.InvokeRequired() Then
+            ' If InvokeRequired is true, use Invoke to call the action on the UI thread.
+            invokeOn.Invoke(input)
+        Else
+            ' If not required, just execute the action directly.
+            input()
+        End If
     End Sub
 
     Private Sub UpdateGridViewRowColor(ByRef itemOnGUI As MyDataGridViewRow, ByRef item As MyDataGridViewRow)
@@ -3035,22 +3025,22 @@ Public Class Form1
                                                         If Not boolClosingWindow Then MsgBox("Processing aborted.", MsgBoxStyle.Information, strMessageBoxTitleText)
                                                     End Sub, Me)
                                        Finally
-                                                     itemOnGUI = Nothing
-                                                     intCurrentlyActiveTab = TabNumberNull
+                                           itemOnGUI = Nothing
+                                           intCurrentlyActiveTab = TabNumberNull
 
-                                                     Interlocked.Exchange(longAllReadBytes, 0)
-                                                     Interlocked.Exchange(longAllBytes, 0)
+                                           Interlocked.Exchange(longAllReadBytes, 0)
+                                           Interlocked.Exchange(longAllBytes, 0)
 
-                                                     MyInvoke(Sub()
-                                                                  If Not boolClosingWindow Then
-                                                                      btnTransferToHashIndividualFilesTab.Enabled = True
-                                                                      btnOpenExistingHashFile.Text = "Open Hash File"
-                                                                      ProgressForm.SetTaskbarProgressBarValue(0)
-                                                                      verifyIndividualFilesAllFilesProgressBar.Value = 0
-                                                                  End If
-                                                              End Sub, Me)
-                                                 End Try
-                                             End Sub) With {
+                                           MyInvoke(Sub()
+                                                        If Not boolClosingWindow Then
+                                                            btnTransferToHashIndividualFilesTab.Enabled = True
+                                                            btnOpenExistingHashFile.Text = "Open Hash File"
+                                                            ProgressForm.SetTaskbarProgressBarValue(0)
+                                                            verifyIndividualFilesAllFilesProgressBar.Value = 0
+                                                        End If
+                                                    End Sub, Me)
+                                       End Try
+                                   End Sub) With {
             .Priority = GetThreadPriority(),
             .Name = "Verify Hash File Working Thread",
             .IsBackground = True
@@ -3309,7 +3299,7 @@ Public Class Form1
                     .Arguments = "-removesystemlevelassociations",
                     .Verb = "runas"
                 }
-                Dim process As Process = Process.Start(startInfo)
+                Dim process As Process = process.Start(startInfo)
                 process.WaitForExit()
                 boolSuccessful = True
             Catch ex As Win32Exception
