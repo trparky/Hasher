@@ -104,15 +104,13 @@ Public Module SaveAppSettings
     ''' <return>Returns a String value.</return>
     <Extension()>
     Private Function FindKeyInDictionaryAndReturnIt(haystack As Dictionary(Of String, Object), needle As String, ByRef value As Object) As Boolean
-        If String.IsNullOrEmpty(needle) Then
+        If String.IsNullOrWhiteSpace(needle) Then
             Throw New ArgumentException($"'{NameOf(needle)}' cannot be null or empty.", NameOf(needle))
         End If
         If haystack Is Nothing Then
-            Throw New ArgumentNullException(NameOf(haystack))
+            Throw New ArgumentNullException($"'{NameOf(haystack)}' cannot be null or empty.", NameOf(haystack))
         End If
 
-        Dim KeyValuePair As KeyValuePair(Of String, Object) = haystack.FirstOrDefault(Function(item As KeyValuePair(Of String, Object)) item.Key.Trim.Equals(needle, StringComparison.OrdinalIgnoreCase))
-        If KeyValuePair.Value IsNot Nothing Then value = KeyValuePair.Value
-        Return KeyValuePair.Value IsNot Nothing
+        Return haystack.TryGetValue(needle, value)
     End Function
 End Module
