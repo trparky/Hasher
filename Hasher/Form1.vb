@@ -667,7 +667,7 @@ Public Class Form1
                                 SaveFileDialog.FileName &= ".sha256"
                             Case "SHA384 File|*.sha384"
                                 SaveFileDialog.FileName &= ".sha384"
-                            Case "SHA384 File|*.sha512"
+                            Case "SHA512 File|*.sha512"
                                 SaveFileDialog.FileName &= ".sha512"
                         End Select
                     End If
