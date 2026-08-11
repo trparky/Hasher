@@ -800,28 +800,22 @@ Public Class Form1
         LaunchURLInWebBrowser(strBuyMeACoffee)
     End Sub
 
-    Private Sub SendToIPCNamedPipeServer(strJson As String)
+    Private Sub SendToIPCNamedPipeServer(strJSON As String)
         Try
-            Using pipeClient As New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
-                pipeClient.Connect(3000) ' 3 second timeout - the main instance should already be listening.
+            Using namedPipeClient As New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
+                namedPipeClient.Connect(3000) ' 3 second timeout - the main instance should already be listening.
 
-                Dim messageBytes As Byte() = Encoding.UTF8.GetBytes(strJson)
-                Dim lengthPrefix As Byte() = BitConverter.GetBytes(messageBytes.Length)
+                Dim byteArrayMessage As Byte() = Encoding.UTF8.GetBytes(strJSON)
+                Dim byteArrayLengthPrefix As Byte() = BitConverter.GetBytes(byteArrayMessage.Length)
 
-                pipeClient.Write(lengthPrefix, 0, lengthPrefix.Length)
-                pipeClient.Write(messageBytes, 0, messageBytes.Length)
-                pipeClient.Flush()
+                namedPipeClient.Write(byteArrayLengthPrefix, 0, byteArrayLengthPrefix.Length)
+                namedPipeClient.Write(byteArrayMessage, 0, byteArrayMessage.Length)
+                namedPipeClient.Flush()
 
-                ' WaitForPipeDrain ensures the bytes actually made it out the door
-                ' before we dispose the pipe and exit the process.
-                pipeClient.WaitForPipeDrain()
+                ' WaitForPipeDrain ensures the bytes actually made it out the door before we dispose the pipe and exit the process.
+                namedPipeClient.WaitForPipeDrain()
             End Using
-        Catch oEX As Exception
-            ' Main instance disappeared between our failed StartNamedPipeServer()
-            ' call and now (rare race), or some other transient pipe error.
-            ' Nothing meaningful to do here since this instance is exiting anyway -
-            ' consider logging via your existing logging mechanism if this matters
-            ' to you (e.g. so a dropped file doesn't silently vanish).
+        Catch
         End Try
     End Sub
 
@@ -849,7 +843,7 @@ Public Class Form1
                 UpdateFilesListCountHeader()
                 If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
             End If
-        Catch ex As Exception
+        Catch
         End Try
     End Sub
 
@@ -869,7 +863,7 @@ Public Class Form1
             Dim pipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
             pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
             Return True ' We were able to create a named pipe server. Yay!
-        Catch oEX As Exception
+        Catch
             Return False ' OK, there's already a named pipe server in operation already so we return a False value.
         End Try
     End Function
@@ -885,79 +879,59 @@ Public Class Form1
             ' This is the key change from the old code: no Dispose()/re-create per message.
             While namedPipeServer.IsConnected
                 Dim strReceivedMessage As String = Await ReadOneMessageAsync(namedPipeServer)
-
-                If strReceivedMessage Is Nothing Then
-                    ' Client closed its end (or sent zero bytes) - fall out and let the
-                    ' Finally block below re-arm a fresh pipe for the next connection.
-                    Exit While
-                End If
-
+                If strReceivedMessage Is Nothing Then Exit While
                 If String.IsNullOrWhiteSpace(strReceivedMessage) Then Continue While
-
-                HandleReceivedMessage(strReceivedMessage)
+                ProcessReceivedMessage(strReceivedMessage)
             End While
-
-        Catch oEX As Exception
-            ' A parse error or dropped connection lands here. We deliberately do NOT
-            ' return without re-arming - see the Finally block. That was the bug in
-            ' the original version: a Catch/Return here would permanently kill IPC.
-
+        Catch
         Finally
             Try
                 namedPipeServer.Dispose()
             Catch
-                ' Already gone - ignore.
             End Try
 
-            ' Always re-arm a new listener so the app keeps accepting IPC connections,
-            ' whether this connection ended cleanly or via an exception.
+            ' Always re-arm a new listener so the app keeps accepting IPC connections, whether this connection ended cleanly or via an exception.
             Try
                 Dim nextPipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
                 nextPipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), nextPipeServer)
             Catch
-                ' If this fails too, IPC is effectively down until the app restarts.
-                ' Consider logging this via your existing logging mechanism.
             End Try
         End Try
     End Sub
 
-    ''' <summary>Reads one length-prefixed message from the pipe. Returns Nothing if the client disconnected before sending a complete message.</summary>
-    ''' <remarks>
-    ''' A single Read() call isn't guaranteed to return an entire message - for
-    ''' larger payloads (e.g. long file paths) the data can arrive in more than
-    ''' one chunk. This reads a 4-byte length prefix first, then loops until it
-    ''' has read exactly that many bytes, so the message is always reassembled
-    ''' correctly regardless of how the pipe buffers it. This means the CLIENT
-    ''' side also needs to write a 4-byte length prefix before the message bytes.
-    ''' </remarks>
     Private Async Function ReadOneMessageAsync(pipeServer As NamedPipeServerStream) As Task(Of String)
-        Dim lengthPrefix As Byte() = New Byte(3) {}
-        Dim bytesRead As Integer = Await ReadExactAsync(pipeServer, lengthPrefix, 4)
-        If bytesRead < 4 Then Return Nothing ' Client disconnected mid-handshake.
+        Dim byteArrayLengthPrefix As Byte() = New Byte(3) {}
+        Dim byteArrayMessageBuffer As Byte()
+        Dim intBytesRead, intMessageLength As Integer
 
-        Dim messageLength As Integer = BitConverter.ToInt32(lengthPrefix, 0)
-        If messageLength <= 0 OrElse messageLength > 1024 * 1024 Then Return Nothing ' Sanity check - reject garbage/oversized lengths.
-
-        Dim messageBuffer As Byte() = New Byte(messageLength - 1) {}
-        bytesRead = Await ReadExactAsync(pipeServer, messageBuffer, messageLength)
-        If bytesRead < messageLength Then Return Nothing ' Client disconnected mid-message.
-
-        Return Encoding.UTF8.GetString(messageBuffer, 0, bytesRead).Trim()
+        intBytesRead = Await ReadExactAsync(pipeServer, byteArrayLengthPrefix, 4)
+        If intBytesRead < 4 Then Return Nothing ' Client disconnected mid-handshake.
+        intMessageLength = BitConverter.ToInt32(byteArrayLengthPrefix, 0)
+        If intMessageLength <= 0 OrElse intMessageLength > 1024 * 1024 Then Return Nothing ' Sanity check - reject garbage/oversized lengths.
+        byteArrayMessageBuffer = New Byte(intMessageLength - 1) {}
+        intBytesRead = Await ReadExactAsync(pipeServer, byteArrayMessageBuffer, intMessageLength)
+        If intBytesRead < intMessageLength Then Return Nothing ' Client disconnected mid-message.
+        Return Encoding.UTF8.GetString(byteArrayMessageBuffer, 0, intBytesRead).Trim()
     End Function
 
     ''' <summary>Reads exactly count bytes from the stream (looping as needed), or fewer if the stream ends first.</summary>
-    Private Async Function ReadExactAsync(pipeServer As NamedPipeServerStream, buffer As Byte(), count As Integer) As Task(Of Integer)
-        Dim totalRead As Integer = 0
-        While totalRead < count
-            Dim n As Integer = Await pipeServer.ReadAsync(buffer, totalRead, count - totalRead)
-            If n = 0 Then Exit While ' Pipe closed.
-            totalRead += n
+    Private Async Function ReadExactAsync(namedPipe As NamedPipeServerStream, byteArrayBuffer As Byte(), intCount As Integer) As Task(Of Integer)
+        Dim intTotalRead As Integer = 0
+        Dim intN As Integer
+
+        While intTotalRead < intCount
+            intN = Await namedPipe.ReadAsync(byteArrayBuffer, intTotalRead, intCount - intTotalRead)
+
+            If intN = 0 Then Exit While ' Pipe closed.
+
+            intTotalRead += intN
         End While
-        Return totalRead
+
+        Return intTotalRead
     End Function
 
-    ''' <summary>Parses one received JSON message and dispatches it, same logic as before.</summary>
-    Private Sub HandleReceivedMessage(strReceivedMessage As String)
+    ''' <summary>Parses one received JSON message and processes it.</summary>
+    Private Sub ProcessReceivedMessage(strReceivedMessage As String)
         Try
             Dim parsedArguments As Dictionary(Of String, Object) = Newtonsoft.Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(strReceivedMessage)
             If parsedArguments Is Nothing Then Return
@@ -972,18 +946,15 @@ Public Class Form1
                              ElseIf Not String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
                                  txtFile2.Text = strFilePathToBeCompared
                              End If
+
                              TabControl1.SelectedIndex = TabNumberCompareFilesTab
+
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub, Me)
             ElseIf parsedArguments.ContainsKey("addfile") Then
                 AddFileOrDirectoryToHashFileList(parsedArguments("addfile"))
             End If
-
-        Catch oEX As Exception
-            ' Bad JSON or unexpected shape from this one message. Swallow it here
-            ' rather than in WaitForConnectionCallBack, so a single malformed
-            ' message doesn't tear down the whole connection - just that message
-            ' is ignored and the loop keeps reading the next one.
+        Catch
         End Try
     End Sub
 
@@ -3388,7 +3359,7 @@ Public Class Form1
                     .Arguments = "-removesystemlevelassociations",
                     .Verb = "runas"
                 }
-                Dim process As Process = process.Start(startInfo)
+                Dim process As Process = Process.Start(startInfo)
                 process.WaitForExit()
                 boolSuccessful = True
             Catch ex As Win32Exception
