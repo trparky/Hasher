@@ -23,6 +23,8 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabWelcome = New System.Windows.Forms.TabPage()
@@ -31,19 +33,21 @@ Partial Class Form1
         Me.lblWelcomeText = New System.Windows.Forms.Label()
         Me.tabHashText = New System.Windows.Forms.TabPage()
         Me.btnCopyTextHashResultsToClipboard = New System.Windows.Forms.Button()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.btnPasteTextFromWindowsClipboard = New System.Windows.Forms.Button()
-        Me.btnComputeTextHash = New System.Windows.Forms.Button()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.lblHashTextStep1 = New System.Windows.Forms.Label()
         Me.txtHashResults = New System.Windows.Forms.DataGridView()
         Me.txtHashTypeColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtHashColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.textHashContextMenu = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.CopyHashToWindowsClipboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.btnPasteTextFromWindowsClipboard = New System.Windows.Forms.Button()
+        Me.btnComputeTextHash = New System.Windows.Forms.Button()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblHashTextStep1 = New System.Windows.Forms.Label()
         Me.txtTextToHash = New System.Windows.Forms.TextBox()
         Me.lblTextToHash = New System.Windows.Forms.Label()
+        Me.btnCheckHaveIBeenPwned = New System.Windows.Forms.Button()
         Me.tabHashIndividualFiles = New System.Windows.Forms.TabPage()
+        Me.lblFileCountOnHashIndividualFilesTab = New System.Windows.Forms.Label()
         Me.hashIndividualFilesTableLayoutControl = New System.Windows.Forms.TableLayoutPanel()
         Me.lblIndividualFilesStatusProcessingFile = New System.Windows.Forms.Label()
         Me.lblProcessingFile = New System.Windows.Forms.Label()
@@ -77,7 +81,6 @@ Partial Class Form1
         Me.btnAddIndividualFiles = New System.Windows.Forms.Button()
         Me.tabVerifySavedHashes = New System.Windows.Forms.TabPage()
         Me.btnRetestFailedFiles = New System.Windows.Forms.Button()
-        Me.btnCheckHaveIBeenPwned = New System.Windows.Forms.Button()
         Me.verifyHashesListFiles = New System.Windows.Forms.DataGridView()
         Me.colFile = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colFileSize2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -134,6 +137,9 @@ Partial Class Form1
         Me.txtFileForKnownHash = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.tabSettings = New System.Windows.Forms.TabPage()
+        Me.ChkAutoScroll = New System.Windows.Forms.CheckBox()
+        Me.chkHideCheckForUpdatesButton = New System.Windows.Forms.CheckBox()
+        Me.btnRemoveSystemLevelFileAssociations = New System.Windows.Forms.Button()
         Me.chkClearBeforeTransferringFromVerifyToHash = New System.Windows.Forms.CheckBox()
         Me.BtnLoadSettingsFromFile = New System.Windows.Forms.Button()
         Me.BtnSaveSettingsToFile = New System.Windows.Forms.Button()
@@ -175,24 +181,20 @@ Partial Class Form1
         Me.lblRoundFileSizesLabel = New System.Windows.Forms.Label()
         Me.ChkIncludeEntryCountInFileNameHeader = New System.Windows.Forms.CheckBox()
         Me.ChkComputeHashesOnCompareFilesTabEvenWithDifferentFileSizes = New System.Windows.Forms.CheckBox()
-        Me.btnRemoveSystemLevelFileAssociations = New System.Windows.Forms.Button()
-        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.btnRemoveFileAssociations = New System.Windows.Forms.Button()
-        Me.lblFileCountOnHashIndividualFilesTab = New System.Windows.Forms.Label()
-        Me.chkHideCheckForUpdatesButton = New System.Windows.Forms.CheckBox()
-        Me.ChkAutoScroll = New System.Windows.Forms.CheckBox()
+        Me.ToolTip = New System.Windows.Forms.ToolTip(Me.components)
         Me.TabControl1.SuspendLayout()
         Me.tabWelcome.SuspendLayout()
         Me.tabHashText.SuspendLayout()
+        CType(Me.txtHashResults, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.textHashContextMenu.SuspendLayout()
         Me.tabHashIndividualFiles.SuspendLayout()
-        CType(Me.listFiles, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.txtHashResults, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.hashIndividualFilesTableLayoutControl.SuspendLayout()
+        CType(Me.listFiles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.listFilesContextMenu.SuspendLayout()
         Me.tabVerifySavedHashes.SuspendLayout()
-        Me.verifyListFilesContextMenu.SuspendLayout()
         CType(Me.verifyHashesListFiles, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.verifyListFilesContextMenu.SuspendLayout()
         Me.verifySavedHashesTableLayoutControl.SuspendLayout()
         Me.tabCompareFiles.SuspendLayout()
         CType(Me.pictureBoxCompareFiles, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -289,30 +291,6 @@ Partial Class Form1
         Me.tabHashText.TabIndex = 1
         Me.tabHashText.Text = "Hash Text"
         '
-        'txtHashTypeColumn
-        '
-        Me.txtHashTypeColumn.HeaderText = "Type"
-        Me.txtHashTypeColumn.Name = "txtHashTypeColumn"
-        Me.txtHashTypeColumn.Width = 104
-        '
-        'txtHashColumn
-        '
-        Me.txtHashColumn.HeaderText = "Hash"
-        Me.txtHashColumn.Name = "txtHashColumn"
-        Me.txtHashColumn.Width = 854
-        '
-        'textHashContextMenu
-        '
-        Me.textHashContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyHashToWindowsClipboardToolStripMenuItem})
-        Me.textHashContextMenu.Name = "textHashContextMenu"
-        Me.textHashContextMenu.Size = New System.Drawing.Size(254, 26)
-        '
-        'CopyHashToWindowsClipboardToolStripMenuItem
-        '
-        Me.CopyHashToWindowsClipboardToolStripMenuItem.Name = "CopyHashToWindowsClipboardToolStripMenuItem"
-        Me.CopyHashToWindowsClipboardToolStripMenuItem.Size = New System.Drawing.Size(253, 22)
-        Me.CopyHashToWindowsClipboardToolStripMenuItem.Text = "&Copy Hash to Windows Clipboard"
-        '
         'btnCopyTextHashResultsToClipboard
         '
         Me.btnCopyTextHashResultsToClipboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -323,17 +301,6 @@ Partial Class Form1
         Me.btnCopyTextHashResultsToClipboard.TabIndex = 31
         Me.btnCopyTextHashResultsToClipboard.Text = "&Copy Results to Clipboard"
         Me.btnCopyTextHashResultsToClipboard.UseVisualStyleBackColor = True
-        '
-        'Label3
-        '
-        Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(15, 246)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(112, 13)
-        Me.Label3.TabIndex = 28
-        Me.Label3.Text = "Your Hash Results"
         '
         'txtHashResults
         '
@@ -353,6 +320,43 @@ Partial Class Form1
         Me.txtHashResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.txtHashResults.Size = New System.Drawing.Size(1586, 134)
         Me.txtHashResults.TabIndex = 34
+        '
+        'txtHashTypeColumn
+        '
+        Me.txtHashTypeColumn.HeaderText = "Type"
+        Me.txtHashTypeColumn.Name = "txtHashTypeColumn"
+        Me.txtHashTypeColumn.ReadOnly = True
+        Me.txtHashTypeColumn.Width = 104
+        '
+        'txtHashColumn
+        '
+        Me.txtHashColumn.HeaderText = "Hash"
+        Me.txtHashColumn.Name = "txtHashColumn"
+        Me.txtHashColumn.ReadOnly = True
+        Me.txtHashColumn.Width = 854
+        '
+        'textHashContextMenu
+        '
+        Me.textHashContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyHashToWindowsClipboardToolStripMenuItem})
+        Me.textHashContextMenu.Name = "textHashContextMenu"
+        Me.textHashContextMenu.Size = New System.Drawing.Size(254, 26)
+        '
+        'CopyHashToWindowsClipboardToolStripMenuItem
+        '
+        Me.CopyHashToWindowsClipboardToolStripMenuItem.Name = "CopyHashToWindowsClipboardToolStripMenuItem"
+        Me.CopyHashToWindowsClipboardToolStripMenuItem.Size = New System.Drawing.Size(253, 22)
+        Me.CopyHashToWindowsClipboardToolStripMenuItem.Text = "&Copy Hash to Windows Clipboard"
+        '
+        'Label3
+        '
+        Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(15, 246)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(112, 13)
+        Me.Label3.TabIndex = 28
+        Me.Label3.Text = "Your Hash Results"
         '
         'btnPasteTextFromWindowsClipboard
         '
@@ -381,7 +385,7 @@ Partial Class Form1
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(15, 156)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(459, 13)
+        Me.Label2.Size = New System.Drawing.Size(171, 13)
         Me.Label2.TabIndex = 25
         Me.Label2.Text = "Step 2: Compute the hashes."
         '
@@ -417,6 +421,20 @@ Partial Class Form1
         Me.lblTextToHash.TabIndex = 0
         Me.lblTextToHash.Text = "Text that you want to hash"
         '
+        'btnCheckHaveIBeenPwned
+        '
+        Me.btnCheckHaveIBeenPwned.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnCheckHaveIBeenPwned.Enabled = False
+        Me.btnCheckHaveIBeenPwned.Location = New System.Drawing.Point(240, 172)
+        Me.btnCheckHaveIBeenPwned.Name = "btnCheckHaveIBeenPwned"
+        Me.btnCheckHaveIBeenPwned.Size = New System.Drawing.Size(291, 71)
+        Me.btnCheckHaveIBeenPwned.TabIndex = 33
+        Me.btnCheckHaveIBeenPwned.Text = "Check HaveIBeenPwned.com for hashed string" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Used to check if a password has been" &
+    " compromised)"
+        Me.ToolTip.SetToolTip(Me.btnCheckHaveIBeenPwned, "Note: This tool only sends the first five characters of a SHA1 hashed string to h" &
+        "aveibeenpwned.com's API.")
+        Me.btnCheckHaveIBeenPwned.UseVisualStyleBackColor = True
+        '
         'tabHashIndividualFiles
         '
         Me.tabHashIndividualFiles.BackColor = System.Drawing.SystemColors.Control
@@ -443,6 +461,15 @@ Partial Class Form1
         Me.tabHashIndividualFiles.Size = New System.Drawing.Size(1610, 444)
         Me.tabHashIndividualFiles.TabIndex = 2
         Me.tabHashIndividualFiles.Text = "Hash Individual Files"
+        '
+        'lblFileCountOnHashIndividualFilesTab
+        '
+        Me.lblFileCountOnHashIndividualFilesTab.AutoSize = True
+        Me.lblFileCountOnHashIndividualFilesTab.Location = New System.Drawing.Point(270, 4)
+        Me.lblFileCountOnHashIndividualFilesTab.Name = "lblFileCountOnHashIndividualFilesTab"
+        Me.lblFileCountOnHashIndividualFilesTab.Size = New System.Drawing.Size(43, 13)
+        Me.lblFileCountOnHashIndividualFilesTab.TabIndex = 25
+        Me.lblFileCountOnHashIndividualFilesTab.Text = "(0 Files)"
         '
         'hashIndividualFilesTableLayoutControl
         '
@@ -535,7 +562,7 @@ Partial Class Form1
         Me.lblHashIndividualFilesStep3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblHashIndividualFilesStep3.Location = New System.Drawing.Point(15, 257)
         Me.lblHashIndividualFilesStep3.Name = "lblHashIndividualFilesStep3"
-        Me.lblHashIndividualFilesStep3.Size = New System.Drawing.Size(459, 13)
+        Me.lblHashIndividualFilesStep3.Size = New System.Drawing.Size(171, 13)
         Me.lblHashIndividualFilesStep3.TabIndex = 19
         Me.lblHashIndividualFilesStep3.Text = "Step 2: Compute the hashes."
         '
@@ -665,7 +692,14 @@ Partial Class Form1
         Me.listFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.listFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFileName, Me.colFileSize, Me.colChecksum, Me.colComputeTime})
         Me.listFiles.ContextMenuStrip = Me.listFilesContextMenu
-        Me.listFiles.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.listFiles.DefaultCellStyle = DataGridViewCellStyle1
         Me.listFiles.Location = New System.Drawing.Point(160, 20)
         Me.listFiles.Name = "listFiles"
         Me.listFiles.ReadOnly = True
@@ -709,23 +743,23 @@ Partial Class Form1
         '
         Me.listFilesContextMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.listFilesContextMenuFileName, Me.listFilesContextMenuLine, Me.listFilesContextMenuChecksum})
         Me.listFilesContextMenu.Name = "ContextMenuStrip1"
-        Me.listFilesContextMenu.Size = New System.Drawing.Size(131, 142)
+        Me.listFilesContextMenu.Size = New System.Drawing.Size(134, 54)
         '
         'listFilesContextMenuFileName
         '
         Me.listFilesContextMenuFileName.Name = "listFilesContextMenuFileName"
-        Me.listFilesContextMenuFileName.Size = New System.Drawing.Size(130, 22)
+        Me.listFilesContextMenuFileName.Size = New System.Drawing.Size(133, 22)
         Me.listFilesContextMenuFileName.Text = "File Name:"
         '
         'listFilesContextMenuLine
         '
         Me.listFilesContextMenuLine.Name = "listFilesContextMenuLine"
-        Me.listFilesContextMenuLine.Size = New System.Drawing.Size(127, 6)
+        Me.listFilesContextMenuLine.Size = New System.Drawing.Size(130, 6)
         '
         'listFilesContextMenuChecksum
         '
         Me.listFilesContextMenuChecksum.Name = "listFilesContextMenuChecksum"
-        Me.listFilesContextMenuChecksum.Size = New System.Drawing.Size(130, 22)
+        Me.listFilesContextMenuChecksum.Size = New System.Drawing.Size(133, 22)
         Me.listFilesContextMenuChecksum.Text = "Checksum:"
         '
         'btnRemoveSelectedFiles
@@ -789,20 +823,6 @@ Partial Class Form1
         Me.btnRetestFailedFiles.UseVisualStyleBackColor = True
         Me.btnRetestFailedFiles.Visible = False
         '
-        'btnCheckHaveIBeenPwned
-        '
-        Me.btnCheckHaveIBeenPwned.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnCheckHaveIBeenPwned.Enabled = False
-        Me.btnCheckHaveIBeenPwned.Location = New System.Drawing.Point(240, 172)
-        Me.btnCheckHaveIBeenPwned.Name = "btnCheckHaveIBeenPwned"
-        Me.btnCheckHaveIBeenPwned.Size = New System.Drawing.Size(291, 71)
-        Me.btnCheckHaveIBeenPwned.TabIndex = 33
-        Me.btnCheckHaveIBeenPwned.Text = "Check HaveIBeenPwned.com for hashed string" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(Used to check if a password has been" &
-    " compromised)"
-        Me.ToolTip.SetToolTip(Me.btnCheckHaveIBeenPwned, "Note: This tool only sends the first five characters of a SHA1 hashed string to h" &
-        "aveibeenpwned.com's API.")
-        Me.btnCheckHaveIBeenPwned.UseVisualStyleBackColor = True
-        '
         'verifyHashesListFiles
         '
         Me.verifyHashesListFiles.AllowUserToAddRows = False
@@ -815,7 +835,14 @@ Partial Class Form1
         Me.verifyHashesListFiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.verifyHashesListFiles.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colFile, Me.colFileSize2, Me.colResults, Me.colComputeTime2, Me.colNewHash})
         Me.verifyHashesListFiles.ContextMenuStrip = Me.verifyListFilesContextMenu
-        Me.verifyHashesListFiles.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.verifyHashesListFiles.DefaultCellStyle = DataGridViewCellStyle2
         Me.verifyHashesListFiles.Location = New System.Drawing.Point(163, 28)
         Me.verifyHashesListFiles.Name = "verifyHashesListFiles"
         Me.verifyHashesListFiles.ReadOnly = True
@@ -1437,6 +1464,28 @@ Partial Class Form1
         Me.tabSettings.TabIndex = 4
         Me.tabSettings.Text = "Settings"
         '
+        'ChkAutoScroll
+        '
+        Me.ChkAutoScroll.AutoSize = True
+        Me.ChkAutoScroll.Location = New System.Drawing.Point(15, 383)
+        Me.ChkAutoScroll.Name = "ChkAutoScroll"
+        Me.ChkAutoScroll.Size = New System.Drawing.Size(77, 17)
+        Me.ChkAutoScroll.TabIndex = 55
+        Me.ChkAutoScroll.Text = "Auto Scroll"
+        Me.ToolTip.SetToolTip(Me.ChkAutoScroll, "Looks pretty but will cause performance degradations.")
+        Me.ChkAutoScroll.UseVisualStyleBackColor = True
+        '
+        'chkHideCheckForUpdatesButton
+        '
+        Me.chkHideCheckForUpdatesButton.AutoSize = True
+        Me.chkHideCheckForUpdatesButton.Location = New System.Drawing.Point(283, 13)
+        Me.chkHideCheckForUpdatesButton.Name = "chkHideCheckForUpdatesButton"
+        Me.chkHideCheckForUpdatesButton.Size = New System.Drawing.Size(174, 17)
+        Me.chkHideCheckForUpdatesButton.TabIndex = 54
+        Me.chkHideCheckForUpdatesButton.Text = "Hide Check for Updates Button"
+        Me.chkHideCheckForUpdatesButton.UseVisualStyleBackColor = True
+        Me.chkHideCheckForUpdatesButton.Visible = False
+        '
         'btnRemoveSystemLevelFileAssociations
         '
         Me.btnRemoveSystemLevelFileAssociations.Location = New System.Drawing.Point(601, 406)
@@ -1488,7 +1537,8 @@ Partial Class Form1
         Me.chkShowFileProgressInFileList.Size = New System.Drawing.Size(165, 17)
         Me.chkShowFileProgressInFileList.TabIndex = 42
         Me.chkShowFileProgressInFileList.Text = "Show File Progress in File List"
-        Me.ToolTip.SetToolTip(Me.chkShowFileProgressInFileList, "Enables the option to show the progress of reading a file in the file list." & vbCrLf & "Looks pretty but will cause performance degradations.")
+        Me.ToolTip.SetToolTip(Me.chkShowFileProgressInFileList, "Enables the option to show the progress of reading a file in the file list." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Look" &
+        "s pretty but will cause performance degradations.")
         Me.chkShowFileProgressInFileList.UseVisualStyleBackColor = True
         '
         'defaultHashType
@@ -1864,37 +1914,6 @@ Partial Class Form1
         Me.btnRemoveFileAssociations.Text = "Remove File Associations"
         Me.btnRemoveFileAssociations.UseVisualStyleBackColor = True
         '
-        'lblFileCountOnHashIndividualFilesTab
-        '
-        Me.lblFileCountOnHashIndividualFilesTab.AutoSize = True
-        Me.lblFileCountOnHashIndividualFilesTab.Location = New System.Drawing.Point(270, 4)
-        Me.lblFileCountOnHashIndividualFilesTab.Name = "lblFileCountOnHashIndividualFilesTab"
-        Me.lblFileCountOnHashIndividualFilesTab.Size = New System.Drawing.Size(43, 13)
-        Me.lblFileCountOnHashIndividualFilesTab.TabIndex = 25
-        Me.lblFileCountOnHashIndividualFilesTab.Text = "(0 Files)"
-        '
-        'chkHideCheckForUpdatesButton
-        '
-        Me.chkHideCheckForUpdatesButton.AutoSize = True
-        Me.chkHideCheckForUpdatesButton.Location = New System.Drawing.Point(283, 13)
-        Me.chkHideCheckForUpdatesButton.Name = "chkHideCheckForUpdatesButton"
-        Me.chkHideCheckForUpdatesButton.Size = New System.Drawing.Size(174, 17)
-        Me.chkHideCheckForUpdatesButton.TabIndex = 54
-        Me.chkHideCheckForUpdatesButton.Text = "Hide Check for Updates Button"
-        Me.chkHideCheckForUpdatesButton.UseVisualStyleBackColor = True
-        Me.chkHideCheckForUpdatesButton.Visible = False
-        '
-        'ChkAutoScroll
-        '
-        Me.ChkAutoScroll.AutoSize = True
-        Me.ChkAutoScroll.Location = New System.Drawing.Point(15, 383)
-        Me.ChkAutoScroll.Name = "ChkAutoScroll"
-        Me.ChkAutoScroll.Size = New System.Drawing.Size(77, 17)
-        Me.ChkAutoScroll.TabIndex = 55
-        Me.ChkAutoScroll.Text = "Auto Scroll"
-        Me.ChkAutoScroll.UseVisualStyleBackColor = True
-        Me.ToolTip.SetToolTip(Me.ChkAutoScroll, "Looks pretty but will cause performance degradations.")
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1910,18 +1929,18 @@ Partial Class Form1
         Me.tabWelcome.PerformLayout()
         Me.tabHashText.ResumeLayout(False)
         Me.tabHashText.PerformLayout()
-        Me.textHashContextMenu.ResumeLayout(False)
         CType(Me.txtHashResults, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.textHashContextMenu.ResumeLayout(False)
         Me.tabHashIndividualFiles.ResumeLayout(False)
         Me.tabHashIndividualFiles.PerformLayout()
-        CType(Me.listFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.hashIndividualFilesTableLayoutControl.ResumeLayout(False)
         Me.hashIndividualFilesTableLayoutControl.PerformLayout()
+        CType(Me.listFiles, System.ComponentModel.ISupportInitialize).EndInit()
         Me.listFilesContextMenu.ResumeLayout(False)
         Me.tabVerifySavedHashes.ResumeLayout(False)
         Me.tabVerifySavedHashes.PerformLayout()
-        Me.verifyListFilesContextMenu.ResumeLayout(False)
         CType(Me.verifyHashesListFiles, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.verifyListFilesContextMenu.ResumeLayout(False)
         Me.verifySavedHashesTableLayoutControl.ResumeLayout(False)
         Me.verifySavedHashesTableLayoutControl.PerformLayout()
         Me.tabCompareFiles.ResumeLayout(False)
