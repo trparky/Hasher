@@ -27,13 +27,13 @@ Partial Class Benchmark
         Me.listResults = New System.Windows.Forms.ListView()
         Me.colBufferSize = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colComputeTime = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.myContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.btnSetBufferSize = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenFileDialog = New System.Windows.Forms.OpenFileDialog()
         Me.btnOpenFile = New System.Windows.Forms.Button()
         Me.ProgressBar = New System.Windows.Forms.ProgressBar()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.lblHeader = New System.Windows.Forms.Label()
-        Me.myContextMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.btnSetBufferSize = New System.Windows.Forms.ToolStripMenuItem()
         Me.myContextMenuStrip.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -60,6 +60,18 @@ Partial Class Benchmark
         '
         Me.colComputeTime.Text = "Compute Time"
         Me.colComputeTime.Width = 185
+        '
+        'myContextMenuStrip
+        '
+        Me.myContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSetBufferSize})
+        Me.myContextMenuStrip.Name = "ContextMenuStrip"
+        Me.myContextMenuStrip.Size = New System.Drawing.Size(149, 26)
+        '
+        'btnSetBufferSize
+        '
+        Me.btnSetBufferSize.Name = "btnSetBufferSize"
+        Me.btnSetBufferSize.Size = New System.Drawing.Size(148, 22)
+        Me.btnSetBufferSize.Text = "Set Buffer Size"
         '
         'OpenFileDialog
         '
@@ -90,28 +102,16 @@ Partial Class Benchmark
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(172, 26)
         Me.lblStatus.TabIndex = 16
-        Me.lblStatus.Text = vbCrLf & "(No Background Process Running)"
+        Me.lblStatus.Text = "" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(No Background Process Running)"
         '
         'lblHeader
         '
         Me.lblHeader.AutoSize = True
         Me.lblHeader.Location = New System.Drawing.Point(9, 9)
         Me.lblHeader.Name = "lblHeader"
-        Me.lblHeader.Size = New System.Drawing.Size(441, 143)
+        Me.lblHeader.Size = New System.Drawing.Size(443, 143)
         Me.lblHeader.TabIndex = 17
         Me.lblHeader.Text = resources.GetString("lblHeader.Text")
-        '
-        'myContextMenuStrip
-        '
-        Me.myContextMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSetBufferSize})
-        Me.myContextMenuStrip.Name = "ContextMenuStrip"
-        Me.myContextMenuStrip.Size = New System.Drawing.Size(181, 48)
-        '
-        'btnSetBufferSize
-        '
-        Me.btnSetBufferSize.Name = "btnSetBufferSize"
-        Me.btnSetBufferSize.Size = New System.Drawing.Size(180, 22)
-        Me.btnSetBufferSize.Text = "Set Buffer Size"
         '
         'Benchmark
         '

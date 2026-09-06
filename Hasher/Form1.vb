@@ -4,6 +4,7 @@ Imports System.IO.Pipes
 Imports System.Reflection
 Imports System.Security.Cryptography
 Imports System.Threading
+Imports System.Text
 
 Public Class Form1
     Private Const strWaitingToBeProcessed As String = "Waiting to be processed..."
@@ -799,15 +800,22 @@ Public Class Form1
         LaunchURLInWebBrowser(strBuyMeACoffee)
     End Sub
 
-    Private Sub SendToIPCNamedPipeServer(strMessageToSend As String)
+    Private Sub SendToIPCNamedPipeServer(strJSON As String)
         Try
-            Using memoryStream As New IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(strMessageToSend))
-                Dim namedPipeDataStream As New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
-                namedPipeDataStream.Connect(5000)
-                memoryStream.CopyTo(namedPipeDataStream)
+            Using namedPipeClient As New NamedPipeClientStream(".", strNamedPipeServerName, PipeDirection.Out, PipeOptions.Asynchronous)
+                namedPipeClient.Connect(3000) ' 3 second timeout - the main instance should already be listening.
+
+                Dim byteArrayMessage As Byte() = Encoding.UTF8.GetBytes(strJSON)
+                Dim byteArrayLengthPrefix As Byte() = BitConverter.GetBytes(byteArrayMessage.Length)
+
+                namedPipeClient.Write(byteArrayLengthPrefix, 0, byteArrayLengthPrefix.Length)
+                namedPipeClient.Write(byteArrayMessage, 0, byteArrayMessage.Length)
+                namedPipeClient.Flush()
+
+                ' WaitForPipeDrain ensures the bytes actually made it out the door before we dispose the pipe and exit the process.
+                namedPipeClient.WaitForPipeDrain()
             End Using
-        Catch ex As IO.IOException
-            MsgBox("There was an error sending data to the named pipe server used for interprocess communication, please close all Hasher instances and try again.", MsgBoxStyle.Critical, strMessageBoxTitleText)
+        Catch
         End Try
     End Sub
 
@@ -835,7 +843,7 @@ Public Class Form1
                 UpdateFilesListCountHeader()
                 If chkSortFileListingAfterAddingFilesToHash.Checked Then SortLogsByFileSize(1, sortOrderForListFiles, listFiles)
             End If
-        Catch ex As Exception
+        Catch
         End Try
     End Sub
 
@@ -848,34 +856,89 @@ Public Class Form1
         CallSaveColumnOrders()
     End Sub
 
-    ''' <summary>Creates a named pipe server. Returns a Boolean value indicating if the function was able to create a named pipe server.</summary>
+    ''' <summary>Creates a named pipe server and starts listening for connections. Returns a Boolean value indicating if the function was able to create a named pipe server.</summary>
     ''' <returns>Returns a Boolean value indicating if the function was able to create a named pipe server.</returns>
     Private Function StartNamedPipeServer() As Boolean
         Try
             Dim pipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
             pipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), pipeServer)
             Return True ' We were able to create a named pipe server. Yay!
-        Catch oEX As Exception
+        Catch
             Return False ' OK, there's already a named pipe server in operation already so we return a False value.
         End Try
     End Function
 
-    Private Sub WaitForConnectionCallBack(iar As IAsyncResult)
+    ''' <summary>Fires once a client connects. Instead of reading one message and tearing the pipe down, this keeps reading messages from the SAME connection until the client disconnects, then re-arms a fresh listener for the next client.</summary>
+    Private Async Sub WaitForConnectionCallBack(iar As IAsyncResult)
+        Dim namedPipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
+
         Try
-            Dim namedPipeServer As NamedPipeServerStream = CType(iar.AsyncState, NamedPipeServerStream)
             namedPipeServer.EndWaitForConnection(iar)
-            Dim buffer As Byte() = New Byte(499) {}
-            namedPipeServer.Read(buffer, 0, 500)
 
-            Dim strReceivedMessage As String = System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length).Replace(vbNullChar, "").Trim
-            Dim parsedArguments As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
+            ' Keep servicing this same connection for as long as the client stays connected.
+            ' This is the key change from the old code: no Dispose()/re-create per message.
+            While namedPipeServer.IsConnected
+                Dim strReceivedMessage As String = Await ReadOneMessageAsync(namedPipeServer)
+                If strReceivedMessage Is Nothing Then Exit While
+                If String.IsNullOrWhiteSpace(strReceivedMessage) Then Continue While
+                ProcessReceivedMessage(strReceivedMessage)
+            End While
+        Catch
+        Finally
+            Try
+                namedPipeServer.Dispose()
+            Catch
+            End Try
 
-            parsedArguments = Newtonsoft.Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(strReceivedMessage)
+            ' Always re-arm a new listener so the app keeps accepting IPC connections, whether this connection ended cleanly or via an exception.
+            Try
+                Dim nextPipeServer As New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
+                nextPipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), nextPipeServer)
+            Catch
+            End Try
+        End Try
+    End Sub
+
+    Private Async Function ReadOneMessageAsync(pipeServer As NamedPipeServerStream) As Task(Of String)
+        Dim byteArrayLengthPrefix As Byte() = New Byte(3) {}
+        Dim byteArrayMessageBuffer As Byte()
+        Dim intBytesRead, intMessageLength As Integer
+
+        intBytesRead = Await ReadExactAsync(pipeServer, byteArrayLengthPrefix, 4)
+        If intBytesRead < 4 Then Return Nothing ' Client disconnected mid-handshake.
+        intMessageLength = BitConverter.ToInt32(byteArrayLengthPrefix, 0)
+        If intMessageLength <= 0 OrElse intMessageLength > 1024 * 1024 Then Return Nothing ' Sanity check - reject garbage/oversized lengths.
+        byteArrayMessageBuffer = New Byte(intMessageLength - 1) {}
+        intBytesRead = Await ReadExactAsync(pipeServer, byteArrayMessageBuffer, intMessageLength)
+        If intBytesRead < intMessageLength Then Return Nothing ' Client disconnected mid-message.
+        Return Encoding.UTF8.GetString(byteArrayMessageBuffer, 0, intBytesRead).Trim()
+    End Function
+
+    ''' <summary>Reads exactly count bytes from the stream (looping as needed), or fewer if the stream ends first.</summary>
+    Private Async Function ReadExactAsync(namedPipe As NamedPipeServerStream, byteArrayBuffer As Byte(), intCount As Integer) As Task(Of Integer)
+        Dim intTotalRead As Integer = 0
+        Dim intN As Integer
+
+        While intTotalRead < intCount
+            intN = Await namedPipe.ReadAsync(byteArrayBuffer, intTotalRead, intCount - intTotalRead)
+
+            If intN = 0 Then Exit While ' Pipe closed.
+
+            intTotalRead += intN
+        End While
+
+        Return intTotalRead
+    End Function
+
+    ''' <summary>Parses one received JSON message and processes it.</summary>
+    Private Sub ProcessReceivedMessage(strReceivedMessage As String)
+        Try
+            Dim parsedArguments As Dictionary(Of String, Object) = Newtonsoft.Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(strReceivedMessage)
+            If parsedArguments Is Nothing Then Return
 
             If parsedArguments.ContainsKey("comparefile") Then
                 MyInvoke(Sub()
                              Dim strFilePathToBeCompared As String = parsedArguments("comparefile")
-
                              If String.IsNullOrWhiteSpace(txtFile1.Text) And String.IsNullOrWhiteSpace(txtFile2.Text) Then
                                  txtFile1.Text = strFilePathToBeCompared
                              ElseIf String.IsNullOrWhiteSpace(txtFile1.Text) And Not String.IsNullOrWhiteSpace(txtFile2.Text) Then
@@ -885,17 +948,13 @@ Public Class Form1
                              End If
 
                              TabControl1.SelectedIndex = TabNumberCompareFilesTab
+
                              If Not String.IsNullOrWhiteSpace(txtFile1.Text) AndAlso Not String.IsNullOrWhiteSpace(txtFile2.Text) Then btnCompareFiles.PerformClick()
                          End Sub, Me)
             ElseIf parsedArguments.ContainsKey("addfile") Then
                 AddFileOrDirectoryToHashFileList(parsedArguments("addfile"))
             End If
-
-            namedPipeServer.Dispose()
-            namedPipeServer = New NamedPipeServerStream(strNamedPipeServerName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous)
-            namedPipeServer.BeginWaitForConnection(New AsyncCallback(AddressOf WaitForConnectionCallBack), namedPipeServer)
         Catch
-            Return
         End Try
     End Sub
 
@@ -932,6 +991,7 @@ Public Class Form1
                     ' need to do something with it, namely pass that data to the first running instance via the named
                     ' pipe and then terminate itself.
                     SendToIPCNamedPipeServer(Newtonsoft.Json.JsonConvert.SerializeObject(parsedArguments)) ' This passes the data to the named pipe server.
+
                     Process.GetCurrentProcess.Kill() ' This terminates the process.
                 End If
             ElseIf parsedArguments.ContainsKey("hashfile") Then
@@ -3299,7 +3359,7 @@ Public Class Form1
                     .Arguments = "-removesystemlevelassociations",
                     .Verb = "runas"
                 }
-                Dim process As Process = process.Start(startInfo)
+                Dim process As Process = Process.Start(startInfo)
                 process.WaitForExit()
                 boolSuccessful = True
             Catch ex As Win32Exception
