@@ -9,7 +9,6 @@ Namespace checkForUpdates
         Public Const strProgramName As String = "Hasher"
         ' Change these variables whenever you import this module into a program's code to handle software updates.
 
-        Public versionString As String
         Public ReadOnly versionInfo As New Version(Application.ProductVersion)
         Public ReadOnly strDisplayVersionString As String = $"{versionInfo.Major}.{versionInfo.Minor} Build {versionInfo.Build}"
 
@@ -131,7 +130,7 @@ Namespace checkForUpdates
                 .SetProxyMode = True
             }
             httpHelper.AddHTTPHeader("PROGRAM_NAME", strProgramName)
-            httpHelper.AddHTTPHeader("PROGRAM_VERSION", versionString)
+            httpHelper.AddHTTPHeader("PROGRAM_VERSION", strDisplayVersionString)
             httpHelper.AddHTTPHeader("OPERATING_SYSTEM", GetFullOSVersionString())
 
             Return httpHelper
