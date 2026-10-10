@@ -3232,7 +3232,7 @@ Public Class Form1
         ' Do all of this work in a background thread so as to keep the GUI active even while work is being done in this routine.
         ThreadPool.QueueUserWorkItem(Sub()
                                          Try
-                                             Dim strFullSHA1String As String = GetSHA160HashOfString(txtTextToHash.Text).ToUpperInvariant() ' First hash the String.
+                                             Dim strFullSHA1String As String = GetSHA160HashOfString(txtTextToHash.Text.Trim).ToUpperInvariant() ' First hash the String.
                                              Dim strSHA1ToSearchWith As String = strFullSHA1String.Substring(0, 5) ' Take out only what we want, the first five characters. That's all we send to the server.
                                              Dim strSuffixToMatch As String = strFullSHA1String.Substring(5) ' Take out the rest of the hash to use for matching against the data we get back from the server.
                                              Dim strWebData As String = Nothing ' Prepare a variable to get data from the web.
