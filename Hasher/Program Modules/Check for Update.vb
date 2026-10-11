@@ -96,10 +96,7 @@ Namespace checkForUpdates
             If String.IsNullOrEmpty(folderPath) OrElse Not Directory.Exists(folderPath) Then Return False
 
             Try
-                Dim strOurTestFileName As String = Path.Combine(folderPath, Guid.NewGuid().ToString() & ".tmp")
-
-                File.Create(strOurTestFileName, 1, FileOptions.DeleteOnClose).Close()
-
+                File.Create(Path.Combine(folderPath, Guid.NewGuid().ToString() & ".tmp"), 1, FileOptions.DeleteOnClose).Close()
                 Return True
             Catch ex As Exception
                 Return False
